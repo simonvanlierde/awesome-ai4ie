@@ -584,7 +584,7 @@
 }
 .zsd-hint {
   font-size: 0.8rem;
-  color: var(--sl-color-gray-3);
+  color: var(--sl-color-gray-2); /* gray-3 is 4.48:1 on the dark demo panel */
   margin: 0;
 }
 .zsd-img {
