@@ -12,6 +12,7 @@ const owner = "simonvanlierde";
 const repo = "awesome-ai4ie";
 const repoUrl = `https://github.com/${owner}/${repo}`;
 const base = `/${repo}`;
+const ogImage = `https://${owner}.github.io/${repo}/og.png`;
 
 // https://astro.build/config
 export default defineConfig({
@@ -53,14 +54,14 @@ export default defineConfig({
       head: [
         {
           tag: "meta",
-          attrs: { property: "og:image", content: `https://${owner}.github.io/${repo}/og.png` },
+          attrs: { property: "og:image", content: ogImage },
         },
         { tag: "meta", attrs: { property: "og:image:width", content: "1200" } },
         { tag: "meta", attrs: { property: "og:image:height", content: "630" } },
         { tag: "meta", attrs: { name: "twitter:card", content: "summary_large_image" } },
         {
           tag: "meta",
-          attrs: { name: "twitter:image", content: `https://${owner}.github.io/${repo}/og.png` },
+          attrs: { name: "twitter:image", content: ogImage },
         },
       ],
       social: [
