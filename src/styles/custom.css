@@ -565,7 +565,8 @@
   font: inherit;
   font-size: 0.85rem;
 }
-.zsd-controls button {
+.zsd-controls button,
+.space-embed-load {
   align-self: flex-start;
   font-family: var(--sl-font);
   font-weight: 600;
@@ -580,6 +581,11 @@
 .zsd-controls button:disabled {
   opacity: 0.5;
   cursor: default;
+}
+.zsd-hint {
+  font-size: 0.8rem;
+  color: var(--sl-color-gray-3);
+  margin: 0;
 }
 .zsd-img {
   max-width: min(100%, 360px);
@@ -620,4 +626,31 @@
   font-size: 0.72rem;
   text-align: right;
   color: var(--sl-color-gray-2);
+}
+
+/* ── Click-to-load Hugging Face Space ───────────────────────────────────── */
+.space-embed {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-block: 1rem;
+}
+.space-embed p {
+  margin: 0 0 0.4rem;
+}
+.space-embed-title {
+  font-weight: 600;
+}
+.space-embed iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  max-height: 85vh;
+  border: 1px solid var(--sl-color-hairline-shade);
+  border-radius: 6px;
+}
+@media (min-width: 50rem) {
+  .space-embed iframe {
+    aspect-ratio: 1;
+  }
 }

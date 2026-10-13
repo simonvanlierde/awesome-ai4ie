@@ -55,23 +55,29 @@ export default function ZeroShotDemo() {
 
   async function classify() {
     if (!imageUrl) return;
+    const candidates = [
+      ...new Set(
+        labels
+          .split(",")
+          .map((l) => l.trim())
+          .filter(Boolean),
+      ),
+    ];
+    if (candidates.length === 0) {
+      setStatus("Add at least one label, separated by commas.");
+      return;
+    }
     setBusy(true);
     setStatus("loading model (≈150 MB on first use, then cached)…");
     try {
       const classifier = await getClassifier(setStatus);
       setStatus("classifying…");
-      const candidates = [
-        ...new Set(
-          labels
-            .split(",")
-            .map((l) => l.trim())
-            .filter(Boolean),
-        ),
-      ];
       setResults(await classifier(imageUrl, candidates));
       setStatus(null);
-    } catch (err) {
-      setStatus(`failed to load or run the model: ${err instanceof Error ? err.message : err}`);
+    } catch {
+      setStatus(
+        "Could not load or run the model. Check your connection, then press Classify to try again.",
+      );
     } finally {
       setBusy(false);
     }
@@ -93,9 +99,19 @@ export default function ZeroShotDemo() {
           Candidate labels, comma-separated
           <input type="text" value={labels} onChange={(e) => setLabels(e.target.value)} />
         </label>
-        <button type="button" onClick={classify} disabled={!imageUrl || busy}>
+        <button
+          type="button"
+          onClick={classify}
+          disabled={!imageUrl || busy}
+          aria-describedby="zsd-hint"
+        >
           Classify
         </button>
+        <p className="zsd-hint" id="zsd-hint">
+          {imageUrl
+            ? "The first run downloads the CLIP model (≈150 MB) from huggingface.co; later runs use the browser cache."
+            : "Pick a photo to enable Classify. The first run then downloads the CLIP model (≈150 MB) from huggingface.co."}
+        </p>
       </div>
       {imageUrl && <img src={imageUrl} alt="Your selected input" className="zsd-img" />}
       {status && (

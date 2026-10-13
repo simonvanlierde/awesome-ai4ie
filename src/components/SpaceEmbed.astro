@@ -1,0 +1,41 @@
+---
+/**
+ * A Hugging Face Space that loads only when the reader asks for it. An eager
+ * iframe pulls megabytes of the Space's app into every page view. Without JS
+ * the plain link remains.
+ */
+interface Props {
+  title: string;
+  description: string;
+  /** The Space page on huggingface.co. */
+  href: string;
+  /** The URL the iframe loads (the Space's *.hf.space app). */
+  src: string;
+}
+const { title, description, href, src } = Astro.props;
+---
+
+<space-embed class="space-embed not-content" data-src={src} data-title={`Demo: ${title}`}>
+  <p class="space-embed-title">{title}</p>
+  <p>{description}</p>
+  <p><a href={href}>Open the Space on huggingface.co</a></p>
+  <button type="button" class="space-embed-load" hidden>Load demo (runs on huggingface.co)</button>
+</space-embed>
+
+<script>
+  class SpaceEmbed extends HTMLElement {
+    connectedCallback() {
+      const button = this.querySelector("button");
+      if (!button) return;
+      button.hidden = false;
+      button.addEventListener("click", () => {
+        const iframe = document.createElement("iframe");
+        iframe.src = this.dataset.src ?? "";
+        iframe.title = this.dataset.title ?? "";
+        button.replaceWith(iframe);
+        iframe.focus();
+      });
+    }
+  }
+  customElements.define("space-embed", SpaceEmbed);
+</script>
