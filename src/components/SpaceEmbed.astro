@@ -19,9 +19,7 @@ const { title, description, href, src } = Astro.props;
   <p class="space-embed-title">{title}</p>
   <p>{description}</p>
   <p><a href={href}>Open the Space on huggingface.co</a></p>
-  <button type="button" class="space-embed-load" aria-label={`Load the ${title} demo (runs on huggingface.co)`} hidden>
-    Load demo (runs on huggingface.co)
-  </button>
+  <button type="button" class="space-embed-load" hidden>Load {title} (runs on huggingface.co)</button>
 </space-embed>
 
 <script>
