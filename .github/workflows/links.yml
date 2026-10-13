@@ -48,20 +48,17 @@ jobs:
             --max-retries 2 --timeout 30
             'src/content/docs/**/*.md' 'src/content/docs/**/*.mdx' paper-links.txt
 
-      - name: Find the open link-check issue
+      # Creating the issue through the REST API also creates the label if it is missing.
+      - name: Open or update the link-check issue
         if: steps.lychee.outputs.exit_code != 0
-        id: issue
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          number=$(gh api "repos/${GITHUB_REPOSITORY}/issues?labels=broken-links&state=open" -q '.[0].number // empty')
-          echo "number=${number}" >> "$GITHUB_OUTPUT"
-
-      - name: Open or update the issue
-        if: steps.lychee.outputs.exit_code != 0
-        uses: peter-evans/create-issue-from-file@fca9117c27cdc29c6c4db3b86c48e4115a786710 # v6.0.0
-        with:
-          title: Broken links found by the weekly link check
-          content-filepath: ./lychee/out.md
-          issue-number: ${{ steps.issue.outputs.number }}
-          labels: broken-links
+          issues="repos/${GITHUB_REPOSITORY}/issues"
+          number=$(gh api "${issues}?labels=broken-links&state=open" -q '.[0].number // empty')
+          if [ -n "$number" ]; then
+            gh api -X PATCH "${issues}/${number}" -F body=@lychee/out.md >/dev/null
+          else
+            gh api "$issues" -f title="Broken links found by the weekly link check" \
+              -F body=@lychee/out.md -f 'labels[]=broken-links' >/dev/null
+          fi
