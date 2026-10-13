@@ -1,0 +1,33 @@
+/**
+ * Give each Markdown task-list checkbox (`- [ ] …`) an accessible name.
+ *
+ * GFM renders `<input type="checkbox" disabled> text` with nothing tying the
+ * text to the box, so screen readers announce an unnamed checkbox. Wrapping the
+ * box and its text in a `<label>` names it without repeating the text.
+ */
+export function rehypeTaskListLabels() {
+  return (tree) => {
+    visit(tree, (node) => {
+      if (!node.properties?.className?.includes("task-list-item")) return;
+      // A loose list puts the checkbox inside the item's first paragraph.
+      const host = node.children.find((c) => c.tagName === "p") ?? node;
+      const children = host.children;
+      const i = children.findIndex(isTaskCheckbox);
+      if (i === -1) return;
+      // Stop before a nested list: a label holds phrasing content only.
+      let end = children.findIndex((c, j) => j > i && isList(c));
+      if (end === -1) end = children.length;
+      const label = { type: "element", tagName: "label", properties: {}, children: [] };
+      label.children = children.splice(i, end - i, label);
+    });
+  };
+}
+
+const isTaskCheckbox = (n) => n.tagName === "input" && n.properties?.type === "checkbox";
+const isList = (n) => n.tagName === "ul" || n.tagName === "ol";
+
+// NOTE: same small walker as remark-base-links, instead of a `unist-util-visit` dependency.
+function visit(node, fn) {
+  fn(node);
+  for (const child of node.children ?? []) visit(child, fn);
+}

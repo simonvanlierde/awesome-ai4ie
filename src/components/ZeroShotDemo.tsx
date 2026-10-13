@@ -80,12 +80,15 @@ export default function ZeroShotDemo() {
   return (
     <div className="zsd not-content">
       <div className="zsd-controls">
-        <input
-          type="file"
-          accept="image/*"
-          disabled={busy}
-          onChange={(e) => onFile(e.target.files?.[0])}
-        />
+        <label className="zsd-labels">
+          Image to classify
+          <input
+            type="file"
+            accept="image/*"
+            disabled={busy}
+            onChange={(e) => onFile(e.target.files?.[0])}
+          />
+        </label>
         <label className="zsd-labels">
           Candidate labels, comma-separated
           <input type="text" value={labels} onChange={(e) => setLabels(e.target.value)} />

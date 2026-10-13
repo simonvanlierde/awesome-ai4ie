@@ -4,6 +4,7 @@ import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { defineConfig } from "astro/config";
 import starlightLinksValidator from "starlight-links-validator";
+import { rehypeTaskListLabels } from "./src/plugins/rehype-task-list-labels.mjs";
 import { remarkBaseLinks } from "./src/plugins/remark-base-links.mjs";
 
 // Repo coordinates: the one place to change when forking or renaming.
@@ -17,8 +18,12 @@ export default defineConfig({
   site: `https://${owner}.github.io`,
   base,
 
-  // Content writes internal links root-absolute (`/tools/`); this adds `base`.
-  markdown: { remarkPlugins: [[remarkBaseLinks, { base }]] },
+  // Content writes internal links root-absolute (`/tools/`); remarkBaseLinks adds
+  // `base`. rehypeTaskListLabels names task-list checkboxes for screen readers.
+  markdown: {
+    remarkPlugins: [[remarkBaseLinks, { base }]],
+    rehypePlugins: [rehypeTaskListLabels],
+  },
 
   // Old URLs that are live on the deployed site must keep working after a move.
   // (Astro base-prefixes the route but not the destination, hence `/${repo}`.)
