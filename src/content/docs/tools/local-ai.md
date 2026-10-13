@@ -33,8 +33,8 @@ quarter it for full precision. *(checked 2026-07)*
 
 - **Laptop.** Modern Apple silicon (16 GB+) or a laptop RTX GPU runs 7–14B models usably via Ollama/LM Studio. *Good for:* drafting, summarization, code completion on confidential material. *Not for:* the quality you're used to from frontier hosted models; expect a clear step down.
 - **Workstation.** One consumer GPU (24–32 GB VRAM, roughly €2,000–3,500 for the card at 2026 prices) runs ~30B models fast and 70B slowly. *Good for:* a research group's shared "sensitive data" box running Ollama or vLLM.
-- **Server / cluster.** For serving a group or fine-tuning: multi-GPU boxes or university HPC. Most universities have a cluster with GPU partitions; how you request access, and whether your group already has a shared box, is local knowledge. *TODO: add your institution's answer below.*
-- **Cloud APIs.** For non-sensitive data, hosted APIs are the least setup and the best quality per euro. The line to watch is data governance, not cost. Which providers you may use, and for which data classifications, is set by your institution's policy. Check before uploading anything. *TODO: add your institution's answer below.*
+- **Server / cluster.** For serving a group or fine-tuning: multi-GPU boxes or university HPC. Most universities have a cluster with GPU partitions; how you request access, and whether your group already has a shared box, is local knowledge. *Wanted: your institution's answer, in the notes below.*
+- **Cloud APIs.** For non-sensitive data, hosted APIs are the least setup and the best quality per euro. The line to watch is data governance, not cost. Which providers you may use, and for which data classifications, is set by your institution's policy. Check before uploading anything. *Wanted: your institution's answer, in the notes below.*
 
 ### Per-institution notes
 
@@ -42,7 +42,7 @@ Access routes and data policies differ per university, so they live here rather 
 text above. Add yours: institution, cluster name, how to request GPU access, and which
 hosted providers are approved for which data classification.
 
-*TODO: no entries yet.*
+*Wanted: no entries yet. Add yours.*
 
 ## Decision shortcut
 
