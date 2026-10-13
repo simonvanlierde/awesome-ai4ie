@@ -16,7 +16,8 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:a11y": "node scripts/a11y.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
@@ -33,9 +34,11 @@
     "yaml": "^2.9.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@biomejs/biome": "^2.5.4",
     "@vitest/coverage-v8": "^4.1.10",
     "lefthook": "^2.1.9",
+    "playwright": "1.64.0",
     "starlight-links-validator": "^0.25.2",
     "vitest": "^4.1.10"
   },
