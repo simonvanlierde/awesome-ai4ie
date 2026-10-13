@@ -35,3 +35,20 @@ export const TYPE_TAGS = {
 export type IeTag = keyof typeof IE_TAGS;
 export type MlTag = keyof typeof ML_TAGS;
 export type TypeTag = keyof typeof TYPE_TAGS;
+
+/** All three vocabularies by dimension. Key order is the curated display order. */
+export const TAGS = { ie: IE_TAGS, ml: ML_TAGS, type: TYPE_TAGS } as const;
+export type TagDim = keyof typeof TAGS;
+export const TAG_DIMS = Object.keys(TAGS) as TagDim[];
+
+/** What each dimension is called in the UI. */
+export const DIM_LABELS: Record<TagDim, string> = {
+  ie: "IE field",
+  ml: "AI technique",
+  type: "Type",
+};
+
+/** Display label for a tag; falls back to the slug for a tag not in the vocabulary. */
+export function tagLabel(dim: TagDim, tag: string): string {
+  return (TAGS[dim] as Record<string, string>)[tag] ?? tag;
+}

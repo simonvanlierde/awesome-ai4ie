@@ -1,12 +1,12 @@
 ---
 name: Propose an entry
-about: Suggest a tool, hardware setup, prompt, checklist item, or demo to add
+about: Suggest a paper, tool, hardware setup, dataset, prompt, checklist item, or demo to add
 title: "[Entry] "
 labels: entry
 ---
 
 **Which page?**
-<!-- Hardware / Best practices / Tools / Guides / Applications map -->
+<!-- Applications map / Literature & resources (papers) / Best practices & guides / Tools & hardware / Demos -->
 
 **The entry**
 <!-- Name + link, and one line on what it is. -->

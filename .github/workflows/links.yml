@@ -1,0 +1,64 @@
+name: Link check
+
+# Checks every external link and DOI in the content and data files once a week.
+# Not on PRs: a publisher being down for an hour should not block a merge.
+# On failure it opens one issue, or updates the open one, with lychee's report.
+on:
+  schedule:
+    - cron: "17 6 * * 1" # Mondays 06:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lychee:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v7
+      # The literature data holds bare DOIs and arXiv ids, not URLs, so list them
+      # as links for lychee.
+      - name: List the paper links
+        run: |
+          sed -nE 's#^ *doi: *"?([^"]+)"?.*$#https://doi.org/\1#p; s#^ *arxiv: *"?([^"]+)"?.*$#https://arxiv.org/abs/\1#p' \
+            src/data/literature.yaml > paper-links.txt
+          echo "$(wc -l < paper-links.txt) paper links"
+
+      - id: lychee
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          fail: false
+          # --accept 403,429: DOIs that land on publisher bot walls (Elsevier, ACS,
+          # Wiley and others), the AI chat apps and some news sites answer 403
+          # to any script, and some hosts rate-limit with 429. Both mean the
+          # server is there, so they count as fine rather than being excluded,
+          # which would also hide a real 404 or a dead domain.
+          # --root-dir + --exclude file://: root-relative site links (`/tools/`)
+          # are checked by the build's link validator, not here.
+          args: >-
+            --no-progress
+            --accept '200..=299,403,429'
+            --scheme https --scheme http
+            --root-dir ${{ github.workspace }}
+            --exclude '^file://'
+            --max-retries 2 --timeout 30
+            'src/content/docs/**/*.md' 'src/content/docs/**/*.mdx' paper-links.txt
+
+      # Creating the issue through the REST API also creates the label if it is missing.
+      - name: Open or update the link-check issue
+        if: steps.lychee.outputs.exit_code != 0
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          issues="repos/${GITHUB_REPOSITORY}/issues"
+          number=$(gh api "${issues}?labels=broken-links&state=open" -q '.[0].number // empty')
+          if [ -n "$number" ]; then
+            gh api -X PATCH "${issues}/${number}" -F body=@lychee/out.md >/dev/null
+          else
+            gh api "$issues" -f title="Broken links found by the weekly link check" \
+              -F body=@lychee/out.md -f 'labels[]=broken-links' >/dev/null
+          fi

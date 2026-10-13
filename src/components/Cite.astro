@@ -5,7 +5,8 @@
 // citations can't drift from the data. Author/year come from the entry, never
 // hardcoded in the text.
 import { getCollection } from "astro:content";
-import { litUrl } from "./litFilter";
+import { citeAuthors, formatAuthors, paperLink } from "../lib/literature";
+import { litUrl } from "../lib/urls";
 
 interface Props {
   id: string;
@@ -18,10 +19,8 @@ if (!entry) {
   throw new Error(`<Cite id="${id}"/>: no literature.yaml entry with that id`);
 }
 
-const { authors, year, link } = entry.data;
-// "Sterkens, W., et al." -> "Sterkens et al."; single author -> just the surname.
-const surname = authors.split(",")[0].trim();
-const short = /\bet al\b/.test(authors) ? `${surname} et al.` : surname;
+const { year } = entry.data;
+const title = `${formatAuthors(entry.data)} (${year}). ${paperLink(entry.data).label}`;
 
 // With children, the citation wears the caller's words (a model name, say)
 // instead of "(Author, Year)", so prose can name the thing and still link it.
@@ -30,4 +29,4 @@ const labelled = Astro.slots.has("default");
 const href = litUrl({ papers: [id] });
 ---
 
-<a class:list={["cite", { "cite-ref": !labelled }]} href={href} title={`${authors} (${year}). DOI: ${link}`}>{labelled ? <slot /> : `(${short}, ${year})`}</a>
+<a class:list={["cite", { "cite-ref": !labelled }]} href={href} title={title}>{labelled ? <slot /> : `(${citeAuthors(entry.data)}, ${year})`}</a>

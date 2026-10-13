@@ -4,6 +4,7 @@ import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { defineConfig } from "astro/config";
 import starlightLinksValidator from "starlight-links-validator";
+import { rehypeTaskListLabels } from "./src/plugins/rehype-task-list-labels.mjs";
 import { remarkBaseLinks } from "./src/plugins/remark-base-links.mjs";
 
 // Repo coordinates: the one place to change when forking or renaming.
@@ -11,14 +12,20 @@ const owner = "simonvanlierde";
 const repo = "awesome-ai4ie";
 const repoUrl = `https://github.com/${owner}/${repo}`;
 const base = `/${repo}`;
+const ogImage = `https://${owner}.github.io/${repo}/og.png`;
 
 // https://astro.build/config
 export default defineConfig({
   site: `https://${owner}.github.io`,
   base,
 
-  // Content writes internal links root-absolute (`/tools/`); this adds `base`.
-  markdown: { remarkPlugins: [[remarkBaseLinks, { base }]] },
+  // Content writes internal links root-absolute (`/tools/`); remarkBaseLinks adds
+  // `base` and turns `repo:blob/main/...` links into GitHub URLs.
+  // rehypeTaskListLabels names task-list checkboxes for screen readers.
+  markdown: {
+    remarkPlugins: [[remarkBaseLinks, { base, repoUrl }]],
+    rehypePlugins: [rehypeTaskListLabels],
+  },
 
   // Old URLs that are live on the deployed site must keep working after a move.
   // (Astro base-prefixes the route but not the destination, hence `/${repo}`.)
@@ -48,14 +55,14 @@ export default defineConfig({
       head: [
         {
           tag: "meta",
-          attrs: { property: "og:image", content: `https://${owner}.github.io/${repo}/og.png` },
+          attrs: { property: "og:image", content: ogImage },
         },
         { tag: "meta", attrs: { property: "og:image:width", content: "1200" } },
         { tag: "meta", attrs: { property: "og:image:height", content: "630" } },
         { tag: "meta", attrs: { name: "twitter:card", content: "summary_large_image" } },
         {
           tag: "meta",
-          attrs: { name: "twitter:image", content: `https://${owner}.github.io/${repo}/og.png` },
+          attrs: { name: "twitter:image", content: ogImage },
         },
       ],
       social: [

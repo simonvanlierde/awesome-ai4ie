@@ -6,7 +6,7 @@ import { applicationSchema, literatureSchema } from "./schemas";
 
 // Field-level rules live in the schemas (same ones the site build enforces);
 // these tests only add what zod can't express: uniqueness and cross-references.
-type Raw = { id?: string; link?: string; papers?: string[] };
+type Raw = { id?: string; doi?: string; arxiv?: string; papers?: string[] };
 const lit = parse(readFileSync("src/data/literature.yaml", "utf8")) as Raw[];
 const apps = parse(readFileSync("src/data/applications.yaml", "utf8")) as Raw[];
 
@@ -14,10 +14,19 @@ describe("literature.yaml", () => {
   it("matches the site schema", () => {
     z.array(literatureSchema).parse(lit);
   });
-  it("has unique ids and links", () => {
+  it("has unique ids, DOIs and arXiv ids", () => {
     for (const e of lit) expect(e.id, "entry missing id").toBeTruthy();
     expect(new Set(lit.map((e) => e.id)).size).toBe(lit.length);
-    expect(new Set(lit.map((e) => e.link)).size).toBe(lit.length);
+    for (const k of ["doi", "arxiv"] as const) {
+      // DOIs are case-insensitive, so compare them lower-cased.
+      const ids = lit.flatMap((e) => (e[k] ? [e[k].toLowerCase()] : []));
+      expect(new Set(ids).size, `duplicate ${k}`).toBe(ids.length);
+    }
+  });
+  it("requires a doi or an arxiv id", () => {
+    const { doi: _d, arxiv: _a, ...bare } = lit[0] as Record<string, unknown>;
+    expect(literatureSchema.safeParse(bare).success).toBe(false);
+    expect(literatureSchema.safeParse({ ...bare, arxiv: "2401.01234" }).success).toBe(true);
   });
 });
 

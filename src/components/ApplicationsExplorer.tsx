@@ -1,50 +1,50 @@
 import { useState } from "react";
 import type { AppEntry } from "../data/schemas";
-import { IE_TAGS, ML_TAGS } from "../data/tags";
+import { DIM_LABELS, tagLabel } from "../data/tags";
+import { litUrl, siteUrl } from "../lib/urls";
 import { groupBy, toGrid } from "./appPivot";
-import { BASE, litUrl } from "./litFilter";
+import TagChips from "./TagChips";
 
-type View = "ie" | "ml" | "grid";
+type Mode = "ie" | "ml" | "grid";
 
-const VIEWS: { key: View; label: string }[] = [
-  { key: "ie", label: "By IE field" },
-  { key: "ml", label: "By AI technique" },
+const MODES: { key: Mode; label: string }[] = [
+  { key: "ie", label: `By ${DIM_LABELS.ie}` },
+  { key: "ml", label: `By ${DIM_LABELS.ml}` },
   { key: "grid", label: "Grid" },
 ];
-
-const label = (dim: "ie" | "ml", tag: string) =>
-  dim === "ie" ? IE_TAGS[tag as keyof typeof IE_TAGS] : ML_TAGS[tag as keyof typeof ML_TAGS];
 
 /**
  * Pivotable view of applications.yaml: the same entries grouped by IE field,
  * by AI technique, or as an IE × ML grid. Entries and cells deep-link to the
  * literature list, by cited paper ids where an entry cites papers, by the
  * same tags otherwise.
+ *
+ * The mode switch is a group of toggle buttons (aria-pressed), not tabs: the
+ * content below re-renders in place rather than showing one of several panels.
  */
 export default function ApplicationsExplorer({ entries }: { entries: AppEntry[] }) {
-  const [view, setView] = useState<View>("ie");
+  const [mode, setMode] = useState<Mode>("ie");
 
   return (
     <div className="apx not-content">
-      <div className="apx-switch" role="tablist" aria-label="Map view">
-        {VIEWS.map((v) => (
+      <fieldset className="apx-switch" aria-label="Map view">
+        {MODES.map((m) => (
           <button
             type="button"
-            key={v.key}
-            role="tab"
-            aria-selected={view === v.key}
-            onClick={() => setView(v.key)}
+            key={m.key}
+            aria-pressed={mode === m.key}
+            onClick={() => setMode(m.key)}
           >
-            {v.label}
+            {m.label}
           </button>
         ))}
-      </div>
+      </fieldset>
 
-      {view !== "grid" && (
+      {mode !== "grid" && (
         <div>
-          {[...groupBy(entries, view)].map(([tag, apps]) => (
+          {[...groupBy(entries, mode)].map(([tag, apps]) => (
             <section key={tag} className="apx-group">
-              <h3 className={`apx-group-label apx-${view}`}>{label(view, tag)}</h3>
+              <h3 className={`apx-group-label apx-${mode}`}>{tagLabel(mode, tag)}</h3>
               <ul className="apx-list">
                 {apps.map((a) => (
                   <li key={a.id} className="apx-entry">
@@ -53,16 +53,7 @@ export default function ApplicationsExplorer({ entries }: { entries: AppEntry[] 
                       {a.summary} <em className="apx-maturity">{a.maturity}</em>
                     </p>
                     <span className="apx-links">
-                      {a.ie.map((t) => (
-                        <span key={t} className="lit-tag lit-tag-ie">
-                          {IE_TAGS[t]}
-                        </span>
-                      ))}
-                      {a.ml.map((t) => (
-                        <span key={t} className="lit-tag lit-tag-ml">
-                          {ML_TAGS[t]}
-                        </span>
-                      ))}
+                      <TagChips ie={a.ie} ml={a.ml} />
                       <a
                         href={
                           a.papers.length > 0
@@ -74,9 +65,7 @@ export default function ApplicationsExplorer({ entries }: { entries: AppEntry[] 
                           ? `papers (${a.papers.length}) →`
                           : "related reading →"}
                       </a>
-                      {a.demo && (
-                        <a href={a.demo.startsWith("http") ? a.demo : BASE + a.demo}>demo →</a>
-                      )}
+                      {a.demo && <a href={siteUrl(a.demo)}>demo →</a>}
                     </span>
                   </li>
                 ))}
@@ -86,7 +75,7 @@ export default function ApplicationsExplorer({ entries }: { entries: AppEntry[] 
         </div>
       )}
 
-      {view === "grid" && <Grid entries={entries} />}
+      {mode === "grid" && <Grid entries={entries} />}
     </div>
   );
 }
@@ -108,7 +97,7 @@ function Grid({ entries }: { entries: AppEntry[] }) {
             <th aria-label="AI technique by IE field" />
             {ies.map((ie) => (
               <th key={ie} scope="col">
-                <a href={litUrl({ ie: [ie] })}>{label("ie", ie)}</a>
+                <a href={litUrl({ ie: [ie] })}>{tagLabel("ie", ie)}</a>
               </th>
             ))}
           </tr>
@@ -117,21 +106,26 @@ function Grid({ entries }: { entries: AppEntry[] }) {
           {mls.map((ml) => (
             <tr key={ml}>
               <th scope="row">
-                <a href={litUrl({ ml: [ml] })}>{label("ml", ml)}</a>
+                <a href={litUrl({ ml: [ml] })}>{tagLabel("ml", ml)}</a>
               </th>
               {ies.map((ie) => {
                 const apps = cells.get(`${ie}|${ml}`);
                 if (!apps) return <td key={ie} />;
                 const papers = [...new Set(apps.flatMap((a) => a.papers))];
-                const title = apps.map((a) => a.name).join(" · ");
+                const names = apps.map((a) => a.name).join(" · ");
+                // The visible text is only a count, so the accessible name carries the apps.
+                const name = `${apps.length} ${apps.length === 1 ? "application" : "applications"}: ${names}`;
                 return (
                   <td key={ie}>
                     {papers.length > 0 ? (
-                      <a href={litUrl({ papers })} title={title}>
+                      <a href={litUrl({ papers })} title={names} aria-label={`Papers for ${name}`}>
                         {apps.length}
                       </a>
                     ) : (
-                      <span title={title}>{apps.length}</span>
+                      <span title={names}>
+                        <span aria-hidden="true">{apps.length}</span>
+                        <span className="sr-only">{name}</span>
+                      </span>
                     )}
                   </td>
                 );

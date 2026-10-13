@@ -4,6 +4,7 @@ description: Interactive demos of AI methods relevant to IE, in-browser and embe
 ---
 
 import Cite from '../../components/Cite.astro';
+import SpaceEmbed from '../../components/SpaceEmbed.astro';
 import ZeroShotDemo from '../../components/ZeroShotDemo.tsx';
 
 Seeing a method run on *your own* photo beats reading about it. There are three
@@ -17,7 +18,8 @@ Pick a photo (a product, a part, a pile of scrap) and a set of candidate labels;
 <Cite id="radfordLearningTransferableVisual2021">CLIP</Cite> scores the labels against the image. It runs
 **entirely in this browser tab** via
 [transformers.js](https://huggingface.co/docs/transformers.js); the photo is never
-uploaded. That is why local models matter for sensitive data (see
+uploaded. The page does fetch two things on first use: the transformers.js code from
+cdn.jsdelivr.net and the CLIP model from huggingface.co. Your photo stays in the tab. That is why local models matter for sensitive data (see
 [Local AI & hardware](/tools/local-ai/)).
 
 <ZeroShotDemo client:visible />
@@ -34,13 +36,14 @@ confident-looking score proves nothing about labels you didn't offer.
 SAM segments whatever you click: the *detection & segmentation* step behind
 component-counting at end-of-life. This Space also runs fully client-side.
 
-<iframe src="https://webml-community-segment-anything-webgpu.static.hf.space/index.html"
-        width="100%"
-        style="height:700px;border:1px solid var(--sl-color-hairline-shade);border-radius:6px"
-        loading="lazy" title="Demo: Segment Anything WebGPU"></iframe>
+<SpaceEmbed
+  title="Segment Anything WebGPU"
+  description="Upload a photo and click on it to cut out a region. The model runs on your GPU."
+  href="https://huggingface.co/spaces/webml-community/segment-anything-webgpu"
+  src="https://webml-community-segment-anything-webgpu.static.hf.space/index.html"
+/>
 
-[Open directly](https://huggingface.co/spaces/webml-community/segment-anything-webgpu)
-if the embed fails to load. **What it doesn't show:** class assignment. SAM finds
+**What it doesn't show:** class assignment. SAM finds
 regions, not component types; you still need a classification step on top before
 you get a usable bill of components.
 
@@ -50,13 +53,14 @@ Monocular depth estimation, the *quantity/geometry* column: error-bounded geomet
 from a single photo. This one calls a hosted GPU, so **your image leaves the
 browser**; use test images, not confidential ones.
 
-<iframe src="https://depth-anything-depth-anything-v2.hf.space"
-        width="100%"
-        style="height:700px;border:1px solid var(--sl-color-hairline-shade);border-radius:6px"
-        loading="lazy" title="Demo: Depth Anything V2"></iframe>
+<SpaceEmbed
+  title="Depth Anything V2"
+  description="Upload a photo and get a depth map back. The image is sent to a hosted GPU."
+  href="https://huggingface.co/spaces/depth-anything/Depth-Anything-V2"
+  src="https://depth-anything-depth-anything-v2.hf.space"
+/>
 
-[Open directly](https://huggingface.co/spaces/depth-anything/Depth-Anything-V2)
-if the embed fails to load. **What it doesn't show:** metric accuracy on the
+**What it doesn't show:** metric accuracy on the
 reflective, transparent, and thin parts that dominate real products.
 
 ## Two ways to add a demo
@@ -64,7 +68,9 @@ reflective, transparent, and thin parts that dominate real products.
 - **External app (most common):** anything that *calls a hosted model* needs a
   backend, so host it separately (Hugging Face Space, an institute server, a small
   FastAPI app) and embed it with an `<iframe>`. Keep a text link too, for when the
-  embed can't load.
+  embed can't load. For a Hugging Face Space, use
+  [`SpaceEmbed`](repo:blob/main/src/components/SpaceEmbed.astro)
+  as above: the Space loads only when the reader clicks, not on every page view.
 
   ```html
   <iframe src="https://example.org/your-demo/" width="100%"
@@ -74,9 +80,9 @@ reflective, transparent, and thin parts that dominate real products.
 
 - **In-page island:** a client-side widget ships as an Astro island, no backend
   needed, including real in-browser inference via transformers.js. Copy
-  [`src/components/ZeroShotDemo.tsx`](https://github.com/simonvanlierde/awesome-ai4ie/blob/main/src/components/ZeroShotDemo.tsx),
+  [`src/components/ZeroShotDemo.tsx`](repo:blob/main/src/components/ZeroShotDemo.tsx),
   then drop `<YourDemo client:visible />` into an `.mdx` page.
 
 When adding a demo, link it from the matching entry in
-[`src/data/applications.yaml`](https://github.com/simonvanlierde/awesome-ai4ie/blob/main/src/data/applications.yaml)
+[`src/data/applications.yaml`](repo:blob/main/src/data/applications.yaml)
 (`demo:` field) so the [map](/applications-map/) points to it.

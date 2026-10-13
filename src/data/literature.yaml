@@ -1,33 +1,38 @@
 # Curated reading list, rendered on the Literature & resources page.
-# One entry per paper; id = citation key. Required fields: title, authors,
-# year, link (DOI preferred), blurb (one line, why read this), type, added.
+# One entry per paper; id = citation key. Required fields: title, authors
+# (a list, one "Surname, I." per author; add `etAl: true` when the list is cut
+# short), year, doi (bare 10.x id) or arxiv (bare id) or both, blurb (one line,
+# why read this), type, added (YYYY-MM).
 # Tags must exist in src/data/tags.ts; the test suite enforces this.
 # See CONTRIBUTING.md for how to add an entry.
 
 # ── AI × IE: cross-cutting perspectives ──────────────────────────────────────
 - id: donatiFutureArtificialIntelligence2022
   title: "The future of artificial intelligence in the context of industrial ecology"
-  authors: "Donati, F., et al."
+  authors: ["Donati, F."]
+  etAl: true
   year: 2022
-  link: "https://doi.org/10.1111/jiec.13313"
+  doi: "10.1111/jiec.13313"
   blurb: "The JIE perspective on what AI can and cannot do for IE; a good starting point for this whole resource."
   ie: [lca, mfa, eol]
   type: [review]
   added: 2026-07
 - id: gongEvolutionResearchIntersection2025
   title: "The evolution of research at the intersection of industrial ecology and artificial intelligence"
-  authors: "Gong, Y., et al."
+  authors: ["Gong, Y."]
+  etAl: true
   year: 2025
-  link: "https://doi.org/10.1111/jiec.13612"
+  doi: "10.1111/jiec.13612"
   blurb: "Topic-model map of the IE-and-AI literature: which applications the field has actually been publishing on."
   ie: [lca, mfa, eol]
   type: [review]
   added: 2026-07
 - id: zhaoDataScienceApplications2024
   title: "Data science applications in circular economy: trends, status, and future"
-  authors: "Zhao, F., et al."
+  authors: ["Zhao, F."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.1021/acs.est.3c08331"
+  doi: "10.1021/acs.est.3c08331"
   blurb: "Status check on data science across CE applications, with a sober view of the data bottlenecks."
   ie: [eol]
   ml: [tabular-ml]
@@ -35,9 +40,10 @@
   added: 2026-07
 - id: xuBigDataIndustrial2015
   title: "Big data and industrial ecology"
-  authors: "Xu, M., et al."
+  authors: ["Xu, M."]
+  etAl: true
   year: 2015
-  link: "https://doi.org/10.1111/jiec.12241"
+  doi: "10.1111/jiec.12241"
   blurb: "The early (2015) case for data-intensive IE; useful context for everything newer on this list."
   ie: [lca, mfa]
   type: [review]
@@ -46,9 +52,10 @@
 # ── LCA & footprinting ───────────────────────────────────────────────────────
 - id: ghoroghiAdvancesApplicationMachine2022
   title: "Advances in application of machine learning to life cycle assessment: a literature review"
-  authors: "Ghoroghi, A., et al."
+  authors: ["Ghoroghi, A."]
+  etAl: true
   year: 2022
-  link: "https://doi.org/10.1007/s11367-022-02030-3"
+  doi: "10.1007/s11367-022-02030-3"
   blurb: "Broad review of where ML actually enters LCA workflows: impact prediction, inventory estimation, interpretation."
   ie: [lca]
   ml: [tabular-ml]
@@ -56,9 +63,10 @@
   added: 2026-07
 - id: romeikoReviewMachineLearning2024
   title: "A review of machine learning applications in life cycle assessment studies"
-  authors: "Romeiko, X. X., et al."
+  authors: ["Romeiko, X. X."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.1016/j.scitotenv.2023.168969"
+  doi: "10.1016/j.scitotenv.2023.168969"
   blurb: "Newer ML-in-LCA review; useful as a cross-check on Ghoroghi et al.'s taxonomy of use cases."
   ie: [lca]
   ml: [tabular-ml]
@@ -66,9 +74,10 @@
   added: 2026-07
 - id: songRapidLifeCycleImpact2017
   title: "Rapid life-cycle impact screening using artificial neural networks"
-  authors: "Song, R., et al."
+  authors: ["Song, R."]
+  etAl: true
   year: 2017
-  link: "https://doi.org/10.1021/acs.est.7b02862"
+  doi: "10.1021/acs.est.7b02862"
   blurb: "Early proof that ANNs can screen chemical impacts orders of magnitude faster than full characterization."
   ie: [lca]
   ml: [tabular-ml]
@@ -76,9 +85,10 @@
   added: 2026-07
 - id: zargarReviewInventoryModeling2022
   title: "A review of inventory modeling methods for missing data in life cycle assessment"
-  authors: "Zargar, S., et al."
+  authors: ["Zargar, S."]
+  etAl: true
   year: 2022
-  link: "https://doi.org/10.1111/jiec.13305"
+  doi: "10.1111/jiec.13305"
   blurb: "The gap-filling problem stated properly: what's missing in LCI data and which estimation methods (incl. ML) apply."
   ie: [lca]
   ml: [tabular-ml]
@@ -86,9 +96,10 @@
   added: 2026-07
 - id: balajiFlamingoEnvironmentalImpact2023
   title: "Flamingo: environmental impact factor matching for life cycle assessment with zero-shot machine learning"
-  authors: "Balaji, B., et al."
+  authors: ["Balaji, B."]
+  etAl: true
   year: 2023
-  link: "https://doi.org/10.1145/3616385"
+  doi: "10.1145/3616385"
   blurb: "Zero-shot matching of products to impact factors; the Amazon-scale take on automating footprinting."
   ie: [lca]
   ml: [nlp-extraction, llm]
@@ -96,9 +107,9 @@
   added: 2026-07
 - id: preussLargeLanguageModels2024
   title: "Large language models for life cycle assessments: opportunities, challenges, and risks"
-  authors: "Preuss, N., Alshehri, A. S. & You, F."
+  authors: ["Preuss, N.", "Alshehri, A. S.", "You, F."]
   year: 2024
-  link: "https://doi.org/10.1016/j.jclepro.2024.142824"
+  doi: "10.1016/j.jclepro.2024.142824"
   blurb: "The consensus recommendation in one paper: use LLMs to extract inventory data, never to invent it."
   ie: [lca]
   ml: [llm]
@@ -106,9 +117,10 @@
   added: 2026-07
 - id: kumarLargeLanguageModelbased2025
   title: "A large language model-based framework to retrieve life cycle inventory and environmental impact data from scientific literature"
-  authors: "Kumar, A., et al."
+  authors: ["Kumar, A."]
+  etAl: true
   year: 2025
-  link: "https://doi.org/10.1021/acs.est.5c05955"
+  doi: "10.1021/acs.est.5c05955"
   blurb: "Fine-tuned LLaMA-2 + RAG extracts LCI data at F1 ≈ 0.82–0.86: good enough to accelerate, not to skip human checks."
   ie: [lca]
   ml: [llm, nlp-extraction]
@@ -116,9 +128,10 @@
   added: 2026-07
 - id: dengAutoPCFEfficientProduct2023
   title: "AutoPCF: efficient product carbon footprint accounting with large language models"
-  authors: "Deng, S., et al."
+  authors: ["Deng, S."]
+  etAl: true
   year: 2023
-  link: "https://doi.org/10.48550/ARXIV.2308.04241"
+  doi: "10.48550/ARXIV.2308.04241"
   blurb: "LLM pipeline for product carbon footprints via semantic matching of emission factors; an early working system."
   ie: [lca]
   ml: [llm]
@@ -126,9 +139,10 @@
   added: 2026-07
 - id: tuMitigatingGrandChallenges2024
   title: "Mitigating grand challenges in life cycle inventory modeling through the applications of large language models"
-  authors: "Tu, Q., et al."
+  authors: ["Tu, Q."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.1021/acs.est.4c07634"
+  doi: "10.1021/acs.est.4c07634"
   blurb: "Maps LCI's chronic data problems onto what LLMs can realistically fix, and what they make worse."
   ie: [lca]
   ml: [llm]
@@ -136,9 +150,10 @@
   added: 2026-07
 - id: donaldsonExpertGroundedBenchmark2025
   title: "An Expert-grounded benchmark of General Purpose LLMs in LCA"
-  authors: "Donaldson, A., et al."
+  authors: ["Donaldson, A."]
+  etAl: true
   year: 2025
-  link: "https://doi.org/10.48550/arXiv.2510.19886"
+  doi: "10.48550/arXiv.2510.19886"
   blurb: "Expert-grounded benchmark of eleven general-purpose LLMs on LCA questions: experts judged 37% of answers inaccurate or misleading, with citation hallucination up to 40%."
   ie: [lca]
   ml: [llm]
@@ -146,9 +161,10 @@
   added: 2026-07
 - id: gkousisMachineLearningLarge2026
   title: "Machine learning and large language models for life cycle inventory compilation: current situation and future perspectives"
-  authors: "Gkousis, S., et al."
+  authors: ["Gkousis, S."]
+  etAl: true
   year: 2026
-  link: "https://doi.org/10.1016/j.rser.2025.116577"
+  doi: "10.1016/j.rser.2025.116577"
   blurb: "The most current survey of ML/LLM-assisted LCI compilation; a good entry point as of 2026."
   ie: [lca]
   ml: [llm, tabular-ml]
@@ -156,9 +172,10 @@
   added: 2026-07
 - id: froemeltMachineLearningBased2020
   title: "Machine learning based modeling of households: a regionalized bottom-up approach to investigate consumption-induced environmental impacts"
-  authors: "Froemelt, A., et al."
+  authors: ["Froemelt, A."]
+  etAl: true
   year: 2020
-  link: "https://doi.org/10.1111/jiec.12969"
+  doi: "10.1111/jiec.12969"
   blurb: "ML clustering of household data to model consumption footprints bottom-up across a whole country."
   ie: [lca]
   ml: [tabular-ml]
@@ -166,9 +183,10 @@
   added: 2026-07
 - id: forsterExtractingSustainabilityIndicators2026
   title: "Assessing corporate sustainability with large language models: evidence from Europe"
-  authors: "Forster, P., et al."
+  authors: ["Forster, P."]
+  etAl: true
   year: 2026
-  link: "https://doi.org/10.1038/s41467-026-75160-z"
+  doi: "10.1038/s41467-026-75160-z"
   blurb: "LLM extraction of 501 ESRS indicators from 9,173 corporate reports shows corpus-scale extraction works; the 29% hit rate is non-disclosure, not model failure."
   ie: [lca]
   ml: [nlp-extraction, llm]
@@ -178,9 +196,10 @@
 # ── MFA, stocks & flows ──────────────────────────────────────────────────────
 - id: haberlHighResolutionMaps2021
   title: "High-resolution maps of material stocks in buildings and infrastructures in Austria and Germany"
-  authors: "Haberl, H., et al."
+  authors: ["Haberl, H."]
+  etAl: true
   year: 2021
-  link: "https://doi.org/10.1021/acs.est.0c05642"
+  doi: "10.1021/acs.est.0c05642"
   blurb: "National material stock maps at 10 m from free satellite data + OSM, no cadastre needed; ~5 Gt Austria, ~38 Gt Germany."
   ie: [mfa]
   ml: [remote-sensing, tabular-ml]
@@ -188,9 +207,10 @@
   added: 2026-07
 - id: haberlGlobalBuiltEnvironment2024
   title: "Weighing the global built environment: high-resolution mapping and quantification of material stocks in buildings"
-  authors: "Haberl, H., et al."
+  authors: ["Haberl, H."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.1111/jiec.13585"
+  doi: "10.1111/jiec.13585"
   blurb: "Global building material stocks (547 Gt) at 90 m from Earth observation, with an honest 53–200% validation spread."
   ie: [mfa]
   ml: [remote-sensing]
@@ -198,9 +218,9 @@
   added: 2026-07
 - id: peledSpatialMaterialStock2021
   title: "Estimation and mapping of the material stocks of buildings of Europe: a novel nighttime lights-based approach"
-  authors: "Peled, Y. & Fishman, T."
+  authors: ["Peled, Y.", "Fishman, T."]
   year: 2021
-  link: "https://doi.org/10.1016/j.resconrec.2021.105509"
+  doi: "10.1016/j.resconrec.2021.105509"
   blurb: "Night-lights radiance as a continent-scale proxy for built-up volume: MFA without a single site visit."
   ie: [mfa]
   ml: [remote-sensing]
@@ -208,9 +228,10 @@
   added: 2026-07
 - id: baoDeepLearningFusion2023
   title: "High-resolution quantification of building stock using multi-source remote sensing imagery and deep learning"
-  authors: "Bao, S., et al."
+  authors: ["Bao, S."]
+  etAl: true
   year: 2023
-  link: "https://doi.org/10.1111/jiec.13356"
+  doi: "10.1111/jiec.13356"
   blurb: "Feature-fusion deep model beats single-source baselines for Beijing's building stock (<14% total error), but still needs ground data."
   ie: [mfa]
   ml: [remote-sensing]
@@ -218,9 +239,10 @@
   added: 2026-07
 - id: huangImageBasedPrediction2024
   title: "Image-based prediction of residential building attributes with deep learning"
-  authors: "Huang, Y., et al."
+  authors: ["Huang, Y."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.1111/jiec.13591"
+  doi: "10.1111/jiec.13591"
   blurb: "Street-view CV predicts floor area (~19% MAPE) and age (~70%) in Toronto, and degrades sharply in other cities; feasibility, not production."
   ie: [mfa]
   ml: [cv]
@@ -228,9 +250,10 @@
   added: 2026-07
 - id: arbabiScalableDataCollection2021
   title: "A scalable data collection, characterization, and accounting framework for urban material stocks"
-  authors: "Arbabi, H., et al."
+  authors: ["Arbabi, H."]
+  etAl: true
   year: 2021
-  link: "https://doi.org/10.1111/jiec.13198"
+  doi: "10.1111/jiec.13198"
   blurb: "Mobile sensing + CV counts doors and windows across a whole neighborhood at accuracy comparable to manual surveys."
   ie: [mfa, "urban-mining"]
   ml: [cv, segmentation]
@@ -238,9 +261,10 @@
   added: 2026-07
 - id: daiModelingInteriorComponent2025
   title: "Modeling interior component stocks of UK housing using exterior features and machine learning techniques"
-  authors: "Dai, M., et al."
+  authors: ["Dai, M."]
+  etAl: true
   year: 2025
-  link: "https://doi.org/10.1111/jiec.70048"
+  doi: "10.1111/jiec.70048"
   blurb: "Predicts what's inside buildings from what's visible outside: ML as a shortcut around impossible surveys."
   ie: [mfa, "urban-mining"]
   ml: [tabular-ml]
@@ -250,9 +274,10 @@
 # ── Waste, EoL & circularity ─────────────────────────────────────────────────
 - id: sterkensProductLabelIdentification2023
   title: "Product label identification with OCR for model-specific reuse, repair, and recycling: A case study for washing machines"
-  authors: "Sterkens, W., et al."
+  authors: ["Sterkens, W."]
+  etAl: true
   year: 2023
-  link: "https://doi.org/10.1111/jiec.13279"
+  doi: "10.1111/jiec.13279"
   blurb: "Deployed label-OCR pipeline for e-waste identification; reads 95.7% of labels in repair shops but 39.7% at the recycler."
   ie: [eol]
   ml: [cv, nlp-extraction]
@@ -260,9 +285,9 @@
   added: 2026-07
 - id: luComputerVisionSolid2022
   title: "Computer vision for solid waste sorting: A critical review of academic research"
-  authors: "Lu, W. & Chen, J."
+  authors: ["Lu, W.", "Chen, J."]
   year: 2022
-  link: "https://doi.org/10.1016/j.wasman.2022.02.009"
+  doi: "10.1016/j.wasman.2022.02.009"
   blurb: "The critical review of CV-for-waste-sorting research, including why lab accuracies don't survive the sorting plant."
   ie: [eol]
   ml: [cv]
@@ -270,9 +295,10 @@
   added: 2026-07
 - id: wuApplicationsConvolutionalNeural2023
   title: "Applications of convolutional neural networks for intelligent waste identification and recycling: A review"
-  authors: "Wu, Z., et al."
+  authors: ["Wu, Z."]
+  etAl: true
   year: 2023
-  link: "https://doi.org/10.1016/j.resconrec.2022.106813"
+  doi: "10.1016/j.resconrec.2022.106813"
   blurb: "Systematic review of CNN waste-identification work: datasets, architectures, and the recurring benchmark gaps."
   ie: [eol]
   ml: [cv]
@@ -280,9 +306,10 @@
   added: 2026-07
 - id: ameurFutureRoboticDisassembly2025
   title: "The future of robotic disassembly: a systematic review of techniques and applications in the age of AI"
-  authors: "Ameur, A., et al."
+  authors: ["Ameur, A."]
+  etAl: true
   year: 2025
-  link: "https://doi.org/10.3389/frobt.2025.1584657"
+  doi: "10.3389/frobt.2025.1584657"
   blurb: "Where robotic disassembly actually stands: systematic review of perception, planning, and human-robot collaboration."
   ie: [eol]
   ml: [cv]
@@ -290,9 +317,10 @@
   added: 2026-07
 - id: koyanakaIndividualModelIdentification2024
   title: "Individual model identification of waste digital devices by the combination of CNN-based image recognition and weight information"
-  authors: "Koyanaka, S., et al."
+  authors: ["Koyanaka, S."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.1007/s10163-024-01961-3"
+  doi: "10.1007/s10163-024-01961-3"
   blurb: "CNN + weight sensor identifies individual device models on a sorting line: identity recovery under real EoL conditions."
   ie: [eol]
   ml: [cv]
@@ -300,9 +328,10 @@
   added: 2026-07
 - id: vogelgesangAutomatedMaterialFlow2025
   title: "Automated material flow characterization of WEEE in sorting plants using deep learning and regression models"
-  authors: "Vogelgesang, M., et al."
+  authors: ["Vogelgesang, M."]
+  etAl: true
   year: 2025
-  link: "https://doi.org/10.1016/j.wasman.2025.114904"
+  doi: "10.1016/j.wasman.2025.114904"
   blurb: "Camera-based deep learning characterizes shredded WEEE composition in an operating plant: CV feeding MFA directly."
   ie: [eol, mfa]
   ml: [cv, segmentation]
@@ -310,9 +339,10 @@
   added: 2026-07
 - id: jiangBottomUpApproachIntegrating2025
   title: "A bottom-up approach integrating computer vision with material flow analysis to estimate recycling potential"
-  authors: "Jiang, Y., et al."
+  authors: ["Jiang, Y."]
+  etAl: true
   year: 2025
-  link: "https://doi.org/10.1021/acs.est.5c01600"
+  doi: "10.1021/acs.est.5c01600"
   blurb: "Couples CV-derived product counts to an MFA of recycling potential; CV and MFA in a single pipeline."
   ie: [eol, mfa]
   ml: [cv]
@@ -320,9 +350,10 @@
   added: 2026-07
 - id: majchrowskaDeepLearningbasedWaste2022
   title: "Deep learning-based waste detection in natural and urban environments"
-  authors: "Majchrowska, S., et al."
+  authors: ["Majchrowska, S."]
+  etAl: true
   year: 2022
-  link: "https://doi.org/10.1016/j.wasman.2021.12.001"
+  doi: "10.1016/j.wasman.2021.12.001"
   blurb: "Waste detection benchmarks and datasets in one place, plus semi-supervised tricks for the label-scarcity problem."
   ie: [eol]
   ml: [cv, segmentation]
@@ -330,9 +361,10 @@
   added: 2026-07
 - id: funkEvaluationVisionLanguage2026
   title: "Evaluation of vision–language models for waste classification: zero- and few-shot with a training-free tip-adapter"
-  authors: "Funk, C., et al."
+  authors: ["Funk, C."]
+  etAl: true
   year: 2026
-  link: "https://doi.org/10.1016/j.clwas.2026.100475"
+  doi: "10.1016/j.clwas.2026.100475"
   blurb: "Do CLIP-class models sort waste without training data? A measured answer, at material-recovery-facility conditions."
   ie: [eol]
   ml: [cv, foundation]
@@ -340,9 +372,10 @@
   added: 2026-07
 - id: zhangEvaluatingLargeLightweight2026
   title: "Evaluating large and lightweight vision models for irregular component segmentation in e-waste disassembly"
-  authors: "Zhang, R., et al."
+  authors: ["Zhang, R."]
+  etAl: true
   year: 2026
-  link: "https://doi.org/10.48550/ARXIV.2603.27441"
+  doi: "10.48550/ARXIV.2603.27441"
   blurb: "Head-to-head of foundation vs. lightweight segmenters on opened e-waste: what 'SAM needs a class layer' looks like in practice."
   ie: [eol]
   ml: [cv, segmentation, foundation]
@@ -350,9 +383,10 @@
   added: 2026-07
 - id: liuRAISERobotAssistedSelective2025
   title: "RAISE: a robot-assisted selective disassembly and sorting system for end-of-life phones"
-  authors: "Liu, X., et al."
+  authors: ["Liu, X."]
+  etAl: true
   year: 2025
-  link: "https://doi.org/10.48550/ARXIV.2509.23048"
+  doi: "10.48550/ARXIV.2509.23048"
   blurb: "A full working cell, from perception to manipulation, for selective phone disassembly; where the integration problems live."
   ie: [eol]
   ml: [cv, segmentation]
@@ -360,18 +394,19 @@
   added: 2026-07
 - id: babbittDisassemblybasedBillMaterials2020
   title: "Disassembly-based bill of materials data for consumer electronic products"
-  authors: "Babbitt, C. W., et al."
+  authors: ["Babbitt, C. W."]
+  etAl: true
   year: 2020
-  link: "https://doi.org/10.1038/s41597-020-0573-9"
+  doi: "10.1038/s41597-020-0573-9"
   blurb: "95 products physically disassembled into validated BoM data: the ground truth CV-based approaches need to beat."
   ie: [eol, "urban-mining"]
   type: [dataset]
   added: 2026-07
 - id: vanlierdeReverseEngineeringLab2026
   title: "Reverse Engineering Lab - Data Collection Platform"
-  authors: "van Lierde, S."
+  authors: ["van Lierde, S."]
   year: 2026
-  link: "https://doi.org/10.5281/zenodo.19703316"
+  doi: "10.5281/zenodo.19703316"
   blurb: "Open platform for structured product-disassembly data collection (CML): infrastructure for the datasets this field lacks."
   ie: [eol, "urban-mining"]
   ml: [cv]
@@ -379,9 +414,10 @@
   added: 2026-07
 - id: yangDepthAnythingV22024
   title: "Depth Anything V2"
-  authors: "Yang, L., et al."
+  authors: ["Yang, L."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.48550/ARXIV.2406.09414"
+  doi: "10.48550/ARXIV.2406.09414"
   blurb: "Monocular depth that mostly just works; the geometry-from-one-photo building block. Try it on the demos page."
   ml: [depth, cv]
   type: [method]
@@ -390,9 +426,10 @@
 # ── Research practice (using AI well) ────────────────────────────────────────
 - id: rankinCallEnsureReproducibility2026
   title: "A call to ensure reproducibility of machine learning applications in industrial ecology"
-  authors: "Rankin, J., et al."
+  authors: ["Rankin, J."]
+  etAl: true
   year: 2026
-  link: "https://doi.org/10.21203/rs.3.rs-9270723/v1"
+  doi: "10.21203/rs.3.rs-9270723/v1"
   blurb: "CML survey of ML-in-IE papers; data leakage and poor computational reporting are the two dominant failure modes."
   ie: [lca, mfa, eol]
   ml: [tabular-ml]
@@ -400,69 +437,74 @@
   added: 2026-07
 - id: kapoorLeakageReproducibilityCrisis2023
   title: "Leakage and the reproducibility crisis in machine-learning-based science"
-  authors: "Kapoor, S. & Narayanan, A."
+  authors: ["Kapoor, S.", "Narayanan, A."]
   year: 2023
-  link: "https://doi.org/10.1016/j.patter.2023.100804"
+  doi: "10.1016/j.patter.2023.100804"
   blurb: "The taxonomy of 8 data-leakage types that silently inflate ML results, found in 294 papers across 17 fields."
   ml: [tabular-ml]
   type: [meta]
   added: 2026-07
 - id: kapoorREFORMSConsensus2024
   title: "REFORMS: consensus-based recommendations for machine-learning-based science"
-  authors: "Kapoor, S., et al."
+  authors: ["Kapoor, S."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.1126/sciadv.adk3452"
+  doi: "10.1126/sciadv.adk3452"
   blurb: "A 32-item, field-agnostic reporting checklist to fill in before submitting any ML-based paper."
   type: [meta]
   added: 2026-07
 - id: semmelrockReproducibilityMachineLearningDriven2023
   title: "Reproducibility in machine-learning-driven research"
-  authors: "Semmelrock, H., et al."
+  authors: ["Semmelrock, H."]
+  etAl: true
   year: 2023
-  link: "https://arxiv.org/abs/2307.10320"
+  arxiv: "2307.10320"
   blurb: "Quick map of why 'we used ML' so often means 'nobody can rerun it': barriers and the practices that fix them."
   type: [meta, review]
   added: 2026-07
 - id: waltersFabricationErrorsBibliographic2023
   title: "Fabrication and errors in the bibliographic citations generated by ChatGPT"
-  authors: "Walters, W. H. & Wilder, E. I."
+  authors: ["Walters, W. H.", "Wilder, E. I."]
   year: 2023
-  link: "https://doi.org/10.1038/s41598-023-41032-5"
+  doi: "10.1038/s41598-023-41032-5"
   blurb: "Measured, not anecdotal: 55% of GPT-3.5 and 18% of GPT-4 citations were fabricated; many real ones still had errors."
   ml: [llm]
   type: [meta]
   added: 2026-07
 - id: cabezasclavijoAssessingPerformance2025
   title: "Assessing the performance of 8 AI chatbots in bibliographic reference retrieval"
-  authors: "Cabezas-Clavijo, Á. & Sidorenko-Bautista, P."
+  authors: ["Cabezas-Clavijo, Á.", "Sidorenko-Bautista, P."]
   year: 2025
-  link: "https://arxiv.org/abs/2505.18059"
+  arxiv: "2505.18059"
   blurb: "The 2025 update on citation reliability across 8 chatbots: ~40% of retrieved references still erroneous or fabricated."
   ml: [llm]
   type: [meta]
   added: 2026-07
 - id: aljamaanReferenceHallucinationScore2024
   title: "Reference hallucination score for medical artificial intelligence chatbots"
-  authors: "Aljamaan, F., et al."
+  authors: ["Aljamaan, F."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.2196/54345"
+  doi: "10.2196/54345"
   blurb: "A usable metric for citation hallucination, and evidence that retrieval-backed tools hallucinate far less."
   ml: [llm]
   type: [meta, method]
   added: 2026-07
 - id: lacosteQuantifyingCarbonEmissions2019
   title: "Quantifying the carbon emissions of machine learning"
-  authors: "Lacoste, A., et al."
+  authors: ["Lacoste, A."]
+  etAl: true
   year: 2019
-  link: "https://doi.org/10.48550/ARXIV.1910.09700"
+  doi: "10.48550/ARXIV.1910.09700"
   blurb: "The standard starting point (and calculator) for reporting the footprint of your own model training."
   type: [meta, method]
   added: 2026-07
 - id: verdecchiaSystematicReviewGreen2023
   title: "A systematic review of Green AI"
-  authors: "Verdecchia, R., et al."
+  authors: ["Verdecchia, R."]
+  etAl: true
   year: 2023
-  link: "https://doi.org/10.1002/widm.1507"
+  doi: "10.1002/widm.1507"
   blurb: "What's actually known about making AI itself less resource-hungry: an IE question applied to our own tools."
   type: [meta, review]
   added: 2026-07
@@ -470,107 +512,119 @@
 # ── ML landmarks (understand today's tools) ──────────────────────────────────
 - id: dengImageNetLargescaleHierarchical2009
   title: "ImageNet: a large-scale hierarchical image database"
-  authors: "Deng, J., et al."
+  authors: ["Deng, J."]
+  etAl: true
   year: 2009
-  link: "https://doi.org/10.1109/CVPR.2009.5206848"
+  doi: "10.1109/CVPR.2009.5206848"
   blurb: "The dataset that kicked off the deep-learning era, and the reason benchmarks steer the field."
   ml: [cv]
   type: [landmark-ml, dataset]
   added: 2026-07
 - id: heDeepResidualLearning2015
   title: "Deep residual learning for image recognition"
-  authors: "He, K., et al."
+  authors: ["He, K."]
+  etAl: true
   year: 2015
-  link: "https://arxiv.org/abs/1512.03385"
+  arxiv: "1512.03385"
   blurb: "ResNet: the trick (skip connections) that made very deep networks trainable; still inside most vision backbones."
   ml: [cv]
   type: [landmark-ml]
   added: 2026-07
 - id: vaswaniAttentionAllYou2017
   title: "Attention is all you need"
-  authors: "Vaswani, A., et al."
+  authors: ["Vaswani, A."]
+  etAl: true
   year: 2017
-  link: "https://arxiv.org/abs/1706.03762"
+  arxiv: "1706.03762"
   blurb: "The transformer architecture behind every modern LLM; worth knowing what 'attention' actually does."
   ml: [foundation]
   type: [landmark-ml]
   added: 2026-07
 - id: kaplanScalingLawsNeural2020
   title: "Scaling laws for neural language models"
-  authors: "Kaplan, J., et al."
+  authors: ["Kaplan, J."]
+  etAl: true
   year: 2020
-  link: "https://arxiv.org/abs/2001.08361"
+  arxiv: "2001.08361"
   blurb: "Why bigger kept getting better: the empirical laws that justified training ever-larger models."
   ml: [foundation, llm]
   type: [landmark-ml]
   added: 2026-07
 - id: brownLanguageModelsAre2020
   title: "Language models are few-shot learners"
-  authors: "Brown, T., et al."
+  authors: ["Brown, T."]
+  etAl: true
   year: 2020
-  link: "https://arxiv.org/abs/2005.14165"
+  arxiv: "2005.14165"
   blurb: "GPT-3: scale alone produced in-context learning. The paper that made 'prompting' a verb."
   ml: [llm, foundation]
   type: [landmark-ml]
   added: 2026-07
 - id: hoDenoisingDiffusionProbabilistic2020
   title: "Denoising diffusion probabilistic models"
-  authors: "Ho, J., et al."
+  authors: ["Ho, J."]
+  etAl: true
   year: 2020
-  link: "https://arxiv.org/abs/2006.11239"
+  arxiv: "2006.11239"
   blurb: "The diffusion formulation behind modern image generation: noise in, image out, one denoising step at a time."
   ml: [generative]
   type: [landmark-ml]
   added: 2026-07
 - id: dosovitskiyImageWorth2020
   title: "An image is worth 16x16 words: transformers for image recognition at scale"
-  authors: "Dosovitskiy, A., et al."
+  authors: ["Dosovitskiy, A."]
+  etAl: true
   year: 2020
-  link: "https://arxiv.org/abs/2010.11929"
+  arxiv: "2010.11929"
   blurb: "ViT: transformers displace convolutions in vision, the reason 'foundation model' now includes images."
   ml: [cv, foundation]
   type: [landmark-ml]
   added: 2026-07
 - id: radfordLearningTransferableVisual2021
   title: "Learning transferable visual models from natural language supervision"
-  authors: "Radford, A., et al."
+  authors: ["Radford, A."]
+  etAl: true
   year: 2021
-  link: "https://doi.org/10.48550/ARXIV.2103.00020"
+  doi: "10.48550/ARXIV.2103.00020"
   blurb: "CLIP: images and text in one embedding space; the zero-shot recognition used in this site's own demo."
   ml: [cv, foundation]
   type: [landmark-ml]
   added: 2026-07
 - id: jumperHighlyAccurateProtein2021
   title: "Highly accurate protein structure prediction with AlphaFold"
-  authors: "Jumper, J., et al."
+  authors: ["Jumper, J."]
+  etAl: true
   year: 2021
-  link: "https://doi.org/10.1038/s41586-021-03819-2"
+  doi: "10.1038/s41586-021-03819-2"
   blurb: "The clearest case of deep learning solving a real scientific problem, and the bar for 'AI for science' claims."
   type: [landmark-ml]
   added: 2026-07
 - id: ouyangTrainingLanguageModels2022
   title: "Training language models to follow instructions with human feedback"
-  authors: "Ouyang, L., et al."
+  authors: ["Ouyang, L."]
+  etAl: true
   year: 2022
-  link: "https://arxiv.org/abs/2203.02155"
+  arxiv: "2203.02155"
   blurb: "InstructGPT/RLHF: why chat models answer questions instead of continuing your sentence, and where their politeness bias comes from."
   ml: [llm]
   type: [landmark-ml]
   added: 2026-07
 - id: kirillovSegmentAnything2023
   title: "Segment Anything"
-  authors: "Kirillov, A., et al."
+  authors: ["Kirillov, A."]
+  etAl: true
   year: 2023
-  link: "https://doi.org/10.48550/ARXIV.2304.02643"
+  doi: "10.48550/ARXIV.2304.02643"
   blurb: "SAM: promptable segmentation of anything. Try it on the demos page, then note it can't tell you what the segments are."
   ml: [cv, segmentation, foundation]
   type: [landmark-ml]
   added: 2026-07
 - id: zhaoSurveyLargeLanguage2023
   title: "A survey of large language models"
-  authors: "Zhao, W. X., et al."
+  authors: ["Zhao, W. X."]
+  etAl: true
   year: 2023
-  link: "https://arxiv.org/abs/2303.18223"
+  arxiv: "2303.18223"
   blurb: "The reference survey when you need the full LLM landscape (training, capabilities, evaluation) in one document."
   ml: [llm]
   type: [landmark-ml, review]
@@ -582,144 +636,160 @@
 # the application.
 - id: huMetric3DV22024
   title: "Metric3D v2: a versatile monocular geometric foundation model for zero-shot metric depth and surface normal estimation"
-  authors: "Hu, M., et al."
+  authors: ["Hu, M."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.1109/TPAMI.2024.3444912"
+  doi: "10.1109/TPAMI.2024.3444912"
   blurb: "Monocular depth in real metres rather than relative units, plus surface normals; the difference between a nice depth map and a measurement."
   ml: [depth, cv, foundation]
   type: [method]
   added: 2026-07
 - id: bochkovskiiDepthProSharp2024
   title: "Depth Pro: sharp monocular metric depth in less than a second"
-  authors: "Bochkovskii, A., et al."
+  authors: ["Bochkovskii, A."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.48550/ARXIV.2410.02073"
+  doi: "10.48550/ARXIV.2410.02073"
   blurb: "Metric depth from one image in under a second, with boundaries crisp enough to trace a part; the fast end of monocular depth."
   ml: [depth, cv]
   type: [method]
   added: 2026-07
 - id: wangVGGTVisualGeometry2025
   title: "VGGT: visual geometry grounded transformer"
-  authors: "Wang, J., et al."
+  authors: ["Wang, J."]
+  etAl: true
   year: 2025
-  link: "https://doi.org/10.48550/ARXIV.2503.11651"
+  doi: "10.48550/ARXIV.2503.11651"
   blurb: "Feed-forward 3D from a handful of photos, no per-scene optimisation; multi-view geometry without running a photogrammetry pipeline."
   ml: [depth, cv, foundation]
   type: [method]
   added: 2026-07
 - id: keethaMapAnythingUniversalFeedForward2025
   title: "MapAnything: universal feed-forward metric 3D reconstruction"
-  authors: "Keetha, N., et al."
+  authors: ["Keetha, N."]
+  etAl: true
   year: 2025
-  link: "https://doi.org/10.48550/ARXIV.2509.13414"
+  doi: "10.48550/ARXIV.2509.13414"
   blurb: "One feed-forward model for metric 3D across many input combinations; the generalist counterpart to VGGT."
   ml: [depth, cv, foundation]
   type: [method]
   added: 2026-07
 - id: mildenhallNeRFRepresentingScenes2020
   title: "NeRF: representing scenes as neural radiance fields for view synthesis"
-  authors: "Mildenhall, B., et al."
+  authors: ["Mildenhall, B."]
+  etAl: true
   year: 2020
-  link: "https://doi.org/10.48550/ARXIV.2003.08934"
+  doi: "10.48550/ARXIV.2003.08934"
   blurb: "The paper that made photorealistic 3D-from-photos routine. Slow to fit per scene, and the ancestor of everything that followed."
   ml: [depth, cv]
   type: [landmark-ml]
   added: 2026-07
 - id: kerbl3DGaussianSplatting2023
   title: "3D Gaussian splatting for real-time radiance field rendering"
-  authors: "Kerbl, B., et al."
+  authors: ["Kerbl, B."]
+  etAl: true
   year: 2023
-  link: "https://doi.org/10.48550/ARXIV.2308.04079"
+  doi: "10.48550/ARXIV.2308.04079"
   blurb: "Radiance fields you can render in real time; where NeRF's quality met a practical speed budget."
   ml: [depth, cv]
   type: [landmark-ml]
   added: 2026-07
 - id: jeongWinCLIPZeroFewShot2023
   title: "WinCLIP: zero-/few-shot anomaly classification and segmentation"
-  authors: "Jeong, J., et al."
+  authors: ["Jeong, J."]
+  etAl: true
   year: 2023
-  link: "https://doi.org/10.48550/ARXIV.2303.14814"
+  doi: "10.48550/ARXIV.2303.14814"
   blurb: "Zero-shot anomaly detection built on CLIP: flags that something is wrong without defect training data, but not how bad it is."
   ml: [cv, foundation, anomaly-detection]
   type: [method]
   added: 2026-07
 - id: zhouAnomalyCLIPObjectAgnostic2023
   title: "AnomalyCLIP: object-agnostic prompt learning for zero-shot anomaly detection"
-  authors: "Zhou, Q., et al."
+  authors: ["Zhou, Q."]
+  etAl: true
   year: 2023
-  link: "https://doi.org/10.48550/ARXIV.2310.18961"
+  doi: "10.48550/ARXIV.2310.18961"
   blurb: "Prompts learned to be object-agnostic, so zero-shot anomaly detection travels across product types instead of being tuned per object."
   ml: [cv, foundation, anomaly-detection]
   type: [method]
   added: 2026-07
 - id: raviSAM2Segment2024
   title: "SAM 2: segment anything in images and videos"
-  authors: "Ravi, N., et al."
+  authors: ["Ravi, N."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.48550/ARXIV.2408.00714"
+  doi: "10.48550/ARXIV.2408.00714"
   blurb: "SAM extended to video with memory across frames: segmentation that tracks, still without naming what it found."
   ml: [cv, segmentation, foundation]
   type: [method]
   added: 2026-07
 - id: carionSAM3Segment2025
   title: "SAM 3: segment anything with concepts"
-  authors: "Carion, N., et al."
+  authors: ["Carion, N."]
+  etAl: true
   year: 2025
-  link: "https://doi.org/10.48550/ARXIV.2511.16719"
+  doi: "10.48550/ARXIV.2511.16719"
   blurb: "Segmentation promptable by concept rather than by click; the class-assignment gap the original SAM left open starts to close here."
   ml: [cv, segmentation, foundation]
   type: [method]
   added: 2026-07
 - id: liuGroundingDINOMarrying2024
   title: "Grounding DINO: marrying DINO with grounded pre-training for open-set object detection"
-  authors: "Liu, S., et al."
+  authors: ["Liu, S."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.1007/978-3-031-72970-6_3"
+  doi: "10.1007/978-3-031-72970-6_3"
   blurb: "Open-set detection driven by a text prompt: turns \"find the screws\" into boxes without a fixed, pre-trained class list."
   ml: [cv, segmentation, foundation]
   type: [method]
   added: 2026-07
 - id: renGroundedSAMAssembling2024
   title: "Grounded SAM: assembling open-world models for diverse visual tasks"
-  authors: "Ren, T., et al."
+  authors: ["Ren, T."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.48550/ARXIV.2401.14159"
+  doi: "10.48550/ARXIV.2401.14159"
   blurb: "Grounding DINO and SAM wired together, text prompt in and masks out; the pragmatic open-vocabulary segmentation stack."
   ml: [cv, segmentation, foundation]
   type: [method]
   added: 2026-07
 - id: liuSINGAPOSingleImage2025
   title: "SINGAPO: single image controlled generation of articulated parts in objects"
-  authors: "Liu, J., et al."
+  authors: ["Liu, J."]
+  etAl: true
   year: 2025
-  link: "https://doi.org/10.48550/ARXIV.2410.16499"
+  doi: "10.48550/ARXIV.2410.16499"
   blurb: "Articulated parts inferred from one image. Relevant to disassembly structure, but demonstrated only on a few household categories."
   ml: [cv, generative]
   type: [method]
   added: 2026-07
 - id: chenURDFormerPipelineConstructing2024
   title: "URDFormer: a pipeline for constructing articulated simulation environments from real-world images"
-  authors: "Chen, Z., et al."
+  authors: ["Chen, Z."]
+  etAl: true
   year: 2024
-  link: "https://doi.org/10.48550/ARXIV.2405.11656"
+  doi: "10.48550/ARXIV.2405.11656"
   blurb: "Turns a photo into a simulatable articulated model; recovers kinematic joints, not the fastener relations a disassembly plan needs."
   ml: [cv, generative]
   type: [method]
   added: 2026-07
 - id: bellMaterialRecognitionWild2015
   title: "Material recognition in the wild with the Materials in Context Database"
-  authors: "Bell, S., et al."
+  authors: ["Bell, S."]
+  etAl: true
   year: 2015
-  link: "https://doi.org/10.1109/CVPR.2015.7298970"
+  doi: "10.1109/CVPR.2015.7298970"
   blurb: "MINC: 23 material classes on real in-the-wild photos, and still the reference point for recognising what a surface is made of."
   ml: [cv]
   type: [dataset]
   added: 2026-07
 - id: redmonYouOnlyLook2015
   title: "You only look once: unified, real-time object detection"
-  authors: "Redmon, J., et al."
+  authors: ["Redmon, J."]
+  etAl: true
   year: 2015
-  link: "https://doi.org/10.48550/ARXIV.1506.02640"
+  doi: "10.48550/ARXIV.1506.02640"
   blurb: "Detection as a single regression pass; the reason real-time object detection is cheap enough to run on a sorting line."
   ml: [cv, segmentation]
   type: [landmark-ml]

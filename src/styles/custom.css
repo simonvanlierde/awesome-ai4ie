@@ -15,8 +15,10 @@
 :root {
   /* Material palette: the fixed points every accent derives from */
   --copper: #b5541e; /* fresh metal: the anchor (a real MFA case-study element) */
-  --copper-bright: #e0895a; /* AA-safe copper for text/links on dark surfaces */
+  --copper-bright: #e8996f; /* AA-safe copper for text/links on dark surfaces */
+  --copper-deep: #a84d1b; /* AA-safe copper for text on light tints (inline code) */
   --patina: #2a7d74; /* verdigris: what the copper becomes */
+  --patina-deep: #22665f; /* AA-safe patina for text on light tints (note asides) */
   --patina-bright: #5bb3a8; /* AA-safe patina for dark surfaces */
 
   /* Theme-aware text inks: bright variants on dark surfaces, base variants on
@@ -37,8 +39,9 @@
 :root {
   --sl-color-accent-low: #173f3b; /* deep patina */
   --sl-color-accent: #b5541e; /* copper: buttons, active nav */
-  --sl-color-accent-high: #e0895a; /* bright copper: link text (was #e9c9b4) */
-  --sl-color-text-accent: var(--copper-bright); /* fixes ~3.66:1 links → ~6.8:1 */
+  --sl-color-accent-high: var(--copper-bright); /* bright copper: link text */
+  /* 7.8:1 on the page, 5.2:1 on inline code, 5.1:1 under the current-page ink */
+  --sl-color-text-accent: var(--copper-bright);
   --sl-color-bg: #1a1817; /* warm near-black, sits with copper */
   --sl-color-hairline-shade: #2c2724;
 }
@@ -48,11 +51,12 @@
   --sl-color-accent-low: #f0e3d8; /* pale copper wash */
   --sl-color-accent: #b5541e;
   --sl-color-accent-high: #6e3212; /* deep copper */
-  --sl-color-text-accent: var(--copper); /* 4.95:1 on white: AA */
+  /* 5.4:1 on the page, 4.9:1 on inline code (links wrapping `code`) */
+  --sl-color-text-accent: var(--copper-deep);
   --sl-color-bg: #fbfaf7; /* warm white */
   --sl-color-hairline-shade: #ece5dc;
   --copper-ink: var(--copper);
-  --patina-ink: var(--patina);
+  --patina-ink: var(--patina-deep); /* 5.5:1 on the note aside tint */
 }
 
 /* ── Typography ──────────────────────────────────────────────────────────── */
@@ -66,11 +70,9 @@
 }
 
 /* Prose body: the research-journal serif. Scoped to content so nav/UI stay in
-   the grotesque. */
-.sl-markdown-content p,
-.sl-markdown-content li,
-.sl-markdown-content td,
-.sl-markdown-content blockquote {
+   the grotesque, and kept out of `.not-content` islands, which style their own
+   text (the :where() adds no specificity, so island classes still win). */
+.sl-markdown-content :is(p, li, td, blockquote):not(:where(.not-content *)) {
   font-family: var(--font-prose);
   line-height: 1.7;
 }
@@ -120,19 +122,19 @@
 }
 
 /* ── Collapsible skill files ─────────────────────────────────────────────── */
-.sl-markdown-content details {
+.sl-markdown-content details:not(:where(.not-content *)) {
   border: 1px solid var(--sl-color-hairline-shade);
   border-radius: 0.5rem;
   padding: 0.5rem 0.9rem;
 }
-.sl-markdown-content details summary {
+.sl-markdown-content details:not(:where(.not-content *)) summary {
   font-family: var(--sl-font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.05em;
   color: var(--sl-color-text-accent);
   cursor: pointer;
 }
-.sl-markdown-content details[open] summary {
+.sl-markdown-content details[open]:not(:where(.not-content *)) summary {
   margin-bottom: 0.6rem;
 }
 
@@ -359,6 +361,14 @@
   letter-spacing: 0.04em;
   color: var(--sl-color-gray-3);
 }
+.lit-new {
+  margin-left: 0.5rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: var(--sl-color-accent-low);
+  /* text-accent is 4.46:1 on accent-low in light; accent-high passes in both themes */
+  color: var(--sl-color-accent-high);
+}
 .lit-title {
   display: block;
   font-family: var(--sl-font);
@@ -420,6 +430,9 @@
 }
 .apx-switch {
   display: inline-flex;
+  margin: 0;
+  padding: 0;
+  min-inline-size: 0;
   border: 1px solid var(--sl-color-gray-5);
   border-radius: 0.5rem;
   overflow: hidden;
@@ -437,7 +450,7 @@
 .apx-switch button + button {
   border-left: 1px solid var(--sl-color-gray-5);
 }
-.apx-switch button[aria-selected="true"] {
+.apx-switch button[aria-pressed="true"] {
   background: var(--sl-color-accent-low);
   color: var(--sl-color-white);
 }
@@ -549,7 +562,7 @@
   font-family: var(--sl-font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.05em;
-  color: var(--sl-color-gray-3);
+  color: var(--sl-color-gray-2);
 }
 .zsd-labels input {
   display: block;
@@ -563,7 +576,8 @@
   font: inherit;
   font-size: 0.85rem;
 }
-.zsd-controls button {
+.zsd-controls button,
+.space-embed-load {
   align-self: flex-start;
   font-family: var(--sl-font);
   font-weight: 600;
@@ -579,6 +593,11 @@
   opacity: 0.5;
   cursor: default;
 }
+.zsd-hint {
+  font-size: 0.8rem;
+  color: var(--sl-color-gray-2); /* gray-3 is 4.48:1 on the dark demo panel */
+  margin: 0;
+}
 .zsd-img {
   max-width: min(100%, 360px);
   border-radius: 0.35rem;
@@ -587,7 +606,7 @@
 .zsd-status {
   font-family: var(--sl-font-mono);
   font-size: 0.72rem;
-  color: var(--sl-color-gray-3);
+  color: var(--sl-color-gray-2); /* gray-3 is 4.47:1 on the dark demo panel */
   margin: 0.6rem 0 0;
 }
 .zsd-results {
@@ -618,4 +637,31 @@
   font-size: 0.72rem;
   text-align: right;
   color: var(--sl-color-gray-2);
+}
+
+/* ── Click-to-load Hugging Face Space ───────────────────────────────────── */
+.space-embed {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-block: 1rem;
+}
+.space-embed p {
+  margin: 0 0 0.4rem;
+}
+.space-embed-title {
+  font-weight: 600;
+}
+.space-embed iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  max-height: 85vh;
+  border: 1px solid var(--sl-color-hairline-shade);
+  border-radius: 6px;
+}
+@media (min-width: 50rem) {
+  .space-embed iframe {
+    aspect-ratio: 1;
+  }
 }
