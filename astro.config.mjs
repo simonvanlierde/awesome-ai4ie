@@ -1,5 +1,6 @@
 // @ts-check
 
+import { unified } from "@astrojs/markdown-remark";
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { defineConfig } from "astro/config";
@@ -22,9 +23,13 @@ export default defineConfig({
   // Content writes internal links root-absolute (`/tools/`); remarkBaseLinks adds
   // `base` and turns `repo:blob/main/...` links into GitHub URLs.
   // rehypeTaskListLabels names task-list checkboxes for screen readers.
+  // Both are remark/rehype plugins, so they need the unified processor rather than
+  // Astro's default (Sätteri).
   markdown: {
-    remarkPlugins: [[remarkBaseLinks, { base, repoUrl }]],
-    rehypePlugins: [rehypeTaskListLabels],
+    processor: unified({
+      remarkPlugins: [[remarkBaseLinks, { base, repoUrl }]],
+      rehypePlugins: [rehypeTaskListLabels],
+    }),
   },
 
   // Old URLs that are live on the deployed site must keep working after a move.
