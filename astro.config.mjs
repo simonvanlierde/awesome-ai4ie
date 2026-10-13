@@ -20,9 +20,10 @@ export default defineConfig({
   base,
 
   // Content writes internal links root-absolute (`/tools/`); remarkBaseLinks adds
-  // `base`. rehypeTaskListLabels names task-list checkboxes for screen readers.
+  // `base` and turns `repo:blob/main/...` links into GitHub URLs.
+  // rehypeTaskListLabels names task-list checkboxes for screen readers.
   markdown: {
-    remarkPlugins: [[remarkBaseLinks, { base }]],
+    remarkPlugins: [[remarkBaseLinks, { base, repoUrl }]],
     rehypePlugins: [rehypeTaskListLabels],
   },
 
