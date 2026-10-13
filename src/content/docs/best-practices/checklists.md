@@ -8,9 +8,9 @@ before results go anywhere near a paper.
 
 ## AI-assisted coding
 
-AI-generated code runs and looks plausible whether or not it's doing the right thing. This is
-especially risky in data pipelines (LCA, MFA, ML), where a silently wrong default or unit
-conversion won't throw an error; it will just quietly change your results.
+AI-generated code runs and looks plausible whether or not it's doing the right thing. That's
+most risky in data pipelines (LCA, MFA, ML). A wrong default or unit conversion there won't
+throw an error. It just quietly changes your results.
 
 - [ ] Did I read the actual diff, not just skim the chat summary of what changed?
 - [ ] Are units, defaults, and thresholds still what I intended, not silently changed?
@@ -20,11 +20,11 @@ conversion won't throw an error; it will just quietly change your results.
 
 ## Machine learning reproducibility
 
-AI coding tools lower the barrier to using ML in applied research, which also lowers the
-minimum domain knowledge needed to spot reproducibility errors. The checklist below is drawn
+AI coding tools make it easier to use ML in applied research, and so they also lower the
+domain knowledge people bring to spotting reproducibility errors. The checklist below comes
 from a CML literature review of ML reproducibility in IE research
-([Rankin et al.](https://doi.org/10.21203/rs.3.rs-9270723/v1)); the two most common failure
-modes were **data leakage** and **poor computational reporting**.
+([Rankin et al.](https://doi.org/10.21203/rs.3.rs-9270723/v1)). The two most common failure
+modes it found were **data leakage** and **poor computational reporting**.
 
 - [ ] Is the test set isolated *before* any pre-processing, normalization, or gap-filling?
 - [ ] If the data has a time dimension, was splitting done in a way that avoids temporal leakage
@@ -39,10 +39,10 @@ modes were **data leakage** and **poor computational reporting**.
       data cutoff and provenance discussed as a possible source of test-set leakage?
 
 :::note[For reviewers]
-The following are disqualifying regardless of ML expertise: no hold-out test set, temporal
-leakage, or normalization/gap-filling performed before the train/test split. A withheld or
-proprietary dataset is not disqualifying on its own if the rest of the study follows best
-practice and the reason is stated.
+Three errors disqualify a study, and you don't need ML expertise to spot them: no hold-out
+test set, temporal leakage, or normalization/gap-filling performed before the train/test
+split. A withheld or proprietary dataset doesn't disqualify a study on its own, as long as
+the rest of the study follows best practice and the reason is stated.
 :::
 
 The [`ml-reproducibility` skill](/best-practices/prompts-and-skills/#ml-reproducibility)
