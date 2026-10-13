@@ -1,6 +1,6 @@
 # Awesome AI for Industrial Ecology
 
-A community-curated resource for using AI in industrial ecology research. Started in the AI4IE working group; [contributions welcome from anyone](CONTRIBUTING.md).
+A community-curated resource for using AI in industrial ecology (IE) research. It started in the AI4IE working group, and [anyone can contribute](CONTRIBUTING.md).
 
 [![Live site](https://img.shields.io/badge/live_site-ai4ie-c2410c)](https://simonvanlierde.github.io/awesome-ai4ie/)
 [![Contributing](https://img.shields.io/badge/contributing-guide-0f766e)](CONTRIBUTING.md)
@@ -19,8 +19,8 @@ A community-curated resource for using AI in industrial ecology research. Starte
 
 ## What this is
 
-This repo is a proposal to the AI4IE working group and to anyone else working at this
-intersection, not a finished resource. Each section already has real content to react to: an applications map, a literature list, tool and hardware guidance, working Claude skills, and in-browser demos. Feel free to propose changes or additions via pull request, or open an issue if you want to discuss something first.
+This repo is a proposal, not a finished resource. It's for the AI4IE working group and
+for anyone else who works where AI and IE meet. Each section already has real content to react to: an applications map, a literature list, tool and hardware guidance, working Claude skills, and in-browser demos. To change or add something, open a pull request. If you'd rather discuss it first, open an issue.
 
 | Page | Contents |
 | --- | --- |
@@ -32,11 +32,11 @@ intersection, not a finished resource. Each section already has real content to 
 
 ## Contributing
 
-Add a paper or application to a YAML file under `src/data/`, or edit a Markdown page under `src/content/docs/`, and open a pull request. No local setup needed to edit text; see [CONTRIBUTING.md](CONTRIBUTING.md).
+Add a paper or application to a YAML file under `src/data/`, or edit a Markdown page under `src/content/docs/`, then open a pull request. You don't need a local setup to edit text. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## How it's built
 
-[Astro](https://astro.build) + the [Starlight](https://starlight.astro.build) docs theme. Content is plain Markdown/MDX; interactive demos are **Astro islands**, so pages that don't use one ship zero JavaScript. Pushing to `main` builds and deploys to GitHub Pages.
+The site uses [Astro](https://astro.build) and the [Starlight](https://starlight.astro.build) docs theme. Pages are plain Markdown or MDX. The interactive demos are **Astro islands**: components that load their own JavaScript, so a page without one ships no JavaScript at all. A push to `main` builds the site and deploys it to GitHub Pages.
 
 | Where | What |
 | --- | --- |
