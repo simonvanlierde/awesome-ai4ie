@@ -5,6 +5,8 @@
  * text to the box, so screen readers announce an unnamed checkbox. Wrapping the
  * box and its text in a `<label>` names it without repeating the text.
  */
+import { visit } from "./remark-base-links.mjs";
+
 export function rehypeTaskListLabels() {
   return (tree) => {
     visit(tree, (node) => {
@@ -25,9 +27,3 @@ export function rehypeTaskListLabels() {
 
 const isTaskCheckbox = (n) => n.tagName === "input" && n.properties?.type === "checkbox";
 const isList = (n) => n.tagName === "ul" || n.tagName === "ol";
-
-// NOTE: same small walker as remark-base-links, instead of a `unist-util-visit` dependency.
-function visit(node, fn) {
-  fn(node);
-  for (const child of node.children ?? []) visit(child, fn);
-}

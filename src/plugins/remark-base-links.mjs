@@ -29,8 +29,8 @@ export function remarkBaseLinks({ base, repoUrl }) {
   };
 }
 
-// NOTE: 6-line walker instead of a `unist-util-visit` dependency.
-function visit(node, fn) {
+// NOTE: 4-line walker instead of a `unist-util-visit` dependency; the rehype plugin uses it too.
+export function visit(node, fn) {
   fn(node);
   for (const child of node.children ?? []) visit(child, fn);
 }

@@ -1,12 +1,9 @@
 ---
 import { getCollection } from "astro:content";
 import LiteratureBrowser from "./LiteratureBrowser";
-import { sortEntries } from "./litFilter";
 
-const entries = sortEntries(
-  (await getCollection("literature")).map((e) => ({ id: e.id, ...e.data })),
-  "year",
-);
+// No sorting here: LiteratureBrowser sorts what it renders, on the server too.
+const entries = (await getCollection("literature")).map((e) => ({ id: e.id, ...e.data }));
 ---
 
 <LiteratureBrowser client:load entries={entries} />

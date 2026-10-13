@@ -24,10 +24,7 @@ export function citeAuthors({ authors, etAl }: Authored): string {
 
 /** Where the title links, and how the link is labelled in a tooltip. A DOI wins
  * over an arXiv id when an entry has both. */
-export function paperLink({ doi, arxiv }: { doi?: string; arxiv?: string }): {
-  href: string;
-  label: string;
-} {
+export function paperLink({ doi, arxiv }: { doi?: string; arxiv?: string }) {
   if (doi) return { href: `https://doi.org/${doi}`, label: `DOI ${doi}` };
   if (arxiv) return { href: `https://arxiv.org/abs/${arxiv}`, label: `arXiv ${arxiv}` };
   throw new Error("entry has neither doi nor arxiv"); // the schema refine rules this out

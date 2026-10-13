@@ -59,13 +59,12 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
     entries.filter((e) => matchesFilter(e, filter)),
     sort,
   );
-  const anyActive = TAG_DIMS.some((d) => filter[d].length > 0) || filter.papers.length > 0;
-
   // One pill per active tag, plus one for a `?papers=` deep-link, which would
   // otherwise narrow the list with nothing on screen to explain why.
   const pills = TAG_DIMS.flatMap((dim) =>
     filter[dim].map((tag) => ({ id: `${dim}:${tag}`, dim, tag, label: tagLabel(dim, tag) })),
   );
+  const anyActive = pills.length > 0 || filter.papers.length > 0;
 
   return (
     <div className="lit-browser not-content">
