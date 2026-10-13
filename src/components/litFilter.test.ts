@@ -1,12 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  BASE,
-  litUrl,
-  matchesFilter,
-  parseFilterParams,
-  sortEntries,
-  toFilterParams,
-} from "./litFilter";
+import { matchesFilter, parseView, sortEntries, toQuery } from "./litFilter";
 
 const entry = { ie: ["eol"], ml: ["cv", "segmentation"], type: ["method"] };
 
@@ -32,35 +25,41 @@ describe("matchesFilter", () => {
   });
 });
 
-describe("parseFilterParams", () => {
+describe("parseView", () => {
   it("parses comma-separated params and ignores unknown keys", () => {
-    expect(parseFilterParams("?ie=eol,lca&ml=cv&foo=x")).toEqual({
-      ...none,
-      ie: ["eol", "lca"],
-      ml: ["cv"],
+    expect(parseView("?ie=eol,lca&ml=cv&foo=x")).toEqual({
+      filter: { ...none, ie: ["eol", "lca"], ml: ["cv"] },
+      sort: "year",
     });
   });
   it("handles empty search", () => {
-    expect(parseFilterParams("")).toEqual(none);
+    expect(parseView("")).toEqual({ filter: none, sort: "year" });
   });
-  it("round-trips through toFilterParams", () => {
-    const f = {
+  it("reads a known sort and falls back to year for an unknown one", () => {
+    expect(parseView("?sort=title").sort).toBe("title");
+    expect(parseView("?sort=bogus").sort).toBe("year");
+  });
+  it("round-trips through toQuery, sort included", () => {
+    const filter = {
       ie: ["eol"],
       ml: ["cv", "depth"],
       type: [],
       papers: ["kirillovSegmentAnything2023"],
     };
-    expect(parseFilterParams(toFilterParams(f))).toEqual(f);
+    for (const sort of ["year", "authors", "title"] as const) {
+      expect(parseView(toQuery({ filter, sort }))).toEqual({ filter, sort });
+    }
+    expect(parseView(toQuery({ filter: none, sort: "title" }))).toEqual({
+      filter: none,
+      sort: "title",
+    });
   });
-  it("omits empty filters", () => {
-    expect(toFilterParams(none)).toBe("");
-  });
-});
-
-describe("litUrl", () => {
-  it("uses the literature page with optional filters", () => {
-    expect(litUrl()).toBe(`${BASE}literature/`);
-    expect(litUrl({ ie: ["eol"] })).toBe(`${BASE}literature/?ie=eol`);
+  it("omits empty filters and the default sort", () => {
+    expect(toQuery({ filter: none, sort: "year" })).toBe("");
+    expect(toQuery({ filter: none, sort: "title" })).toBe("?sort=title");
+    expect(toQuery({ filter: { ...none, ie: ["eol"] }, sort: "authors" })).toBe(
+      "?ie=eol&sort=authors",
+    );
   });
 });
 

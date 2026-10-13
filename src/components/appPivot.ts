@@ -1,17 +1,14 @@
-import { IE_TAGS, ML_TAGS } from "../data/tags";
+import { TAGS } from "../data/tags";
 
 type App = { id: string; ie: string[]; ml: string[] };
 
 /** Curated vocabulary order (tags.ts declaration order), so every view — grouped
  * lists and grid axes alike — presents a dimension in the same sequence instead
  * of whichever order the data happens to introduce its tags in. */
-const ORDER: Record<"ie" | "ml", string[]> = {
-  ie: Object.keys(IE_TAGS),
-  ml: Object.keys(ML_TAGS),
+const byVocabulary = (dim: "ie" | "ml") => {
+  const order = Object.keys(TAGS[dim]);
+  return (a: string, b: string) => order.indexOf(a) - order.indexOf(b);
 };
-
-const byVocabulary = (dim: "ie" | "ml") => (a: string, b: string) =>
-  ORDER[dim].indexOf(a) - ORDER[dim].indexOf(b);
 
 /** Group applications by one tag dimension; multi-tagged entries appear in every group. */
 export function groupBy<T extends App>(entries: T[], dim: "ie" | "ml"): Map<string, T[]> {
