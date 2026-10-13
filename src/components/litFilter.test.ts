@@ -65,9 +65,9 @@ describe("parseView", () => {
 
 describe("sortEntries", () => {
   const es = [
-    { year: 2020, authors: "Zhao", title: "Bravo" },
-    { year: 2024, authors: "Adams", title: "Alpha" },
-    { year: 2020, authors: "Adams", title: "Charlie" },
+    { year: 2020, authors: ["Zhao, F."], title: "Bravo" },
+    { year: 2024, authors: ["Adams, B.", "Zhu, A."], title: "Alpha" },
+    { year: 2020, authors: ["Adams, A."], title: "Charlie" },
   ];
   it("year sorts newest first, then by author", () => {
     expect(sortEntries(es, "year").map((e) => e.title)).toEqual(["Alpha", "Charlie", "Bravo"]);

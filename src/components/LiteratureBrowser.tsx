@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { LitEntry } from "../data/schemas";
 import { DIM_LABELS, TAG_DIMS, TAGS, type TagDim, tagLabel } from "../data/tags";
+import { formatAuthors, isNew, paperLink } from "../lib/literature";
 import {
   DEFAULT_SORT,
   EMPTY_FILTER,
@@ -146,9 +147,11 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
         {shown.map((e) => (
           <li key={e.id} className="lit-entry">
             <span className="lit-meta">
-              {e.authors} · {e.year}
+              {formatAuthors(e)} · {e.year}
+              {/* After hydration only: "new" depends on today, not on the build date. */}
+              {hydrated && isNew(e.added) && <span className="lit-new">new</span>}
             </span>
-            <a href={e.link} className="lit-title">
+            <a href={paperLink(e).href} className="lit-title">
               {e.title}
             </a>
             <p className="lit-blurb">{e.blurb}</p>

@@ -8,17 +8,32 @@ const ieTag = z.enum(Object.keys(IE_TAGS) as [IeTag, ...IeTag[]]);
 const mlTag = z.enum(Object.keys(ML_TAGS) as [MlTag, ...MlTag[]]);
 const typeTag = z.enum(Object.keys(TYPE_TAGS) as [TypeTag, ...TypeTag[]]);
 
-export const literatureSchema = z.object({
-  title: z.string(),
-  authors: z.string(), // short form ("Sterkens, W., et al."); full list lives at the DOI
-  year: z.number().int().min(1950).max(2027),
-  link: z.url(), // DOI link preferred, arXiv otherwise
-  blurb: z.string().min(10).max(300), // one line: why read this
-  ie: z.array(ieTag).default([]), // empty = not IE-specific (e.g. ML landmarks)
-  ml: z.array(mlTag).default([]),
-  type: z.array(typeTag).min(1),
-  added: z.string().regex(/^\d{4}-\d{2}$/),
-});
+// Computed when the site builds, so a paper dated next year (online-first) passes.
+const MAX_YEAR = new Date().getFullYear() + 1;
+
+export const literatureSchema = z
+  .object({
+    title: z.string(),
+    // One "Surname, I." per author. A long list may stop early with etAl: true;
+    // the full list lives at the DOI.
+    authors: z.array(z.string().regex(/^[^,]+, \S/)).min(1),
+    etAl: z.boolean().default(false),
+    year: z.number().int().min(1950).max(MAX_YEAR),
+    doi: z
+      .string()
+      .regex(/^10\.\d{4,9}\/\S+$/)
+      .optional(), // bare id, no https://doi.org/
+    arxiv: z
+      .string()
+      .regex(/^\d{4}\.\d{4,5}$/)
+      .optional(), // bare id, no URL or version
+    blurb: z.string().min(10).max(300), // one line: why read this
+    ie: z.array(ieTag).default([]), // empty = not IE-specific (e.g. ML landmarks)
+    ml: z.array(mlTag).default([]),
+    type: z.array(typeTag).min(1),
+    added: z.string().regex(/^\d{4}-\d{2}$/), // YYYY-MM; drives the "new" marker
+  })
+  .refine((e) => e.doi || e.arxiv, { message: "set doi, arxiv or both" });
 
 export const applicationSchema = z.object({
   name: z.string(),
