@@ -41,10 +41,13 @@ export function parseView(search: string): View {
 
 /** Query string for a view ("" for the default view). The default sort is left
  * out to keep the common URL clean.
- * NOTE: plain string build, no URLSearchParams: tag slugs, sort keys and
- * citation keys are alphanumeric/kebab-case and never need percent-escaping. */
+ * NOTE: a plain string build, not URLSearchParams, so the commas between values
+ * stay readable. Each value is still escaped: a hand-made URL can carry a `#`
+ * or `&` that would otherwise turn into a fragment or a new key. */
 export function toQuery({ filter, sort }: View): string {
-  const parts = KEYS.filter((k) => filter[k].length > 0).map((k) => `${k}=${filter[k].join(",")}`);
+  const parts = KEYS.filter((k) => filter[k].length > 0).map(
+    (k) => `${k}=${filter[k].map(encodeURIComponent).join(",")}`,
+  );
   if (sort !== DEFAULT_SORT) parts.push(`sort=${sort}`);
   return parts.length > 0 ? `?${parts.join("&")}` : "";
 }

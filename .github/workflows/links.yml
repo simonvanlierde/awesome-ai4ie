@@ -20,6 +20,14 @@ jobs:
       issues: write
     steps:
       - uses: actions/checkout@v7
+      # The literature data holds bare DOIs and arXiv ids, not URLs, so list them
+      # as links for lychee.
+      - name: List the paper links
+        run: |
+          sed -nE 's#^ *doi: *"?([^"]+)"?.*$#https://doi.org/\1#p; s#^ *arxiv: *"?([^"]+)"?.*$#https://arxiv.org/abs/\1#p' \
+            src/data/literature.yaml > paper-links.txt
+          echo "$(wc -l < paper-links.txt) paper links"
+
       - id: lychee
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
@@ -38,7 +46,7 @@ jobs:
             --root-dir ${{ github.workspace }}
             --exclude '^file://'
             --max-retries 2 --timeout 30
-            'src/content/docs/**/*.md' 'src/content/docs/**/*.mdx' 'src/data/*.yaml'
+            'src/content/docs/**/*.md' 'src/content/docs/**/*.mdx' paper-links.txt
 
       - name: Find the open link-check issue
         if: steps.lychee.outputs.exit_code != 0

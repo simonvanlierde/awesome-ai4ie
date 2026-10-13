@@ -54,6 +54,10 @@ describe("parseView", () => {
       sort: "title",
     });
   });
+  it("escapes values, so a # or & in a hand-made URL stays a value", () => {
+    const filter = { ...none, ie: ["a#b", "c&d"] };
+    expect(parseView(toQuery({ filter, sort: "year" }))).toEqual({ filter, sort: "year" });
+  });
   it("omits empty filters and the default sort", () => {
     expect(toQuery({ filter: none, sort: "year" })).toBe("");
     expect(toQuery({ filter: none, sort: "title" })).toBe("?sort=title");
