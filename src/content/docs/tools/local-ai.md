@@ -4,8 +4,8 @@ description: Run models on hardware you control; local inference servers, memory
 ---
 
 Run open-weight models (Llama, Qwen, Gemma, Mistral, DeepSeek families) on hardware
-you control: the option that keeps NDA'd inventories and proprietary process data in
-the building. Software first, then what to run it on.
+you control. It's the option that keeps NDA'd inventories and proprietary process data in
+the building. This page covers the software first, then what to run it on.
 
 ## Local / self-hosted inference
 
@@ -20,9 +20,9 @@ Models to run with these live on the [datasets & models page](/tools/data-and-mo
 
 Where to run models, from a laptop to a shared GPU box. The constraint that matters
 is **memory** (GPU VRAM, or unified memory on Apple silicon): it sets which models
-fit at all. Rules of thumb below assume 4-bit quantized weights (the practical
-default for local use) and modest context; halve the model size for 8-bit,
-quarter it for full precision. *(checked 2026-07)*
+fit at all. The rules of thumb below assume 4-bit quantized weights (the practical
+default for local use) and a modest context length. For 8-bit, halve the model size.
+For full precision, quarter it. *(checked 2026-07)*
 
 | Memory | Runs (4-bit) | Typical hardware |
 |---|---|---|

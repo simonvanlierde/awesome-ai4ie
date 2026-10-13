@@ -32,12 +32,12 @@ Using ML, deep learning, or generative models to process or produce data you wil
 publish. Coding assistants have lowered the barrier to running a model much further
 than the barrier to noticing a broken one.
 
-- **Start with a baseline.** Report a simple model — linear regression will do —
+- **Start with a baseline.** Report a simple model, such as a linear regression,
   alongside any complex one. If the gap is small, the complex model needs a reason
   to exist, and sometimes the honest answer is that the question didn't need ML.
 - **Isolate the test set first.** Data leakage is the single most common
-  reproducibility failure in IE ML work, and normalization, gap-filling, or feature
-  selection performed before the split is the usual route in. Time-structured data
+  reproducibility failure in IE ML work. It usually gets in through normalization,
+  gap-filling, or feature selection done before the split. Time-structured data
   needs a time-aware split, not a random one. The
   [ML-reproducibility checklist](/best-practices/checklists/#machine-learning-reproducibility)
   is the full version; the
