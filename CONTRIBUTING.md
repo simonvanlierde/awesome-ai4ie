@@ -16,7 +16,7 @@ This started in the **AI4IE working group**, but it's a community resource and c
 ### Adding a paper or an application
 
 - Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR; a tag ships together with its first entry.
-- Literature entries need: `id` (citation key), `title`, `authors`, `year`, `link` (DOI preferred), a one-line `blurb` saying why it's worth reading, tags, and `added: YYYY-MM`.
+- Literature entries need: `id` (citation key), `title`, `authors` (a list with one `"Surname, I."` per author; add `etAl: true` when you stop before the last author), `year`, `doi` (the bare `10.…` id) or `arxiv` (the bare id, such as `2401.01234`) or both, a one-line `blurb` saying why it's worth reading, tags, and `added: YYYY-MM`. An entry gets a "new" marker in the list for about two months after the start of its `added` month.
 - Application entries need both tag dimensions (`ie:` and `ml:`), an honest one-line `maturity:`, and `papers:` referencing literature ids.
 - `npm run test` validates every field, tag, and cross-reference; CI runs it on your PR, so a typo can't break the site.
 
@@ -82,7 +82,7 @@ To add a **new section page**:
 
 Two options:
 
-- **External app** (anything that calls a hosted model; it needs a backend): host it (Hugging Face Space, an institute server, a small FastAPI app) and embed it with an `<iframe>` on the [demos page](src/content/docs/demos.mdx).
+- **External app** (anything that calls a hosted model; it needs a backend): host it (Hugging Face Space, an institute server, a small FastAPI app) and add it to the [demos page](src/content/docs/demos.mdx): a Hugging Face Space with [`SpaceEmbed`](src/components/SpaceEmbed.astro), which loads it only when the reader clicks, anything else with an `<iframe>` and a text link.
 - **In-page island** (client-side, no backend needed, including in-browser inference via transformers.js): copy [`src/components/ZeroShotDemo.tsx`](src/components/ZeroShotDemo.tsx), then use it in an `.mdx` page: `import YourDemo from '...'` and `<YourDemo client:visible />`.
 
 Link new demos from the matching `demo:` field in `src/data/applications.yaml`.
