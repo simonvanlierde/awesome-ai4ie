@@ -42,8 +42,16 @@ export default defineConfig({
       // Fails the build on broken internal links / missing heading anchors, and
       // on relative links — content must be root-absolute so `base` gets applied.
       plugins: [starlightLinksValidator()],
+      // The home cover (title beside Fig. 1) and the running head above each title.
+      components: {
+        Hero: "./src/components/overrides/Hero.astro",
+        PageTitle: "./src/components/overrides/PageTitle.astro",
+      },
       // Show each page's last-git-commit date: signals a living, maintained resource.
       lastUpdated: true,
+      // Wrap long lines: most blocks are prompts to copy, and a block that
+      // scrolls sideways must also be reachable by keyboard (axe).
+      expressiveCode: { defaultProps: { wrap: true } },
       favicon: "/favicon.svg",
       // Constructed "AI4IE" wordmark; Starlight swaps the two by theme. The mark
       // replaces the title text in the top bar (title still drives <title>/SEO).
@@ -83,11 +91,12 @@ export default defineConfig({
         baseUrl: `${repoUrl}/edit/main/`,
       },
       // Self-hosted variable fonts (no CDN: reproducible, offline-friendly,
-      // fits the federated/local-hosting ethos). Weight axis only, both themes.
+      // fits the federated/local-hosting ethos). Archivo loads its width axis too:
+      // titles, tables and tabs are set narrow.
       customCss: [
-        "@fontsource-variable/bricolage-grotesque/wght.css",
-        "@fontsource-variable/literata/wght.css",
-        "@fontsource-variable/literata/wght-italic.css",
+        "@fontsource-variable/archivo/wdth.css",
+        "@fontsource-variable/source-serif-4/opsz.css",
+        "@fontsource-variable/source-serif-4/opsz-italic.css",
         "@fontsource-variable/martian-mono/wght.css",
         "./src/styles/custom.css",
       ],
@@ -95,7 +104,7 @@ export default defineConfig({
       sidebar: [
         { label: "Home", link: "/" },
         {
-          label: "Map of AI applications in IE",
+          label: "Map of AI applications",
           items: [
             { label: "The map", slug: "applications-map" },
             { label: "Worked example: CV taxonomy", slug: "applications-map/cv-taxonomy" },

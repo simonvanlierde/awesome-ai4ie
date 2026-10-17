@@ -65,7 +65,9 @@
             "noUnusedVariables": "off",
             "noUnusedImports": "off",
             "noUnresolvedImports": "off",
-            "useImportExtensions": "off"
+            "useImportExtensions": "off",
+            // A Qwik rule: Biome applies it to Astro frontmatter, which is not Qwik.
+            "useQwikValidLexicalScope": "off"
           }
         }
       }

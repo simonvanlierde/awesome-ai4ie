@@ -44,7 +44,9 @@ export default function ApplicationsExplorer({ entries }: { entries: AppEntry[] 
         <div>
           {[...groupBy(entries, mode)].map(([tag, apps]) => (
             <section key={tag} className="apx-group">
-              <h3 className={`apx-group-label apx-${mode}`}>{tagLabel(mode, tag)}</h3>
+              <h3 className={`apx-group-label apx-${mode}${mode === "ie" ? ` field-${tag}` : ""}`}>
+                {tagLabel(mode, tag)}
+              </h3>
               <ul className="apx-list">
                 {apps.map((a) => (
                   <li key={a.id} className="apx-entry">
@@ -91,12 +93,15 @@ function Grid({ entries }: { entries: AppEntry[] }) {
 
   return (
     <div className="apx-grid-wrap">
-      <table className="apx-grid">
+      <p className="apx-grid-title" id="apx-grid-title">
+        <b>Table 1.1</b>Applications by AI technique and IE field
+      </p>
+      <table className="apx-grid" aria-labelledby="apx-grid-title">
         <thead>
           <tr>
             <th aria-label="AI technique by IE field" />
             {ies.map((ie) => (
-              <th key={ie} scope="col">
+              <th key={ie} scope="col" className={`field-${ie}`}>
                 <a href={litUrl({ ie: [ie] })}>{tagLabel("ie", ie)}</a>
               </th>
             ))}
@@ -110,13 +115,21 @@ function Grid({ entries }: { entries: AppEntry[] }) {
               </th>
               {ies.map((ie) => {
                 const apps = cells.get(`${ie}|${ml}`);
-                if (!apps) return <td key={ie} />;
+                if (!apps)
+                  return (
+                    <td key={ie} data-n="0">
+                      <span className="sr-only">
+                        No application yet: {tagLabel("ie", ie)} with {tagLabel("ml", ml)}
+                      </span>
+                    </td>
+                  );
                 const papers = [...new Set(apps.flatMap((a) => a.papers))];
                 const names = apps.map((a) => a.name).join(" · ");
                 // The visible text is only a count, so the accessible name carries the apps.
                 const name = `${apps.length} ${apps.length === 1 ? "application" : "applications"}: ${names}`;
+                // Shade steps at 1, 2 and 3+ applications.
                 return (
-                  <td key={ie}>
+                  <td key={ie} data-n={Math.min(apps.length, 3)}>
                     {papers.length > 0 ? (
                       <a href={litUrl({ papers })} title={names} aria-label={`Papers for ${name}`}>
                         {apps.length}
@@ -134,6 +147,10 @@ function Grid({ entries }: { entries: AppEntry[] }) {
           ))}
         </tbody>
       </table>
+      <p className="apx-grid-src">
+        Shade = number of applications; a dashed cell has none yet. Source:
+        src/data/applications.yaml.
+      </p>
     </div>
   );
 }

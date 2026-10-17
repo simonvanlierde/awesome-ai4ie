@@ -8,13 +8,9 @@ head:
     content: Awesome AI for Industrial Ecology
 template: splash
 hero:
-  tagline: Tools, practices, literature, and worked demos that help IE researchers use AI without getting burned by it.
-  image:
-    alt: The AI4IE pivot mark, a two-tone copper glyph reading as both 4 and Æ.
-    light: ../../assets/ai4ie-mark.svg
-    dark: ../../assets/ai4ie-mark-dark.svg
+  tagline: What AI can do for industrial ecology (IE) research today, the papers behind each claim, and how to try it without getting burned.
   actions:
-    - text: See what AI can do in IE
+    - text: Open the applications map
       # Frontmatter isn't markdown, so remarkBaseLinks can't prefix `base` here.
       # This is the one internal link that must carry it literally.
       link: /awesome-ai4ie/applications-map/
@@ -25,62 +21,33 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
-
-A community-curated guide to using AI in industrial ecology (IE). It started in the
-**AI4IE working group**, IE researchers scattered across institutes who meet on
-[Discord](https://discord.gg/zhHAZakXHX). Anyone can contribute.
+A community-curated guide, started in the **AI4IE working group**: IE researchers
+scattered across institutes who meet on [Discord](https://discord.gg/zhHAZakXHX).
+Anyone can contribute.
 
 :::note[A proposal: argue with it]
-This website is currently in the demo phase. If something looks wrong or your subfield is missing, [open a pull request](repo:blob/main/CONTRIBUTING.md).
+This website is in its demo phase. If something looks wrong or your subfield is missing, [open a pull request](repo:blob/main/CONTRIBUTING.md).
 :::
 
 ## How it fits together
 
-One tag vocabulary connects the whole site. For every application area you can
-follow the same three steps:
+One tag vocabulary connects the whole site, so every application area can be
+followed in the same three steps:
 
 1. **See what works today** on the [map of AI applications](/applications-map/), e.g. computer vision at end-of-life;
 2. **Read the evidence** in the [literature list](/literature/), pre-filtered to the same tags, e.g. [EoL × computer vision](/literature/?ie=eol&ml=cv);
 3. **Try it** on the [demos page](/demos/) where a demo exists, e.g. zero-shot recognition running in your browser.
 
-## Sections
-
-| # | Section | What's in it |
-| --- | --- | --- |
-| 1 | [Map of AI applications in IE](/applications-map/) | What works today, by IE field × AI technique, with a maturity call for each entry. |
-| 2 | [Literature & resources](/literature/) | A tag-filterable reading list: AI in IE, research practice, and ML landmarks. |
-| 3 | [Best practices & guides](/best-practices/) | Getting started, pitfalls, verification checklists, reusable prompts, Claude skills. |
-| 4 | [Tools & hardware](/tools/) | Models, apps, libraries, and what to run them on, including local options for sensitive data. |
-| 5 | [Demos](/demos/) | In-browser and embedded demos, each tied to a cell of the map. |
-
 ## Who this is for
 
-<CardGrid>
-  <Card title="LCA / MFA researcher" icon="magnifier">
-    Start with [what works in your field](/applications-map/#what-works-today-per-field),
-    then the [ML-reproducibility checklist](/best-practices/checklists/#machine-learning-reproducibility)
-    before your first model. *Contribute:* add your own examples of AI in your field.
-  </Card>
-  <Card title="Student" icon="open-book">
-    Start with [getting started](/best-practices/) and the
-    [ML landmarks](/literature/?type=landmark-ml) reading list.
-    *Contribute:* the pitfall you wish someone had warned you about.
-  </Card>
-  <Card title="Tool builder / RSE" icon="setting">
-    Start with [tools & hardware](/tools/) and the
-    [how-to-add-a-demo guide](/demos/#two-ways-to-add-a-demo).
-    *Contribute:* a demo of your method, embedded or in-browser.
-  </Card>
-  <Card title="Anyone else" icon="star">
-    The whole site is a proposal, not a finished product. *Contribute:* answers to the
-    `Wanted` items across the site, or a pull request for any other change or addition.
-  </Card>
-</CardGrid>
+- **An LCA or MFA researcher.** Start with [what works in your field](/applications-map/#what-works-today-per-field), then the [ML-reproducibility checklist](/best-practices/checklists/#machine-learning-reproducibility) before your first model. *Contribute:* examples of AI in your field.
+- **A student.** Start with [getting started](/best-practices/) and the [ML landmarks](/literature/?type=landmark-ml) reading list. *Contribute:* the pitfall you wish someone had warned you about.
+- **A research software engineer (RSE) or tool builder.** Start with [tools & hardware](/tools/) and the [how-to-add-a-demo guide](/demos/#two-ways-to-add-a-demo). *Contribute:* a demo of your method, embedded or in-browser.
+- **Anyone else.** Look for the <span class="wanted">Wanted</span> marks across the site. *Contribute:* a pull request for any change or addition.
 
 ## Contributing
 
 To add a paper, a tool, an application, or a demo, open a pull request. The data
-lives in two YAML files, and every page has an edit pencil. The
+lives in two YAML files, and every page has an edit link. The
 [contributing guide](repo:blob/main/CONTRIBUTING.md)
 explains the format and where each type of entry goes.

@@ -1,0 +1,438 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-17T00:00:00Z",
+  "title": "Design System: Awesome AI for Industrial Ecology",
+  "extensions": {
+    "colorMeta": {
+      "ink-cobalt": {
+        "role": "primary",
+        "displayName": "Cobalt (dark theme)",
+        "tonalRamp": [
+          "#00052c",
+          "#0f214a",
+          "#103493",
+          "#2d56b7",
+          "#4b77dc",
+          "#6a9aff",
+          "#8ec1ff",
+          "#d3efff"
+        ]
+      },
+      "ink-cobalt-light": {
+        "role": "primary",
+        "displayName": "Cobalt (light theme)",
+        "canonical": "oklch(43.5% 0.161 264.1)",
+        "tonalRamp": [
+          "#00052c",
+          "#0f214a",
+          "#103493",
+          "#2d56b7",
+          "#4b77dc",
+          "#6a9aff",
+          "#8ec1ff",
+          "#d3efff"
+        ]
+      },
+      "ink-vermilion": {
+        "role": "secondary",
+        "displayName": "Vermilion (dark theme)",
+        "tonalRamp": [
+          "#240000",
+          "#431005",
+          "#800000",
+          "#a62b0f",
+          "#cc4f35",
+          "#f27257",
+          "#ff997c",
+          "#ffdbcb"
+        ]
+      },
+      "ink-vermilion-light": {
+        "role": "secondary",
+        "displayName": "Vermilion (light theme)",
+        "canonical": "oklch(52.2% 0.164 33.6)",
+        "tonalRamp": [
+          "#240000",
+          "#431005",
+          "#800000",
+          "#a62b0f",
+          "#cc4f35",
+          "#f27257",
+          "#ff997c",
+          "#ffdbcb"
+        ]
+      },
+      "ink-olive": {
+        "role": "secondary",
+        "displayName": "Olive (dark theme)",
+        "tonalRamp": [
+          "#080e00",
+          "#202809",
+          "#384700",
+          "#55661a",
+          "#74863d",
+          "#95a85e",
+          "#bacf83",
+          "#e9f4cf"
+        ]
+      },
+      "ink-olive-light": {
+        "role": "secondary",
+        "displayName": "Olive (light theme)",
+        "canonical": "oklch(48.0% 0.101 121.4)",
+        "tonalRamp": [
+          "#080e00",
+          "#202809",
+          "#384700",
+          "#55661a",
+          "#74863d",
+          "#95a85e",
+          "#bacf83",
+          "#e9f4cf"
+        ]
+      },
+      "ink-ochre": {
+        "role": "secondary",
+        "displayName": "Ochre (dark theme)",
+        "tonalRamp": [
+          "#170700",
+          "#322002",
+          "#5d3600",
+          "#7e5400",
+          "#a0742b",
+          "#c3964f",
+          "#eabb75",
+          "#ffebc8"
+        ]
+      },
+      "ink-ochre-light": {
+        "role": "secondary",
+        "displayName": "Ochre (light theme)",
+        "canonical": "oklch(50.4% 0.104 76.9)",
+        "tonalRamp": [
+          "#170700",
+          "#322002",
+          "#5d3600",
+          "#7e5400",
+          "#a0742b",
+          "#c3964f",
+          "#eabb75",
+          "#ffebc8"
+        ]
+      },
+      "ink-plum": {
+        "role": "tertiary",
+        "displayName": "Plum (dark theme)",
+        "tonalRamp": [
+          "#180217",
+          "#331832",
+          "#60225e",
+          "#81427f",
+          "#a362a0",
+          "#c783c3",
+          "#efa8eb",
+          "#ffe1ff"
+        ]
+      },
+      "ink-plum-light": {
+        "role": "tertiary",
+        "displayName": "Plum (light theme)",
+        "canonical": "oklch(41.4% 0.119 328.7)",
+        "tonalRamp": [
+          "#180217",
+          "#331832",
+          "#60225e",
+          "#81427f",
+          "#a362a0",
+          "#c783c3",
+          "#efa8eb",
+          "#ffe1ff"
+        ]
+      },
+      "stock-dark": {
+        "role": "neutral",
+        "displayName": "Blue-black Stock",
+        "tonalRamp": [
+          "#121419",
+          "#22262c",
+          "#2c3038",
+          "#3a3f47",
+          "#5f656e",
+          "#969ca5",
+          "#bcc1c8",
+          "#f1f2f4"
+        ]
+      },
+      "black-ink-dark": {
+        "role": "neutral",
+        "displayName": "Ink on Dark",
+        "tonalRamp": [
+          "#121419",
+          "#22262c",
+          "#2c3038",
+          "#3a3f47",
+          "#5f656e",
+          "#969ca5",
+          "#bcc1c8",
+          "#f1f2f4"
+        ]
+      },
+      "stock-light": {
+        "role": "neutral",
+        "displayName": "Cool White Stock",
+        "tonalRamp": [
+          "#16181d",
+          "#24272d",
+          "#3a3e45",
+          "#5b616a",
+          "#8a9098",
+          "#c9cdd2",
+          "#eaecee",
+          "#f7f8f6"
+        ]
+      },
+      "black-ink-light": {
+        "role": "neutral",
+        "displayName": "Ink on Light",
+        "tonalRamp": [
+          "#16181d",
+          "#24272d",
+          "#3a3e45",
+          "#5b616a",
+          "#8a9098",
+          "#c9cdd2",
+          "#eaecee",
+          "#f7f8f6"
+        ]
+      },
+      "hairline-dark": {
+        "role": "neutral",
+        "displayName": "Hairline (dark)"
+      },
+      "hairline-light": {
+        "role": "neutral",
+        "displayName": "Hairline (light)"
+      },
+      "accent-low-dark": {
+        "role": "neutral",
+        "displayName": "Cobalt Wash (dark)"
+      },
+      "accent-low-light": {
+        "role": "neutral",
+        "displayName": "Cobalt Wash (light)"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The home cover title only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Every page title, under the running head."
+      },
+      "title": {
+        "displayName": "Section head",
+        "purpose": "h2, opened by a 1px ink rule above."
+      },
+      "subtitle": {
+        "displayName": "Subsection head",
+        "purpose": "h3."
+      },
+      "body": {
+        "displayName": "Reading text",
+        "purpose": "Markdown prose at a 68ch measure."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "The cover tagline, max 34ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Running heads, sidebar, chips, tags, buttons, table cells."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Figure and table captions and source lines."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "Code only."
+      }
+    },
+    "shadows": [
+      {
+        "name": "dropdown",
+        "value": "0 8px 24px rgb(0 0 0 / 0.18)",
+        "purpose": "The open literature facet panel only; everything else is flat."
+      }
+    ],
+    "motion": [
+      {
+        "name": "band-focus",
+        "value": "fill-opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Flow plate bands rising and receding on hover or focus."
+      },
+      {
+        "name": "caret",
+        "value": "transform 0.15s ease-out",
+        "purpose": "Facet trigger caret rotating on open."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition: none",
+        "purpose": "Both transitions are removed under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "40rem",
+        "purpose": "Below: running head drops its right part; flow labels enlarge."
+      },
+      {
+        "name": "chapter-strip",
+        "value": "50rem",
+        "purpose": "At and above: five-column chapter index; square embeds."
+      },
+      {
+        "name": "cover",
+        "value": "64rem",
+        "purpose": "At and above: two-column cover (5fr title, 7fr Fig. 1)."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one primary action on a page, filled with the accent ink.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Open the applications map</a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: var(--sl-color-text-accent, #8eaaff); color: var(--sl-color-black, #121419); font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-weight: 700; font-size: 1rem; text-decoration: none; border: none; border-radius: 0; } .ds-btn-primary:focus-visible { outline: 2px solid var(--sl-color-text-accent, #8eaaff); outline-offset: 2px; }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Toggleable tag filter; pressed flips to solid ink.",
+      "html": "<button class=\"ds-chip\" aria-pressed=\"false\">Computer vision</button><button class=\"ds-chip\" aria-pressed=\"true\">LCA</button>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; margin-right: 0.35rem; padding: 0.2rem 0.55rem; font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 0.8125rem; font-weight: 600; font-stretch: 88%; border: 1px solid var(--sl-color-gray-5, #3a3f47); background: transparent; color: var(--sl-color-gray-1, #dcdfe3); border-radius: 0; cursor: pointer; } .ds-chip[aria-pressed='true'] { background: var(--sl-color-white, #f1f2f4); border-color: var(--sl-color-white, #f1f2f4); color: var(--sl-color-black, #121419); } .ds-chip:hover { border-color: var(--sl-color-white, #f1f2f4); } .ds-chip:focus-visible { outline: 2px solid var(--sl-color-text-accent, #8eaaff); outline-offset: 2px; }"
+    },
+    {
+      "name": "Field Tag and Wanted Mark",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "Read-only tags; an IE field shows its ink as a swatch, and the dashed Wanted tag marks a gap.",
+      "html": "<span class=\"ds-tag ds-tag-ie\" style=\"--field: var(--ink-1, #8eaaff)\">LCA & footprinting</span> <span class=\"ds-tag ds-tag-type\">Review</span> <span class=\"ds-wanted\">Wanted</span>",
+      "css": ".ds-tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.1rem 0.45rem; font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 0.75rem; font-weight: 600; font-stretch: 88%; border: 1px solid var(--sl-color-hairline-light, #3a3f47); color: var(--sl-color-gray-2, #bcc1c8); } .ds-tag-ie::before { content: ''; width: 0.55rem; height: 0.55rem; background: var(--field); } .ds-tag-type { border-style: dashed; } .ds-wanted { display: inline-block; padding: 0 0.4rem; border: 1px dashed var(--sl-color-gray-3, #969ca5); font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 0.8125rem; font-weight: 650; font-stretch: 85%; line-height: 1.5; color: var(--sl-color-gray-2, #bcc1c8); }"
+    },
+    {
+      "name": "Select Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Square, stock-ground field with the global accent focus ring.",
+      "html": "<label class=\"ds-field\">Candidate labels<input value=\"phone, laptop, battery\"></label>",
+      "css": ".ds-field { display: block; font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 0.875rem; font-weight: 650; color: var(--sl-color-gray-1, #dcdfe3); } .ds-field input { display: block; width: 100%; margin-top: 0.3rem; padding: 0.5rem 0.6rem; border: 1px solid var(--sl-color-gray-4, #5f656e); background: var(--sl-color-black, #121419); color: var(--sl-color-white, #f1f2f4); font: inherit; font-weight: 400; font-size: 0.9375rem; border-radius: 0; } .ds-field input:focus-visible { outline: 2px solid var(--sl-color-text-accent, #8eaaff); outline-offset: 2px; }"
+    },
+    {
+      "name": "Running Head",
+      "kind": "nav",
+      "refersTo": "chapter-number",
+      "description": "Above every page title: chapter number block in the chapter ink, chapter title, site name, over a 2px ink rule.",
+      "html": "<p class=\"ds-running-head\" style=\"--chapter-ink: var(--ink-2, #ff8f70)\"><span><b class=\"ds-no\">2</b> Literature & resources</span><span>Awesome AI for Industrial Ecology</span></p>",
+      "css": ".ds-running-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.25rem 1rem; margin: 0; padding-bottom: 0.4rem; border-bottom: 2px solid var(--sl-color-white, #f1f2f4); font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 0.875rem; font-weight: 600; font-stretch: 85%; word-spacing: 0.1em; color: var(--sl-color-gray-3, #969ca5); } .ds-running-head > span:first-child { color: var(--sl-color-gray-2, #bcc1c8); } .ds-no { display: inline-grid; place-items: center; min-width: 1.5rem; height: 1.5rem; margin-right: 0.35rem; background: var(--chapter-ink); color: var(--on-ink, #121419); font-weight: 800; font-stretch: 75%; }"
+    },
+    {
+      "name": "Segmented Switch",
+      "kind": "nav",
+      "description": "The applications explorer's view toggle: an ink frame, pressed segment solid ink.",
+      "html": "<div class=\"ds-switch\"><button aria-pressed=\"true\">By IE field</button><button aria-pressed=\"false\">By AI technique</button><button aria-pressed=\"false\">Grid</button></div>",
+      "css": ".ds-switch { display: inline-flex; border: 1px solid var(--sl-color-white, #f1f2f4); } .ds-switch button { font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 0.875rem; font-weight: 650; padding: 0.4rem 0.9rem; border: none; background: transparent; color: var(--sl-color-gray-1, #dcdfe3); cursor: pointer; } .ds-switch button + button { border-left: 1px solid var(--sl-color-white, #f1f2f4); } .ds-switch button[aria-pressed='true'] { background: var(--sl-color-white, #f1f2f4); color: var(--sl-color-black, #121419); } .ds-switch button:focus-visible { outline: 2px solid var(--sl-color-text-accent, #8eaaff); outline-offset: 2px; }"
+    },
+    {
+      "name": "Count Grid (Table 1.1)",
+      "kind": "custom",
+      "description": "Numbered ruled table with cells shaded by count in one ink and dashed empty cells, plus a source line.",
+      "html": "<div class=\"ds-grid\"><p class=\"ds-grid-title\"><b>Table 1.1</b> Applications by AI technique and IE field</p><table><thead><tr><th></th><th>LCA</th><th>MFA</th></tr></thead><tbody><tr><th>Computer vision</th><td data-n=\"0\"></td><td data-n=\"2\"><a href=\"#\">2</a></td></tr><tr><th>LLMs & agents</th><td data-n=\"3\"><a href=\"#\">3</a></td><td data-n=\"1\"><a href=\"#\">1</a></td></tr></tbody></table><p class=\"ds-grid-src\">Shade = number of applications; a dashed cell has none yet. Source: src/data/applications.yaml.</p></div>",
+      "css": ".ds-grid { font-family: var(--sl-font, 'Archivo Variable', sans-serif); color: var(--sl-color-white, #f1f2f4); } .ds-grid-title { margin: 0 0 0.4rem; font-size: 0.875rem; font-weight: 700; } .ds-grid-title b { margin-right: 0.5rem; } .ds-grid table { border-collapse: collapse; font-variant-numeric: tabular-nums; border-top: 2px solid var(--sl-color-white, #f1f2f4); border-bottom: 1px solid var(--sl-color-white, #f1f2f4); } .ds-grid th, .ds-grid td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--sl-color-hairline, #2c3038); text-align: center; font-size: 0.875rem; } .ds-grid thead th { font-weight: 700; font-stretch: 82%; border-bottom-color: var(--sl-color-white, #f1f2f4); } .ds-grid tbody th { text-align: left; font-weight: 650; } .ds-grid td > a { display: inline-grid; place-items: center; min-width: 2.75rem; height: 1.75rem; font-weight: 750; text-decoration: none; color: var(--sl-color-white, #f1f2f4); } .ds-grid td[data-n='1'] > a { background: color-mix(in srgb, var(--ink-1, #8eaaff) 22%, transparent); } .ds-grid td[data-n='2'] > a { background: color-mix(in srgb, var(--ink-1, #8eaaff) 45%, transparent); } .ds-grid td[data-n='3'] > a { background: var(--ink-1, #8eaaff); color: var(--on-ink, #121419); } .ds-grid td[data-n='0']::before { content: ''; display: inline-block; width: 2.75rem; height: 1.75rem; border: 1px dashed var(--sl-color-gray-4, #5f656e); vertical-align: middle; } .ds-grid td a:hover, .ds-grid td a:focus-visible { outline: 2px solid var(--sl-color-white, #f1f2f4); } .ds-grid-src { margin: 0.5rem 0 0; font-size: 0.8125rem; color: var(--sl-color-gray-3, #969ca5); }"
+    },
+    {
+      "name": "Flow Plate (Fig. 1)",
+      "kind": "custom",
+      "description": "Signature Sankey: IE field to AI technique, bands in field inks, each a link; hover lifts one band and recedes the rest.",
+      "html": "<figure class=\"ds-flow\"><svg viewBox=\"0 0 420 160\"><g class=\"ds-bands\"><a href=\"#\"><path class=\"ds-band\" style=\"--field: var(--ink-1, #8eaaff)\" d=\"M108 10C200 10 200 20 292 20V70C200 70 200 60 108 60Z\"/></a><a href=\"#\"><path class=\"ds-band\" style=\"--field: var(--ink-2, #ff8f70)\" d=\"M108 70C200 70 200 80 292 80V150C200 150 200 140 108 140Z\"/></a></g><rect x=\"100\" y=\"10\" width=\"8\" height=\"50\" fill=\"var(--ink-1, #8eaaff)\"/><rect x=\"100\" y=\"70\" width=\"8\" height=\"70\" fill=\"var(--ink-2, #ff8f70)\"/><rect x=\"292\" y=\"20\" width=\"8\" height=\"130\" fill=\"var(--sl-color-white, #f1f2f4)\"/><text x=\"90\" y=\"35\" text-anchor=\"end\" dominant-baseline=\"middle\">LCA <tspan class=\"ds-n\">18</tspan></text><text x=\"90\" y=\"105\" text-anchor=\"end\" dominant-baseline=\"middle\">Waste &amp; EoL <tspan class=\"ds-n\">21</tspan></text><text x=\"310\" y=\"85\" dominant-baseline=\"middle\">Computer vision <tspan class=\"ds-n\">18</tspan></text></svg><figcaption><span><b>Fig. 1</b> What the AI-in-IE papers apply, from IE field to AI technique.</span><span class=\"ds-src\">Source: src/data/literature.yaml</span></figcaption></figure>",
+      "css": ".ds-flow { margin: 0; } .ds-flow svg { display: block; width: 100%; height: auto; overflow: visible; } .ds-flow text { font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 13px; font-weight: 650; font-stretch: 82%; word-spacing: 0.1em; fill: var(--sl-color-white, #f1f2f4); } .ds-flow .ds-n { font-weight: 500; fill: var(--sl-color-gray-3, #969ca5); } .ds-band { fill: var(--field); fill-opacity: var(--band-opacity, 0.55); transition: fill-opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1); } .ds-bands:has(a:is(:hover, :focus-visible)) .ds-band { fill-opacity: 0.12; } .ds-bands a:is(:hover, :focus-visible) .ds-band { fill-opacity: 0.9; } .ds-flow a:focus-visible { outline: none; } .ds-flow a:focus-visible .ds-band { stroke: var(--sl-color-white, #f1f2f4); stroke-width: 2; } .ds-flow figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25rem 1.5rem; margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid var(--sl-color-hairline, #2c3038); font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 0.8125rem; line-height: 1.45; color: var(--sl-color-gray-2, #bcc1c8); } .ds-flow figcaption b { color: var(--sl-color-white, #f1f2f4); margin-right: 0.25rem; } .ds-src { color: var(--sl-color-gray-3, #969ca5); } @media (prefers-reduced-motion: reduce) { .ds-band { transition: none; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Field Yearbook",
+    "overview": "The site is set like a statistical yearbook for industrial ecology. Each chapter has a number and a printing ink. A running head sits above every page title. Claims appear as numbered tables and figures, each with a source line. The cover figure is a material-flow (Sankey) plate, the field's own graphic: it shows the literature flowing from IE field to AI technique, and every band links to the filtered papers.\n\nThe page is paper and ink. Dark is the default theme, a blue-black stock with near-white ink. Light is a cool white stock with near-black ink. Five printing inks (cobalt, vermilion, olive, ochre, plum) carry all colour, and each ink has two jobs: it marks a chapter, and four of them also mark an IE field. Everything else is grey. Corners are square, depth comes from rules rather than shadows, and type is narrow Archivo for anything that labels or structures and Source Serif 4 for anything to be read.\n\nDensity is that of a reference work: tight ruled tables, compact chips, reading text at a 68ch measure. The docs-site hero with a button pair and a card grid is rejected. The cover leads with the title, a lede, one primary action, and Fig. 1.",
+    "keyCharacteristics": [
+      "Numbered chapters, each with its own ink, repeated on sidebar tabs, running heads and the home chapter index.",
+      "Numbered figures and tables with a caption and a \"Source:\" line naming the data file.",
+      "Square corners everywhere, including Starlight's own controls.",
+      "Hairline and ink rules for structure; no cards, no drop shadows at rest.",
+      "Narrow sans for structure, serif for reading, mono only for code."
+    ],
+    "rules": [
+      {
+        "name": "The Two Jobs Rule",
+        "body": "An ink means a chapter or an IE field, and the pairing is fixed: cobalt = 1 Map = LCA, vermilion = 2 Literature = EoL, olive = 3 Practice = MFA, ochre = 4 Tools = urban mining, plum = 5 Demos. Never use an ink for decoration, and never give a new field or chapter an ink already taken by a different meaning.",
+        "section": "colors"
+      },
+      {
+        "name": "The Swatch Not Fill Rule",
+        "body": "Outside the cover plate, an IE field shows its ink as a small square swatch (0.55 to 0.75rem) beside its label, never as a filled chip or coloured text.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Hue Count Rule",
+        "body": "Count shading on a grid uses one ink at stepped strength (22%, 45%, solid). An empty cell is a dashed outline, not a pale fill.",
+        "section": "colors"
+      },
+      {
+        "name": "The Narrow For Structure Rule",
+        "body": "Anything that names, numbers or navigates is Archivo set narrow (font-stretch 72 to 90%). Anything a reader reads through is Source Serif 4. Interactive islands (.not-content) set their own text in Archivo.",
+        "section": "typography"
+      },
+      {
+        "name": "The Open Space Rule",
+        "body": "Narrow widths shrink the space glyph, so narrow headings, running heads, chapter titles, sidebar labels and figure text take word-spacing: 0.1em.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Figures Rule",
+        "body": "Tables, counts, meta lines and scores use font-variant-numeric: tabular-nums.",
+        "section": "typography"
+      },
+      {
+        "name": "The Ruled Not Raised Rule",
+        "body": "Surfaces sit flat on the stock and are separated by rules. A shadow is allowed only on a panel that floats over other content.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Dashes Carry Meaning Rule",
+        "body": "A dashed outline marks a gap (the \"Wanted\" tag, an empty map cell) or sets the content-type tag apart from topic tags. Don't use dashes as decoration.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do number every figure and table (\"Fig. 1\", \"Table 1.1\") and give it a caption and a \"Source:\" line naming the data file.",
+      "Do take colour only from the five inks and the grey ramp, following the Two Jobs Rule.",
+      "Do keep every corner square (0px), including on Starlight components you restyle.",
+      "Do separate content with rules and hairlines; use the 2px ink rule for heads and table tops.",
+      "Do set structure in narrow Archivo and reading text in Source Serif 4 at a 68ch measure.",
+      "Do mark gaps with the dashed \"Wanted\" tag or a dashed empty cell.",
+      "Do check every new ink use against 4.5:1 on its theme's ground, in both themes."
+    ],
+    "donts": [
+      "Don't build a docs-site hero with a button pair and a card grid.",
+      "Don't round corners or add drop shadows to surfaces at rest; the facet panel is the one floating exception.",
+      "Don't use an ink for decoration, or reuse an ink for a meaning other than its chapter and field.",
+      "Don't fill an IE-field chip or set field-coloured text; use the square swatch.",
+      "Don't use mono outside code.",
+      "Don't use dashed borders as decoration; they mean a gap or a content type."
+    ]
+  }
+}

@@ -2,8 +2,8 @@
 
 A community-curated resource for using AI in industrial ecology (IE) research. It started in the AI4IE working group, and [anyone can contribute](CONTRIBUTING.md).
 
-[![Live site](https://img.shields.io/badge/live_site-ai4ie-c2410c)](https://simonvanlierde.github.io/awesome-ai4ie/)
-[![Contributing](https://img.shields.io/badge/contributing-guide-0f766e)](CONTRIBUTING.md)
+[![Live site](https://img.shields.io/badge/live_site-ai4ie-2148a8)](https://simonvanlierde.github.io/awesome-ai4ie/)
+[![Contributing](https://img.shields.io/badge/contributing-guide-55661a)](CONTRIBUTING.md)
 [![Discord](https://img.shields.io/badge/chat-Discord-5865F2?logo=discord&logoColor=white)](https://discord.gg/zhHAZakXHX)
 [![CI](https://img.shields.io/github/actions/workflow/status/simonvanlierde/awesome-ai4ie/ci.yml?label=CI)](https://github.com/simonvanlierde/awesome-ai4ie/actions)
 [![Coverage](https://img.shields.io/codecov/c/github/simonvanlierde/awesome-ai4ie)](https://codecov.io/gh/simonvanlierde/awesome-ai4ie)

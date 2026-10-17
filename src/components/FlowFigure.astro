@@ -1,0 +1,85 @@
+---
+import { getCollection } from "astro:content";
+import { tagLabel } from "../data/tags";
+import { sankeyLayout } from "../lib/sankey";
+import { litUrl } from "../lib/urls";
+
+// Short names: the figure's labels must fit beside the nodes at phone width.
+const SHORT: Record<string, string> = {
+  "urban-mining": "Urban mining",
+  eol: "Waste & EoL",
+  llm: "LLMs",
+  "nlp-extraction": "NLP extraction",
+  cv: "Computer vision",
+  segmentation: "Segmentation",
+  depth: "Depth & 3D",
+  "remote-sensing": "Remote sensing",
+  "tabular-ml": "Tabular ML",
+  generative: "Generative",
+  foundation: "Foundation models",
+  "anomaly-detection": "Anomaly detection",
+};
+const short = (tag: string) => SHORT[tag] ?? tag.toUpperCase();
+
+// viewBox geometry, in user units: label column, flow, label column.
+const H = 420;
+const GAP = 18;
+const X0 = 200;
+const X1 = 490;
+const NODE = 8;
+const W = X1 + NODE + 250;
+
+const entries = (await getCollection("literature")).map((e) => e.data);
+const { ieNodes, mlNodes, bands, total } = sankeyLayout(entries, H, GAP);
+const papers = entries.filter((e) => (e.ie?.length ?? 0) > 0 && (e.ml?.length ?? 0) > 0).length;
+const mid = (X0 + NODE + X1) / 2;
+const band = (b: (typeof bands)[number]) =>
+  `M${X0 + NODE} ${b.y0}C${mid} ${b.y0} ${mid} ${b.y1} ${X1} ${b.y1}` +
+  `V${b.y1 + b.h}C${mid} ${b.y1 + b.h} ${mid} ${b.y0 + b.h} ${X0 + NODE} ${b.y0 + b.h}Z`;
+---
+
+<figure class="flow not-content">
+  <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-labelledby="flow-cap">
+    <g class="flow-bands">
+      {
+        bands.map((b) => (
+          <a
+            href={litUrl({ ie: [b.ie], ml: [b.ml] })}
+            aria-label={`${tagLabel("ie", b.ie)} with ${tagLabel("ml", b.ml)}: ${b.count} ${b.count === 1 ? "paper" : "papers"}`}
+          >
+            <path class={`band field-${b.ie}`} d={band(b)}>
+              <title>{`${short(b.ie)} → ${short(b.ml)}: ${b.count}`}</title>
+            </path>
+          </a>
+        ))
+      }
+    </g>
+    {
+      ieNodes.map((n) => (
+        <a href={litUrl({ ie: [n.tag] })} class="flow-node" aria-label={`${tagLabel("ie", n.tag)}: all papers`}>
+          <rect class={`node field-${n.tag}`} x={X0} y={n.y} width={NODE} height={n.h} />
+          <text x={X0 - 10} y={n.y + n.h / 2} text-anchor="end" dominant-baseline="middle">
+            {`${short(n.tag)} `}
+            <tspan class="flow-n">{n.count}</tspan>
+          </text>
+        </a>
+      ))
+    }
+    {
+      mlNodes.map((n) => (
+        <a href={litUrl({ ml: [n.tag] })} class="flow-node" aria-label={`${tagLabel("ml", n.tag)}: all papers`}>
+          <rect class="node" x={X1} y={n.y} width={NODE} height={n.h} />
+          <text x={X1 + NODE + 10} y={n.y + n.h / 2} dominant-baseline="middle">
+            {`${short(n.tag)} `}
+            <tspan class="flow-n">{n.count}</tspan>
+          </text>
+        </a>
+      ))
+    }
+  </svg>
+  <figcaption id="flow-cap">
+    <span><b>Fig. 1</b> What the {papers} AI-in-IE papers apply, from IE field to AI technique. Band
+      width counts field-technique pairings ({total}); follow a band to read its papers.</span>
+    <span class="flow-src">Source: src/data/literature.yaml</span>
+  </figcaption>
+</figure>
