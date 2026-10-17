@@ -571,6 +571,101 @@ starlight-menu-button button {
   text-underline-offset: 0.2em;
 }
 
+/* Fig. 2: the see → read → try path, three steps joined by a ruled arrow. */
+.path {
+  margin: 1.5rem 0 0;
+}
+.path ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.25rem;
+}
+@media (min-width: 40rem) {
+  .path ol {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem;
+  }
+}
+.path li {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  padding-top: 0.6rem;
+  border-top: 3px solid var(--chapter-ink);
+}
+/* The arrow to the next step sits in the gap, on the top rule. */
+@media (min-width: 40rem) {
+  .path li + li::before {
+    content: "";
+    position: absolute;
+    top: -0.55rem;
+    left: -2.1rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    border: solid var(--sl-color-gray-3);
+    border-width: 2px 2px 0 0;
+    transform: rotate(45deg);
+  }
+}
+.path-step {
+  font-family: var(--sl-font);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-stretch: 85%;
+  color: var(--sl-color-gray-3);
+}
+.path a {
+  display: grid;
+  gap: 0.4rem;
+  color: var(--sl-color-white);
+  text-decoration: none;
+}
+.path-verb {
+  font-family: var(--sl-font);
+  font-size: 1.375rem;
+  font-weight: 760;
+  font-stretch: 80%;
+  line-height: 1.1;
+  word-spacing: 0.1em;
+}
+.path a:hover .path-verb {
+  text-decoration: underline;
+  text-decoration-color: var(--chapter-ink);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+.path-where {
+  display: flex;
+  align-items: center;
+  font-family: var(--sl-font);
+  font-size: 0.9375rem;
+  font-weight: 650;
+  font-stretch: 88%;
+  color: var(--sl-color-gray-1);
+}
+.path-fact {
+  font-family: var(--font-read);
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--sl-color-gray-2);
+}
+.path figcaption {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--sl-color-hairline);
+  font-family: var(--sl-font);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--sl-color-gray-2);
+}
+.path figcaption b {
+  margin-right: 0.25rem;
+  color: var(--sl-color-white);
+}
+
 /* ── Tags, shared by both islands (TagChips) ─────────────────────────────── */
 .lit-tag {
   display: inline-flex;

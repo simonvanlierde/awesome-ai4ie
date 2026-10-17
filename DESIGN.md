@@ -287,6 +287,10 @@ The signature component. A build-time Sankey of vetted papers, IE field nodes on
 
 The second system. A ruled table (2px ink top, 1px ink bottom, hairline rows) titled "Table N.N" in bold. Column heads carry the field swatch. Cells hold a 2.75rem by 1.75rem block shaded by count in cobalt (22%, 45%, solid with on-ink text); an empty cell is a dashed gray-4 outline. A source line in gray-3 sits below. Markdown tables in content follow the same ruling.
 
+#### Path figure (Fig. 2)
+
+On the home page, three steps (see, read, try) worked for one map cell, with counts read from the data at build time. Each step is topped by a 3px rule in the ink of the chapter it links to (1, 2, 5), with a gray-3 "Step N", an Archivo 760 verb at width 80%, the chapter's number block and name, and a serif fact in gray-2. A gray-3 chevron in the gap joins the steps on desktop; on phones they stack. Caption as Fig. 1.
+
 #### Chapter index
 
 On the home cover, five columns, each topped by a 3px rule in its chapter ink, with the number block, an Archivo 750 title and a serif gist in gray-2. Hover underlines the title in the chapter ink.

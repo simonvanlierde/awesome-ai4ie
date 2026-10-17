@@ -1,0 +1,61 @@
+---
+// Fig. 2 on the home page: the see → read → try path, worked for one cell of
+// the map (waste & EoL × computer vision). Counts come from the data, so the
+// figure stays true as entries are added.
+import { getCollection } from "astro:content";
+import { litUrl, siteUrl } from "../lib/urls";
+
+const has = (e: { ie?: readonly string[]; ml?: readonly string[] }) =>
+  (e.ie ?? []).includes("eol") && (e.ml ?? []).includes("cv");
+const apps = (await getCollection("applications")).filter((e) => has(e.data)).length;
+const papers = (await getCollection("literature")).filter((e) => has(e.data)).length;
+
+const steps = [
+  {
+    n: 1,
+    verb: "See what works today",
+    where: "Map of AI applications",
+    href: siteUrl("applications-map/#what-works-today-per-field"),
+    fact: `${apps} computer-vision applications at end-of-life, each with a maturity call`,
+  },
+  {
+    n: 2,
+    verb: "Read the evidence",
+    where: "Literature, pre-filtered",
+    href: litUrl({ ie: ["eol"], ml: ["cv"] }),
+    fact: `${papers} papers tagged waste & EoL × computer vision`,
+  },
+  {
+    n: 5,
+    verb: "Try it",
+    where: "Demos",
+    href: siteUrl("demos/"),
+    fact: "Zero-shot recognition of your own photo, in this browser tab",
+  },
+];
+---
+
+<figure class="path not-content">
+  <ol>
+    {
+      steps.map((s, i) => (
+        <li style={`--chapter-ink: var(--ink-${s.n})`}>
+          <span class="path-step">Step {i + 1}</span>
+          <a href={s.href}>
+            <span class="path-verb">{s.verb}</span>
+            <span class="path-where">
+              <b class="running-no">{s.n}</b>
+              {s.where}
+            </span>
+          </a>
+          <span class="path-fact">{s.fact}</span>
+        </li>
+      ))
+    }
+  </ol>
+  <figcaption>
+    <span><b>Fig. 2</b> One path through the site, worked for waste &amp; EoL × computer vision.
+      Every field and technique follows the same three steps, because one tag vocabulary links
+      the map, the literature and the demos.</span>
+  </figcaption>
+</figure>

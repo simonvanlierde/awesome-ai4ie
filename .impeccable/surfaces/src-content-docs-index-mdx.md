@@ -35,4 +35,4 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
 - Home: Starlight's splash template has no sidebar, and the author chose to keep Starlight. The cover's numbered chapter strip stands in for the thumb index there.
 - Phone: Fig. 1 keeps every node with enlarged labels rather than a reduced plate, so the phone shows the same evidence as the desktop. Revisit if the technique count grows past about eight.
-- "How it fits together" stays a numbered list, not a figure: three linked steps, and a figure would only restyle them.
+- "How it fits together" is Fig. 2, a numbered three-step figure worked for waste & EoL × computer vision, with counts from the data (author decision, 2026-10-17).
