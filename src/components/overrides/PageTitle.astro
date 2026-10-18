@@ -1,0 +1,19 @@
+---
+// Page title with a running head naming the chapter, in the chapter's ink.
+import { chapterOf } from "../../lib/chapters";
+
+const { id, data } = Astro.locals.starlightRoute.entry;
+const chapter = chapterOf(id);
+---
+
+{
+  chapter && (
+    <p class="running-head" style={`--chapter-ink: var(--ink-${chapter.n})`}>
+      <span>
+        <b class="running-no">{chapter.n}</b> {chapter.title}
+      </span>
+      <span>Awesome AI for Industrial Ecology</span>
+    </p>
+  )
+}
+<h1 id="_top">{data.title}</h1>

@@ -55,7 +55,7 @@ export function toQuery({ filter, sort }: View): string {
 type Sortable = { year: number; authors: readonly string[]; title: string };
 
 const byAuthor = (a: Sortable, b: Sortable) =>
-  surname(a.authors[0]).localeCompare(surname(b.authors[0]));
+  surname(a.authors[0]).localeCompare(surname(b.authors[0]), "en");
 
 /** Return a sorted copy: year descending, first author's surname and title
  * ascending, each with a secondary key so ties order deterministically. */
@@ -63,7 +63,7 @@ export function sortEntries<T extends Sortable>(entries: T[], key: SortKey): T[]
   const cmp: Record<SortKey, (a: Sortable, b: Sortable) => number> = {
     year: (a, b) => b.year - a.year || byAuthor(a, b),
     authors: (a, b) => byAuthor(a, b) || b.year - a.year,
-    title: (a, b) => a.title.localeCompare(b.title) || b.year - a.year,
+    title: (a, b) => a.title.localeCompare(b.title, "en") || b.year - a.year,
   };
   return [...entries].sort(cmp[key]);
 }

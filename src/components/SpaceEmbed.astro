@@ -19,7 +19,7 @@ const { title, description, href, src } = Astro.props;
   <p class="space-embed-title">{title}</p>
   <p>{description}</p>
   <p><a href={href}>Open the Space on huggingface.co</a></p>
-  <button type="button" class="space-embed-load" hidden>Load {title} (runs on huggingface.co)</button>
+  <button type="button" class="space-embed-load" hidden>Load {title} (runs on huggingface.co, which loads further scripts)</button>
 </space-embed>
 
 <script>
@@ -32,6 +32,7 @@ const { title, description, href, src } = Astro.props;
         const iframe = document.createElement("iframe");
         iframe.src = this.dataset.src ?? "";
         iframe.title = this.dataset.title ?? "";
+        iframe.referrerPolicy = "no-referrer";
         button.replaceWith(iframe);
         iframe.focus();
       });

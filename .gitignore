@@ -9,3 +9,6 @@ node_modules/
 # misc
 .DS_Store
 npm-debug.log*
+# design-tool scratch (decision mockups, review captures)
+.impeccable/mocks/
+.impeccable/review/

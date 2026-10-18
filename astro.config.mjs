@@ -5,6 +5,7 @@ import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { defineConfig } from "astro/config";
 import starlightLinksValidator from "starlight-links-validator";
+import { rehypeFocusableTables } from "./src/plugins/rehype-focusable-tables.mjs";
 import { rehypeTaskListLabels } from "./src/plugins/rehype-task-list-labels.mjs";
 import { remarkBaseLinks } from "./src/plugins/remark-base-links.mjs";
 
@@ -22,13 +23,14 @@ export default defineConfig({
 
   // Content writes internal links root-absolute (`/tools/`); remarkBaseLinks adds
   // `base` and turns `repo:blob/main/...` links into GitHub URLs.
-  // rehypeTaskListLabels names task-list checkboxes for screen readers.
+  // rehypeTaskListLabels names task-list checkboxes for screen readers;
+  // rehypeFocusableTables lets keyboard users scroll a wide table.
   // Both are remark/rehype plugins, so they need the unified processor rather than
   // Astro's default (Sätteri).
   markdown: {
     processor: unified({
       remarkPlugins: [[remarkBaseLinks, { base, repoUrl }]],
-      rehypePlugins: [rehypeTaskListLabels],
+      rehypePlugins: [rehypeTaskListLabels, rehypeFocusableTables],
     }),
   },
 
@@ -42,8 +44,21 @@ export default defineConfig({
       // Fails the build on broken internal links / missing heading anchors, and
       // on relative links — content must be root-absolute so `base` gets applied.
       plugins: [starlightLinksValidator()],
+      // The home cover (title beside Fig. 1) and the running head above each title.
+      components: {
+        Head: "./src/components/overrides/Head.astro",
+        Hero: "./src/components/overrides/Hero.astro",
+        PageTitle: "./src/components/overrides/PageTitle.astro",
+      },
       // Show each page's last-git-commit date: signals a living, maintained resource.
       lastUpdated: true,
+      // Wrap long lines: most blocks are prompts to copy, and a block that
+      // scrolls sideways must also be reachable by keyboard (axe).
+      expressiveCode: {
+        defaultProps: { wrap: true },
+        // Martian Mono runs wide, so the default size lands under 12px.
+        styleOverrides: { codeFontSize: "0.8125rem" },
+      },
       favicon: "/favicon.svg",
       // Constructed "AI4IE" wordmark; Starlight swaps the two by theme. The mark
       // replaces the title text in the top bar (title still drives <title>/SEO).
@@ -83,19 +98,22 @@ export default defineConfig({
         baseUrl: `${repoUrl}/edit/main/`,
       },
       // Self-hosted variable fonts (no CDN: reproducible, offline-friendly,
-      // fits the federated/local-hosting ethos). Weight axis only, both themes.
+      // fits the federated/local-hosting ethos). Archivo loads its width axis too:
+      // titles, tables and tabs are set narrow. The serif stays weight-only.
       customCss: [
-        "@fontsource-variable/bricolage-grotesque/wght.css",
-        "@fontsource-variable/literata/wght.css",
-        "@fontsource-variable/literata/wght-italic.css",
+        "@fontsource-variable/archivo/wdth.css",
+        "@fontsource-variable/source-serif-4/wght.css",
+        "@fontsource-variable/source-serif-4/wght-italic.css",
         "@fontsource-variable/martian-mono/wght.css",
         "./src/styles/custom.css",
       ],
       // Sidebar order + labels. Add new pages here (slug = filename without .md).
+      // A new top-level entry is a new chapter: it also needs an entry in
+      // src/lib/chapters.ts and an ink in custom.css (chapters.test.ts checks both).
       sidebar: [
         { label: "Home", link: "/" },
         {
-          label: "Map of AI applications in IE",
+          label: "Map of AI applications",
           items: [
             { label: "The map", slug: "applications-map" },
             { label: "Worked example: CV taxonomy", slug: "applications-map/cv-taxonomy" },

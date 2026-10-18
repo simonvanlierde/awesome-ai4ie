@@ -1,136 +1,347 @@
 /* ============================================================================
-   AI4IE design system : "copper and its patina"
+   AI4IE design system: a yearbook with a flow plate on its cover
    ----------------------------------------------------------------------------
-   The two brand colours are the SAME metal at two stages of its life: fresh
-   copper and the verdigris patina it oxidises into. That is the palette's whole
-   reason to exist; a material-flow story (stocks, flows, lifecycle) rendered in
-   two hex values, which is about as industrial-ecology as a colour scheme gets.
+   The frame is a statistical yearbook: numbered chapters on coloured thumb-index
+   tabs, a running head above each title, ruled tables with source lines. The
+   cover figure is a material-flow (Sankey) plate, the field's own graphic.
 
-   Type is a "scientific field-manual" system, all self-hosted (no CDN):
-     · Bricolage Grotesque : display / UI / headings (industrial grotesque)
-     · Literata            : prose body (a research-journal screen serif)
-     · Martian Mono        : labels, table headers, code (the technical voice)
+   Five printing inks do two jobs. Each chapter has one (tabs, running heads,
+   the home index), and each IE field has one (flow bands, field tags):
+     ink-1 cobalt    chapter 1 Map          field LCA
+     ink-2 vermilion chapter 2 Literature   field waste, EoL & circularity
+     ink-3 olive     chapter 3 Practice     field MFA
+     ink-4 ochre     chapter 4 Tools        field urban mining
+     ink-5 plum      chapter 5 Demos
+   Every ink passes 4.5:1 as text on its own theme's ground.
+
+   Type, all self-hosted:
+     · Archivo (narrow widths) : titles, tables, tabs, labels, UI
+     · Source Serif 4          : reading text
+     · Martian Mono            : code only
    ============================================================================ */
 
+/* ── Tokens: dark (Starlight's default root) ─────────────────────────────── */
 :root {
-  /* Material palette: the fixed points every accent derives from */
-  --copper: #b5541e; /* fresh metal: the anchor (a real MFA case-study element) */
-  --copper-bright: #e8996f; /* AA-safe copper for text/links on dark surfaces */
-  --copper-deep: #a84d1b; /* AA-safe copper for text on light tints (inline code) */
-  --patina: #2a7d74; /* verdigris: what the copper becomes */
-  --patina-deep: #22665f; /* AA-safe patina for text on light tints (note asides) */
-  --patina-bright: #5bb3a8; /* AA-safe patina for dark surfaces */
+  --ink-1: #8eaaff;
+  --ink-2: #ff8f70;
+  --ink-3: #b9cb70;
+  --ink-4: #e9b85a;
+  --ink-5: #dca0d9;
+  --on-ink: #121419; /* text set on an ink block */
+  --band-opacity: 0.55;
 
-  /* Theme-aware text inks: bright variants on dark surfaces, base variants on
-     light (reassigned in the light-theme block). Use these for colored text so
-     each new element doesn't need its own light-theme override. */
-  --copper-ink: var(--copper-bright);
-  --patina-ink: var(--patina-bright);
+  --sl-color-white: #f1f2f4; /* the ink: highest-contrast text */
+  --sl-color-gray-1: #dcdfe3;
+  --sl-color-gray-2: #bcc1c8;
+  --sl-color-gray-3: #969ca5;
+  --sl-color-gray-4: #5f656e;
+  --sl-color-gray-5: #3a3f47;
+  --sl-color-gray-6: #22262c;
+  --sl-color-black: #121419; /* the stock: page ground */
+  --sl-color-bg: #121419;
+  --sl-color-bg-nav: #121419;
+  --sl-color-bg-sidebar: #121419;
+  --sl-color-hairline: #2c3038;
+  --sl-color-hairline-light: #3a3f47;
+  --sl-color-hairline-shade: #2c3038;
+  --sl-color-accent-low: #1c2648;
+  --sl-color-accent: #8eaaff;
+  --sl-color-accent-high: #d3ddff;
+  --sl-color-text-accent: #8eaaff;
 
-  /* Type roles */
-  --sl-font: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-prose: "Literata Variable", Georgia, "Times New Roman", serif;
+  --sl-font: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-read: "Source Serif 4 Variable", Georgia, "Times New Roman", serif;
   --sl-font-mono: "Martian Mono Variable", ui-monospace, "SF Mono", monospace;
-
-  --flow-rule: linear-gradient(90deg, var(--copper), var(--patina));
+  --sl-content-width: 48rem;
 }
 
-/* ── Dark theme (Starlight's default root) ───────────────────────────────── */
-:root {
-  --sl-color-accent-low: #173f3b; /* deep patina */
-  --sl-color-accent: #b5541e; /* copper: buttons, active nav */
-  --sl-color-accent-high: var(--copper-bright); /* bright copper: link text */
-  /* 7.8:1 on the page, 5.2:1 on inline code, 5.1:1 under the current-page ink */
-  --sl-color-text-accent: var(--copper-bright);
-  --sl-color-bg: #1a1817; /* warm near-black, sits with copper */
-  --sl-color-hairline-shade: #2c2724;
-}
-
-/* ── Light theme ─────────────────────────────────────────────────────────── */
+/* ── Tokens: light ───────────────────────────────────────────────────────── */
 :root[data-theme="light"] {
-  --sl-color-accent-low: #f0e3d8; /* pale copper wash */
-  --sl-color-accent: #b5541e;
-  --sl-color-accent-high: #6e3212; /* deep copper */
-  /* 5.4:1 on the page, 4.9:1 on inline code (links wrapping `code`) */
-  --sl-color-text-accent: var(--copper-deep);
-  --sl-color-bg: #fbfaf7; /* warm white */
-  --sl-color-hairline-shade: #ece5dc;
-  --copper-ink: var(--copper);
-  --patina-ink: var(--patina-deep); /* 5.5:1 on the note aside tint */
+  --ink-1: #2148a8;
+  --ink-2: #b4391f;
+  --ink-3: #55661a;
+  --ink-4: #855b05;
+  --ink-5: #6d2f6b;
+  --on-ink: #ffffff;
+  --band-opacity: 0.55;
+
+  --sl-color-white: #16181d;
+  --sl-color-gray-1: #24272d;
+  --sl-color-gray-2: #3a3e45;
+  --sl-color-gray-3: #5b616a;
+  --sl-color-gray-4: #8a9098;
+  --sl-color-gray-5: #c9cdd2;
+  --sl-color-gray-6: #eaecee;
+  --sl-color-gray-7: #f1f2f1;
+  --sl-color-black: #f7f8f6;
+  --sl-color-bg: #f7f8f6;
+  --sl-color-bg-nav: #f7f8f6;
+  --sl-color-bg-sidebar: #f7f8f6;
+  --sl-color-hairline: #d6d9dd;
+  --sl-color-hairline-light: #e3e5e8;
+  --sl-color-hairline-shade: #d6d9dd;
+  --sl-color-accent-low: #dfe6f7;
+  --sl-color-accent: #2148a8;
+  --sl-color-accent-high: #142f73;
+  --sl-color-text-accent: #2148a8;
 }
 
-/* ── Typography ──────────────────────────────────────────────────────────── */
-/* Headings: display grotesque, tightened tracking for a printed-cover feel */
-.sl-markdown-content :is(h1, h2, h3, h4),
-.hero h1 {
+/* IE fields wear their chapter-sharing ink (see the table above). */
+.field-lca {
+  --field: var(--ink-1);
+}
+.field-eol {
+  --field: var(--ink-2);
+}
+.field-mfa {
+  --field: var(--ink-3);
+}
+.field-urban-mining {
+  --field: var(--ink-4);
+}
+
+/* ── Browser surfaces ────────────────────────────────────────────────────── */
+::file-selector-button {
+  margin-right: 0.75rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--sl-color-white);
+  background: var(--sl-color-black);
+  color: var(--sl-color-white);
+  font: 650 0.875rem var(--sl-font);
+  cursor: pointer;
+}
+::selection {
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-white);
+}
+html {
+  accent-color: var(--sl-color-text-accent);
+  caret-color: var(--sl-color-text-accent);
+  scrollbar-color: var(--sl-color-gray-5) transparent;
+}
+:focus-visible {
+  outline: 2px solid var(--sl-color-text-accent);
+  outline-offset: 2px;
+}
+
+/* ── Type ────────────────────────────────────────────────────────────────── */
+h1#_top,
+.sl-markdown-content :is(h2, h3, h4) {
   font-family: var(--sl-font);
-  font-weight: 650;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  color: var(--sl-color-white);
+}
+h1#_top {
+  font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.25rem);
+  font-weight: 800;
+  font-stretch: 72%;
+  line-height: 1;
+  margin-top: 0.6rem;
+}
+/* Narrow widths shrink the space glyph too; open it back up. */
+h1#_top,
+.sl-markdown-content :is(h2, h3),
+.flow text,
+.running-head,
+.chapter-title,
+.path-verb,
+.sidebar-content .large {
+  word-spacing: 0.1em;
+}
+/* Section openers: an ink rule above, like a yearbook's section head. Starlight
+   wraps each heading with its anchor link, so the rule goes on the wrapper. */
+.sl-markdown-content h2 {
+  font-size: 1.75rem;
+  font-weight: 760;
+  font-stretch: 80%;
+  line-height: 1.1;
+}
+.sl-markdown-content .sl-heading-wrapper.level-h2 {
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--sl-color-white);
+  margin-top: 2.75rem;
+}
+.sl-markdown-content h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-stretch: 88%;
+  margin-top: 2rem;
+}
+.sl-markdown-content h4 {
+  font-size: 1rem;
+  font-weight: 700;
 }
 
-/* Prose body: the research-journal serif. Scoped to content so nav/UI stay in
-   the grotesque, and kept out of `.not-content` islands, which style their own
-   text (the :where() adds no specificity, so island classes still win). */
-.sl-markdown-content :is(p, li, td, blockquote):not(:where(.not-content *)) {
-  font-family: var(--font-prose);
-  line-height: 1.7;
+/* Reading text: the serif, at a reading measure. Islands (.not-content) set
+   their own text; the :where() adds no specificity, so island classes win. */
+.sl-markdown-content :is(p, li, blockquote, dd):not(:where(.not-content *)) {
+  font-family: var(--font-read);
+  font-size: 1.0625rem;
+  line-height: 1.65;
 }
-
-/* Table headers & code: the technical mono voice. Martian runs wide, so trim. */
-.sl-markdown-content th {
-  font-family: var(--sl-font-mono);
-  font-weight: 600;
-  font-size: 0.72em;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.sl-markdown-content > :is(p, ul, ol, blockquote) {
+  max-width: 68ch;
 }
-.sl-markdown-content :is(code, kbd),
-.sl-markdown-content pre {
-  font-size: 0.86em;
-}
-
-/* Mono eyebrow: a labelling utility for authors: <p class="eyebrow">…</p> */
-.eyebrow {
-  font-family: var(--sl-font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+.sl-markdown-content a:not(:where(.not-content *, .sl-link-button)) {
   color: var(--sl-color-text-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+.sl-markdown-content a:not(:where(.not-content *, .sl-link-button)):hover {
+  text-decoration-thickness: 2px;
+}
+/* Inline code only: blocks take their size from Expressive Code (astro.config.mjs). */
+.sl-markdown-content :not(pre) > :is(code, kbd) {
+  font-size: 0.82em;
+}
+.sl-markdown-content :not(pre) > code {
+  background: var(--sl-color-gray-6);
+  border: none;
+  padding: 0.1em 0.3em;
 }
 
-/* ── Signature: the copper→patina flow rule under the splash headline ─────── */
-.hero h1::after {
-  content: "";
-  display: block;
-  width: min(240px, 55%);
-  height: 3px;
-  margin-top: 1.1rem;
-  border-radius: 2px;
-  background: var(--flow-rule);
+/* ── Running head (PageTitle and Hero overrides) ─────────────────────────── */
+.running-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.25rem 1rem;
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--sl-color-white);
+  font-family: var(--sl-font);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-stretch: 85%;
+  color: var(--sl-color-gray-3);
 }
-.hero .tagline {
-  font-family: var(--font-prose);
+@media (max-width: 40rem) {
+  .running-head > span + span {
+    display: none;
+  }
+}
+.running-head > span:first-child {
+  color: var(--sl-color-gray-2);
+}
+.running-no {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.35rem;
+  background: var(--chapter-ink, var(--sl-color-white));
+  color: var(--on-ink);
+  font-weight: 800;
+  font-stretch: 75%;
+  letter-spacing: 0;
 }
 
-/* ── Asides: note wears the patina instead of Starlight's default blue ───── */
-.starlight-aside--note {
-  --sl-color-asides-text-accent: var(--patina-ink);
-  --sl-color-asides-border: var(--patina);
-  background-color: color-mix(in srgb, var(--patina) 12%, transparent);
+/* ── Sidebar as a thumb index ────────────────────────────────────────────────
+   Top-level items 2-6 are chapters 1-5 in astro.config.mjs's sidebar order. */
+.sidebar-content .top-level > li:nth-child(2) {
+  --chapter-ink: var(--ink-1);
+}
+.sidebar-content .top-level > li:nth-child(3) {
+  --chapter-ink: var(--ink-2);
+}
+.sidebar-content .top-level > li:nth-child(4) {
+  --chapter-ink: var(--ink-3);
+}
+.sidebar-content .top-level > li:nth-child(5) {
+  --chapter-ink: var(--ink-4);
+}
+.sidebar-content .top-level > li:nth-child(6) {
+  --chapter-ink: var(--ink-5);
+}
+.sidebar-content .top-level {
+  counter-reset: chapter -1;
+}
+.sidebar-content .top-level > li {
+  counter-increment: chapter;
+}
+.sidebar-content .top-level > li > :is(a, details > summary) .large {
+  font-weight: 700;
+  font-stretch: 88%;
+  font-size: 0.95rem;
+}
+.sidebar-content .top-level > li:not(:first-child) > a::before,
+.sidebar-content .top-level > li:not(:first-child) > details > summary .group-label::before {
+  content: counter(chapter);
+  display: inline-grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.6rem;
+  background: var(--chapter-ink);
+  color: var(--on-ink);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: 0.875rem;
+  flex: none;
+}
+.sidebar-content .top-level > li > a,
+.sidebar-content .top-level .group-label {
+  display: flex;
+  align-items: center;
+}
+.sidebar-content a {
+  border-radius: 0;
+}
+.sidebar-content ul ul {
+  border-inline-start-color: var(--sl-color-hairline);
+  margin-inline-start: 0.75rem;
+}
+.sidebar-content a[aria-current="page"],
+.sidebar-content a[aria-current="page"]:hover,
+.sidebar-content a[aria-current="page"]:focus {
+  background: color-mix(in srgb, var(--chapter-ink, var(--sl-color-white)) 16%, transparent);
+  color: var(--sl-color-white);
+  font-weight: 700;
 }
 
-/* ── Collapsible skill files ─────────────────────────────────────────────── */
+/* Header, buttons and Starlight's own controls: square, like everything printed. */
+.header {
+  border-bottom-color: var(--sl-color-hairline);
+}
+site-search button[data-open-modal],
+site-search dialog,
+.pagination-links a,
+mobile-starlight-toc summary .toggle,
+starlight-menu-button button {
+  border-radius: 0;
+  box-shadow: none;
+}
+.pagination-links a {
+  border: none;
+  border-top: 2px solid var(--sl-color-white);
+}
+/* The site's one gap mark: a dashed tag reading "Wanted". */
+.wanted {
+  display: inline-block;
+  padding: 0 0.4rem;
+  border: 1px dashed var(--sl-color-gray-3);
+  font-family: var(--sl-font);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  font-stretch: 85%;
+  line-height: 1.5;
+  vertical-align: 0.1em;
+  color: var(--sl-color-gray-2);
+}
+.sl-link-button {
+  border-radius: 0;
+  font-weight: 700;
+}
 .sl-markdown-content details:not(:where(.not-content *)) {
-  border: 1px solid var(--sl-color-hairline-shade);
-  border-radius: 0.5rem;
+  border: 1px solid var(--sl-color-hairline);
   padding: 0.5rem 0.9rem;
 }
 .sl-markdown-content details:not(:where(.not-content *)) summary {
-  font-family: var(--sl-font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
+  font-family: var(--sl-font);
+  font-size: 0.875rem;
+  font-weight: 650;
   color: var(--sl-color-text-accent);
   cursor: pointer;
 }
@@ -138,21 +349,364 @@
   margin-bottom: 0.6rem;
 }
 
-/* ── Accessibility floor ─────────────────────────────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--copper);
-  outline-offset: 2px;
+/* ── Tables: yearbook ruling ─────────────────────────────────────────────── */
+.sl-markdown-content table:not(:where(.not-content *)),
+.apx-grid {
+  border-collapse: collapse;
+  font-family: var(--sl-font);
+  font-variant-numeric: tabular-nums;
+}
+/* The rules sit on the rows, not the table: Starlight sets a table to
+   display: block so it can scroll, and its box is then wider than its rows. */
+.sl-markdown-content table:not(:where(.not-content *)) thead th,
+.apx-grid thead th {
+  border-top: 2px solid var(--sl-color-white);
+}
+.sl-markdown-content table:not(:where(.not-content *)) tbody tr:last-child td,
+.apx-grid tbody tr:last-child :is(th, td) {
+  border-bottom: 1px solid var(--sl-color-white);
+}
+.sl-markdown-content table:not(:where(.not-content *)) :is(th, td) {
+  border: none;
+  border-bottom: 1px solid var(--sl-color-hairline);
+  background: none;
+  padding: 0.55rem 0.75rem 0.55rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  vertical-align: top;
+}
+.sl-markdown-content table:not(:where(.not-content *)) th {
+  font-weight: 700;
+  font-stretch: 85%;
+  font-size: 0.8125rem;
+  border-bottom-color: var(--sl-color-white);
+  color: var(--sl-color-gray-2);
+}
+.sl-markdown-content table:not(:where(.not-content *)) tr {
+  background: none;
+}
+.sl-markdown-content table:not(:where(.not-content *)) td:first-child {
+  font-weight: 650;
 }
 
-/* ── Literature browser ──────────────────────────────────────────────────────
-   Tag chips carry the two-dimensional story: IE-field chips wear the patina,
-   AI-technique chips wear the copper, entry-type chips stay neutral mono. */
+/* ── Asides: a tinted panel in the chapter inks, no side bar ─────────────── */
+.starlight-aside {
+  border: 1px solid color-mix(in srgb, var(--aside-ink) 45%, transparent);
+  background: color-mix(in srgb, var(--aside-ink) 9%, transparent);
+  --sl-color-asides-text-accent: var(--aside-ink);
+}
+.starlight-aside--note {
+  --aside-ink: var(--ink-1);
+}
+.starlight-aside--tip {
+  --aside-ink: var(--ink-3);
+}
+.starlight-aside--caution {
+  --aside-ink: var(--ink-4);
+}
+.starlight-aside--danger {
+  --aside-ink: var(--ink-2);
+}
+.starlight-aside__title {
+  font-family: var(--sl-font);
+  font-weight: 750;
+  font-stretch: 85%;
+}
+
+/* ── Home cover (Hero override) ──────────────────────────────────────────── */
+.cover {
+  padding-block: 1.5rem 0.5rem;
+}
+.cover-grid {
+  display: grid;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+@media (min-width: 64rem) {
+  .cover-grid {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 7fr);
+    gap: 3rem;
+    align-items: start;
+  }
+}
+.cover-copy {
+  display: grid;
+  gap: 1.25rem;
+  align-content: start;
+}
+.cover h1#_top {
+  font-size: clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem);
+  margin: 0;
+}
+.cover-tagline {
+  margin: 0;
+  max-width: 34ch;
+  font-family: var(--font-read);
+  font-size: clamp(1.125rem, 1rem + 0.4vw, 1.3125rem);
+  line-height: 1.5;
+  color: var(--sl-color-gray-1);
+}
+.cover-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+}
+
+/* Fig. 1: the flow plate. */
+.flow {
+  margin: 0;
+  min-width: 0;
+}
+.flow svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.flow text {
+  font-family: var(--sl-font);
+  font-size: 17px; /* user units: about 15px at desktop width */
+  font-weight: 650;
+  font-stretch: 82%;
+  fill: var(--sl-color-white);
+}
+.flow .flow-n {
+  font-weight: 500;
+  fill: var(--sl-color-gray-3);
+}
+.flow .band {
+  fill: var(--field, var(--sl-color-gray-3));
+  fill-opacity: var(--band-opacity);
+  transition: fill-opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.flow .node {
+  fill: var(--field, var(--sl-color-white));
+}
+/* Pointing at a band lifts its flow and lets the rest recede. */
+.flow-bands:has(a:is(:hover, :focus-visible)) .band {
+  fill-opacity: 0.12;
+}
+.flow-bands a:is(:hover, :focus-visible) .band {
+  fill-opacity: 0.9;
+}
+.flow a:focus-visible {
+  outline: none;
+}
+.flow a:focus-visible :is(.band, .node) {
+  stroke: var(--sl-color-text-accent);
+  stroke-width: 3;
+  paint-order: stroke;
+}
+.flow-node:is(:hover, :focus-visible) text {
+  text-decoration: underline;
+}
+/* Invisible hit area so thin nodes are still easy to tap. */
+.flow-hit {
+  fill: transparent;
+}
+.flow figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--sl-color-hairline);
+  font-family: var(--sl-font);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--sl-color-gray-2);
+}
+.flow figcaption b {
+  color: var(--sl-color-white);
+  margin-right: 0.25rem;
+}
+.flow-src {
+  color: var(--sl-color-gray-3);
+}
+@media (max-width: 40rem) {
+  .flow text {
+    font-size: 32px; /* about 14px once the plate shrinks to phone width */
+  }
+}
+
+/* Chapter index: the thumb-index tabs laid out across the cover. */
+.chapter-index ol {
+  list-style: none;
+  margin: 2.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem 1rem;
+}
+@media (min-width: 50rem) {
+  .chapter-index ol {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  /* Two title lines for every chapter, so the gists share a baseline. */
+  .chapter-index a {
+    grid-template-rows: 2.6rem auto;
+  }
+}
+.chapter-index a {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.15rem 0.6rem;
+  height: 100%;
+  padding: 0.6rem 0 0.75rem;
+  border-top: 3px solid var(--chapter-ink);
+  text-decoration: none;
+  color: var(--sl-color-white);
+}
+.chapter-index .running-no {
+  margin: 0;
+}
+.chapter-title {
+  font-family: var(--sl-font);
+  font-weight: 750;
+  font-stretch: 85%;
+  font-size: 1.0625rem;
+  line-height: 1.2;
+}
+.chapter-gist {
+  grid-column: 2;
+  font-family: var(--font-read);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: var(--sl-color-gray-2);
+}
+.chapter-index a:hover .chapter-title {
+  text-decoration: underline;
+  text-decoration-color: var(--chapter-ink);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+/* Fig. 2: the see → read → try path, three steps joined by a ruled arrow. */
+.path {
+  margin: 1.5rem 0 0;
+}
+.path ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.25rem;
+}
+@media (min-width: 40rem) {
+  .path ol {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem;
+  }
+}
+.path li {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  padding-top: 0.6rem;
+  border-top: 3px solid var(--chapter-ink);
+}
+/* The arrow to the next step sits in the gap, on the top rule. */
+@media (min-width: 40rem) {
+  .path li + li::before {
+    content: "";
+    position: absolute;
+    top: -0.55rem;
+    left: -2.1rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    border: solid var(--sl-color-gray-3);
+    border-width: 2px 2px 0 0;
+    transform: rotate(45deg);
+  }
+}
+.path-step {
+  font-family: var(--sl-font);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-stretch: 85%;
+  color: var(--sl-color-gray-3);
+}
+.path a {
+  display: grid;
+  gap: 0.4rem;
+  color: var(--sl-color-white);
+  text-decoration: none;
+}
+.path-verb {
+  font-family: var(--sl-font);
+  font-size: 1.375rem;
+  font-weight: 760;
+  font-stretch: 80%;
+  line-height: 1.1;
+}
+.path a:hover .path-verb {
+  text-decoration: underline;
+  text-decoration-color: var(--chapter-ink);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+.path-where {
+  display: flex;
+  align-items: center;
+  font-family: var(--sl-font);
+  font-size: 0.9375rem;
+  font-weight: 650;
+  font-stretch: 88%;
+  color: var(--sl-color-gray-1);
+}
+.path-fact {
+  font-family: var(--font-read);
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--sl-color-gray-2);
+}
+.path figcaption {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--sl-color-hairline);
+  font-family: var(--sl-font);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--sl-color-gray-2);
+}
+.path figcaption b {
+  margin-right: 0.25rem;
+  color: var(--sl-color-white);
+}
+
+/* ── Tags, shared by both islands (TagChips) ─────────────────────────────── */
+.lit-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--sl-font);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-stretch: 88%;
+  padding: 0.1rem 0.45rem;
+  border: 1px solid var(--sl-color-hairline-light);
+  color: var(--sl-color-gray-2);
+}
+/* An IE-field tag carries its field's ink as a swatch. */
+.lit-tag-ie::before {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--field, var(--sl-color-gray-3));
+}
+.lit-tag-type {
+  border-style: dashed;
+}
+
+/* ── Literature browser ──────────────────────────────────────────────────── */
 .lit-browser {
   margin-top: 1.5rem;
+  font-family: var(--sl-font);
 }
-/* Filter bar: one quiet line by default. Each dimension is a native <details>
-   disclosure (name= makes them mutually exclusive), so the 18 tag chips stay
-   out of the way until asked for, with keyboard support and no JS. */
+/* Filter bar: each dimension is a native <details> disclosure (name= makes
+   them mutually exclusive), so the tag chips stay hidden until asked for. */
 .lit-bar {
   display: flex;
   flex-wrap: wrap;
@@ -161,11 +715,8 @@
   margin-bottom: 0.6rem;
 }
 .lit-bar-label {
-  font-family: var(--sl-font-mono);
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 0.875rem;
+  font-weight: 700;
   color: var(--sl-color-gray-3);
   margin-right: 0.35rem;
 }
@@ -175,20 +726,20 @@
 .lit-facet-trigger {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  font-family: var(--sl-font-mono);
-  font-size: 0.68rem;
-  padding: 0.2rem 0.6rem;
+  gap: 0.45rem;
+  font-size: 0.875rem;
+  font-weight: 650;
+  padding: 0.3rem 0.7rem;
   border: 1px solid var(--sl-color-gray-5);
-  border-radius: 999px;
-  color: var(--sl-color-gray-2);
+  color: var(--sl-color-gray-1);
+  background: var(--sl-color-black);
   cursor: pointer;
   list-style: none;
 }
 .lit-facet-trigger::-webkit-details-marker {
   display: none;
 }
-/* Caret, drawn in CSS so it needs no icon font and rotates on open. */
+/* Caret, drawn in CSS so it rotates on open without an icon font. */
 .lit-facet-trigger::after {
   content: "";
   width: 0.32rem;
@@ -199,27 +750,32 @@
   transition: transform 0.15s ease-out;
 }
 .lit-facet[open] > .lit-facet-trigger {
-  border-color: var(--sl-color-gray-3);
+  border-color: var(--sl-color-white);
   color: var(--sl-color-white);
 }
 .lit-facet[open] > .lit-facet-trigger::after {
   transform: translateY(1px) rotate(-135deg);
 }
 .lit-facet-count {
-  min-width: 1.05rem;
-  padding: 0 0.25rem;
-  border-radius: 999px;
+  min-width: 1.15rem;
+  padding: 0 0.3rem;
   text-align: center;
-  color: #fff;
+  background: var(--sl-color-white);
+  color: var(--sl-color-black);
+  font-variant-numeric: tabular-nums;
 }
-.lit-count-ie {
-  background: var(--patina);
-}
-.lit-count-ml {
-  background: var(--copper);
-}
-.lit-count-type {
-  background: var(--sl-color-gray-4);
+@media (max-width: 40rem) {
+  .lit-bar {
+    position: relative;
+  }
+  .lit-facet {
+    position: static;
+  }
+  .lit-bar .lit-facet-panel {
+    left: 0;
+    right: 0;
+    max-width: none;
+  }
 }
 .lit-facet-panel {
   position: absolute;
@@ -227,18 +783,16 @@
   left: 0;
   z-index: 20;
   margin-top: 0.35rem;
-  padding: 0.55rem;
+  padding: 0.6rem;
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
   min-width: 15rem;
-  max-width: 24rem;
+  max-width: min(24rem, 90vw);
   background: var(--sl-color-black);
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.4rem;
-  box-shadow: 0 6px 20px rgb(0 0 0 / 0.25);
+  border: 1px solid var(--sl-color-white);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.18);
 }
-/* Active filters, in the same colours the entries use for those tags. */
 .lit-active {
   display: flex;
   flex-wrap: wrap;
@@ -246,66 +800,35 @@
   gap: 0.35rem;
   margin-bottom: 0.6rem;
 }
+.lit-chip,
 .lit-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-family: var(--sl-font-mono);
-  font-size: 0.68rem;
-  padding: 0.15rem 0.55rem;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  color: #fff;
-  cursor: pointer;
-}
-.lit-pill-ie {
-  background: var(--patina);
-}
-.lit-pill-ml {
-  background: var(--copper);
-}
-.lit-pill-type,
-.lit-pill-papers {
-  background: var(--sl-color-gray-4);
-  color: var(--sl-color-white);
-}
-@media (prefers-reduced-motion: reduce) {
-  .lit-facet-trigger::after {
-    transition: none;
-  }
-}
-.lit-chip {
-  font-family: var(--sl-font-mono);
-  font-size: 0.68rem;
-  padding: 0.15rem 0.55rem;
-  border-radius: 999px;
+  font-family: var(--sl-font);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-stretch: 88%;
+  padding: 0.2rem 0.55rem;
   border: 1px solid var(--sl-color-gray-5);
   background: transparent;
-  color: var(--sl-color-gray-2);
+  color: var(--sl-color-gray-1);
   cursor: pointer;
 }
-/* Keep each option on one line; the panel wraps whole chips instead.
-   Declared after .lit-chip so specificity stays ascending. */
 .lit-facet-panel .lit-chip {
   white-space: nowrap;
 }
-.lit-chip[aria-pressed="true"].lit-chip-ie {
-  background: var(--patina);
-  border-color: var(--patina);
-  color: #fff;
+/* Active filters and pressed chips: ink set solid. */
+.lit-pill,
+.lit-chip[aria-pressed="true"] {
+  background: var(--sl-color-white);
+  border-color: var(--sl-color-white);
+  color: var(--sl-color-black);
 }
-.lit-chip[aria-pressed="true"].lit-chip-ml {
-  background: var(--copper);
-  border-color: var(--copper);
-  color: #fff;
-}
-.lit-chip[aria-pressed="true"].lit-chip-type {
-  background: var(--sl-color-gray-4);
-  border-color: var(--sl-color-gray-4);
-  color: var(--sl-color-white);
-}
-/* Touch devices need a 44px target; keep the dense mono look on pointer devices. */
 @media (pointer: coarse) {
+  .lit-title {
+    padding-block: 0.5rem;
+  }
   .lit-facet-trigger,
   .lit-facet-panel .lit-chip,
   .lit-pill {
@@ -313,11 +836,18 @@
   }
 }
 .lit-count {
-  margin: 1rem 0 0.5rem;
-  font-family: var(--sl-font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
-  color: var(--sl-color-gray-3);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--sl-color-white);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--sl-color-gray-2);
 }
 .lit-clear {
   border: none;
@@ -328,23 +858,25 @@
   cursor: pointer;
 }
 .lit-sort {
-  float: right;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--sl-color-gray-2);
 }
 .lit-sort select {
   font: inherit;
   color: var(--sl-color-white);
-  background: var(--sl-color-gray-6);
+  background: var(--sl-color-black);
   border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.25rem;
-  padding: 0.1rem 0.3rem;
+  padding: 0.15rem 0.35rem;
 }
-/* Inline citation link (the <Cite> component). Only the "(Author, Year)" form
-   is kept on one line; a labelled cite carries prose that must be free to wrap. */
-.cite-ref {
-  white-space: nowrap;
+/* Inline citation link (<Cite>). Only "(Author, Year)" stays on one line. */
+@media (min-width: 40rem) {
+  .cite-ref {
+    white-space: nowrap;
+  }
 }
 .lit-list {
   list-style: none;
@@ -352,30 +884,28 @@
   margin: 0;
 }
 .lit-entry {
-  padding: 0.85rem 0;
-  border-top: 1px solid var(--sl-color-hairline-shade);
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--sl-color-hairline);
 }
 .lit-meta {
-  font-family: var(--sl-font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.04em;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
   color: var(--sl-color-gray-3);
 }
 .lit-new {
   margin-left: 0.5rem;
   padding: 0 0.35rem;
-  border-radius: 999px;
   background: var(--sl-color-accent-low);
-  /* text-accent is 4.46:1 on accent-low in light; accent-high passes in both themes */
   color: var(--sl-color-accent-high);
 }
 .lit-title {
   display: block;
-  font-family: var(--sl-font);
-  font-weight: 600;
-  font-size: 1.02rem;
+  font-weight: 700;
+  font-stretch: 90%;
+  font-size: 1.125rem;
   line-height: 1.3;
-  margin: 0.15rem 0;
+  margin: 0.2rem 0;
   text-decoration: none;
   color: var(--sl-color-white);
 }
@@ -384,92 +914,73 @@
   text-decoration: underline;
 }
 .lit-blurb {
-  font-family: var(--font-prose);
-  font-size: 0.9rem;
+  font-family: var(--font-read);
+  font-size: 1rem;
   line-height: 1.55;
-  margin: 0.15rem 0 0.4rem;
-  color: var(--sl-color-gray-2);
+  margin: 0.2rem 0 0.5rem;
+  color: var(--sl-color-gray-1);
+  max-width: 68ch;
 }
 .lit-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem;
 }
-.lit-tag {
-  font-family: var(--sl-font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.04em;
-  padding: 0.08rem 0.45rem;
-  border-radius: 999px;
-  border: 1px solid var(--sl-color-gray-5);
-  color: var(--sl-color-gray-3);
-}
-.lit-tag-ie {
-  border-color: color-mix(in srgb, var(--patina) 55%, transparent);
-  color: var(--patina-ink);
-}
-.lit-tag-ml {
-  border-color: color-mix(in srgb, var(--copper) 55%, transparent);
-  color: var(--copper-ink);
-}
 .lit-empty {
-  font-family: var(--font-prose);
-  color: var(--sl-color-gray-3);
-}
-@media (max-width: 640px) {
-  .lit-chip-row {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
+  font-family: var(--font-read);
+  color: var(--sl-color-gray-2);
 }
 
-/* ── Applications explorer ──────────────────────────────────────────────────
-   Same dimension colors as the literature browser: IE = patina, ML = copper. */
+/* ── Applications explorer ───────────────────────────────────────────────── */
 .apx {
   margin: 1.5rem 0;
+  font-family: var(--sl-font);
 }
 .apx-switch {
   display: inline-flex;
+  flex-wrap: wrap;
   margin: 0;
   padding: 0;
   min-inline-size: 0;
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.5rem;
-  overflow: hidden;
+  border: 1px solid var(--sl-color-white);
 }
 .apx-switch button {
-  font-family: var(--sl-font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
-  padding: 0.35rem 0.8rem;
+  font-family: var(--sl-font);
+  font-size: 0.875rem;
+  font-weight: 650;
+  padding: 0.4rem 0.9rem;
   border: none;
   background: transparent;
-  color: var(--sl-color-gray-2);
+  color: var(--sl-color-gray-1);
   cursor: pointer;
 }
 .apx-switch button + button {
-  border-left: 1px solid var(--sl-color-gray-5);
+  border-left: 1px solid var(--sl-color-white);
 }
 .apx-switch button[aria-pressed="true"] {
-  background: var(--sl-color-accent-low);
-  color: var(--sl-color-white);
+  background: var(--sl-color-white);
+  color: var(--sl-color-black);
 }
 .apx-group {
-  margin-top: 1.4rem;
+  margin-top: 1.75rem;
 }
 .apx-group-label {
-  font-family: var(--sl-font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin: 0 0 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 750;
+  font-stretch: 88%;
+  margin: 0;
+  padding-bottom: 0.35rem;
+  border-bottom: 2px solid var(--sl-color-white);
+  color: var(--sl-color-white);
 }
-.apx-group-label.apx-ie {
-  color: var(--patina-ink);
-}
-.apx-group-label.apx-ml {
-  color: var(--copper-ink);
+.apx-group-label.apx-ie::before {
+  content: "";
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--field, var(--sl-color-gray-3));
 }
 .apx-list {
   list-style: none;
@@ -477,136 +988,188 @@
   margin: 0;
 }
 .apx-entry {
-  padding: 0.7rem 0;
-  border-top: 1px solid var(--sl-color-hairline-shade);
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--sl-color-hairline);
 }
 .apx-name {
-  font-family: var(--sl-font);
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-stretch: 90%;
+  font-size: 1.0625rem;
 }
 .apx-summary {
-  font-family: var(--font-prose);
-  font-size: 0.9rem;
+  font-family: var(--font-read);
+  font-size: 1rem;
   line-height: 1.55;
-  margin: 0.2rem 0 0.4rem;
-  color: var(--sl-color-gray-2);
+  margin: 0.25rem 0 0.5rem;
+  color: var(--sl-color-gray-1);
+  max-width: 68ch;
 }
 .apx-maturity {
-  color: var(--sl-color-gray-3);
+  color: var(--sl-color-gray-2);
 }
 .apx-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem 0.6rem;
+  gap: 0.35rem 0.7rem;
   align-items: center;
 }
 .apx-links a {
-  font-family: var(--sl-font-mono);
-  font-size: 0.7rem;
+  font-size: 0.875rem;
+  font-weight: 650;
   color: var(--sl-color-text-accent);
-  text-decoration: none;
 }
-.apx-links a:hover {
-  text-decoration: underline;
-}
+/* The grid: Table 1.1, cells shaded by how many applications they hold. */
 .apx-grid-wrap {
+  position: relative;
   overflow-x: auto;
-  margin-top: 1rem;
+  margin-top: 1.25rem;
 }
-.apx-grid {
-  border-collapse: collapse;
-  font-family: var(--sl-font-mono);
-  font-size: 0.7rem;
+.apx-grid-title,
+.sl-markdown-content .table-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.apx-grid-title b,
+.sl-markdown-content .table-title b {
+  margin-right: 0.5rem;
 }
 .apx-grid th,
 .apx-grid td {
-  border: 1px solid var(--sl-color-hairline-shade);
-  padding: 0.4rem 0.55rem;
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--sl-color-hairline);
   text-align: center;
+  font-size: 0.875rem;
+}
+.apx-grid thead th {
+  font-weight: 700;
+  font-stretch: 82%;
+  vertical-align: bottom;
+  border-bottom-color: var(--sl-color-white);
 }
 .apx-grid thead th a {
-  color: var(--copper-ink);
-  text-decoration: none;
-}
-.apx-grid tbody th {
-  text-align: left;
-}
-.apx-grid tbody th a {
-  color: var(--patina-ink);
-  text-decoration: none;
-}
-.apx-grid td a {
-  display: inline-block;
-  min-width: 1.6rem;
-  border-radius: 999px;
-  background: var(--sl-color-accent-low);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   color: var(--sl-color-white);
   text-decoration: none;
 }
+.apx-grid thead th a::before {
+  content: "";
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--field, var(--sl-color-gray-3));
+}
+.apx-grid tbody th {
+  text-align: left;
+  font-weight: 650;
+}
+.apx-grid tbody th a {
+  color: var(--sl-color-white);
+}
+.apx-grid td > * {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.75rem;
+  height: 1.75rem;
+  font-weight: 750;
+  text-decoration: none;
+  color: var(--sl-color-white);
+}
+.apx-grid td[data-n="1"] > * {
+  background: color-mix(in srgb, var(--ink-1) 30%, transparent);
+}
+.apx-grid td[data-n="2"] > * {
+  background: color-mix(in srgb, var(--ink-1) 45%, transparent);
+}
+.apx-grid td[data-n="3"] > * {
+  background: var(--ink-1);
+  color: var(--on-ink);
+}
+.apx-grid td[data-n="0"]::before {
+  content: "";
+  display: inline-block;
+  width: 2.75rem;
+  height: 1.75rem;
+  border: 1px dashed var(--sl-color-gray-4);
+  vertical-align: middle;
+}
+.apx-grid td a:hover {
+  outline: 2px solid var(--sl-color-white);
+}
+.apx-grid-src,
+.sl-markdown-content .table-src {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--sl-color-gray-3);
+}
 
-/* ── Zero-shot demo island ──────────────────────────────────────────────── */
+/* ── Zero-shot demo island ───────────────────────────────────────────────── */
 .zsd {
-  border: 1px solid var(--sl-color-gray-5);
-  border-left: 3px solid var(--patina);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  background: var(--sl-color-gray-6);
+  border: 1px solid var(--sl-color-white);
+  padding: 1.1rem;
+  font-family: var(--sl-font);
 }
 .zsd-controls {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.7rem;
 }
 .zsd-labels {
-  font-family: var(--sl-font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
-  color: var(--sl-color-gray-2);
+  font-size: 0.875rem;
+  font-weight: 650;
+  color: var(--sl-color-gray-1);
 }
 .zsd-labels input {
   display: block;
   width: 100%;
   margin-top: 0.3rem;
-  padding: 0.45rem 0.6rem;
-  border-radius: 0.35rem;
-  border: 1px solid var(--sl-color-gray-5);
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--sl-color-gray-4);
   background: var(--sl-color-black);
   color: var(--sl-color-white);
   font: inherit;
-  font-size: 0.85rem;
+  font-weight: 400;
+  font-size: 0.9375rem;
 }
-.zsd-controls button,
 .space-embed-load {
   align-self: flex-start;
   font-family: var(--sl-font);
-  font-weight: 600;
-  font-size: 0.85rem;
-  padding: 0.45rem 0.9rem;
-  border-radius: 0.35rem;
-  border: none;
-  background: var(--copper);
-  color: #fff;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--sl-color-white);
+  background: transparent;
+  color: var(--sl-color-white);
   cursor: pointer;
 }
-.zsd-controls button:disabled {
+.zsd-controls button {
+  align-self: flex-start;
+  font-family: var(--sl-font);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: var(--sl-color-text-accent);
+  color: var(--sl-color-black);
+  cursor: pointer;
+}
+.zsd-controls button[aria-disabled="true"] {
   opacity: 0.5;
   cursor: default;
 }
 .zsd-hint {
-  font-size: 0.8rem;
-  color: var(--sl-color-gray-2); /* gray-3 is 4.48:1 on the dark demo panel */
+  font-size: 0.875rem;
+  color: var(--sl-color-gray-2);
   margin: 0;
 }
 .zsd-img {
   max-width: min(100%, 360px);
-  border-radius: 0.35rem;
   margin-top: 0.8rem;
 }
 .zsd-status {
-  font-family: var(--sl-font-mono);
-  font-size: 0.72rem;
-  color: var(--sl-color-gray-2); /* gray-3 is 4.47:1 on the dark demo panel */
+  font-size: 0.875rem;
+  color: var(--sl-color-gray-2);
   margin: 0.6rem 0 0;
 }
 .zsd-results {
@@ -619,30 +1182,32 @@
   grid-template-columns: minmax(8rem, 14rem) 1fr 3.5rem;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.25rem 0;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--sl-color-hairline);
 }
 .zsd-result-label {
-  font-family: var(--sl-font-mono);
-  font-size: 0.72rem;
+  font-size: 0.875rem;
+  font-weight: 600;
   overflow-wrap: anywhere;
 }
 .zsd-bar {
   height: 0.6rem;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--patina), var(--copper));
+  background: var(--ink-5);
   min-width: 2px;
 }
 .zsd-score {
-  font-family: var(--sl-font-mono);
-  font-size: 0.72rem;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
   text-align: right;
   color: var(--sl-color-gray-2);
 }
 
-/* ── Click-to-load Hugging Face Space ───────────────────────────────────── */
+/* ── Click-to-load Hugging Face Space ────────────────────────────────────── */
 .space-embed {
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.5rem;
+  display: block; /* a custom element is inline until told otherwise */
+  box-sizing: border-box;
+  max-width: 100%;
+  border: 1px solid var(--sl-color-hairline);
   padding: 1rem;
   margin-block: 1rem;
 }
@@ -650,18 +1215,127 @@
   margin: 0 0 0.4rem;
 }
 .space-embed-title {
-  font-weight: 600;
+  font-family: var(--sl-font);
+  font-weight: 700;
 }
 .space-embed iframe {
   display: block;
   width: 100%;
   aspect-ratio: 3 / 4;
   max-height: 85vh;
-  border: 1px solid var(--sl-color-hairline-shade);
-  border-radius: 6px;
+  border: 1px solid var(--sl-color-hairline);
 }
 @media (min-width: 50rem) {
   .space-embed iframe {
     aspect-ratio: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lit-facet-trigger::after,
+  .flow .band {
+    transition: none;
+  }
+}
+
+/* Windows high contrast: colours collapse to a few system colours, so pressed
+   toggles need their own system highlight to stay distinguishable. */
+@media (forced-colors: active) {
+  .lit-chip[aria-pressed="true"],
+  .lit-pill,
+  .apx-switch button[aria-pressed="true"] {
+    forced-color-adjust: none;
+    background: Highlight;
+    border-color: Highlight;
+    color: HighlightText;
+  }
+}
+
+/* Markdown task lists read as a printed checklist: one square box per item,
+   no bullet beside it. The boxes are disabled, so they are not tap targets. */
+.sl-markdown-content .contains-task-list {
+  list-style: none;
+  padding-inline-start: 0;
+}
+.sl-markdown-content .task-list-item label {
+  display: block;
+  position: relative;
+  padding-inline-start: 1.65rem;
+}
+.sl-markdown-content .task-list-item input[type="checkbox"] {
+  appearance: none;
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.3em;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  border: 1.5px solid var(--sl-color-white);
+}
+
+/* Starlight cards become ruled panels, like the chapter index: no box, no icon. */
+.sl-markdown-content .card {
+  border: none;
+  border-top: 3px solid var(--sl-color-white);
+  background: none;
+  padding: 0.75rem 0 0;
+}
+.sl-markdown-content .card .icon {
+  display: none;
+}
+.sl-markdown-content .card .title {
+  font-family: var(--sl-font);
+  font-weight: 750;
+  font-stretch: 85%;
+}
+
+/* Map grid heads: the full field name, or its short form on a phone. */
+.apx-head-short {
+  display: none;
+}
+@media (max-width: 40rem) {
+  .apx-head-full {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .apx-head-short {
+    display: inline;
+  }
+}
+
+/* Captions and source lines of Markdown tables are Archivo, like Table 1.1's. */
+.sl-markdown-content .table-title,
+.sl-markdown-content .table-src {
+  font-family: var(--sl-font);
+  line-height: 1.45;
+}
+
+/* Asides keep the reading measure. */
+.starlight-aside__content > :is(p, ul, ol) {
+  max-width: 68ch;
+}
+
+/* Table 1.1 fits a phone: tighter cells, and a field swatch on the first line
+   of a wrapped head. */
+@media (max-width: 40rem) {
+  .apx-grid th,
+  .apx-grid td {
+    padding: 0.45rem 0.25rem;
+  }
+  .apx-grid td > *,
+  .apx-grid td[data-n="0"]::before {
+    min-width: 2.25rem;
+    width: 2.25rem;
+  }
+  .apx-grid thead th a {
+    align-items: flex-start;
+  }
+  .apx-grid thead th a::before {
+    flex: none;
+    margin-top: 0.3em;
   }
 }

@@ -1,0 +1,70 @@
+---
+// Fig. 2 on the home page: the see → read → try path, worked for one cell of
+// the map (waste & EoL × computer vision). Counts come from the data with the
+// literature list's own filter rule, so each number matches the page it links to.
+import { getCollection } from "astro:content";
+import { EMPTY_FILTER, matchesFilter } from "../components/litFilter";
+import { CHAPTERS, chapterOf } from "../lib/chapters";
+import { litUrl, siteUrl } from "../lib/urls";
+
+const cell = { ...EMPTY_FILTER, ie: ["eol"], ml: ["cv"] };
+const apps = (await getCollection("applications")).filter((e) =>
+  matchesFilter(e.data, cell),
+).length;
+const papers = (await getCollection("literature")).filter((e) =>
+  matchesFilter(e.data, cell),
+).length;
+const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+
+const steps = [
+  {
+    chapter: "applications-map",
+    verb: "See what works today",
+    // The anchor is a heading in applications-map/index.mdx; chapters.test.ts checks it.
+    href: siteUrl("applications-map/#what-works-today-per-field"),
+    fact: `${plural(apps, "computer-vision application", "computer-vision applications")} at end-of-life, each with a maturity call`,
+  },
+  {
+    chapter: "literature",
+    verb: "Read the evidence",
+    href: litUrl(cell),
+    fact: `${plural(papers, "paper", "papers")} tagged waste & EoL × computer vision`,
+  },
+  {
+    chapter: "demos",
+    verb: "Try it",
+    href: siteUrl("demos/"),
+    fact: "Zero-shot recognition of your own photo, in this browser tab",
+  },
+].map((s) => ({
+  ...s,
+  n: chapterOf(s.chapter)?.n ?? 0,
+  where: CHAPTERS.find((c) => c.slug === s.chapter)?.title,
+}));
+---
+
+<figure class="path not-content">
+  <ol>
+    {
+      steps.map((s, i) => (
+        <li style={`--chapter-ink: var(--ink-${s.n})`}>
+          <span class="path-step">Step {i + 1}</span>
+          <a href={s.href}>
+            <span class="path-verb">{s.verb}</span>
+            <span class="path-where">
+              {/* The chapter number repeats the sidebar tab; screen readers get the name alone. */}
+              <b class="running-no" aria-hidden="true">{s.n}</b>
+              {s.where}
+            </span>
+          </a>
+          <span class="path-fact">{s.fact}</span>
+        </li>
+      ))
+    }
+  </ol>
+  <figcaption>
+    <span><b>Fig. 2</b> One path through the site, worked for waste &amp; EoL × computer vision.
+      Every field and technique follows the same three steps, because one tag vocabulary links
+      the map, the literature and the demos.</span>
+  </figcaption>
+</figure>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { AppEntry } from "../data/schemas";
-import { DIM_LABELS, tagLabel } from "../data/tags";
+import { DIM_LABELS, SHORT_LABELS, tagLabel } from "../data/tags";
 import { litUrl, siteUrl } from "../lib/urls";
 import { groupBy, toGrid } from "./appPivot";
 import TagChips from "./TagChips";
@@ -44,7 +44,9 @@ export default function ApplicationsExplorer({ entries }: { entries: AppEntry[] 
         <div>
           {[...groupBy(entries, mode)].map(([tag, apps]) => (
             <section key={tag} className="apx-group">
-              <h3 className={`apx-group-label apx-${mode}`}>{tagLabel(mode, tag)}</h3>
+              <h3 className={`apx-group-label${mode === "ie" ? ` apx-ie field-${tag}` : ""}`}>
+                {tagLabel(mode, tag)}
+              </h3>
               <ul className="apx-list">
                 {apps.map((a) => (
                   <li key={a.id} className="apx-entry">
@@ -90,14 +92,28 @@ function Grid({ entries }: { entries: AppEntry[] }) {
   const { rows: ies, cols: mls, cells } = toGrid(entries);
 
   return (
-    <div className="apx-grid-wrap">
-      <table className="apx-grid">
+    // A focusable, named region: on a phone the table scrolls sideways inside it.
+    <section
+      className="apx-grid-wrap"
+      aria-labelledby="apx-grid-title"
+      // biome-ignore lint/a11y/noNoninteractiveTabindex: a scrollable region must be keyboard-reachable (WCAG 2.1.1)
+      tabIndex={0}
+    >
+      <p className="apx-grid-title" id="apx-grid-title">
+        <b>Table 1.1</b>Applications by AI technique and IE field
+      </p>
+      <table className="apx-grid" aria-labelledby="apx-grid-title">
         <thead>
           <tr>
             <th aria-label="AI technique by IE field" />
             {ies.map((ie) => (
-              <th key={ie} scope="col">
-                <a href={litUrl({ ie: [ie] })}>{tagLabel("ie", ie)}</a>
+              <th key={ie} scope="col" className={`field-${ie}`}>
+                <a href={litUrl({ ie: [ie] })}>
+                  <span className="apx-head-full">{tagLabel("ie", ie)}</span>
+                  <span className="apx-head-short" aria-hidden="true">
+                    {SHORT_LABELS[ie as keyof typeof SHORT_LABELS] ?? ie}
+                  </span>
+                </a>
               </th>
             ))}
           </tr>
@@ -110,13 +126,21 @@ function Grid({ entries }: { entries: AppEntry[] }) {
               </th>
               {ies.map((ie) => {
                 const apps = cells.get(`${ie}|${ml}`);
-                if (!apps) return <td key={ie} />;
+                if (!apps)
+                  return (
+                    <td key={ie} data-n="0">
+                      <span className="sr-only">
+                        No application yet: {tagLabel("ie", ie)} with {tagLabel("ml", ml)}
+                      </span>
+                    </td>
+                  );
                 const papers = [...new Set(apps.flatMap((a) => a.papers))];
                 const names = apps.map((a) => a.name).join(" · ");
                 // The visible text is only a count, so the accessible name carries the apps.
                 const name = `${apps.length} ${apps.length === 1 ? "application" : "applications"}: ${names}`;
+                // Shade steps at 1, 2 and 3+ applications.
                 return (
-                  <td key={ie}>
+                  <td key={ie} data-n={Math.min(apps.length, 3)}>
                     {papers.length > 0 ? (
                       <a href={litUrl({ papers })} title={names} aria-label={`Papers for ${name}`}>
                         {apps.length}
@@ -134,6 +158,10 @@ function Grid({ entries }: { entries: AppEntry[] }) {
           ))}
         </tbody>
       </table>
-    </div>
+      <p className="apx-grid-src">
+        Shade = number of applications: 1, 2, or 3 and more; a dashed cell has none yet. Source:
+        src/data/applications.yaml.
+      </p>
+    </section>
   );
 }

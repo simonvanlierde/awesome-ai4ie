@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 /**
- * Runs axe (WCAG 2.2 AA) on every page of the built site, in light and dark,
- * and exits 1 on any violation. Hugging Face Space iframes are third-party and excluded.
+ * Runs axe (WCAG 2.2 AA) on every page of the built site, in light and dark, at
+ * desktop and phone width, and exits 1 on any violation or on a page wider than
+ * a phone screen (WCAG 1.4.10 Reflow). Hugging Face Space iframes are
+ * third-party and excluded. Checks axe could not decide ("incomplete", e.g.
+ * contrast of text over a figure) are listed but do not fail the run.
  *
  *   npm run build && npx astro preview &   # serves dist/ at the base path
  *   npm run test:a11y                      # defaults to http://localhost:4321/awesome-ai4ie/
@@ -19,9 +22,10 @@ const root = process.argv[2] ?? "http://localhost:4321/awesome-ai4ie/";
 const INDEX_HTML = /index\.html$/;
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
-// Every built page, as a path relative to the site root ('' is the home page).
-// Redirect stubs are skipped: their meta refresh navigates away mid-scan.
-const pages = [];
+// Every built page, as a path relative to the site root ('' is the home page),
+// plus the 404 page. Redirect stubs are skipped: their meta refresh navigates
+// away mid-scan.
+const pages = ["404.html"];
 for (const f of await readdir("dist", { recursive: true })) {
   if (
     f.endsWith("index.html") &&
@@ -32,21 +36,39 @@ for (const f of await readdir("dist", { recursive: true })) {
 }
 
 const browser = await chromium.launch();
+const VIEWPORTS = { desktop: { width: 1280, height: 800 }, phone: { width: 390, height: 844 } };
 let violations = 0;
+const incomplete = new Map();
 for (const colorScheme of ["light", "dark"]) {
-  const page = await (await browser.newContext({ colorScheme })).newPage();
-  for (const path of pages) {
-    await page.goto(new URL(path, root).href);
-    const result = await new AxeBuilder({ page }).withTags(TAGS).exclude("iframe").analyze();
-    for (const v of result.violations) {
-      console.log(
-        `${colorScheme} /${path}: ${v.id} (${v.impact}) at ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`,
-      );
-      console.log(`  ${v.nodes[0].failureSummary?.split("\n").slice(1).join(" ").trim()}`);
+  for (const [name, viewport] of Object.entries(VIEWPORTS)) {
+    const page = await (await browser.newContext({ colorScheme, viewport })).newPage();
+    for (const path of pages) {
+      const where = `${colorScheme} ${name} /${path}`;
+      await page.goto(new URL(path, root).href);
+      const result = await new AxeBuilder({ page }).withTags(TAGS).exclude("iframe").analyze();
+      for (const v of result.violations) {
+        console.log(
+          `${where}: ${v.id} (${v.impact}) at ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`,
+        );
+        console.log(`  ${v.nodes[0].failureSummary?.split("\n").slice(1).join(" ").trim()}`);
+      }
+      violations += result.violations.length;
+      for (const v of result.incomplete)
+        incomplete.set(
+          `/${path} ${v.id}`,
+          Math.max(incomplete.get(`/${path} ${v.id}`) ?? 0, v.nodes.length),
+        );
+      const wider = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+      if (wider > 0) {
+        console.log(`${where}: page is ${wider}px wider than the screen (reflow)`);
+        violations += 1;
+      }
     }
-    violations += result.violations.length;
   }
 }
 await browser.close();
-console.log(`axe: ${pages.length} page(s) × 2 colour schemes, ${violations} violation(s).`);
+for (const [key, n] of incomplete) console.log(`not decided by axe: ${key} (${n} node(s))`);
+console.log(
+  `axe: ${pages.length} page(s) × 2 colour schemes × 2 widths, ${violations} violation(s).`,
+);
 process.exit(violations ? 1 : 0);

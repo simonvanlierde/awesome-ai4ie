@@ -23,6 +23,13 @@ describe("literature.yaml", () => {
       expect(new Set(ids).size, `duplicate ${k}`).toBe(ids.length);
     }
   });
+  it("lists each tag at most once per entry", () => {
+    for (const e of [...lit, ...apps] as Record<string, unknown>[])
+      for (const dim of ["ie", "ml", "type"]) {
+        const tags = (e[dim] as string[] | undefined) ?? [];
+        expect(new Set(tags).size, `${e.id}: duplicate ${dim} tag`).toBe(tags.length);
+      }
+  });
   it("requires a doi or an arxiv id", () => {
     const { doi: _d, arxiv: _a, ...bare } = lit[0] as Record<string, unknown>;
     expect(literatureSchema.safeParse(bare).success).toBe(false);

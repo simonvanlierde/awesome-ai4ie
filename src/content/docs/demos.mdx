@@ -14,6 +14,7 @@ it does and doesn't show.
 
 ## In this browser: zero-shot identification (CLIP)
 
+Zero-shot means you name the categories when you run it; the model was never trained on them.
 Pick a photo (a product, a part, a pile of scrap) and a set of candidate labels;
 <Cite id="radfordLearningTransferableVisual2021">CLIP</Cite> scores the labels against the image. It runs
 **entirely in this browser tab** via
@@ -74,7 +75,7 @@ reflective, transparent, and thin parts that dominate real products.
 
   ```html
   <iframe src="https://example.org/your-demo/" width="100%"
-          style="height:480px;border:1px solid #ccc;border-radius:6px"
+          style="height:480px;border:1px solid #ccc"
           loading="lazy" title="Demo: category name"></iframe>
   ```
 

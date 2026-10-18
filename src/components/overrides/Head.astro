@@ -1,0 +1,13 @@
+---
+// Starlight's head, plus a preload for the two faces above the fold on every
+// page. Without it the browser finds the fonts only after parsing the CSS, and
+// the swap shifts the layout. The ?url imports resolve to the same hashed files
+// the @font-face rules use.
+import Default from "@astrojs/starlight/components/Head.astro";
+import archivo from "@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url";
+import serif from "@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2?url";
+---
+
+<Default />
+<link rel="preload" href={archivo} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={serif} as="font" type="font/woff2" crossorigin />
