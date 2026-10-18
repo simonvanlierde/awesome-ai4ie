@@ -24,6 +24,8 @@ fit at all. The rules of thumb below assume 4-bit quantized weights (the practic
 default for local use) and a modest context length. For 8-bit, halve the model size.
 For full precision, quarter it. *(checked 2026-07)*
 
+**Table 4.1** What fits in memory at 4-bit
+
 | Memory | Runs (4-bit) | Typical hardware |
 |---|---|---|
 | 8 GB | ~7–8B models | entry laptop GPU, base MacBook Air |
@@ -31,10 +33,12 @@ For full precision, quarter it. *(checked 2026-07)*
 | 24–32 GB | ~30B | RTX 4090/5090 workstation, MacBook M-Max |
 | 48–96 GB | ~70B | 2× consumer GPUs, RTX 6000-class, Mac Studio |
 
+Source: rules of thumb for 4-bit weights and a modest context, checked 2026-07.
+
 - **Laptop.** Modern Apple silicon (16 GB+) or a laptop RTX GPU runs 7–14B models usably via Ollama/LM Studio. *Good for:* drafting, summarization, code completion on confidential material. *Not for:* the quality you're used to from frontier hosted models; expect a clear step down.
 - **Workstation.** One consumer GPU (24–32 GB VRAM, roughly €2,000–3,500 for the card at 2026 prices) runs ~30B models fast and 70B slowly. *Good for:* a research group's shared "sensitive data" box running Ollama or vLLM.
-- **Server / cluster.** For serving a group or fine-tuning: multi-GPU boxes or university HPC. Most universities have a cluster with GPU partitions; how you request access, and whether your group already has a shared box, is local knowledge. *Wanted: your institution's answer, in the notes below.*
-- **Cloud APIs.** For non-sensitive data, hosted APIs are the least setup and the best quality per euro. The line to watch is data governance, not cost. Which providers you may use, and for which data classifications, is set by your institution's policy. Check before uploading anything. *Wanted: your institution's answer, in the notes below.*
+- **Server / cluster.** For serving a group or fine-tuning: multi-GPU boxes or university HPC. Most universities have a cluster with GPU partitions; how you request access, and whether your group already has a shared box, is local knowledge. <span class="wanted">Wanted</span> your institution's answer, in the notes below.
+- **Cloud APIs.** For non-sensitive data, hosted APIs are the least setup and the best quality per euro. The line to watch is data governance, not cost. Which providers you may use, and for which data classifications, is set by your institution's policy. Check before uploading anything. <span class="wanted">Wanted</span> your institution's answer, in the notes below.
 
 ### Per-institution notes
 
@@ -42,7 +46,7 @@ Access routes and data policies differ per university, so they live here rather 
 text above. Add yours: institution, cluster name, how to request GPU access, and which
 hosted providers are approved for which data classification.
 
-*Wanted: no entries yet. Add yours.*
+<span class="wanted">Wanted</span> No entries yet. Add yours.
 
 ## Decision shortcut
 

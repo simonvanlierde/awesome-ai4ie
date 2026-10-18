@@ -186,7 +186,7 @@ Two neutral stocks, one near-black ink, and five printing inks that each pass 4.
 
 **The Swatch Not Fill Rule.** Outside the cover plate, an IE field shows its ink as a small square swatch (0.55 to 0.75rem) beside its label, never as a filled chip or coloured text.
 
-**The One Hue Count Rule.** Count shading on a grid uses one ink at stepped strength (22%, 45%, solid). An empty cell is a dashed outline, not a pale fill.
+**The One Hue Count Rule.** Count shading on a grid uses one ink at stepped strength (30%, 45%, solid for 3 and more). An empty cell is a dashed outline, not a pale fill.
 
 ### Typography
 
@@ -248,9 +248,9 @@ Square corners throughout (0px): buttons, chips, tags, inputs, panels, sidebar i
 #### Buttons
 
 - **Shape:** square (0px).
-- **Primary:** Starlight's link button, filled with the accent ink (cobalt), text in the stock colour (dark) or white (light), weight 700. The demo run button and the Space load button follow the same fill at 0.5rem 1rem padding.
-- **Secondary:** Starlight's minimal link button, text only with an icon.
-- **Hover / Focus:** a 2px accent outline at 2px offset on every focusable element. Disabled buttons drop to 50% opacity.
+- **Primary:** Starlight's link button, filled with the accent ink (cobalt), text in the stock colour (dark) or white (light), weight 700. The demo run button follows the same fill at 0.5rem 1rem padding.
+- **Secondary:** Starlight's minimal link button, text only with an icon; the Space load buttons are 1px ink outlines on the stock, so a page keeps one filled action.
+- **Hover / Focus:** a 2px accent outline at 2px offset on every focusable element. Unavailable buttons (`aria-disabled`, which keeps keyboard focus) drop to 50% opacity.
 
 #### Chips (if used)
 
@@ -263,6 +263,8 @@ Square corners throughout (0px): buttons, chips, tags, inputs, panels, sidebar i
 - **Corner Style:** square.
 - **Background:** none; entries are rows on the stock separated by hairlines (1rem padding for literature entries, 0.85rem for applications).
 - **Shadow Strategy:** none (see Elevation & Depth).
+- **Starlight cards:** no box and no icon; a 3px ink rule on top and the title in Archivo, like the home chapter index.
+- **Task lists:** no bullet; one 1rem square box with a 1.5px ink border per item.
 - **Border:** demo and embed containers take a 1px border, ink for the zero-shot demo, hairline for embeds. Asides take a 1px border at 45% of their ink over a 9% tint, with no side bar.
 - **Internal Padding:** 1rem to 1.1rem.
 
@@ -281,11 +283,11 @@ Square corners throughout (0px): buttons, chips, tags, inputs, panels, sidebar i
 
 #### Flow plate (Fig. 1)
 
-The signature component. A build-time Sankey of vetted papers, IE field nodes on the left (8-unit bars in the field ink), AI technique nodes on the right (ink bars), bands filled with the source field's ink at `--band-opacity` (0.55 in both themes). Labels are Archivo 650 at width 82% with the number of papers in gray-3; band width counts field-technique pairings, and the caption says so. Each band and node is a link to the filtered literature list, and a node's list holds exactly the papers its number counts. Nodes are in the tab order with a 28-unit hit area; bands are pointer-only (the nodes and the literature filters reach the same lists). Pointing at or focusing a band raises it to 0.9 and drops the others to 0.12 (0.25s, `cubic-bezier(0.16, 1, 0.3, 1)`); keyboard focus draws a 3px accent stroke and underlines the label. Under the plate, a caption over a hairline: bold "Fig. 1", the claim, and a gray-3 source line.
+The signature component. A build-time Sankey of vetted papers, IE field nodes on the left (8-unit bars in the field ink), AI technique nodes on the right (ink bars), bands filled with the source field's ink at `--band-opacity` (0.55 in both themes). Labels are Archivo 650 at width 82% with the number of papers in gray-3; band width counts field-technique pairings, and the caption says so. Each band and node is a link to the filtered literature list, and a node's list holds exactly the papers its number counts. Nodes are in the tab order with a 48-unit hit area (about 22px on a phone); bands are pointer-only (the nodes and the literature filters reach the same lists). Pointing at or focusing a band raises it to 0.9 and drops the others to 0.12 (0.25s, `cubic-bezier(0.16, 1, 0.3, 1)`); keyboard focus draws a 3px accent stroke and underlines the label. Under the plate, a caption over a hairline: bold "Fig. 1", the claim, and a gray-3 source line.
 
 #### Numbered table with count cells (Table 1.1)
 
-The second system. A ruled table (2px ink top, 1px ink bottom, hairline rows) titled "Table N.N" in bold. Column heads carry the field swatch. Cells hold a 2.75rem by 1.75rem block shaded by count in cobalt (22%, 45%, solid with on-ink text); an empty cell is a dashed gray-4 outline. A source line in gray-3 sits below. Markdown tables in content follow the same ruling.
+The second system. A ruled table (2px ink rule over the head row, 1px ink rule under the last row, hairline rows; the rules sit on the rows so they match the table's width) titled "Table N.N" in bold. Column heads carry the field swatch. Cells hold a 2.75rem by 1.75rem block shaded by count in cobalt (30%, 45%, solid with on-ink text for 3 and more). On a phone the column heads switch to the short field names, with the full name kept for screen readers; an empty cell is a dashed gray-4 outline. A source line in gray-3 sits below. Markdown tables in content follow the same ruling, with a bold "Table N.N" title above and a source line below.
 
 #### Path figure (Fig. 2)
 

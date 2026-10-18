@@ -354,7 +354,15 @@ starlight-menu-button button {
   border-collapse: collapse;
   font-family: var(--sl-font);
   font-variant-numeric: tabular-nums;
+}
+/* The rules sit on the rows, not the table: Starlight sets a table to
+   display: block so it can scroll, and its box is then wider than its rows. */
+.sl-markdown-content table:not(:where(.not-content *)) thead th,
+.apx-grid thead th {
   border-top: 2px solid var(--sl-color-white);
+}
+.sl-markdown-content table:not(:where(.not-content *)) tbody tr:last-child td,
+.apx-grid tbody tr:last-child :is(th, td) {
   border-bottom: 1px solid var(--sl-color-white);
 }
 .sl-markdown-content table:not(:where(.not-content *)) :is(th, td) {
@@ -415,7 +423,7 @@ starlight-menu-button button {
 }
 @media (min-width: 64rem) {
   .cover-grid {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-columns: minmax(0, 6fr) minmax(0, 7fr);
     gap: 3rem;
     align-items: start;
   }
@@ -706,10 +714,8 @@ starlight-menu-button button {
   margin-bottom: 0.6rem;
 }
 .lit-bar-label {
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
   color: var(--sl-color-gray-3);
   margin-right: 0.35rem;
 }
@@ -819,6 +825,9 @@ starlight-menu-button button {
   color: var(--sl-color-black);
 }
 @media (pointer: coarse) {
+  .lit-title {
+    padding-block: 0.5rem;
+  }
   .lit-facet-trigger,
   .lit-facet-panel .lit-chip,
   .lit-pill {
@@ -863,8 +872,10 @@ starlight-menu-button button {
   padding: 0.15rem 0.35rem;
 }
 /* Inline citation link (<Cite>). Only "(Author, Year)" stays on one line. */
-.cite-ref {
-  white-space: nowrap;
+@media (min-width: 40rem) {
+  .cite-ref {
+    white-space: nowrap;
+  }
 }
 .lit-list {
   list-style: none;
@@ -926,6 +937,7 @@ starlight-menu-button button {
 }
 .apx-switch {
   display: inline-flex;
+  flex-wrap: wrap;
   margin: 0;
   padding: 0;
   min-inline-size: 0;
@@ -957,8 +969,7 @@ starlight-menu-button button {
   gap: 0.5rem;
   font-size: 0.875rem;
   font-weight: 750;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-stretch: 88%;
   margin: 0;
   padding-bottom: 0.35rem;
   border-bottom: 2px solid var(--sl-color-white);
@@ -1063,7 +1074,7 @@ starlight-menu-button button {
   color: var(--sl-color-white);
 }
 .apx-grid td[data-n="1"] > * {
-  background: color-mix(in srgb, var(--ink-1) 22%, transparent);
+  background: color-mix(in srgb, var(--ink-1) 30%, transparent);
 }
 .apx-grid td[data-n="2"] > * {
   background: color-mix(in srgb, var(--ink-1) 45%, transparent);
@@ -1117,8 +1128,18 @@ starlight-menu-button button {
   font-weight: 400;
   font-size: 0.9375rem;
 }
-.zsd-controls button,
 .space-embed-load {
+  align-self: flex-start;
+  font-family: var(--sl-font);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--sl-color-white);
+  background: transparent;
+  color: var(--sl-color-white);
+  cursor: pointer;
+}
+.zsd-controls button {
   align-self: flex-start;
   font-family: var(--sl-font);
   font-weight: 700;
@@ -1223,5 +1244,60 @@ starlight-menu-button button {
     background: Highlight;
     border-color: Highlight;
     color: HighlightText;
+  }
+}
+
+/* Markdown task lists read as a printed checklist: one square box per item,
+   no bullet beside it. The boxes are disabled, so they are not tap targets. */
+.sl-markdown-content .contains-task-list {
+  list-style: none;
+  padding-inline-start: 0;
+}
+.sl-markdown-content .task-list-item label {
+  display: flex;
+  gap: 0.65rem;
+  align-items: baseline;
+}
+.sl-markdown-content .task-list-item input[type="checkbox"] {
+  appearance: none;
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  border: 1.5px solid var(--sl-color-white);
+  transform: translateY(0.15em);
+}
+
+/* Starlight cards become ruled panels, like the chapter index: no box, no icon. */
+.sl-markdown-content .card {
+  border: none;
+  border-top: 3px solid var(--sl-color-white);
+  background: none;
+  padding: 0.75rem 0 0;
+}
+.sl-markdown-content .card .icon {
+  display: none;
+}
+.sl-markdown-content .card .title {
+  font-family: var(--sl-font);
+  font-weight: 750;
+  font-stretch: 85%;
+}
+
+/* Map grid heads: the full field name, or its short form on a phone. */
+.apx-head-short {
+  display: none;
+}
+@media (max-width: 40rem) {
+  .apx-head-full {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .apx-head-short {
+    display: inline;
   }
 }

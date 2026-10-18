@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { AppEntry } from "../data/schemas";
-import { DIM_LABELS, tagLabel } from "../data/tags";
+import { DIM_LABELS, SHORT_LABELS, tagLabel } from "../data/tags";
 import { litUrl, siteUrl } from "../lib/urls";
 import { groupBy, toGrid } from "./appPivot";
 import TagChips from "./TagChips";
@@ -108,7 +108,12 @@ function Grid({ entries }: { entries: AppEntry[] }) {
             <th aria-label="AI technique by IE field" />
             {ies.map((ie) => (
               <th key={ie} scope="col" className={`field-${ie}`}>
-                <a href={litUrl({ ie: [ie] })}>{tagLabel("ie", ie)}</a>
+                <a href={litUrl({ ie: [ie] })}>
+                  <span className="apx-head-full">{tagLabel("ie", ie)}</span>
+                  <span className="apx-head-short" aria-hidden="true">
+                    {SHORT_LABELS[ie as keyof typeof SHORT_LABELS] ?? ie}
+                  </span>
+                </a>
               </th>
             ))}
           </tr>
@@ -154,7 +159,7 @@ function Grid({ entries }: { entries: AppEntry[] }) {
         </tbody>
       </table>
       <p className="apx-grid-src">
-        Shade = number of applications; a dashed cell has none yet. Source:
+        Shade = number of applications: 1, 2, or 3 and more; a dashed cell has none yet. Source:
         src/data/applications.yaml.
       </p>
     </section>
