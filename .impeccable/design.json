@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-17T00:00:00Z",
+  "generatedAt": "2026-10-18T00:00:00Z",
   "title": "Design System: Awesome AI for Industrial Ecology",
   "extensions": {
     "colorMeta": {
@@ -241,7 +241,7 @@
       },
       "body": {
         "displayName": "Reading text",
-        "purpose": "Markdown prose at a 68ch measure."
+        "purpose": "Markdown prose at a 68ch measure. All three faces are self-hosted with font-display: optional; Archivo and Source Serif are preloaded in Head.astro."
       },
       "lede": {
         "displayName": "Lede",
@@ -253,20 +253,14 @@
       },
       "caption": {
         "displayName": "Caption",
-        "purpose": "Figure and table captions and source lines."
+        "purpose": "Figure and table captions and source lines, including the Table N.N title and source of Markdown tables."
       },
       "code": {
         "displayName": "Code",
-        "purpose": "Code only."
+        "purpose": "Code only. Martian Mono loads with font-display: optional."
       }
     },
-    "shadows": [
-      {
-        "name": "dropdown",
-        "value": "0 8px 24px rgb(0 0 0 / 0.18)",
-        "purpose": "The open literature facet panel only; everything else is flat."
-      }
-    ],
+    "shadows": [],
     "motion": [
       {
         "name": "band-focus",
@@ -276,19 +270,19 @@
       {
         "name": "caret",
         "value": "transform 0.15s ease-out",
-        "purpose": "Facet trigger caret rotating on open."
+        "purpose": "Facet trigger and application entry carets rotating on open."
       },
       {
         "name": "reduced-motion",
         "value": "transition: none",
-        "purpose": "Both transitions are removed under prefers-reduced-motion."
+        "purpose": "All three transitions are removed under prefers-reduced-motion."
       }
     ],
     "breakpoints": [
       {
         "name": "phone",
         "value": "40rem",
-        "purpose": "Below: running head drops its right part; flow labels enlarge."
+        "purpose": "Below: running head drops its right part; flow labels enlarge to 32 user units; Path steps stack; grid heads use short field names."
       },
       {
         "name": "chapter-strip",
@@ -298,7 +292,7 @@
       {
         "name": "cover",
         "value": "64rem",
-        "purpose": "At and above: two-column cover (5fr title, 7fr Fig. 1)."
+        "purpose": "At and above: two-column cover (6fr title, 7fr Fig. 1); flow labels 19 user units."
       }
     ]
   },
@@ -317,7 +311,7 @@
       "refersTo": "chip",
       "description": "Toggleable tag filter; pressed flips to solid ink.",
       "html": "<button class=\"ds-chip\" aria-pressed=\"false\">Computer vision</button><button class=\"ds-chip\" aria-pressed=\"true\">LCA</button>",
-      "css": ".ds-chip { display: inline-flex; align-items: center; margin-right: 0.35rem; padding: 0.2rem 0.55rem; font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 0.8125rem; font-weight: 600; font-stretch: 88%; border: 1px solid var(--sl-color-gray-5, #3a3f47); background: transparent; color: var(--sl-color-gray-1, #dcdfe3); border-radius: 0; cursor: pointer; } .ds-chip[aria-pressed='true'] { background: var(--sl-color-white, #f1f2f4); border-color: var(--sl-color-white, #f1f2f4); color: var(--sl-color-black, #121419); } .ds-chip:hover { border-color: var(--sl-color-white, #f1f2f4); } .ds-chip:focus-visible { outline: 2px solid var(--sl-color-text-accent, #8eaaff); outline-offset: 2px; }"
+      "css": ".ds-chip { display: inline-flex; align-items: center; margin-right: 0.35rem; padding: 0.2rem 0.55rem; font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 0.8125rem; font-weight: 600; font-stretch: 88%; border: 1px solid var(--sl-color-gray-5, #3a3f47); background: transparent; color: var(--sl-color-gray-1, #dcdfe3); border-radius: 0; cursor: pointer; } .ds-chip[aria-pressed='true'] { background: var(--sl-color-white, #f1f2f4); border-color: var(--sl-color-white, #f1f2f4); color: var(--sl-color-black, #121419); } .ds-chip:focus-visible { outline: 2px solid var(--sl-color-text-accent, #8eaaff); outline-offset: 2px; }"
     },
     {
       "name": "Field Tag and Wanted Mark",
@@ -355,19 +349,40 @@
       "kind": "custom",
       "description": "Numbered ruled table with cells shaded by count in one ink and dashed empty cells, plus a source line.",
       "html": "<div class=\"ds-grid\"><p class=\"ds-grid-title\"><b>Table 1.1</b> Applications by AI technique and IE field</p><table><thead><tr><th></th><th>LCA</th><th>MFA</th></tr></thead><tbody><tr><th>Computer vision</th><td data-n=\"0\"></td><td data-n=\"2\"><a href=\"#\">2</a></td></tr><tr><th>LLMs & agents</th><td data-n=\"3\"><a href=\"#\">3</a></td><td data-n=\"1\"><a href=\"#\">1</a></td></tr></tbody></table><p class=\"ds-grid-src\">Shade = number of applications; a dashed cell has none yet. Source: src/data/applications.yaml.</p></div>",
-      "css": ".ds-grid { font-family: var(--sl-font, 'Archivo Variable', sans-serif); color: var(--sl-color-white, #f1f2f4); } .ds-grid-title { margin: 0 0 0.4rem; font-size: 0.875rem; font-weight: 700; } .ds-grid-title b { margin-right: 0.5rem; } .ds-grid table { border-collapse: collapse; font-variant-numeric: tabular-nums; border-top: 2px solid var(--sl-color-white, #f1f2f4); border-bottom: 1px solid var(--sl-color-white, #f1f2f4); } .ds-grid th, .ds-grid td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--sl-color-hairline, #2c3038); text-align: center; font-size: 0.875rem; } .ds-grid thead th { font-weight: 700; font-stretch: 82%; border-bottom-color: var(--sl-color-white, #f1f2f4); } .ds-grid tbody th { text-align: left; font-weight: 650; } .ds-grid td > a { display: inline-grid; place-items: center; min-width: 2.75rem; height: 1.75rem; font-weight: 750; text-decoration: none; color: var(--sl-color-white, #f1f2f4); } .ds-grid td[data-n='1'] > a { background: color-mix(in srgb, var(--ink-1, #8eaaff) 22%, transparent); } .ds-grid td[data-n='2'] > a { background: color-mix(in srgb, var(--ink-1, #8eaaff) 45%, transparent); } .ds-grid td[data-n='3'] > a { background: var(--ink-1, #8eaaff); color: var(--on-ink, #121419); } .ds-grid td[data-n='0']::before { content: ''; display: inline-block; width: 2.75rem; height: 1.75rem; border: 1px dashed var(--sl-color-gray-4, #5f656e); vertical-align: middle; } .ds-grid td a:hover, .ds-grid td a:focus-visible { outline: 2px solid var(--sl-color-white, #f1f2f4); } .ds-grid-src { margin: 0.5rem 0 0; font-size: 0.8125rem; color: var(--sl-color-gray-3, #969ca5); }"
+      "css": ".ds-grid { font-family: var(--sl-font, 'Archivo Variable', sans-serif); color: var(--sl-color-white, #f1f2f4); } .ds-grid-title { margin: 0 0 0.4rem; font-size: 0.875rem; font-weight: 700; } .ds-grid-title b { margin-right: 0.5rem; } .ds-grid table { border-collapse: collapse; font-variant-numeric: tabular-nums; border-top: 2px solid var(--sl-color-white, #f1f2f4); border-bottom: 1px solid var(--sl-color-white, #f1f2f4); } .ds-grid th, .ds-grid td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--sl-color-hairline, #2c3038); text-align: center; font-size: 0.875rem; } .ds-grid thead th { font-weight: 700; font-stretch: 82%; border-bottom-color: var(--sl-color-white, #f1f2f4); } .ds-grid tbody th { text-align: left; font-weight: 650; } .ds-grid td > a { display: inline-grid; place-items: center; min-width: 2.75rem; height: 1.75rem; font-weight: 750; text-decoration: none; color: var(--sl-color-white, #f1f2f4); } .ds-grid td[data-n='1'] > a { background: color-mix(in srgb, var(--ink-1, #8eaaff) 30%, transparent); } .ds-grid td[data-n='2'] > a { background: color-mix(in srgb, var(--ink-1, #8eaaff) 45%, transparent); } .ds-grid td[data-n='3'] > a { background: var(--ink-1, #8eaaff); color: var(--on-ink, #121419); } .ds-grid td[data-n='0']::before { content: ''; display: inline-block; width: 2.75rem; height: 1.75rem; border: 1px dashed var(--sl-color-gray-4, #5f656e); vertical-align: middle; } .ds-grid td a:hover, .ds-grid td a:focus-visible { outline: 2px solid var(--sl-color-white, #f1f2f4); } .ds-grid-src { margin: 0.5rem 0 0; font-size: 0.8125rem; color: var(--sl-color-gray-3, #969ca5); }"
     },
     {
       "name": "Flow Plate (Fig. 1)",
       "kind": "custom",
       "description": "Signature Sankey: IE field to AI technique, bands in field inks, each a link; hover lifts one band and recedes the rest.",
       "html": "<figure class=\"ds-flow\"><svg viewBox=\"0 0 420 160\"><g class=\"ds-bands\"><a href=\"#\"><path class=\"ds-band\" style=\"--field: var(--ink-1, #8eaaff)\" d=\"M108 10C200 10 200 20 292 20V70C200 70 200 60 108 60Z\"/></a><a href=\"#\"><path class=\"ds-band\" style=\"--field: var(--ink-2, #ff8f70)\" d=\"M108 70C200 70 200 80 292 80V150C200 150 200 140 108 140Z\"/></a></g><rect x=\"100\" y=\"10\" width=\"8\" height=\"50\" fill=\"var(--ink-1, #8eaaff)\"/><rect x=\"100\" y=\"70\" width=\"8\" height=\"70\" fill=\"var(--ink-2, #ff8f70)\"/><rect x=\"292\" y=\"20\" width=\"8\" height=\"130\" fill=\"var(--sl-color-white, #f1f2f4)\"/><text x=\"90\" y=\"35\" text-anchor=\"end\" dominant-baseline=\"middle\">LCA <tspan class=\"ds-n\">18</tspan></text><text x=\"90\" y=\"105\" text-anchor=\"end\" dominant-baseline=\"middle\">Waste &amp; EoL <tspan class=\"ds-n\">21</tspan></text><text x=\"310\" y=\"85\" dominant-baseline=\"middle\">Computer vision <tspan class=\"ds-n\">18</tspan></text></svg><figcaption><span><b>Fig. 1</b> What the AI-in-IE papers apply, from IE field to AI technique.</span><span class=\"ds-src\">Source: src/data/literature.yaml</span></figcaption></figure>",
-      "css": ".ds-flow { margin: 0; } .ds-flow svg { display: block; width: 100%; height: auto; overflow: visible; } .ds-flow text { font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 13px; font-weight: 650; font-stretch: 82%; word-spacing: 0.1em; fill: var(--sl-color-white, #f1f2f4); } .ds-flow .ds-n { font-weight: 500; fill: var(--sl-color-gray-3, #969ca5); } .ds-band { fill: var(--field); fill-opacity: var(--band-opacity, 0.55); transition: fill-opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1); } .ds-bands:has(a:is(:hover, :focus-visible)) .ds-band { fill-opacity: 0.12; } .ds-bands a:is(:hover, :focus-visible) .ds-band { fill-opacity: 0.9; } .ds-flow a:focus-visible { outline: none; } .ds-flow a:focus-visible .ds-band { stroke: var(--sl-color-white, #f1f2f4); stroke-width: 2; } .ds-flow figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25rem 1.5rem; margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid var(--sl-color-hairline, #2c3038); font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 0.8125rem; line-height: 1.45; color: var(--sl-color-gray-2, #bcc1c8); } .ds-flow figcaption b { color: var(--sl-color-white, #f1f2f4); margin-right: 0.25rem; } .ds-src { color: var(--sl-color-gray-3, #969ca5); } @media (prefers-reduced-motion: reduce) { .ds-band { transition: none; } }"
+      "css": ".ds-flow { margin: 0; } .ds-flow svg { display: block; width: 100%; height: auto; overflow: visible; } .ds-flow text { font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 17px; font-weight: 650; font-stretch: 82%; word-spacing: 0.1em; fill: var(--sl-color-white, #f1f2f4); } .ds-flow .ds-n { font-weight: 500; fill: var(--sl-color-gray-3, #969ca5); } .ds-band { fill: var(--field); fill-opacity: var(--band-opacity, 0.55); transition: fill-opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1); } .ds-bands:has(a:is(:hover, :focus-visible)) .ds-band { fill-opacity: 0.12; } .ds-bands a:is(:hover, :focus-visible) .ds-band { fill-opacity: 0.9; } .ds-flow a:focus-visible { outline: none; } .ds-flow a:focus-visible .ds-band { stroke: var(--sl-color-text-accent, #8eaaff); stroke-width: 3; paint-order: stroke; } .ds-flow figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25rem 1.5rem; margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px solid var(--sl-color-hairline, #2c3038); font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 0.8125rem; line-height: 1.45; color: var(--sl-color-gray-2, #bcc1c8); } .ds-flow figcaption b { color: var(--sl-color-white, #f1f2f4); margin-right: 0.25rem; } .ds-src { color: var(--sl-color-gray-3, #969ca5); } @media (max-width: 40rem) { .ds-flow text { font-size: 32px; } } @media (min-width: 64rem) { .ds-flow text { font-size: 19px; } } @media (prefers-reduced-motion: reduce) { .ds-band { transition: none; } }"
+    },
+    {
+      "name": "Application Entry",
+      "kind": "custom",
+      "description": "A native disclosure on the map page: closed, the name over the maturity call with a caret; open, the description.",
+      "html": "<div class=\"ds-entry\"><details><summary><span class=\"ds-entry-name\">Battery passport extraction</span><span class=\"ds-entry-maturity\">Prototype on a handful of products.</span></summary><p class=\"ds-entry-desc\">Reads label text from photos and fills the passport fields.</p></details></div>",
+      "css": ".ds-entry { padding: 0.85rem 0; border-bottom: 1px solid var(--sl-color-hairline, #2c3038); } .ds-entry summary { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.2rem 1rem; cursor: pointer; list-style: none; } .ds-entry summary::-webkit-details-marker { display: none; } .ds-entry summary::after { content: ''; grid-column: 2; grid-row: 1; align-self: center; width: 0.45rem; height: 0.45rem; border: solid var(--sl-color-gray-3, #969ca5); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); transition: transform 0.15s ease-out; } .ds-entry details[open] > summary::after { transform: rotate(-135deg); } .ds-entry-name { font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-weight: 700; font-stretch: 90%; font-size: 1.0625rem; } .ds-entry summary:hover .ds-entry-name { text-decoration: underline; text-underline-offset: 0.2em; } .ds-entry-maturity { grid-column: 1; max-width: 68ch; font-family: var(--font-read, 'Source Serif 4 Variable', Georgia, serif); font-size: 0.9375rem; line-height: 1.5; color: var(--sl-color-gray-2, #bcc1c8); } .ds-entry-desc { max-width: 68ch; margin: 0.6rem 0 0.5rem; font-family: var(--font-read, 'Source Serif 4 Variable', Georgia, serif); font-size: 1rem; line-height: 1.55; color: var(--sl-color-gray-1, #dcdfe3); } @media (prefers-reduced-motion: reduce) { .ds-entry summary::after { transition: none; } }"
+    },
+    {
+      "name": "Path Figure (Fig. 2)",
+      "kind": "custom",
+      "description": "Three steps (see, read, try) worked for one map cell, each topped by a 3px rule in its chapter's ink, joined by a chevron on desktop.",
+      "html": "<figure class=\"ds-path\"><ol><li style=\"--chapter-ink: var(--ink-1, #8eaaff)\"><a href=\"#\"><span class=\"ds-path-step\">Step 1</span><span class=\"ds-path-verb\">See</span><span class=\"ds-path-fact\">Two applications sit in this cell.</span></a></li><li style=\"--chapter-ink: var(--ink-2, #ff8f70)\"><a href=\"#\"><span class=\"ds-path-step\">Step 2</span><span class=\"ds-path-verb\">Read</span><span class=\"ds-path-fact\">Nine papers back it.</span></a></li></ol><figcaption><b>Fig. 2</b> One cell, followed from map to papers.</figcaption></figure>",
+      "css": ".ds-path { margin: 0; } .ds-path ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.25rem; } @media (min-width: 40rem) { .ds-path ol { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem; } .ds-path li + li::before { content: ''; position: absolute; top: -0.55rem; left: -2.1rem; width: 0.8rem; height: 0.8rem; border: solid var(--sl-color-gray-3, #969ca5); border-width: 2px 2px 0 0; transform: rotate(45deg); } } .ds-path li { position: relative; display: grid; gap: 0.35rem; align-content: start; padding-top: 0.6rem; border-top: 3px solid var(--chapter-ink); } .ds-path a { display: grid; gap: 0.4rem; color: var(--sl-color-white, #f1f2f4); text-decoration: none; } .ds-path-step { font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 0.875rem; font-weight: 600; font-stretch: 85%; color: var(--sl-color-gray-3, #969ca5); } .ds-path-verb { font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 1.375rem; font-weight: 760; font-stretch: 80%; line-height: 1.1; word-spacing: 0.1em; } .ds-path a:hover .ds-path-verb { text-decoration: underline; text-decoration-color: var(--chapter-ink); text-decoration-thickness: 2px; text-underline-offset: 0.2em; } .ds-path-fact { font-family: var(--font-read, 'Source Serif 4 Variable', Georgia, serif); font-size: 1rem; line-height: 1.45; color: var(--sl-color-gray-2, #bcc1c8); } .ds-path figcaption { margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--sl-color-hairline, #2c3038); font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-size: 0.8125rem; line-height: 1.45; color: var(--sl-color-gray-2, #bcc1c8); } .ds-path figcaption b { margin-right: 0.25rem; color: var(--sl-color-white, #f1f2f4); }"
+    },
+    {
+      "name": "Ruled Card and Task List",
+      "kind": "custom",
+      "description": "Starlight cards as ruled panels (3px ink rule, no box, no icon) and Markdown task lists as a square box per item with no bullet.",
+      "html": "<div class=\"ds-card\"><p class=\"ds-card-title\">Add a paper</p><p>Open an issue with the DOI.</p></div><ul class=\"ds-tasks\"><li><span class=\"ds-box\"></span>Check the DOI resolves</li><li><span class=\"ds-box\"></span>Name the data file</li></ul>",
+      "css": ".ds-card { border: none; border-top: 3px solid var(--sl-color-white, #f1f2f4); background: none; padding: 0.75rem 0 0; } .ds-card-title { margin: 0; font-family: var(--sl-font, 'Archivo Variable', sans-serif); font-weight: 750; font-stretch: 85%; } .ds-tasks { list-style: none; padding-inline-start: 0; } .ds-tasks li { position: relative; padding-inline-start: 1.65rem; } .ds-box { position: absolute; inset-inline-start: 0; top: 0.3em; width: 1rem; height: 1rem; border: 1.5px solid var(--sl-color-white, #f1f2f4); }"
     }
   ],
   "narrative": {
     "northStar": "The Field Yearbook",
-    "overview": "The site is set like a statistical yearbook for industrial ecology. Each chapter has a number and a printing ink. A running head sits above every page title. Claims appear as numbered tables and figures, each with a source line. The cover figure is a material-flow (Sankey) plate, the field's own graphic: it shows the literature flowing from IE field to AI technique, and every band links to the filtered papers.\n\nThe page is paper and ink. Dark is the default theme, a blue-black stock with near-white ink. Light is a cool white stock with near-black ink. Five printing inks (cobalt, vermilion, olive, ochre, plum) carry all colour, and each ink has two jobs: it marks a chapter, and four of them also mark an IE field. Everything else is grey. Corners are square, depth comes from rules rather than shadows, and type is narrow Archivo for anything that labels or structures and Source Serif 4 for anything to be read.\n\nDensity is that of a reference work: tight ruled tables, compact chips, reading text at a 68ch measure. The docs-site hero with a button pair and a card grid is rejected. The cover leads with the title, a lede, one primary action, and Fig. 1.",
+    "overview": "The site is set like a statistical yearbook for industrial ecology. Each chapter has a number and a printing ink. A running head sits above every page title. Claims appear as numbered tables and figures, each with a source line. The cover figure is a material-flow (Sankey) plate, the field's own graphic: it shows the literature flowing from IE field to AI technique, and every band links to the filtered papers.\n\nThe page is paper and ink. The theme follows the reader's system setting. Dark is a blue-black stock with near-white ink; light is a cool white stock with near-black ink. Five printing inks (cobalt, vermilion, olive, ochre, plum) carry all colour, and each ink has two jobs: it marks a chapter, and four of them also mark an IE field. Everything else is grey. Corners are square, depth comes from rules rather than shadows, and type is narrow Archivo for anything that labels or structures and Source Serif 4 for anything to be read.\n\nDensity is that of a reference work: tight ruled tables, compact chips, reading text at a 68ch measure. The docs-site hero with a button pair and a card grid is rejected. The cover leads with the title, a lede, one primary action beside a text link, and Fig. 1.",
     "keyCharacteristics": [
       "Numbered chapters, each with its own ink, repeated on sidebar tabs, running heads and the home chapter index.",
       "Numbered figures and tables with a caption and a \"Source:\" line naming the data file.",
@@ -388,7 +403,7 @@
       },
       {
         "name": "The One Hue Count Rule",
-        "body": "Count shading on a grid uses one ink at stepped strength (22%, 45%, solid). An empty cell is a dashed outline, not a pale fill.",
+        "body": "Count shading on a grid uses one ink at stepped strength (30%, 45%, solid for 3 and more). An empty cell is a dashed outline, not a pale fill.",
         "section": "colors"
       },
       {
@@ -408,7 +423,7 @@
       },
       {
         "name": "The Ruled Not Raised Rule",
-        "body": "Surfaces sit flat on the stock and are separated by rules. A shadow is allowed only on a panel that floats over other content.",
+        "body": "Surfaces sit flat on the stock and are separated by rules. No shadows; a panel that opens pushes the content down rather than covering it.",
         "section": "elevation"
       },
       {
@@ -428,7 +443,7 @@
     ],
     "donts": [
       "Don't build a docs-site hero with a button pair and a card grid.",
-      "Don't round corners or add drop shadows to surfaces at rest; the facet panel is the one floating exception.",
+      "Don't round corners or add drop shadows, and don't float a panel over content.",
       "Don't use an ink for decoration, or reuse an ink for a meaning other than its chapter and field.",
       "Don't fill an IE-field chip or set field-coloured text; use the square swatch.",
       "Don't use mono outside code.",
