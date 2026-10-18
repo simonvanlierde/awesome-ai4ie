@@ -33,6 +33,8 @@ const { title, description, href, src } = Astro.props;
         iframe.src = this.dataset.src ?? "";
         iframe.title = this.dataset.title ?? "";
         iframe.referrerPolicy = "no-referrer";
+        // A Space is third-party code: let it run, but not navigate this page.
+        iframe.sandbox.add("allow-scripts", "allow-same-origin", "allow-forms", "allow-popups", "allow-downloads");
         button.replaceWith(iframe);
         iframe.focus();
       });

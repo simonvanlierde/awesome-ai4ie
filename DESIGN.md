@@ -129,9 +129,8 @@ components:
     rounded: "{rounded.none}"
     padding: "0.5rem 0.6rem"
   facet-panel:
-    backgroundColor: "{colors.stock-dark}"
     rounded: "{rounded.none}"
-    padding: "0.6rem"
+    padding: "0.6rem 0"
 ---
 
 ## Design System: Awesome AI for Industrial Ecology
@@ -174,7 +173,7 @@ Two neutral stocks, one near-black ink, and five printing inks that each pass 4.
 
 #### Neutral
 
-- **Blue-black stock / cool white stock** (`stock-dark`, `stock-light`): page, nav and sidebar ground, and the ground of inputs and dropdown panels. Also the text colour set on an ink block in dark (`--on-ink`); light sets white (`on-ink-light`).
+- **Blue-black stock / cool white stock** (`stock-dark`, `stock-light`): page, nav and sidebar ground, and the ground of inputs, buttons and the select. Also the text colour set on an ink block in dark (`--on-ink`); light sets white (`on-ink-light`).
 - **Ink** (`black-ink-dark`, `black-ink-light`): headings, table and running-head rules, pressed chips, the segmented switch border. Starlight's `--sl-color-white`.
 - **Grey ramp** (`gray-1` to `gray-6`, per theme): gray-1 for serif lede and blurbs, gray-2 for captions, table headers and secondary labels, gray-3 for meta lines and source lines, gray-4 for empty-cell dashes and input borders, gray-5 for chip and trigger borders, gray-6 for inline code ground.
 - **Hairline** (`hairline-dark`, `hairline-light`): row rules in tables and lists, the header border, figure-caption rules, `details` borders.
@@ -229,11 +228,11 @@ The system is flat. Depth comes from rules: a 2px ink rule under running heads, 
 
 #### Shadow Vocabulary
 
-- **Dropdown** (`box-shadow: 0 8px 24px rgb(0 0 0 / 0.18)`): the literature filter's open facet panel only, so it separates from the list it overlays.
+None. Nothing floats over the page: the literature filter's chips open in the page flow, under the bar.
 
 #### Named Rules
 
-**The Ruled Not Raised Rule.** Surfaces sit flat on the stock and are separated by rules. A shadow is allowed only on a panel that floats over other content.
+**The Ruled Not Raised Rule.** Surfaces sit flat on the stock and are separated by rules. No shadows; a panel that opens pushes the content down rather than covering it.
 
 ### Shapes
 
@@ -272,7 +271,7 @@ Square corners throughout (0px): buttons, chips, tags, inputs, panels, sidebar i
 
 - **Style:** stock ground, ink text, 1px gray-4 border (gray-5 on the sort select), square, Archivo at 0.9375rem.
 - **Focus:** the global 2px accent outline.
-- **Filter trigger:** a native `details` summary with a CSS-drawn caret that rotates on open (0.15s ease-out). Open: border and text go to full ink. A solid ink count badge shows how many filters are set.
+- **Filter trigger:** a disclosure button (`aria-expanded`) with a CSS-drawn caret that rotates on open (0.15s ease-out). Open: border and text go to full ink. A solid ink count badge shows how many filters are set. One dimension's chips open at a time, in the page flow under the bar, between a 1px ink rule and a hairline; Escape closes them and returns focus to the button.
 
 #### Navigation
 
@@ -283,7 +282,7 @@ Square corners throughout (0px): buttons, chips, tags, inputs, panels, sidebar i
 
 #### Flow plate (Fig. 1)
 
-The signature component. A build-time Sankey of vetted papers, IE field nodes on the left (8-unit bars in the field ink), AI technique nodes on the right (ink bars), bands filled with the source field's ink at `--band-opacity` (0.55 in both themes). Labels are Archivo 650 at width 82% with the number of papers in gray-3; band width counts field-technique pairings, and the caption says so. Each band and node is a link to the filtered literature list, and a node's list holds exactly the papers its number counts. Nodes are in the tab order with a 66-unit hit area (at least 24px on a 320px screen); bands are pointer-only (the nodes and the literature filters reach the same lists). Pointing at or focusing a band raises it to 0.9 and drops the others to 0.12 (0.25s, `cubic-bezier(0.16, 1, 0.3, 1)`); keyboard focus draws a 3px accent stroke and underlines the label. Under the plate, a caption over a hairline: bold "Fig. 1", the claim, and a gray-3 source line.
+The signature component. A build-time Sankey of vetted papers, IE field nodes on the left (8-unit bars in the field ink), AI technique nodes on the right (ink bars), bands filled with the source field's ink at `--band-opacity` (0.55 in both themes). Labels are Archivo 650 at width 82%, each the start of its tag's full name (`SHORT_LABELS`, so "Detection" reads as the "Detection & segmentation" chip), with the number of papers in gray-3; band width counts field-technique pairings, and the caption says so. Each band and node is a link to the filtered literature list, and a node's list holds exactly the papers its number counts. Nodes are in the tab order with a 66-unit hit area (at least 24px on a 320px screen); bands are pointer-only (the nodes and the literature filters reach the same lists). Pointing at or focusing a band raises it to 0.9 and drops the others to 0.12 (0.25s, `cubic-bezier(0.16, 1, 0.3, 1)`); keyboard focus draws a 3px accent stroke and underlines the label. Under the plate, a caption over a hairline: bold "Fig. 1", the claim, a "Wanted" mark naming the techniques no paper yet applies to an IE field, and a gray-3 source line.
 
 #### Numbered table with count cells (Table 1.1)
 
@@ -312,7 +311,7 @@ On the home cover, five columns, each topped by a 3px rule in its chapter ink, w
 #### Don't
 
 - **Don't** build a docs-site hero with a button pair and a card grid.
-- **Don't** round corners or add drop shadows to surfaces at rest; the facet panel is the one floating exception.
+- **Don't** round corners or add drop shadows, and don't float a panel over content.
 - **Don't** use an ink for decoration, or reuse an ink for a meaning other than its chapter and field.
 - **Don't** fill an IE-field chip or set field-coloured text; use the square swatch.
 - **Don't** use mono outside code.

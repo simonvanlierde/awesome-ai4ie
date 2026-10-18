@@ -720,13 +720,11 @@ starlight-menu-button button {
   color: var(--sl-color-gray-3);
   margin-right: 0.35rem;
 }
-.lit-facet {
-  position: relative;
-}
 .lit-facet-trigger {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+  font: inherit;
   font-size: 0.875rem;
   font-weight: 650;
   padding: 0.3rem 0.7rem;
@@ -734,10 +732,6 @@ starlight-menu-button button {
   color: var(--sl-color-gray-1);
   background: var(--sl-color-black);
   cursor: pointer;
-  list-style: none;
-}
-.lit-facet-trigger::-webkit-details-marker {
-  display: none;
 }
 /* Caret, drawn in CSS so it rotates on open without an icon font. */
 .lit-facet-trigger::after {
@@ -749,11 +743,11 @@ starlight-menu-button button {
   transform: translateY(-1px) rotate(45deg);
   transition: transform 0.15s ease-out;
 }
-.lit-facet[open] > .lit-facet-trigger {
+.lit-facet-trigger[aria-expanded="true"] {
   border-color: var(--sl-color-white);
   color: var(--sl-color-white);
 }
-.lit-facet[open] > .lit-facet-trigger::after {
+.lit-facet-trigger[aria-expanded="true"]::after {
   transform: translateY(1px) rotate(-135deg);
 }
 .lit-facet-count {
@@ -764,34 +758,18 @@ starlight-menu-button button {
   color: var(--sl-color-black);
   font-variant-numeric: tabular-nums;
 }
-@media (max-width: 40rem) {
-  .lit-bar {
-    position: relative;
-  }
-  .lit-facet {
-    position: static;
-  }
-  .lit-bar .lit-facet-panel {
-    left: 0;
-    right: 0;
-    max-width: none;
-  }
-}
+/* The open dimension's chips, in the page flow under the bar: the pills and
+   the count below stay in view while you pick. */
 .lit-facet-panel {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 20;
-  margin-top: 0.35rem;
-  padding: 0.6rem;
+  min-inline-size: 0; /* a fieldset otherwise grows to its widest chip row */
+  margin: 0 0 0.75rem;
+  padding: 0.6rem 0;
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
-  min-width: 15rem;
-  max-width: min(24rem, 90vw);
-  background: var(--sl-color-black);
-  border: 1px solid var(--sl-color-white);
-  box-shadow: 0 8px 24px rgb(0 0 0 / 0.18);
+  border: none;
+  border-top: 1px solid var(--sl-color-white);
+  border-bottom: 1px solid var(--sl-color-hairline);
 }
 .lit-active {
   display: flex;

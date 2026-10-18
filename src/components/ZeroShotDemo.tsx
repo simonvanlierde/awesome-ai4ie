@@ -16,19 +16,38 @@ const MODEL = "Xenova/clip-vit-base-patch32";
 // biome-ignore lint/security/noSecrets: a public git commit id, not a secret
 const MODEL_REVISION = "d15189d7028b43f1d3e65039190477f6af591c2a";
 
+// A load that sends no progress for this long counts as stalled. Measured from
+// the last progress event, not the start, so a slow connection still finishes.
+const STALL_MS = 60_000;
+class StalledError extends Error {}
+
 let classifierPromise: Promise<Classifier> | null = null;
 function getClassifier(onProgress: (msg: string) => void): Promise<Classifier> {
-  classifierPromise ??= import(/* @vite-ignore */ TRANSFORMERS_URL)
-    .then(async ({ pipeline }) => {
-      const pipe = await pipeline("zero-shot-image-classification", MODEL, {
-        revision: MODEL_REVISION,
-        progress_callback: (p: { status: string; file?: string; progress?: number }) => {
-          if (p.status === "progress" && p.file?.endsWith(".onnx"))
-            onProgress(`downloading model… ${Math.round(p.progress ?? 0)}%`);
-        },
-      });
-      return (img: string, labels: string[]) => pipe(img, labels) as Promise<Result[]>;
-    })
+  if (classifierPromise) return classifierPromise;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let stall: (err: Error) => void = () => undefined;
+  const stalled = new Promise<never>((_, reject) => {
+    stall = reject;
+  });
+  const alive = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => stall(new StalledError("model load stalled")), STALL_MS);
+  };
+  alive();
+  const load = import(/* @vite-ignore */ TRANSFORMERS_URL).then(async ({ pipeline }) => {
+    alive();
+    const pipe = await pipeline("zero-shot-image-classification", MODEL, {
+      revision: MODEL_REVISION,
+      progress_callback: (p: { status: string; file?: string; progress?: number }) => {
+        alive();
+        if (p.status === "progress" && p.file?.endsWith(".onnx"))
+          onProgress(`downloading model… ${Math.round(p.progress ?? 0)}%`);
+      },
+    });
+    return (img: string, labels: string[]) => pipe(img, labels) as Promise<Result[]>;
+  });
+  classifierPromise = Promise.race([load, stalled])
+    .finally(() => clearTimeout(timer))
     .catch((err) => {
       classifierPromise = null; // a failed load must not poison every retry
       throw err;
@@ -87,7 +106,9 @@ export default function ZeroShotDemo() {
       // biome-ignore lint/suspicious/noConsole: the status line cannot show the cause; the console keeps it for debugging
       console.error(err);
       setStatus(
-        "Could not load or run the model. Check your connection, then press Classify to try again.",
+        err instanceof StalledError
+          ? "The model download stopped making progress. Check your connection, then press Classify to try again."
+          : "Could not load or run the model. Check your connection, then press Classify to try again.",
       );
     } finally {
       setBusy(false);

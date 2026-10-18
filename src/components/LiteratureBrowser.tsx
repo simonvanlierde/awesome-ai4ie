@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { LitEntry } from "../data/schemas";
 import { DIM_LABELS, TAG_DIMS, TAGS, type TagDim, tagLabel } from "../data/tags";
 import { formatAuthors, isNew, paperLink } from "../lib/literature";
@@ -21,16 +21,18 @@ import TagChips from "./TagChips";
  * shareable and the applications map can deep-link here (by tag or, via
  * `?papers=`, by cited entry ids).
  *
- * Each dimension collapses into a native <details> disclosure rather than a
- * wall of chips: `name` makes them mutually exclusive and gives keyboard
- * support for free, so no popover/focus-trap code is needed. Whatever is
- * actually filtering shows up as removable pills, in the same colours the
- * entries below use for the same tags.
+ * Each dimension is a disclosure button rather than a wall of chips. One
+ * dimension's chips open at a time, in a panel that sits in the page flow under
+ * the bar, so it never covers the active filters or the count. Escape closes it
+ * and returns focus to its button. Whatever is actually filtering shows up as
+ * removable pills.
  */
 export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) {
   const [filter, setFilter] = useState<Filter>(EMPTY_FILTER);
   const [sort, setSort] = useState<SortKey>(DEFAULT_SORT);
   const [hydrated, setHydrated] = useState(false);
+  const [open, setOpen] = useState<TagDim | null>(null);
+  const triggers = useRef<Partial<Record<TagDim, HTMLButtonElement | null>>>({});
 
   // Read the initial view from the URL after hydration (SSR shows everything).
   useEffect(() => {
@@ -65,6 +67,10 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
     filter[dim].map((tag) => ({ id: `${dim}:${tag}`, dim, tag, label: tagLabel(dim, tag) })),
   );
   const anyActive = pills.length > 0 || filter.papers.length > 0;
+  // The filter rule in words: tags within a dimension OR, dimensions AND.
+  const emptyReason = TAG_DIMS.filter((d) => filter[d].length > 0)
+    .map((d) => filter[d].map((t) => tagLabel(d, t)).join(" or "))
+    .join(" and ");
 
   return (
     <div className="lit-browser not-content">
@@ -73,28 +79,43 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
         {TAG_DIMS.map((dim) => {
           const count = filter[dim].length;
           return (
-            <details className="lit-facet" name="lit-facet" key={dim}>
-              <summary className="lit-facet-trigger">
-                {DIM_LABELS[dim]}
-                {count > 0 && <span className="lit-facet-count">{count}</span>}
-              </summary>
-              <div className="lit-facet-panel">
-                {Object.entries(TAGS[dim]).map(([tag, label]) => (
-                  <button
-                    type="button"
-                    key={tag}
-                    className="lit-chip"
-                    aria-pressed={filter[dim].includes(tag)}
-                    onClick={() => toggle(dim, tag)}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </details>
+            <button
+              type="button"
+              key={dim}
+              ref={(el) => {
+                triggers.current[dim] = el;
+              }}
+              className="lit-facet-trigger"
+              aria-expanded={open === dim}
+              aria-controls="lit-facet-panel"
+              onClick={() => setOpen(open === dim ? null : dim)}
+            >
+              {DIM_LABELS[dim]}
+              {count > 0 && <span className="lit-facet-count">{count}</span>}
+            </button>
           );
         })}
       </div>
+      {open && (
+        <fieldset id="lit-facet-panel" className="lit-facet-panel" aria-label={DIM_LABELS[open]}>
+          {Object.entries(TAGS[open]).map(([tag, label]) => (
+            <button
+              type="button"
+              key={tag}
+              className="lit-chip"
+              aria-pressed={filter[open].includes(tag)}
+              onClick={() => toggle(open, tag)}
+              onKeyDown={(e) => {
+                if (e.key !== "Escape") return;
+                triggers.current[open]?.focus();
+                setOpen(null);
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </fieldset>
+      )}
 
       {anyActive && (
         <div className="lit-active">
@@ -161,7 +182,9 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
         ))}
       </ol>
       {shown.length === 0 && (
-        <p className="lit-empty">No entries match this combination. Remove a filter or two.</p>
+        <p className="lit-empty">
+          No entry is tagged {emptyReason || "with these filters"}. Remove one of the filters above.
+        </p>
       )}
     </div>
   );

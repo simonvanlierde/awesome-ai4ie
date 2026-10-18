@@ -44,23 +44,24 @@ export type TagDim = keyof typeof TAGS;
 export const TAG_DIMS = Object.keys(TAGS) as TagDim[];
 
 /** Short names for Fig. 1 on the home page, whose labels must fit beside the
- * nodes at phone width. Typed so that a new IE or ML tag fails the type check
- * until it has one. */
+ * nodes at phone width. Each one is the start of the tag's full label, so it
+ * reads as the filter chip of the same name. Typed so that a new IE or ML tag
+ * fails the type check until it has one. */
 export const SHORT_LABELS: Record<IeTag | MlTag, string> = {
   lca: "LCA",
   mfa: "MFA",
-  eol: "Waste & EoL",
+  eol: "Waste, EoL",
   "urban-mining": "Urban mining",
   llm: "LLMs",
-  "nlp-extraction": "NLP extraction",
+  "nlp-extraction": "NLP",
   cv: "Computer vision",
-  segmentation: "Segmentation",
+  segmentation: "Detection",
   depth: "Depth & 3D",
   "remote-sensing": "Remote sensing",
   "tabular-ml": "Tabular ML",
-  generative: "Generative",
+  generative: "Generative models",
   foundation: "Foundation models",
-  "anomaly-detection": "Anomaly detection",
+  "anomaly-detection": "Anomaly",
 };
 
 /** What each dimension is called in the UI. */

@@ -3,7 +3,7 @@
 // technique. Built from literature.yaml at build time; see sankeyLayout for
 // what the heights and numbers count.
 import { getCollection } from "astro:content";
-import { SHORT_LABELS, tagLabel } from "../data/tags";
+import { ML_TAGS, SHORT_LABELS, tagLabel } from "../data/tags";
 import { sankeyLayout } from "../lib/sankey";
 import { litUrl } from "../lib/urls";
 
@@ -25,6 +25,11 @@ const short = (tag: string) => SHORT_LABELS[tag as keyof typeof SHORT_LABELS] ??
 // the list shows exactly the papers the node's number counts.
 const ieInFlow = ieNodes.map((n) => n.tag);
 const mlInFlow = mlNodes.map((n) => n.tag);
+// Techniques in the vocabulary with no paper in the flow yet: named in the
+// caption, so the figure does not imply the vocabulary ends at its right edge.
+const missing = Object.keys(ML_TAGS)
+  .filter((t) => !mlInFlow.includes(t))
+  .map((t) => tagLabel("ml", t));
 const mid = (X0 + NODE + X1) / 2;
 const band = (b: (typeof bands)[number]) =>
   `M${X0 + NODE} ${b.y0}C${mid} ${b.y0} ${mid} ${b.y1} ${X1} ${b.y1}` +
@@ -37,7 +42,7 @@ const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT)
     <g class="flow-bands">
       {
         bands.map((b) => (
-          // Out of the tab order: the 10 node links below reach the same lists
+          // Out of the tab order: the node links below reach the same lists
           // from the keyboard, and the literature filters reach every pair.
           <a
             href={litUrl({ ie: [b.ie], ml: [b.ml] })}
@@ -45,7 +50,7 @@ const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT)
             aria-label={`${tagLabel("ie", b.ie)} with ${tagLabel("ml", b.ml)}: ${b.count} ${b.count === 1 ? "paper" : "papers"}`}
           >
             <path class={`band field-${b.ie}`} d={band(b)}>
-              <title>{`${short(b.ie)} → ${short(b.ml)}: ${b.count}`}</title>
+              <title>{`${tagLabel("ie", b.ie)} → ${tagLabel("ml", b.ml)}: ${b.count}`}</title>
             </path>
           </a>
         ))
@@ -79,7 +84,15 @@ const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT)
   <figcaption>
     <span><b>Fig. 1</b> What the {papers} AI-in-IE papers apply, from IE field to AI technique.
       Numbers count papers; band width counts field-technique pairings ({total}), since one paper
-      can sit in several bands. Follow a label or band to read the papers.</span>
+      can sit in several bands. Follow a label or band to read the papers.
+      {
+        missing.length > 0 && (
+          <>
+            {" "}
+            <span class="wanted">Wanted</span> No paper yet applies {missing.join(", ")} to an IE field.
+          </>
+        )
+      }</span>
     <span class="flow-src">Source: src/data/literature.yaml</span>
   </figcaption>
 </figure>
