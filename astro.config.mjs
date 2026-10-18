@@ -8,7 +8,7 @@ import starlightLinksValidator from "starlight-links-validator";
 import { rehypeFocusableTables } from "./src/plugins/rehype-focusable-tables.mjs";
 import { rehypeTaskListLabels } from "./src/plugins/rehype-task-list-labels.mjs";
 import { remarkBaseLinks } from "./src/plugins/remark-base-links.mjs";
-import { basePath, discordUrl, repoUrl, site } from "./src/site.ts";
+import { basePath, repoUrl, site } from "./src/site.ts";
 
 const base = basePath || "/";
 const ogImage = `${site}${basePath}/og.png`;
@@ -105,9 +105,14 @@ export default defineConfig({
     starlight({
       // Fails the build on a broken internal link, a missing heading anchor or a
       // relative link. Content links must be root-absolute so `base` gets added.
-      // The home page's hero link is front matter, which the validator reads as
-      // written; the Hero override adds the base to it (contentUrl).
-      plugins: [starlightLinksValidator({ exclude: ["/applications-map/"] })],
+      // The home page's hero links are front matter, which the validator reads
+      // as written; the Hero override adds the base to them (contentUrl). At a
+      // domain's root there is no base, so they validate like any other link.
+      plugins: [
+        starlightLinksValidator({
+          exclude: basePath ? ["/applications-map/", "/#contributing"] : [],
+        }),
+      ],
       // Head adds the fonts, Hero is the home cover (title beside Fig. 1), and
       // PageTitle adds the running head above each title.
       components: {
@@ -157,7 +162,7 @@ export default defineConfig({
           label: "Discord",
           // TODO: this invite can expire. A Discord admin should replace it with a
           // permanent, revocable invite or a vanity link.
-          href: discordUrl,
+          href: "https://discord.gg/zhHAZakXHX",
         },
       ],
       editLink: {

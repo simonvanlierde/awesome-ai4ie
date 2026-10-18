@@ -8,9 +8,11 @@ export const BASE = import.meta.env.BASE_URL.replace(/\/?$/, "/");
 const ABSOLUTE = /^https?:\/\//;
 const LEADING_SLASH = /^\//;
 
-/** A site-relative path resolved against the base; full URLs pass through unchanged. */
+/** A site-relative path resolved against the base; full URLs and paths that
+ * already carry the base pass through unchanged. */
 export function siteUrl(pathOrUrl: string): string {
-  return ABSOLUTE.test(pathOrUrl) ? pathOrUrl : BASE + pathOrUrl.replace(LEADING_SLASH, "");
+  if (ABSOLUTE.test(pathOrUrl) || pathOrUrl.startsWith(BASE)) return pathOrUrl;
+  return BASE + pathOrUrl.replace(LEADING_SLASH, "");
 }
 
 /** Literature-page URL with the given filter pre-applied, in the default sort. */
@@ -20,8 +22,9 @@ export function litUrl(f: Partial<Filter> = {}): string {
   );
 }
 
-/** One of the issue forms in .github/ISSUE_TEMPLATE/ (forms.test.ts checks they exist). */
-export type IssueForm = "paper" | "application" | "tool" | "other";
+/** The issue forms in .github/ISSUE_TEMPLATE/; forms.test.ts checks each file exists. */
+export const ISSUE_FORMS = ["paper", "application", "tool", "other"] as const;
+export type IssueForm = (typeof ISSUE_FORMS)[number];
 
 /** A new issue on the given form, with text fields prefilled by their form id.
  * GitHub prefills text inputs and textareas this way, not dropdowns. */

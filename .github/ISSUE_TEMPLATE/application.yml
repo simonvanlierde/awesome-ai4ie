@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        A maintainer turns this into an entry on the map. Every entry carries a maturity call and the papers behind it, so those two fields matter most.
+        A maintainer turns this into an entry on the map. Every entry carries a maturity call backed by papers, so those two fields matter most. Without a paper we can still list it as a lead.
   - type: input
     id: name
     attributes:
@@ -65,4 +65,4 @@ body:
     id: gap
     attributes:
       label: A field or technique that isn't listed
-      description: Such as a gap from "Not mapped yet" on the map page.
+      description: For example, a gap listed under "Not mapped yet" on the map page. A new tag comes in with its first paper.

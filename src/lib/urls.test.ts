@@ -14,6 +14,7 @@ describe("siteUrl", () => {
     expect(siteUrl("demos/")).toBe(`${BASE}demos/`);
     expect(siteUrl("/demos/")).toBe(`${BASE}demos/`);
     expect(siteUrl("https://example.org/x")).toBe("https://example.org/x");
+    expect(siteUrl(`${BASE}demos/`)).toBe(`${BASE}demos/`);
   });
 });
 

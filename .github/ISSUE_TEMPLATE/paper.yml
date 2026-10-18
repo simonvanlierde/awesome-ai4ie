@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        A maintainer turns this into an entry in the reading list. Only the id and the reason to read it are required. The rest saves us a step.
+        A maintainer turns this into an entry in the reading list. The id, the reason to read it and the check at the end are required; the rest saves us a step.
   - type: input
     id: id
     attributes:
@@ -22,6 +22,11 @@ body:
       description: One or two sentences for the reading list. What does it show, and how strong is the evidence? Honest limits help more than praise.
     validations:
       required: true
+  - type: input
+    id: gap
+    attributes:
+      label: Does it fill a gap on the map?
+      description: If you came from a gap under "Not mapped yet", it's filled in here. A field or technique that isn't in the lists below gets its tag with its first paper.
   # The three dropdowns list the labels in src/data/tags.ts; forms.test.ts keeps them in step.
   - type: dropdown
     id: ie
@@ -51,11 +56,6 @@ body:
         - Generative models
         - Foundation models & transformers
         - Anomaly & condition detection
-  - type: input
-    id: gap
-    attributes:
-      label: A field or technique that isn't listed
-      description: Such as a gap from "Not mapped yet" on the map page. A new tag comes in with its first paper.
   - type: dropdown
     id: type
     attributes:

@@ -54,7 +54,5 @@ body:
     id: checked
     attributes:
       label: When did you check this?
-      description: Prices, specs and model names go stale, so we date every entry.
+      description: Prices, specs and model names go stale, so we date every entry. Leave it empty if it's this month.
       placeholder: YYYY-MM
-    validations:
-      required: true

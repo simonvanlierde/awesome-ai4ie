@@ -6,12 +6,11 @@ export const owner = "simonvanlierde";
 export const repo = "awesome-ai4ie";
 
 /** Custom domain without `https://`, such as "ai4ie.org". Empty serves the site
- * from `<owner>.github.io/<repo>/`. Set it only once the domain's DNS points at
- * GitHub Pages: the site then moves to the domain's root. */
+ * from `<owner>.github.io/<repo>/`. Set it in the same step as the Pages custom
+ * domain setting (MAINTAINING.md): the site then moves to the domain's root. */
 export const domain = "";
 
 export const repoUrl = `https://github.com/${owner}/${repo}`;
 export const site = domain ? `https://${domain}` : `https://${owner}.github.io`;
 /** The path the site is served under, without a trailing slash: "" at a domain's root. */
 export const basePath = domain ? "" : `/${repo}`;
-export const discordUrl = "https://discord.gg/zhHAZakXHX";

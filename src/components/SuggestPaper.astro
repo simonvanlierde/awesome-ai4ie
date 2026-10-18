@@ -10,5 +10,5 @@ const { gap } = Astro.props;
 ---
 
 <a href={issueUrl("paper", { gap })}>
-  Suggest a paper<span class="sr-only"> on {gap}</span>&nbsp;→
+  Suggest a paper<span class="sr-only"> on {gap}</span><span aria-hidden="true">&nbsp;→</span>
 </a>
