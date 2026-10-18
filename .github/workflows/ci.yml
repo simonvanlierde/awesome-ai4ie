@@ -50,12 +50,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
+      # withastro/action has no node-version-file input, so read .nvmrc here.
+      - id: node
+        run: echo "version=$(cat .nvmrc)" >> "$GITHUB_OUTPUT"
       # Builds the Astro site (also validates internal links) and uploads the Pages artifact.
       - uses: withastro/action@3eafd002e65cc31b4f0eae0bb05450d521562247 # v6
         with:
-          # withastro/action has no node-version-file input, so this is pinned
-          # separately from .nvmrc; keep the two in sync when bumping Node.
-          node-version: 26
+          node-version: ${{ steps.node.outputs.version }}
       # withastro/action leaves node_modules and dist/ in place, so axe can scan the build.
       - run: npx playwright install --with-deps chromium
       - name: Accessibility (axe, WCAG 2.2 AA, light and dark)

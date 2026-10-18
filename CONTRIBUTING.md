@@ -87,7 +87,7 @@ The git hooks run lint, tests and the type check. The build and the accessibilit
 2. Run `npm run build`, then `npx astro preview` in one terminal.
 3. Run `npm run test:a11y` in another.
 
-The check runs axe on every page (and the 404 page) in light and dark, at desktop and phone width. It fails on a page wider than the screen, and it checks the literature filter's keyboard behaviour. Lines starting "not decided by axe" are listed but don't fail.
+The check runs axe on every page (and the 404 page) in light and dark, at desktop and phone width. It fails on a page wider than the screen, also at 320px with text at 200%, and it checks the literature filter's keyboard behaviour. Lines starting "not decided by axe" are listed but don't fail.
 
 ### Adding an interactive demo
 

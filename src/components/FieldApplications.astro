@@ -1,6 +1,6 @@
 ---
 // One IE field's applications, collapsed, under that field's section on the
-// map page. Static: the disclosures need no JavaScript.
+// map page. Static: the disclosures need no JavaScript, only printing does.
 import { getCollection } from "astro:content";
 import { type IeTag, tagLabel } from "../data/tags";
 import AppList from "./AppList";
@@ -21,3 +21,15 @@ const apps = (await getCollection("applications"))
   </p>
   <AppList apps={apps} />
 </div>
+
+<script>
+  // Browsers without ::details-content print closed entries, so open them for printing.
+  let opened: HTMLDetailsElement[] = [];
+  addEventListener("beforeprint", () => {
+    opened = [...document.querySelectorAll<HTMLDetailsElement>(".apx-entry details:not([open])")];
+    for (const d of opened) d.open = true;
+  });
+  addEventListener("afterprint", () => {
+    for (const d of opened) d.open = false;
+  });
+</script>
