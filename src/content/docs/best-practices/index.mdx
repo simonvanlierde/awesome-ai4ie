@@ -34,13 +34,13 @@ than the barrier to noticing a broken one.
 
 - **Start with a baseline.** Report a simple model, such as a linear regression,
   alongside any complex one. If the gap is small, the complex model needs a reason
-  to exist, and sometimes the honest answer is that the question didn't need ML.
+  to exist. Sometimes the honest answer is that the question didn't need ML.
 - **Isolate the test set first.** Data leakage is the single most common
   reproducibility failure in IE ML work. It usually gets in through normalization,
   gap-filling, or feature selection done before the split. Time-structured data
   needs a time-aware split, not a random one. The
   [ML-reproducibility checklist](/best-practices/checklists/#machine-learning-reproducibility)
-  is the full version; the
+  is the full version. The
   [leakage self-check prompt](/best-practices/prompts-and-skills/#data-leakage-self-check)
   audits a pipeline you've already built.
 - **Expect performance to collapse off the training distribution.** It happens
@@ -53,15 +53,15 @@ than the barrier to noticing a broken one.
   ([evidence](/applications-map/#mfa--stocks-and-flows)). That spread is the
   accuracy ceiling, so it belongs in your results rather than an appendix.
 - **Use generative models to extract, not to generate.** The consensus in LCA work
-  is that LLMs can pull inventory data out of documents with human verification, and
-  should not produce inventory values themselves
+  is that LLMs can pull inventory data out of documents, with human verification.
+  They should not produce inventory values themselves
   ([evidence](/applications-map/#lca--footprinting)). The
   [extraction prompt](/best-practices/prompts-and-skills/#extract-without-inventing)
-  encodes the difference. Synthetic data is a modeling assumption; if you use it,
-  it goes in the methods section.
+  encodes the difference. Synthetic data is a modeling assumption. If you use it,
+  report it in the methods section.
 - **Report the pipeline in order.** "We split, then normalized, then trained" tells a
   reader more than the architecture diagram does. Pin versions, seeds, and the
-  environment; state the reason when data or code is withheld.
+  environment. State the reason when data or code is withheld.
 - **Carry uncertainty through.** A model's point estimate is no more certain than
   one from a mass balance. Uncertainty is IE's central methodological concern and
   still has no column in the [map](/applications-map/#ai-techniques-with-no-tag).
@@ -74,8 +74,8 @@ surface while you can still catch them.
 
 - **Good at transforming what you give it:** summarizing, restructuring,
   translating, explaining, drafting, and writing code you can test. You can check
-  any of those faster than you could do them yourself. It is bad at being a source;
-  see [pitfalls](#pitfalls) for the measured failure rates.
+  any of those faster than you could do them yourself. It's bad at being a source:
+  [pitfalls](#pitfalls) has the measured failure rates.
 - **Give it the real context.** Most "the AI is bad at this" complaints trace to a
   missing instruction: the actual data schema, the units, the method's constraints,
   the paper's argument. Paste the thing rather than describing it.
@@ -100,24 +100,24 @@ surface while you can still catch them.
 Where people get burned, each with a documented case. The first two apply to both
 tracks; the third decides whether you can use a hosted service at all.
 
-- **Hallucinated citations.** In a controlled study, 55% of the references
-  GPT-3.5 produced and 18% of GPT-4's were entirely fabricated, and much of the
-  remainder had substantive errors
+- **Hallucinated citations.** In a controlled study, GPT-3.5 entirely fabricated 55%
+  of the references it produced and GPT-4 entirely fabricated 18%. Much of the remainder had
+  substantive errors
   ([Walters & Wilder, 2023](https://doi.org/10.1038/s41598-023-41032-5)). Newer
   models are better but not safe: US lawyers were sanctioned for filing a brief
   with six invented cases
   ([Mata v. Avianca](https://apnews.com/article/artificial-intelligence-chatgpt-fake-case-lawyers-d6ae9fa79d0542db9e1455397aef381c)).
   Rule: a citation an AI gives you does not exist until you've opened it.
 - **Confident-but-wrong numbers.** Models state numbers with the same fluency
-  whether recalled correctly, approximated, or invented; there is no tonal
-  difference to detect. Any number destined for a paper gets traced to a primary
-  source or recomputed.
+  whether recalled correctly, approximated, or invented. There is no tonal
+  difference to detect. Trace any number bound for a paper to a primary source, or
+  recompute it.
 - **Leaking confidential data.** Anything pasted into a hosted service leaves your
-  machine and may be retained; Samsung banned generative-AI tools after engineers
+  machine and may be retained. Samsung banned generative-AI tools after engineers
   pasted internal source code into ChatGPT
   ([TechCrunch, 2023](https://techcrunch.com/2023/05/02/samsung-bans-use-of-generative-ai-tools-like-chatgpt-after-april-internal-data-leak/)).
   For NDA'd inventories and industry data, use the
-  [local options on the tools pages](/tools/local-ai/), and check your
+  [local options on the tools pages](/tools/local-ai/). Check your
   data-management plan before pasting.
 
 ## Next

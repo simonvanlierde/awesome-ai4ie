@@ -5,11 +5,11 @@ description: Use when building, reviewing, or writing up a machine-learning mode
 
 # ML reproducibility for IE research
 
-Grounded in the recommendations of
+This skill follows the recommendations of
 [Rankin et al. (2026)](https://doi.org/10.21203/rs.3.rs-9270723/v1), a CML survey
-of ML use in industrial ecology. The two failure modes that dominated that survey
-are **data leakage** and **poor computational reporting**; every rule below traces
-to one of them.
+of ML use in industrial ecology. Two failure modes dominated that survey: **data
+leakage** and **poor computational reporting**. Every rule below traces to one of
+them.
 
 ## When to apply
 
@@ -19,9 +19,9 @@ to one of them.
 
 ## Workflow rules (builder mode)
 
-1. **Isolate the test set first.** Split the data before *any* preprocessing:
-   normalization, gap-filling, feature selection, and outlier removal must be fit on
-   the training set only. If the data has a time dimension, split by time
+1. **Isolate the test set first.** Split the data before *any* preprocessing.
+   Fit normalization, gap-filling, feature selection, and outlier removal on the
+   training set only. If the data has a time dimension, split by time
    (time-series cross-validation), never randomly.
 2. **Ask whether ML is needed at all.** If the hypothesis can be tested with
    empirical data or a mechanistic model, prefer that. ML reproducibility errors
@@ -30,13 +30,12 @@ to one of them.
    baseline before any complex model. If the complex model barely beats it, say so;
    several best-practice studies found linear models nearly as good.
 4. **Fill in a model info sheet.** Use Kapoor & Narayanan's model info sheets to
-   self-evaluate the study against known leakage types before writing up.
+   check the study against known leakage types before writing up.
 5. **Describe the pipeline plainly, in order.** The write-up must say things like
    "we split the data, then normalized, then trained". A reader should be able to
    confirm the order of operations from the text alone.
-6. **Justify anything withheld.** If data, code, or model weights can't be shared
-   (e.g. proprietary data), state why, and point to where similar data could be
-   obtained. Transparency is the default; withholding is the documented exception.
+6. **Justify anything withheld.** If you can't share data, code, or model weights
+   (e.g. proprietary data), state why. Point to where readers can get similar data. Transparency is the default; withholding is the documented exception.
 7. **Hunt for assumptions.** Before trusting a good test metric, ask: does the data
    reflect the process being modeled? Are there hidden assumptions (sampling,
    temporal ordering, unit handling) that condition the result? Treat this like the
@@ -44,8 +43,8 @@ to one of them.
 
 ## Reviewer mode
 
-When reviewing an ML-using study, check the three **disqualifying errors** first:
-they need no ML expertise to spot, and any one of them puts the results in serious
+When reviewing an ML-using study, check the three **disqualifying errors** first.
+You need no ML expertise to spot them, and any one puts the results in serious
 dispute:
 
 - [ ] No hold-out test set at all.
@@ -60,10 +59,10 @@ Then the softer checks:
 - [ ] If data/models are withheld, is the reason stated and reasonable? (Withheld
       data alone is *not* disqualifying when the rest follows best practice.)
 - [ ] If you can't tell whether an error is present, that ambiguity is itself a
-      finding; request clarification in revision rather than guessing.
+      finding. Ask for clarification in the revision instead of guessing.
 
 ## Output
 
-When applying this skill, state explicitly which rules were checked and what was
-found ("checked test-set isolation: split happens in `split.py` before the scaler
+When you apply this skill, state which rules you checked and what you found
+("checked test-set isolation: split happens in `split.py` before the scaler
 is fit, OK"), not a generic "looks reproducible".

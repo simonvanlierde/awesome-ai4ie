@@ -30,13 +30,13 @@
   ie: [lca]
   ml: [llm, nlp-extraction]
   summary: "Match products to emission factors semantically (zero-shot or LLM-driven) to produce carbon footprints at catalog scale."
-  maturity: "Deployed at company scale for common products; accuracy drops off the beaten track, and audit trails remain the weak point."
+  maturity: "Deployed at company scale for common products; accuracy drops for less common products, and audit trails remain the weak point."
   papers: [balajiFlamingoEnvironmentalImpact2023, dengAutoPCFEfficientProduct2023]
 - id: corporate-report-extraction
   name: "Sustainability-indicator extraction from corporate reports"
   ie: [lca]
   ml: [nlp-extraction, llm]
-  summary: "Extract quantitative ESG/ESRS indicators from thousands of corporate reports at once, turning PDF piles into analyzable panels."
+  summary: "Extract quantitative ESG/ESRS indicators from thousands of corporate reports at once, turning piles of PDFs into panel data."
   maturity: "Corpus-scale extraction validated in 2026; the binding constraint is what companies disclose, not the model."
   papers: [forsterExtractingSustainabilityIndicators2026]
 - id: household-consumption-modeling
@@ -90,14 +90,14 @@
   ie: [eol]
   ml: [cv]
   summary: "CNN/transformer classifiers recognize waste categories in images, from litter surveys to conveyor streams."
-  maturity: "The most-published application in the field; lab accuracies are high, performance under plant conditions is the real test."
+  maturity: "The most-published application in the field; lab accuracies are high, but performance under plant conditions is the real test."
   papers: [luComputerVisionSolid2022, wuApplicationsConvolutionalNeural2023, majchrowskaDeepLearningbasedWaste2022]
 - id: sorting-plant-characterization
   name: "Sensor-based material flow characterization in sorting plants"
   ie: [eol, mfa]
   ml: [cv, segmentation]
   summary: "Camera systems on sorting lines characterize the composition of waste flows continuously, feeding MFA with live plant data."
-  maturity: "Running in operating plants for shredded WEEE; per-particle mass and less-common streams still open."
+  maturity: "Running in operating plants for shredded WEEE; per-particle mass and less-common streams are still open."
   papers: [vogelgesangAutomatedMaterialFlow2025, jiangBottomUpApproachIntegrating2025]
 - id: component-detection
   name: "Component detection & counting in opened products"
@@ -112,7 +112,7 @@
   ie: [eol]
   ml: [cv, foundation]
   summary: "CLIP-class models score user-chosen labels against images: recognition without task-specific training data."
-  maturity: "Works impressively in demos; measured MRF-condition evaluations show it's not yet sorting-grade."
+  maturity: "Works impressively in demos; evaluations under materials recovery facility (MRF) conditions show it's not yet sorting-grade."
   papers: [funkEvaluationVisionLanguage2026, radfordLearningTransferableVisual2021]
   demo: "demos/" # site-relative: the explorer prefixes the deploy base
 - id: single-image-geometry

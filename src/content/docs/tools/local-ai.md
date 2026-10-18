@@ -12,7 +12,7 @@ the building. This page covers the software first, then what to run it on.
 - **[Ollama](https://ollama.com)**: one-command local model server with a curated library. *Use when:* you want a local model running in five minutes. Free. **Local.** *(checked 2026-07)*
 - **[LM Studio](https://lmstudio.ai)**: desktop GUI for discovering, downloading, and chatting with local models (incl. Apple-silicon MLX builds). *Use when:* you prefer a GUI, or you're on a Mac. Free for personal/academic use. **Local.** *(checked 2026-07)*
 - **[llama.cpp](https://github.com/ggml-org/llama.cpp)**: the inference engine underneath much of the ecosystem. *Use when:* you need maximum control or minimal footprint (it's what the two tools above build on). Free, open source. **Local.** *(checked 2026-07)*
-- **[vLLM](https://github.com/vllm-project/vllm)**: high-throughput GPU serving with an OpenAI-compatible API. *Use when:* serving one model to a whole group from a shared GPU box. *Not for:* laptops. Free, open source. **Local.** *(checked 2026-07)*
+- **[vLLM](https://github.com/vllm-project/vllm)**: high-throughput GPU serving with an OpenAI-compatible API. *Use when:* you serve one model to a whole group from a shared GPU box. *Not for:* laptops. Free, open source. **Local.** *(checked 2026-07)*
 
 Models to run with these live on the [datasets & models page](/tools/data-and-models/#pretrained-models).
 
@@ -37,8 +37,8 @@ For full precision, quarter it. *(checked 2026-07)*
 
 - **Laptop.** Modern Apple silicon (16 GB+) or a laptop RTX GPU runs 7–14B models usably via Ollama/LM Studio. *Good for:* drafting, summarization, code completion on confidential material. *Not for:* the quality you're used to from frontier hosted models; expect a clear step down.
 - **Workstation.** One consumer GPU (24–32 GB VRAM, roughly €2,000–3,500 for the card at 2026 prices) runs ~30B models fast and 70B slowly. *Good for:* a research group's shared "sensitive data" box running Ollama or vLLM.
-- **Server / cluster.** For serving a group or fine-tuning: multi-GPU boxes or university HPC. Most universities have a cluster with GPU partitions; how you request access, and whether your group already has a shared box, is local knowledge. <span class="wanted">Wanted</span> your institution's answer, in the notes below.
-- **Cloud APIs.** For non-sensitive data, hosted APIs are the least setup and the best quality per euro. The line to watch is data governance, not cost. Which providers you may use, and for which data classifications, is set by your institution's policy. Check before uploading anything. <span class="wanted">Wanted</span> your institution's answer, in the notes below.
+- **Server / cluster.** For serving a group or fine-tuning: multi-GPU boxes or university HPC. Most universities have a cluster with GPU partitions. How you request access, and whether your group already has a shared box, is local knowledge. <span class="wanted">Wanted</span> your institution's answer, in the notes below.
+- **Cloud APIs.** For non-sensitive data, hosted APIs need the least setup and give the best quality per euro. The line to watch is data governance, not cost. Which providers you may use, and for which data classifications, is set by your institution's policy. Check before uploading anything. <span class="wanted">Wanted</span> your institution's answer, in the notes below.
 
 ### Per-institution notes
 

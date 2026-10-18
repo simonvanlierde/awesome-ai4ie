@@ -19,9 +19,9 @@ Pick a photo (a product, a part, a pile of scrap) and a set of candidate labels;
 <Cite id="radfordLearningTransferableVisual2021">CLIP</Cite> scores the labels against the image. It runs
 **entirely in this browser tab** via
 [transformers.js](https://huggingface.co/docs/transformers.js); the photo is never
-uploaded. The page does fetch two things on first use: the transformers.js code from
-cdn.jsdelivr.net and the CLIP model from huggingface.co. That is why local models matter for sensitive data (see
-[Local AI & hardware](/tools/local-ai/)).
+uploaded. On first use the page fetches two things: the transformers.js code from
+cdn.jsdelivr.net and the CLIP model from huggingface.co. To keep sensitive data in-house
+with bigger models, see [Local AI & hardware](/tools/local-ai/).
 
 <ZeroShotDemo client:visible />
 
@@ -79,8 +79,8 @@ reflective, transparent, and thin parts that dominate real products.
           loading="lazy" title="Demo: category name"></iframe>
   ```
 
-- **In-page island:** a client-side widget ships as an Astro island, no backend
-  needed, including real in-browser inference via transformers.js. Copy
+- **In-page island:** a client-side widget ships as an Astro island and needs no
+  backend, even for real in-browser inference via transformers.js. Copy
   [`src/components/ZeroShotDemo.tsx`](repo:blob/main/src/components/ZeroShotDemo.tsx),
   then drop `<YourDemo client:visible />` into an `.mdx` page.
 

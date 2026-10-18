@@ -16,7 +16,7 @@ For each taxonomy category:
 
 - **What it covers:** one or two lines, in plain terms.
 - **Examples:** real applications, tools, or papers (link them; don't fabricate).
-- **Demo:** an optional embedded web-app demonstrating the category.
+- **Demo:** an optional embedded web app that demonstrates the category.
 
 ## Taxonomy at a glance
 
@@ -27,12 +27,12 @@ maturity verdict. Judged by its own rubric, the map is mostly negative: no cell 
 
 | Scale ↓ / Info type → | Identity | Quantity | Structure (BoC) | Condition |
 | --- | --- | --- | --- | --- |
-| **Product** | Label OCR + retrieval (**P**) | Depth / multi-view geometry (**P**) | — | Wear / damage grading (**U**) |
+| **Product** | Label OCR + retrieval (**P**) | Depth / multi-view geometry (**P**) | Not sensed | Wear / damage grading (**U**) |
 | **Component** | Marking OCR + open-vocab naming (**P**) | Per-part geometry, occluded (**P**) | Detection (**P**) / attachment relations (**E**) | Connector-state grading (**U**) |
-| **Material** | Surface BoM classification (**P**); full BoM an open gap | Derived (geometry × density) | — | Corrosion / contamination (**U**) |
+| **Material** | Surface BoM classification (**P**); full BoM an open gap | Derived (geometry × density) | Not sensed | Corrosion / contamination (**U**) |
 
 **Maturity:** **P** partial · **E** emerging-but-narrow · **U** plausible-but-unvalidated ·
-— not directly sensed (empty or derived). No cell is *strong* under decentralized EoL
+*Not sensed* or *Derived*: not directly sensed. No cell is *strong* under decentralized EoL
 capture.
 
 _A personal working taxonomy, still in draft, scoped to CV for product-scale data
@@ -46,18 +46,18 @@ collection. Verdicts and coverage will shift as it develops._
 
 - **Identity (partial).** OCR metadata extraction from labels (text detection, recognition,
   then fuzzy match to a reference database), with retrieval-based classification and VLM
-  scene-text reading as complements. Deployed precedent: a washing-machine label pipeline
-  run by non-experts on commodity phones read model numbers from 95.7% of label-visible
-  images in professional repair but only 39.7% at a recycler <Cite id="sterkensProductLabelIdentification2023" />.
+  scene-text reading as complements. Deployed precedent: non-experts ran a washing-machine label
+  pipeline on commodity phones. It read model numbers from 95.7% of label-visible images
+  in professional repair, but only 39.7% at a recycler <Cite id="sterkensProductLabelIdentification2023" />.
   Failure mode: label degradation at EoL, plus a database-coverage limit downstream.
 - **Quantity (partial, approximate).** Monocular metric depth (<Cite id="huMetric3DV22024">Metric3D v2</Cite>, <Cite id="bochkovskiiDepthProSharp2024">Depth Pro</Cite>,
   <Cite id="yangDepthAnythingV22024">Depth Anything v2</Cite>), feed-forward multi-view geometry (<Cite id="wangVGGTVisualGeometry2025">VGGT</Cite>, <Cite id="keethaMapAnythingUniversalFeedForward2025">MapAnything</Cite>), and
-  photogrammetry / <Cite id="mildenhallNeRFRepresentingScenes2020">NeRF</Cite> / <Cite id="kerbl3DGaussianSplatting2023">3D Gaussian splatting</Cite> recover error-bounded geometry; single-image
+  photogrammetry / <Cite id="mildenhallNeRFRepresentingScenes2020">NeRF</Cite> / <Cite id="kerbl3DGaussianSplatting2023">3D Gaussian splatting</Cite> recover error-bounded geometry. Single-image
   mass estimation exists but is coarse. Visible surfaces only; reflective, transparent, and
   thin parts are the limiting cases.
 - **Condition (plausible but unvalidated).** Wear, damage, and corrosion recognition feeding
-  repair / reuse / recycle triage. Nearest method is zero-shot anomaly detection (<Cite id="jeongWinCLIPZeroFewShot2023">WinCLIP</Cite>,
-  <Cite id="zhouAnomalyCLIPObjectAgnostic2023">AnomalyCLIP</Cite>), which flags an anomaly's presence, not a graded per-unit condition, and is
+  repair / reuse / recycle triage. The nearest method is zero-shot anomaly detection (<Cite id="jeongWinCLIPZeroFewShot2023">WinCLIP</Cite>,
+  <Cite id="zhouAnomalyCLIPObjectAgnostic2023">AnomalyCLIP</Cite>), which flags an anomaly's presence, not a graded per-unit condition. It is
   unvalidated on worn consumer products.
 
 **Demo:** the [zero-shot identification demo](/demos/#in-this-browser-zero-shot-identification-clip)
@@ -71,19 +71,19 @@ runs the open-vocabulary part of this cell in your browser.
 
 - **Structure / BoC (partial detection, emerging-but-narrow relations).** The most populated
   cell. Detecting, segmenting, and counting components is well-validated where task-tuned
-  (~98.8% mAP50 on a laptop-teardown benchmark); foundation segmenters (<Cite id="kirillovSegmentAnything2023">SAM</Cite>, <Cite id="raviSAM2Segment2024">SAM 2</Cite>, <Cite id="carionSAM3Segment2025">SAM 3</Cite>,
+  (~98.8% mAP50 on a laptop-teardown benchmark). Foundation segmenters (<Cite id="kirillovSegmentAnything2023">SAM</Cite>, <Cite id="raviSAM2Segment2024">SAM 2</Cite>, <Cite id="carionSAM3Segment2025">SAM 3</Cite>,
   <Cite id="liuGroundingDINOMarrying2024">GroundingDINO</Cite>, <Cite id="renGroundedSAMAssembling2024">Grounded-SAM</Cite>) need an added class-assignment layer. Inferring
-  component-to-component *attachment relations* is the weakest cell: single-image methods
-  (<Cite id="liuSINGAPOSingleImage2025">SINGAPO</Cite>, <Cite id="chenURDFormerPipelineConstructing2024">URDFormer</Cite>) exist only for a few articulated household categories, collapse out
-  of distribution (~82% → ~39%), and recover kinematic joints rather than the fastener
-  relations (screwed, glued, clipped) a disassembly BoC needs.
+  component-to-component *attachment relations* is the weakest cell. Single-image methods
+  (<Cite id="liuSINGAPOSingleImage2025">SINGAPO</Cite>, <Cite id="chenURDFormerPipelineConstructing2024">URDFormer</Cite>) exist only for a few articulated household categories and collapse out
+  of distribution (~82% → ~39%). They also recover kinematic joints rather than the
+  fastener relations (screwed, glued, clipped) that a disassembly BoC needs.
 - **Identity (partial).** OCR on component markings plus one-shot / retrieval recognition and
-  open-vocabulary naming from a text prompt; fine-grained brand- or part-specific identity is
+  open-vocabulary naming from a text prompt. Fine-grained brand- or part-specific identity is
   not reliably recovered.
 - **Quantity (partial, approximate).** Inherits the product-level geometry methods,
   aggravated by occlusion within the assembled product.
 - **Condition (plausible but unvalidated).** Connector-state recognition (screws, clips,
-  solder joints) for disassembly planning; published work shows fastener *detection*, not
+  solder joints) for disassembly planning. Published work shows fastener *detection*, not
   per-unit condition *grading*.
 
 ## Material-level tasks
@@ -101,8 +101,8 @@ parts.
   characterizes an aggregate flow at a central plant, not the per-component composition of an
   intact product. Occluded interior composition is an open gap.
 - **Quantity (derived, not sensed).** Per-material mass or volume would come from component
-  geometry × material class × a density prior; no dedicated method, and it compounds both
-  inputs' uncertainty. Forward-looking.
-- **Condition (plausible but unvalidated).** Corrosion, degradation, and contamination;
-  surface segmentation can isolate regions, but per-region grading on arbitrary products is
+  geometry × material class × a density prior. No dedicated method exists, and the estimate
+  compounds the uncertainty of both inputs. Forward-looking.
+- **Condition (plausible but unvalidated).** Corrosion, degradation, and contamination.
+  Surface segmentation can isolate regions, but per-region grading on arbitrary products is
   not validated.

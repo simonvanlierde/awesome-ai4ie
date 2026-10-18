@@ -15,7 +15,7 @@ sources, then pretrained-model registries. Same rules as the rest of the
 - **[EXIOBASE](https://www.exiobase.eu)**: global environmentally-extended MRIO database; free with registration. *(checked 2026-07)*
 - **[UNEP IRP Global Material Flows Database](https://www.materialflows.net)**: country-level material extraction, trade, and consumption. Free. *(checked 2026-07)*
 - **[ecoinvent](https://ecoinvent.org)**: the standard LCI database. Paid license; check what your institution already has. *(checked 2026-07)*
-- **[RELab](https://doi.org/10.5281/zenodo.19703316)**: open product-disassembly data collection platform, developed at CML. *(checked 2026-07)*
+- **[RELab](https://doi.org/10.5281/zenodo.19703316)**: open platform for collecting product-disassembly data, developed at CML. *(checked 2026-07)*
 
 **General ML dataset sources:**
 
