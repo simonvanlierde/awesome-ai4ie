@@ -288,6 +288,10 @@ The signature component. A build-time Sankey of vetted papers, IE field nodes on
 
 The second system. A ruled table (2px ink rule over the head row, 1px ink rule under the last row, hairline rows; the rules sit on the rows so they match the table's width) titled "Table N.N" in bold. Column heads carry the field swatch. Cells hold a 2.75rem by 1.75rem block shaded by count in cobalt (30%, 45%, solid with on-ink text for 3 and more). On a phone the column heads switch to the short field names, with the full name kept for screen readers; an empty cell is a dashed gray-4 outline. A source line in gray-3 sits below. Markdown tables in content follow the same ruling, with a bold "Table N.N" title above and a source line below, set as `<p class="table-title">` and `<p class="table-src">` so they share Table 1.1's Archivo caption style. Task-list items keep inline markup flowing: the box sits in the label's left margin.
 
+#### Application entries
+
+On the map page each IE field's section holds its synthesis paragraph, then its applications as native disclosures: closed, the name (Archivo 700) over the maturity call (serif, gray-2, 68ch) with a gray-3 caret on the right; open, the description, the tags and the papers link. Each list sits under a field label with the field's swatch and a 2px ink rule. The explorer below the field sections offers the grid (Table 1.1, the default) and the same entries grouped by AI technique.
+
 #### Path figure (Fig. 2)
 
 On the home page, three steps (see, read, try) worked for one map cell, with counts read from the data at build time. Each step is topped by a 3px rule in the ink of the chapter it links to (1, 2, 5), with a gray-3 "Step N", an Archivo 760 verb at width 80%, the chapter's number block and name, and a serif fact in gray-2. A gray-3 chevron in the gap joins the steps on desktop; on phones they stack. Caption as Fig. 1.

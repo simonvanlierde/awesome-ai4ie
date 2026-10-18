@@ -982,8 +982,50 @@ starlight-menu-button button {
   color: var(--sl-color-gray-1);
   max-width: 68ch;
 }
+/* An application, closed: name and maturity call, with a caret. */
+.apx-entry summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.2rem 1rem;
+  cursor: pointer;
+  list-style: none;
+}
+.apx-entry summary::-webkit-details-marker {
+  display: none;
+}
+.apx-entry summary::after {
+  content: "";
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  width: 0.45rem;
+  height: 0.45rem;
+  border: solid var(--sl-color-gray-3);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+  transition: transform 0.15s ease-out;
+}
+.apx-entry details[open] > summary::after {
+  transform: rotate(-135deg);
+}
+.apx-entry summary:hover .apx-name {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
 .apx-maturity {
+  grid-column: 1;
+  max-width: 68ch;
+  font-family: var(--font-read);
+  font-size: 0.9375rem;
+  line-height: 1.5;
   color: var(--sl-color-gray-2);
+}
+.apx-entry details[open] > .apx-summary {
+  margin-top: 0.6rem;
+}
+/* A field's applications, under its section on the map page. */
+.apx-field {
+  margin: 1.25rem 0 0;
 }
 .apx-links {
   display: flex;
@@ -1210,6 +1252,7 @@ starlight-menu-button button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .apx-entry summary::after,
   .lit-facet-trigger::after,
   .flow .band {
     transition: none;

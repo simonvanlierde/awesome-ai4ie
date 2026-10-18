@@ -4,6 +4,7 @@ description: A two-dimensional map of where AI is applied in industrial ecology,
 ---
 
 import ApplicationsSection from '../../../components/ApplicationsSection.astro';
+import FieldApplications from '../../../components/FieldApplications.astro';
 import Cite from '../../../components/Cite.astro';
 
 A map of where AI is being applied across industrial ecology, organized along **two
@@ -19,16 +20,11 @@ what's missing: entries live in
 see [Contributing](repo:blob/main/CONTRIBUTING.md).
 :::
 
-## Explore the map
-
-Pivot the same set of applications by IE field, by AI technique, or as a grid of both:
-
-<ApplicationsSection />
-
 ## What works today, per field
 
-One paragraph per field on what actually works. The papers behind every claim are in
-the [literature list](/literature/), pre-filtered by the links below.
+One section per field: a paragraph on what actually works, then the field's
+applications with a maturity call for each. Open an application for its description
+and the papers behind it; the [literature list](/literature/) has them all.
 
 ### LCA & footprinting
 
@@ -41,6 +37,8 @@ LLM answers to LCA questions inaccurate or misleading, with hallucinated-citatio
 rates up to 40% <Cite id="donaldsonExpertGroundedBenchmark2025" />. Automated footprinting deploys at catalog scale for common products <Cite id="balajiFlamingoEnvironmentalImpact2023" />
 and degrades off it. [Papers →](/literature/?ie=lca)
 
+<FieldApplications ie="lca" />
+
 ### MFA & stocks and flows
 
 The most mature corner of the map. Satellite-based material stock mapping works at
@@ -50,6 +48,8 @@ studies, and that is the real accuracy ceiling. Night-lights proxies <Cite id="p
 fusion <Cite id="baoDeepLearningFusion2023" /> improve on single sources but still need ground data. Street-view CV for
 building attributes is demonstrated feasibility: good in the training city, sharply
 worse elsewhere <Cite id="huangImageBasedPrediction2024" />. [Papers →](/literature/?ie=mfa)
+
+<FieldApplications ie="mfa" />
 
 ### Waste, EoL & circularity
 
@@ -64,7 +64,22 @@ Robotic disassembly works for narrow product families <Cite id="ameurFutureRobot
 [Papers →](/literature/?ie=eol) · Full depth in the
 [CV taxonomy worked example](/applications-map/cv-taxonomy/).
 
-### Not mapped yet
+<FieldApplications ie="eol" />
+
+### Urban mining & secondary resources
+
+<span class="wanted">Wanted</span> A paragraph on what works here, from someone who knows
+the field. [Papers →](/literature/?ie=urban-mining)
+
+<FieldApplications ie="urban-mining" />
+
+## Explore by technique
+
+The same applications as a grid of IE field × AI technique, or grouped by technique:
+
+<ApplicationsSection />
+
+## Not mapped yet
 
 The blank space in this map matters as much as the filled cells, so we name it here
 instead of leaving it implicit. Two kinds of gap: **IE fields** with no vetted entries, and
@@ -74,7 +89,7 @@ One caveat on how to read this. None of it claims the work doesn't exist. It cla
 have not vetted any of it: our sweep either found nothing that survived verification,
 or never looked. Each line is the easiest possible contribution: one paper, one entry.
 
-#### IE fields with no entries
+### IE fields with no entries
 
 - <span class="wanted">Wanted</span> **Chemicals, toxicity & QSAR.** Predicting properties and toxicity for substances
   nobody has tested, where LCA needs characterisation factors for tens of thousands of them.
@@ -93,7 +108,7 @@ or never looked. Each line is the easiest possible contribution: one paper, one 
 - <span class="wanted">Wanted</span> **Input–output analysis, forecasting & scenario modelling.** The original three
   gaps, still open.
 
-#### AI techniques with no tag
+### AI techniques with no tag
 
 Tags are added together with their first entry, so these stay out of the vocabulary until
 someone brings a paper that earns one.
@@ -118,7 +133,7 @@ someone brings a paper that earns one.
   are never going to pool.
 - <span class="wanted">Wanted</span> **Explainability.** Whether a model-based assessment claim can be interrogated.
 
-#### Where the gaps meet
+### Where the gaps meet
 
 Several of these are not separate holes but one cell each: **chemicals × graph neural
 networks**, **scenarios × surrogates**, **symbiosis × matching**, **EoL × reinforcement

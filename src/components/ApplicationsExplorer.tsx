@@ -1,21 +1,23 @@
 import { useState } from "react";
 import type { AppEntry } from "../data/schemas";
 import { DIM_LABELS, SHORT_LABELS, tagLabel } from "../data/tags";
-import { litUrl, siteUrl } from "../lib/urls";
+import { litUrl } from "../lib/urls";
+import AppList from "./AppList";
 import { groupBy, toGrid } from "./appPivot";
-import TagChips from "./TagChips";
 
-type Mode = "ie" | "ml" | "grid";
+type Mode = "ml" | "grid";
 
+// No "by IE field" view: the page's field sections above already list each
+// field's applications. The grid comes first, so the page does not repeat the
+// whole list by default.
 const MODES: { key: Mode; label: string }[] = [
-  { key: "ie", label: `By ${DIM_LABELS.ie}` },
-  { key: "ml", label: `By ${DIM_LABELS.ml}` },
   { key: "grid", label: "Grid" },
+  { key: "ml", label: `By ${DIM_LABELS.ml}` },
 ];
 
 /**
- * Pivotable view of applications.yaml: the same entries grouped by IE field,
- * by AI technique, or as an IE × ML grid. Entries and cells deep-link to the
+ * Pivotable view of applications.yaml: the entries grouped by AI technique,
+ * or as an IE × ML grid. Entries and cells deep-link to the
  * literature list, by cited paper ids where an entry cites papers, by the
  * same tags otherwise.
  *
@@ -23,7 +25,7 @@ const MODES: { key: Mode; label: string }[] = [
  * content below re-renders in place rather than showing one of several panels.
  */
 export default function ApplicationsExplorer({ entries }: { entries: AppEntry[] }) {
-  const [mode, setMode] = useState<Mode>("ie");
+  const [mode, setMode] = useState<Mode>("grid");
 
   return (
     <div className="apx not-content">
@@ -44,34 +46,8 @@ export default function ApplicationsExplorer({ entries }: { entries: AppEntry[] 
         <div>
           {[...groupBy(entries, mode)].map(([tag, apps]) => (
             <section key={tag} className="apx-group">
-              <h3 className={`apx-group-label${mode === "ie" ? ` apx-ie field-${tag}` : ""}`}>
-                {tagLabel(mode, tag)}
-              </h3>
-              <ul className="apx-list">
-                {apps.map((a) => (
-                  <li key={a.id} className="apx-entry">
-                    <span className="apx-name">{a.name}</span>
-                    <p className="apx-summary">
-                      {a.summary} <em className="apx-maturity">{a.maturity}</em>
-                    </p>
-                    <span className="apx-links">
-                      <TagChips ie={a.ie} ml={a.ml} />
-                      <a
-                        href={
-                          a.papers.length > 0
-                            ? litUrl({ papers: a.papers })
-                            : litUrl({ ie: a.ie, ml: a.ml })
-                        }
-                      >
-                        {a.papers.length > 0
-                          ? `papers (${a.papers.length}) →`
-                          : "related reading →"}
-                      </a>
-                      {a.demo && <a href={siteUrl(a.demo)}>demo →</a>}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              <h3 className="apx-group-label">{tagLabel(mode, tag)}</h3>
+              <AppList apps={apps} />
             </section>
           ))}
         </div>

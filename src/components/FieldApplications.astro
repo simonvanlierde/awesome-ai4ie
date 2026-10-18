@@ -1,0 +1,23 @@
+---
+// One IE field's applications, collapsed, under that field's section on the
+// map page. Static: the disclosures need no JavaScript.
+import { getCollection } from "astro:content";
+import { type IeTag, tagLabel } from "../data/tags";
+import AppList from "./AppList";
+
+interface Props {
+  ie: IeTag;
+}
+const { ie } = Astro.props;
+const apps = (await getCollection("applications"))
+  .map((e) => ({ id: e.id, ...e.data }))
+  .filter((a) => a.ie.includes(ie))
+  .sort((a, b) => a.name.localeCompare(b.name, "en"));
+---
+
+<div class="apx apx-field not-content">
+  <p class={`apx-group-label apx-ie field-${ie}`}>
+    {apps.length} {apps.length === 1 ? "application" : "applications"} in {tagLabel("ie", ie)}
+  </p>
+  <AppList apps={apps} />
+</div>
