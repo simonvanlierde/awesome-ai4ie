@@ -16,13 +16,12 @@ const MODES: { key: Mode; label: string }[] = [
 ];
 
 /**
- * Pivotable view of applications.yaml: the entries grouped by AI technique,
- * or as an IE × ML grid. Entries and cells deep-link to the
- * literature list, by cited paper ids where an entry cites papers, by the
- * same tags otherwise.
+ * applications.yaml grouped by AI technique, or as an IE × ML grid. Entries
+ * and cells link to the literature list: by paper id where an entry cites
+ * papers, by its tags otherwise.
  *
  * The mode switch is a group of toggle buttons (aria-pressed), not tabs: the
- * content below re-renders in place rather than showing one of several panels.
+ * content below re-renders in place instead of switching between panels.
  */
 export default function ApplicationsExplorer({ entries }: { entries: AppEntry[] }) {
   const [mode, setMode] = useState<Mode>("grid");
@@ -60,9 +59,9 @@ export default function ApplicationsExplorer({ entries }: { entries: AppEntry[] 
 
 /**
  * AI technique as rows, IE field as columns: there are far more techniques than
- * fields, so this reads as a tall table rather than a wide one. `toGrid` keeps
- * its IE × ML contract and keys cells "ie|ml"; only the presentation transposes.
- * `toGrid` already returns both axes in vocabulary order.
+ * fields, so the table grows tall, not wide. `toGrid` still returns IE × ML,
+ * cells keyed "ie|ml" and both axes in vocabulary order; only the display
+ * transposes.
  */
 function Grid({ entries }: { entries: AppEntry[] }) {
   const { rows: ies, cols: mls, cells } = toGrid(entries);
@@ -135,8 +134,8 @@ function Grid({ entries }: { entries: AppEntry[] }) {
         </tbody>
       </table>
       <p className="apx-grid-src">
-        Shade = number of applications: 1, 2, or 3 and more; a dashed cell has none yet. Source:
-        src/data/applications.yaml.
+        Shade shows the number of applications: 1, 2, or 3 or more. A dashed cell has none yet.
+        Source: src/data/applications.yaml.
       </p>
     </section>
   );

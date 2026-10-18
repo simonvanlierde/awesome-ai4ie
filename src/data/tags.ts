@@ -1,12 +1,10 @@
-// Shared tag vocabulary: used by the literature list, the applications map,
-// and the schema validation in content.config.ts. Add new tags here first;
-// the collections test enforces that data files only use tags defined here.
-// A new IE field also needs a `.field-<tag>` ink rule in src/styles/custom.css
-// (only five inks exist, see DESIGN.md) and a section on the map page;
-// chapters.test.ts checks for both.
-// Areas with no vetted entries yet are deliberately absent: add the tag together
-// with its first entry. The known gaps are named under "Not mapped yet" on the
-// applications map, so the absences stay visible instead of implicit.
+// Shared tag vocabulary for the literature list, the applications map and the
+// data schemas. Add a tag here first: the collections test rejects data that
+// uses a tag not defined here. A new IE field also needs a `.field-<tag>` ink
+// rule in src/styles/custom.css (only five inks exist, see DESIGN.md) and a
+// section on the map page; chapters.test.ts checks both.
+// Add a tag together with its first vetted entry, not before. The map page
+// names the known gaps under "Not mapped yet".
 export const IE_TAGS = {
   lca: "LCA & footprinting",
   mfa: "MFA & stocks and flows",

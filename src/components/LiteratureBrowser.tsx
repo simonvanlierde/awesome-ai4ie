@@ -17,17 +17,17 @@ import {
 import TagChips from "./TagChips";
 
 /**
- * Tag-filterable reading list. SSRs the full list (filters need JS); the
- * active filter and sort round-trip through URL params so filtered views are
- * shareable and the applications map can deep-link here (by tag or, via
- * `?papers=`, by cited entry ids).
+ * Reading list filtered by tag. The server renders the full list; filtering
+ * needs JavaScript. The filter and sort live in the URL, so a filtered view can
+ * be shared and the applications map can link here by tag or, through
+ * `?papers=`, by entry id.
  *
- * Each dimension is a disclosure button rather than a wall of chips. One
- * dimension's chips open at a time, in a panel that sits in the page flow under
- * the bar, so it never covers the active filters or the count. Escape closes it
- * (from its button or a chip) and returns focus to the button. Whatever is
- * actually filtering shows up as removable pills; removing one moves focus to
- * the next pill, or to the count once none is left, never to the page top.
+ * Each dimension is a disclosure button, not a wall of chips. One dimension's
+ * chips open at a time, in a panel in the page flow under the bar, so it never
+ * covers the active filters or the count. Escape, from the button or a chip,
+ * closes the panel and returns focus to the button. Each active filter shows as
+ * a removable pill. Removing one moves focus to the next pill, or to the count
+ * when none is left, never to the page top.
  */
 export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) {
   const [filter, setFilter] = useState<Filter>(EMPTY_FILTER);
@@ -48,8 +48,7 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
     setHydrated(true);
   }, []);
 
-  // Keep the shareable URL in sync once the initial URL has been read, so a
-  // shared link reproduces both the filter and the order.
+  // Write the filter and sort back to the URL, once the initial view is read.
   useEffect(() => {
     if (!hydrated) return;
     const { pathname, hash } = window.location;

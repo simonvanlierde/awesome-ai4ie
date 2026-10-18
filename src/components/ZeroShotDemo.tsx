@@ -33,7 +33,7 @@ function getClassifier(onProgress: (msg: string) => void): Promise<Classifier> {
         // overwrite the message that told the reader it stopped.
         if (!alive()) return;
         if (p.status === "progress" && p.file?.endsWith(".onnx"))
-          onProgress(`downloading model… ${Math.round(p.progress ?? 0)}%`);
+          onProgress(`Downloading the model… ${Math.round(p.progress ?? 0)}%`);
       },
     });
     return (img: string, labels: string[]) => pipe(img, labels) as Promise<Result[]>;
@@ -84,10 +84,10 @@ export default function ZeroShotDemo() {
       return;
     }
     setBusy(true);
-    setStatus("loading model (≈150 MB on first use, then cached)…");
+    setStatus("Loading the model (≈150 MB on first use, then cached)…");
     try {
       const classifier = await getClassifier(setStatus);
-      setStatus("classifying…");
+      setStatus("Classifying…");
       const scored = await classifier(imageUrl, candidates);
       setResults(scored);
       setStatus(`Done: ${scored[0].label} scores highest, ${(scored[0].score * 100).toFixed(1)}%.`);

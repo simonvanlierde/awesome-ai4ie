@@ -2,9 +2,9 @@ import { TAGS } from "../data/tags";
 
 type App = { id: string; ie: string[]; ml: string[] };
 
-/** Curated vocabulary order (tags.ts declaration order), so every view — grouped
- * lists and grid axes alike — presents a dimension in the same sequence instead
- * of whichever order the data happens to introduce its tags in. */
+/** Sorts tags in vocabulary order (their order in tags.ts), so grouped lists
+ * and grid axes show a dimension in the same order, whatever order the data
+ * uses. */
 const byVocabulary = (dim: "ie" | "ml") => {
   const order = Object.keys(TAGS[dim]);
   return (a: string, b: string) => order.indexOf(a) - order.indexOf(b);

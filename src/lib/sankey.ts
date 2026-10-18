@@ -22,14 +22,14 @@ export type SankeyBand = {
 };
 
 /**
- * Lays out IE field → AI technique flows for the cover figure. Only entries
- * with both an IE field and an AI technique take part (`papers` counts them).
- * One band per (ie, ml) pair, its height proportional to the entries carrying
- * that pair: an entry with two fields and two techniques sits in four bands, so
- * band and node heights count pairings (`total`), while each node's `papers` is
- * the number of distinct entries, which is what the filtered literature list
- * shows. Both columns share one scale, stacked in vocabulary order with `gap`
- * between nodes, inside a column of `height`.
+ * Lays out the IE field → AI technique flow for Fig. 1. Only entries with both
+ * an IE field and an AI technique take part; `papers` counts them. Each
+ * (ie, ml) pair gets one band, its height proportional to the entries that
+ * carry the pair. An entry with two fields and two techniques sits in four
+ * bands, so band and node heights count pairings (`total`). A node's `papers`
+ * counts distinct entries, which is what the filtered literature list shows.
+ * Both columns share one scale and stack in vocabulary order, `gap` apart,
+ * within `height`.
  */
 export function sankeyLayout(entries: readonly Tagged[], height: number, gap: number) {
   // A tag listed twice on one entry still counts once, as the literature filter does.

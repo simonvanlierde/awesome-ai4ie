@@ -3,7 +3,7 @@
 import { unified } from "@astrojs/markdown-remark";
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import starlightLinksValidator from "starlight-links-validator";
 import { rehypeFocusableTables } from "./src/plugins/rehype-focusable-tables.mjs";
 import { rehypeTaskListLabels } from "./src/plugins/rehype-task-list-labels.mjs";
@@ -34,23 +34,89 @@ export default defineConfig({
     }),
   },
 
+  // Self-hosted variable fonts, latin subset only, with no runtime CDN.
+  // font-display: optional, so a late font never shifts the layout; Head.astro
+  // preloads Archivo and the upright serif. Archivo keeps its width axis because
+  // titles, tables and tabs are set narrow.
+  fonts: [
+    {
+      name: "Archivo",
+      cssVariable: "--font-archivo",
+      provider: fontProviders.local(),
+      display: "optional",
+      fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
+      options: {
+        variants: [
+          {
+            src: ["@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2"],
+            weight: "100 900",
+            style: "normal",
+            stretch: "62% 125%",
+          },
+        ],
+      },
+    },
+    {
+      name: "Source Serif 4",
+      cssVariable: "--font-source-serif",
+      provider: fontProviders.local(),
+      display: "optional",
+      fallbacks: ["Georgia", "serif"],
+      options: {
+        variants: [
+          {
+            src: [
+              "@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2",
+            ],
+            weight: "200 900",
+            style: "normal",
+          },
+          {
+            src: [
+              "@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-italic.woff2",
+            ],
+            weight: "200 900",
+            style: "italic",
+          },
+        ],
+      },
+    },
+    {
+      name: "Martian Mono",
+      cssVariable: "--font-martian",
+      provider: fontProviders.local(),
+      display: "optional",
+      fallbacks: ["ui-monospace", "monospace"],
+      options: {
+        variants: [
+          {
+            src: ["@fontsource-variable/martian-mono/files/martian-mono-latin-wght-normal.woff2"],
+            weight: "100 800",
+            style: "normal",
+          },
+        ],
+      },
+    },
+  ],
+
   // Old URLs that are live on the deployed site must keep working after a move.
-  // (Astro base-prefixes the route but not the destination, hence `/${repo}`.)
+  // Astro adds `base` to the route but not to the destination, hence `${base}`.
   redirects: { "/hardware/": `${base}/tools/local-ai/` },
 
   integrations: [
-    react(), // enables interactive React "islands" for demos
+    react(), // islands: the literature list, the map explorer and the demos
     starlight({
-      // Fails the build on broken internal links / missing heading anchors, and
-      // on relative links — content must be root-absolute so `base` gets applied.
+      // Fails the build on a broken internal link, a missing heading anchor or a
+      // relative link. Content links must be root-absolute so `base` gets added.
       plugins: [starlightLinksValidator()],
-      // The home cover (title beside Fig. 1) and the running head above each title.
+      // Head adds the fonts, Hero is the home cover (title beside Fig. 1), and
+      // PageTitle adds the running head above each title.
       components: {
         Head: "./src/components/overrides/Head.astro",
         Hero: "./src/components/overrides/Hero.astro",
         PageTitle: "./src/components/overrides/PageTitle.astro",
       },
-      // Show each page's last-git-commit date: signals a living, maintained resource.
+      // Each page shows the date of its last commit, so readers can see how current it is.
       lastUpdated: true,
       // Wrap long lines: most blocks are prompts to copy, and a block that
       // scrolls sideways must also be reachable by keyboard (axe).
@@ -90,24 +156,15 @@ export default defineConfig({
         {
           icon: "discord",
           label: "Discord",
-          // TODO: discord admin should make a permanent revokable invite link (or use a vanity link) so this doesn't expire.
+          // TODO: this invite can expire. A Discord admin should replace it with a
+          // permanent, revocable invite or a vanity link.
           href: "https://discord.gg/zhHAZakXHX",
         },
       ],
       editLink: {
         baseUrl: `${repoUrl}/edit/main/`,
       },
-      // Self-hosted variable fonts (no CDN: reproducible, offline-friendly,
-      // fits the federated/local-hosting ethos). Archivo loads its width axis too:
-      // titles, tables and tabs are set narrow. The serif stays weight-only.
-      // Each face is declared here with font-display: optional, so a late font
-      // never shifts the layout; Head.astro preloads the two main ones.
-      customCss: [
-        "./src/styles/archivo.css",
-        "./src/styles/source-serif.css",
-        "./src/styles/martian-mono.css",
-        "./src/styles/custom.css",
-      ],
+      customCss: ["./src/styles/custom.css"],
       // Sidebar order + labels. Add new pages here (slug = filename without .md).
       // A new top-level entry is a new chapter: it also needs an entry in
       // src/lib/chapters.ts and an ink in custom.css (chapters.test.ts checks both).

@@ -37,7 +37,7 @@
         "rules": {
           "suspicious": { "noConsole": "off" },
           "correctness": { "noNodejsModules": "off" },
-          // Scripts drive one browser page at a time, so their awaits run in order on purpose.
+          // Scripts drive one browser page at a time, so their awaits must run in order.
           "performance": { "noAwaitInLoops": "off" }
         }
       }

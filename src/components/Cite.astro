@@ -1,9 +1,8 @@
 ---
-// Inline citation that resolves a literature.yaml id at build time and links to
-// the reading list filtered to that one paper (?papers=<id>, the same deep-link
-// the applications map uses). A typo'd or missing id fails the build, so prose
-// citations can't drift from the data. Author/year come from the entry, never
-// hardcoded in the text.
+// Inline citation for a literature.yaml id, linked to the reading list filtered
+// to that paper (?papers=<id>, the link the applications map also uses). An
+// unknown id fails the build, and author and year come from the entry, so a
+// citation in the prose cannot drift from the data.
 import { getCollection } from "astro:content";
 import { citeAuthors, formatAuthors, paperLink } from "../lib/literature";
 import { litUrl } from "../lib/urls";

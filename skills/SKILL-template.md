@@ -2,7 +2,7 @@
 name: your-skill-name
 description: >
   One or two sentences on WHEN this skill should trigger and what it does. Be specific
-  about trigger phrases: this text is how the assistant decides to use the skill.
+  about trigger phrases: Claude reads this text to decide when to use the skill.
   Example: "Use when verifying an LCA dataset before analysis: checks units, missing
   flows, and suspicious outliers."
 ---
@@ -10,8 +10,8 @@ description: >
 # Your skill name
 
 <!--
-This is a template for a Claude skill file. Copy this folder to
-skills/your-skill-name/SKILL.md and fill it in. Delete these comments.
+Template for a Claude skill. Copy this file to
+skills/your-skill-name/SKILL.md, fill it in, and delete this comment.
 See: https://docs.claude.com/en/docs/claude-code/skills
 -->
 

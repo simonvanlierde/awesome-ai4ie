@@ -33,7 +33,7 @@ For full precision, quarter it. *(checked 2026-07)*
 | 24–32 GB | ~30B | RTX 4090/5090 workstation, MacBook M-Max |
 | 48–96 GB | ~70B | 2× consumer GPUs, RTX 6000-class, Mac Studio |
 
-<p class="table-src">Source: rules of thumb for 4-bit weights and a modest context, checked 2026-07.</p>
+<p class="table-src">Source: rules of thumb, checked 2026-07.</p>
 
 - **Laptop.** Modern Apple silicon (16 GB+) or a laptop RTX GPU runs 7–14B models usably via Ollama/LM Studio. *Good for:* drafting, summarization, code completion on confidential material. *Not for:* the quality you're used to from frontier hosted models; expect a clear step down.
 - **Workstation.** One consumer GPU (24–32 GB VRAM, roughly €2,000–3,500 for the card at 2026 prices) runs ~30B models fast and 70B slowly. *Good for:* a research group's shared "sensitive data" box running Ollama or vLLM.

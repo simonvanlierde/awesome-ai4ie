@@ -1,5 +1,5 @@
-# Codecov reports coverage; CI's tests are the gate. It fails a pull request only when
-# total coverage drops by more than 2 points, and the new lines' share is shown, not
+# Codecov reports coverage; CI's tests are the gate. A pull request fails only when
+# total coverage drops by more than 2 points. Coverage of the new lines is shown, not
 # enforced.
 coverage:
   status:

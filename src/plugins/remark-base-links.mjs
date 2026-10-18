@@ -1,12 +1,11 @@
 /**
  * Prefix root-absolute Markdown links with the site's `base`.
  *
- * Astro applies `base` to its own routing but not to hrefs written by hand in
- * Markdown, so content can't portably say `/tools/`. Relative links (`../tools/`)
- * do resolve, but only while the containing page is served with a trailing
- * slash — one `/awesome-ai4ie` without it and every link on the page breaks.
- * Writing links root-absolute and rewriting them here is depth- and
- * trailing-slash-independent.
+ * Astro applies `base` to its own routes but not to hrefs written in Markdown,
+ * so content cannot simply say `/tools/`. Relative links (`../tools/`) work
+ * only while the page is served with a trailing slash: open `/awesome-ai4ie`
+ * without one and every link on the page breaks. Root-absolute links rewritten
+ * here work at any depth, with or without the slash.
  *
  * Links to files in the GitHub repo are written `repo:blob/main/CONTRIBUTING.md`
  * and become `${repoUrl}/blob/main/CONTRIBUTING.md`, so the repo URL lives only
