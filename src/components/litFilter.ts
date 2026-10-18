@@ -1,4 +1,4 @@
-import { TAG_DIMS } from "../data/tags";
+import { TAG_DIMS, type TagDim } from "../data/tags";
 import { surname } from "../lib/literature";
 
 export type Filter = { ie: string[]; ml: string[]; type: string[]; papers: string[] };
@@ -28,6 +28,21 @@ export function matchesFilter(entry: Tagged, f: Filter): boolean {
   return TAG_DIMS.every((d) => f[d].length === 0 || (entry[d] ?? []).some((t) => f[d].includes(t)));
 }
 
+/** Why a filter matches nothing, in the list's own logic: tags within a
+ * dimension OR, dimensions AND, all within any `?papers=` selection. */
+export function emptyMessage(f: Filter, label: (dim: TagDim, tag: string) => string): string {
+  const tags = TAG_DIMS.filter((d) => f[d].length > 0)
+    .map((d) => f[d].map((t) => label(d, t)).join(" or "))
+    .join(" and ");
+  const n = f.papers.length;
+  const remove = "Remove one of the filters above.";
+  if (n === 1 && !tags) return "The linked paper is not in this list.";
+  if (n === 1) return `The linked paper is not tagged ${tags}. ${remove}`;
+  if (n > 1 && !tags) return `None of the ${n} linked papers is in this list.`;
+  if (n > 1) return `None of the ${n} linked papers is tagged ${tags}. ${remove}`;
+  return `No entry is tagged ${tags}. ${remove}`;
+}
+
 /** Read a view from a query string. Unknown keys and unknown sort values are ignored. */
 export function parseView(search: string): View {
   const params = new URLSearchParams(search);
@@ -55,7 +70,7 @@ export function toQuery({ filter, sort }: View): string {
 type Sortable = { year: number; authors: readonly string[]; title: string };
 
 const byAuthor = (a: Sortable, b: Sortable) =>
-  surname(a.authors[0]).localeCompare(surname(b.authors[0]));
+  surname(a.authors[0]).localeCompare(surname(b.authors[0]), "en");
 
 /** Return a sorted copy: year descending, first author's surname and title
  * ascending, each with a secondary key so ties order deterministically. */
@@ -63,7 +78,7 @@ export function sortEntries<T extends Sortable>(entries: T[], key: SortKey): T[]
   const cmp: Record<SortKey, (a: Sortable, b: Sortable) => number> = {
     year: (a, b) => b.year - a.year || byAuthor(a, b),
     authors: (a, b) => byAuthor(a, b) || b.year - a.year,
-    title: (a, b) => a.title.localeCompare(b.title) || b.year - a.year,
+    title: (a, b) => a.title.localeCompare(b.title, "en") || b.year - a.year,
   };
   return [...entries].sort(cmp[key]);
 }

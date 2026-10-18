@@ -56,7 +56,7 @@
   etAl: true
   year: 2022
   doi: "10.1007/s11367-022-02030-3"
-  blurb: "Broad review of where ML actually enters LCA workflows: impact prediction, inventory estimation, interpretation."
+  blurb: "Broad review of where ML enters LCA workflows: impact prediction, inventory estimation, interpretation."
   ie: [lca]
   ml: [tabular-ml]
   type: [review]
@@ -89,7 +89,7 @@
   etAl: true
   year: 2022
   doi: "10.1111/jiec.13305"
-  blurb: "The gap-filling problem stated properly: what's missing in LCI data and which estimation methods (incl. ML) apply."
+  blurb: "The gap-filling problem stated properly: what's missing in LCI data and which estimation methods (including ML) apply."
   ie: [lca]
   ml: [tabular-ml]
   type: [review]
@@ -121,7 +121,7 @@
   etAl: true
   year: 2025
   doi: "10.1021/acs.est.5c05955"
-  blurb: "Fine-tuned LLaMA-2 + RAG extracts LCI data at F1 ≈ 0.82–0.86: good enough to accelerate, not to skip human checks."
+  blurb: "Fine-tuned LLaMA-2 with RAG extracts LCI data at F1 ≈ 0.82–0.86: good enough to accelerate, not to skip human checks."
   ie: [lca]
   ml: [llm, nlp-extraction]
   type: [method]
@@ -154,7 +154,7 @@
   etAl: true
   year: 2025
   doi: "10.48550/arXiv.2510.19886"
-  blurb: "Expert-grounded benchmark of eleven general-purpose LLMs on LCA questions: experts judged 37% of answers inaccurate or misleading, with citation hallucination up to 40%."
+  blurb: "Expert-grounded benchmark of eleven general-purpose LLMs on LCA questions. Experts judged 37% of answers inaccurate or misleading, and citation hallucination reached up to 40%."
   ie: [lca]
   ml: [llm]
   type: [review]
@@ -200,7 +200,7 @@
   etAl: true
   year: 2021
   doi: "10.1021/acs.est.0c05642"
-  blurb: "National material stock maps at 10 m from free satellite data + OSM, no cadastre needed; ~5 Gt Austria, ~38 Gt Germany."
+  blurb: "National material stock maps at 10 m from free satellite data and OSM, no cadastre needed; ~5 Gt Austria, ~38 Gt Germany."
   ie: [mfa]
   ml: [remote-sensing, tabular-ml]
   type: [method]
@@ -254,7 +254,7 @@
   etAl: true
   year: 2021
   doi: "10.1111/jiec.13198"
-  blurb: "Mobile sensing + CV counts doors and windows across a whole neighborhood at accuracy comparable to manual surveys."
+  blurb: "Mobile sensing and CV count doors and windows across a whole neighborhood at accuracy comparable to manual surveys."
   ie: [mfa, "urban-mining"]
   ml: [cv, segmentation]
   type: [method]
@@ -310,7 +310,7 @@
   etAl: true
   year: 2025
   doi: "10.3389/frobt.2025.1584657"
-  blurb: "Where robotic disassembly actually stands: systematic review of perception, planning, and human-robot collaboration."
+  blurb: "Where robotic disassembly stands: a systematic review of perception, planning, and human-robot collaboration."
   ie: [eol]
   ml: [cv]
   type: [review]
@@ -321,7 +321,7 @@
   etAl: true
   year: 2024
   doi: "10.1007/s10163-024-01961-3"
-  blurb: "CNN + weight sensor identifies individual device models on a sorting line: identity recovery under real EoL conditions."
+  blurb: "A CNN and a weight sensor identify individual device models on a sorting line: identity recovery under real EoL conditions."
   ie: [eol]
   ml: [cv]
   type: [method]
@@ -505,7 +505,7 @@
   etAl: true
   year: 2023
   doi: "10.1002/widm.1507"
-  blurb: "What's actually known about making AI itself less resource-hungry: an IE question applied to our own tools."
+  blurb: "What's known about making AI itself less resource-hungry: an IE question applied to our own tools."
   type: [meta, review]
   added: 2026-07
 
@@ -536,7 +536,7 @@
   etAl: true
   year: 2017
   arxiv: "1706.03762"
-  blurb: "The transformer architecture behind every modern LLM; worth knowing what 'attention' actually does."
+  blurb: "The transformer architecture behind every modern LLM; worth knowing what 'attention' does."
   ml: [foundation]
   type: [landmark-ml]
   added: 2026-07

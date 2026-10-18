@@ -1,9 +1,10 @@
-// Shared tag vocabulary: used by the literature list, the applications map,
-// and the schema validation in content.config.ts. Add new tags here first;
-// the collections test enforces that data files only use tags defined here.
-// Areas with no vetted entries yet are deliberately absent: add the tag together
-// with its first entry. The known gaps are named under "Not mapped yet" on the
-// applications map, so the absences stay visible instead of implicit.
+// Shared tag vocabulary for the literature list, the applications map and the
+// data schemas. Add a tag here first: the collections test rejects data that
+// uses a tag not defined here. A new IE field also needs a `.field-<tag>` ink
+// rule in src/styles/custom.css (only five inks exist, see DESIGN.md) and a
+// section on the map page; chapters.test.ts checks both.
+// Add a tag together with its first vetted entry, not before. The map page
+// names the known gaps under "Not mapped yet".
 export const IE_TAGS = {
   lca: "LCA & footprinting",
   mfa: "MFA & stocks and flows",
@@ -40,6 +41,32 @@ export type TypeTag = keyof typeof TYPE_TAGS;
 export const TAGS = { ie: IE_TAGS, ml: ML_TAGS, type: TYPE_TAGS } as const;
 export type TagDim = keyof typeof TAGS;
 export const TAG_DIMS = Object.keys(TAGS) as TagDim[];
+
+/** Short names for Fig. 1 on the home page, whose labels must fit beside the
+ * nodes at phone width. Each one is the start of the tag's full label, so it
+ * reads as the filter chip of the same name. Typed so that a new IE or ML tag
+ * fails the type check until it has one. */
+export const SHORT_LABELS: Record<IeTag | MlTag, string> = {
+  lca: "LCA",
+  mfa: "MFA",
+  eol: "Waste, EoL",
+  "urban-mining": "Urban mining",
+  llm: "LLMs",
+  "nlp-extraction": "NLP",
+  cv: "Computer vision",
+  segmentation: "Detection",
+  depth: "Depth & 3D",
+  "remote-sensing": "Remote sensing",
+  "tabular-ml": "Tabular ML",
+  generative: "Generative models",
+  foundation: "Foundation models",
+  "anomaly-detection": "Anomaly",
+};
+
+/** Short label for an IE or ML tag; falls back to the slug. */
+export function shortLabel(tag: string): string {
+  return (SHORT_LABELS as Record<string, string>)[tag] ?? tag;
+}
 
 /** What each dimension is called in the UI. */
 export const DIM_LABELS: Record<TagDim, string> = {

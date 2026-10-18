@@ -1,7 +1,7 @@
 name: CI & Deploy
 
-# PRs run lint, type check, test and build. Pushes to main run the same, then deploy;
-# deploy is gated on both passing via `needs:`, so a red build never ships.
+# Pull requests run lint, type check, tests and build. Pushes to main also deploy,
+# and only after check and build pass (`needs:`).
 on:
   pull_request:
   push:
@@ -66,14 +66,12 @@ jobs:
 
   deploy:
     needs: build
-    # Only deploy on a push to main, not on PRs.
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
       pages: write
       id-token: write
-    # Allow one concurrent deployment; don't cancel an in-progress one.
     concurrency:
       group: pages
       cancel-in-progress: false

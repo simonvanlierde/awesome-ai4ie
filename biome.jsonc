@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -36,9 +36,18 @@
       "linter": {
         "rules": {
           "suspicious": { "noConsole": "off" },
-          "correctness": { "noNodejsModules": "off" }
+          "correctness": { "noNodejsModules": "off" },
+          // Scripts drive one browser page at a time, so their awaits must run in order.
+          "performance": { "noAwaitInLoops": "off" }
         }
       }
+    },
+    {
+      // The rule flags any later, less specific selector, even one that sets
+      // different properties on different elements; in this stylesheet that is
+      // every finding. Specificity bugs show up in the screenshots and axe runs.
+      "includes": ["**/*.css"],
+      "linter": { "rules": { "style": { "noDescendingSpecificity": "off" } } }
     },
     {
       // Tests read YAML fixtures off disk and import without extensions.
@@ -46,7 +55,12 @@
       "linter": {
         "rules": {
           "security": { "noSecrets": "off" },
-          "correctness": { "noNodejsModules": "off", "useImportExtensions": "off" }
+          "correctness": {
+            "noNodejsModules": "off",
+            "useImportExtensions": "off",
+            // A Qwik rule that flags ordinary closures; this project has no Qwik.
+            "useQwikValidLexicalScope": "off"
+          }
         }
       }
     },
@@ -65,7 +79,9 @@
             "noUnusedVariables": "off",
             "noUnusedImports": "off",
             "noUnresolvedImports": "off",
-            "useImportExtensions": "off"
+            "useImportExtensions": "off",
+            // A Qwik rule: Biome applies it to Astro frontmatter, which is not Qwik.
+            "useQwikValidLexicalScope": "off"
           }
         }
       }

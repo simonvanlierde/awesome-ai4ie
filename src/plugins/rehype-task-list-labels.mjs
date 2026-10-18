@@ -19,6 +19,9 @@ export function rehypeTaskListLabels() {
       // Stop before a nested list: a label holds phrasing content only.
       let end = children.findIndex((c, j) => j > i && isList(c));
       if (end === -1) end = children.length;
+      // The box never changes (it is disabled), so screen readers get the text
+      // as a list item rather than a dimmed checkbox nobody can tick.
+      children[i].properties = { ...children[i].properties, ariaHidden: "true" };
       const label = { type: "element", tagName: "label", properties: {}, children: [] };
       label.children = children.splice(i, end - i, label);
     });

@@ -4,13 +4,14 @@ description: A two-dimensional map of where AI is applied in industrial ecology,
 ---
 
 import ApplicationsSection from '../../../components/ApplicationsSection.astro';
+import FieldApplications from '../../../components/FieldApplications.astro';
 import Cite from '../../../components/Cite.astro';
 
-A map of where AI is being applied across industrial ecology, organized along **two
+This map shows where AI is applied in industrial ecology, along **two
 dimensions**: the IE field (LCA, MFA, waste & circularity, …) and the AI technique
 (LLMs, computer vision, tabular ML, …). Every entry links to the
-[literature list](/literature/) pre-filtered to the same tags, so the map doubles as
-an index into the reading list.
+[literature list](/literature/) pre-filtered to the same tags, so the map is also an
+index into the reading list.
 
 :::note[A first pass]
 These entries are a first pass and certainly incomplete. Argue with them, and add
@@ -19,106 +20,120 @@ what's missing: entries live in
 see [Contributing](repo:blob/main/CONTRIBUTING.md).
 :::
 
-## Explore the map
-
-Pivot the same set of applications by IE field, by AI technique, or as a grid of both:
-
-<ApplicationsSection />
-
 ## What works today, per field
 
-One paragraph per field on what actually works. The papers behind every claim are in
-the [literature list](/literature/), pre-filtered by the links below.
+One section per field: a paragraph on what works today, then the field's
+applications, each with a maturity call. Open an application for its description and
+the papers behind it, or see every paper in the [literature list](/literature/).
 
 ### LCA & footprinting
 
-Two things demonstrably work: **tabular ML** for rapid impact screening and inventory
-gap-filling (validated repeatedly since 2017), and **LLM extraction** of inventory
-data from literature and reports (working systems at F1 ≈ 0.82–0.86 <Cite id="kumarLargeLanguageModelbased2025" />, always with
-human verification). The consensus rule across this work: use LLMs to *extract*
+Two things demonstrably work. The first is **tabular ML** for rapid impact screening
+and inventory gap-filling, validated repeatedly since 2017. The second is **LLM
+extraction** of inventory data from literature and reports: working systems reach
+F1 ≈ 0.82–0.86 <Cite id="kumarLargeLanguageModelbased2025" />, always with human verification. The consensus rule across this work: use LLMs to *extract*
 inventory data, never to generate it <Cite id="preussLargeLanguageModels2024" />. A 2025 benchmark found 37% of general-purpose
 LLM answers to LCA questions inaccurate or misleading, with hallucinated-citation
 rates up to 40% <Cite id="donaldsonExpertGroundedBenchmark2025" />. Automated footprinting deploys at catalog scale for common products <Cite id="balajiFlamingoEnvironmentalImpact2023" />
-and degrades off it. [Papers →](/literature/?ie=lca)
+and degrades for products outside that set. [Papers →](/literature/?ie=lca)
+
+<FieldApplications ie="lca" />
 
 ### MFA & stocks and flows
 
 The most mature corner of the map. Satellite-based material stock mapping works at
 **national scale (10 m)** <Cite id="haberlHighResolutionMaps2021" /> from free data, and a **global estimate (90 m, 547 Gt in
-buildings)** <Cite id="haberlGlobalBuiltEnvironment2024" /> exists. Mind the validation spread, though: 53–200% against independent
-studies, and that is the real accuracy ceiling. Night-lights proxies <Cite id="peledSpatialMaterialStock2021" /> and deep multi-source
+buildings)** <Cite id="haberlGlobalBuiltEnvironment2024" /> exists. Mind the validation spread: 53–200% against independent
+studies. That spread is the real accuracy ceiling. Night-lights proxies <Cite id="peledSpatialMaterialStock2021" /> and deep multi-source
 fusion <Cite id="baoDeepLearningFusion2023" /> improve on single sources but still need ground data. Street-view CV for
 building attributes is demonstrated feasibility: good in the training city, sharply
 worse elsewhere <Cite id="huangImageBasedPrediction2024" />. [Papers →](/literature/?ie=mfa)
 
+<FieldApplications ie="mfa" />
+
 ### Waste, EoL & circularity
 
 The corner with the most publications. Task-tuned detection and counting of waste and
-components is well-validated <Cite id="majchrowskaDeepLearningbasedWaste2022" />; camera-based flow characterization runs in operating
-WEEE sorting plants <Cite id="vogelgesangAutomatedMaterialFlow2025" />; label-OCR identification is deployed in pilots, where readability
-collapses from 96% in repair shops to 40% at the recycler <Cite id="sterkensProductLabelIdentification2023" />. Worn, dirty, damaged
+components is well-validated <Cite id="majchrowskaDeepLearningbasedWaste2022" />. Camera-based flow characterization runs in operating
+WEEE sorting plants <Cite id="vogelgesangAutomatedMaterialFlow2025" />. Label-OCR identification is deployed in pilots, where readability
+collapses from 96% in repair shops to 40% at the recycler <Cite id="sterkensProductLabelIdentification2023" />. Worn, dirty and damaged
 products are the recurring failure mode. Foundation models (<Cite id="kirillovSegmentAnything2023">SAM</Cite>, <Cite id="radfordLearningTransferableVisual2021">CLIP</Cite>) demo
-impressively but need a class-assignment layer and sorting-grade evaluation before
-they count as methods.
+impressively. They still need a class-assignment layer and sorting-grade evaluation
+before they count as methods.
 Robotic disassembly works for narrow product families <Cite id="ameurFutureRoboticDisassembly2025" />.
 [Papers →](/literature/?ie=eol) · Full depth in the
 [CV taxonomy worked example](/applications-map/cv-taxonomy/).
 
-### Not mapped yet
+<FieldApplications ie="eol" />
 
-The blank space in this map matters as much as the filled cells, so we name it here
-instead of leaving it implicit. Two kinds of gap: **IE fields** with no vetted entries, and
+### Urban mining & secondary resources
+
+<span class="wanted">Wanted</span> A paragraph on what works here, from someone who knows
+the field. [Papers →](/literature/?ie=urban-mining)
+
+<FieldApplications ie="urban-mining" />
+
+## Explore by technique
+
+The same applications as a grid of IE field × AI technique, or grouped by technique:
+
+<ApplicationsSection />
+
+## Not mapped yet
+
+The gaps in this map matter as much as the filled cells, so we name them here
+instead of leaving them implicit. Two kinds of gap: **IE fields** with no vetted entries, and
 **AI techniques** with no tag in the vocabulary yet.
 
-One caveat on how to read this. None of it claims the work doesn't exist. It claims we
-have not vetted any of it: our sweep either found nothing that survived verification,
+A caveat on how to read this: none of it claims the work doesn't exist. It claims we
+have not vetted any of it. Our sweep either found nothing that survived verification,
 or never looked. Each line is the easiest possible contribution: one paper, one entry.
 
-#### IE fields with no entries
+### IE fields with no entries
 
-- `Wanted` **Chemicals, toxicity & QSAR.** Predicting properties and toxicity for substances
+- <span class="wanted">Wanted</span> **Chemicals, toxicity & QSAR.** Predicting properties and toxicity for substances
   nobody has tested, where LCA needs characterisation factors for tens of thousands of them.
   Plausibly the largest single hole in this map.
-- `Wanted` **Energy systems & industrial decarbonisation.** Marginal versus average grid
+- <span class="wanted">Wanted</span> **Energy systems & industrial decarbonisation.** Marginal versus average grid
   factors, temporal accounting, process and heat-integration optimisation.
-- `Wanted` **Industrial symbiosis.** Matching one plant's waste to another's input is a
+- <span class="wanted">Wanted</span> **Industrial symbiosis.** Matching one plant's waste to another's input is a
   recommender problem wearing an IE name.
-- `Wanted` **Supply chains, criticality & resource security.** Supply risk, critical raw
+- <span class="wanted">Wanted</span> **Supply chains, criticality & resource security.** Supply risk, critical raw
   materials, trade-network disruption.
-- `Wanted` **Agriculture, food & land use.** The field our remote-sensing tag most obviously
+- <span class="wanted">Wanted</span> **Agriculture, food & land use.** The field our remote-sensing tag most obviously
   serves, with nothing behind it.
-- `Wanted` **Product lifetime, reuse & repair.** Survival analysis and failure prediction;
+- <span class="wanted">Wanted</span> **Product lifetime, reuse & repair.** Survival analysis and failure prediction;
   feeds both MFA stock models and the EoL corner.
-- `Wanted` **Water.** Footprint, scarcity, and hydrological modelling.
-- `Wanted` **Input–output analysis, forecasting & scenario modelling.** The original three
+- <span class="wanted">Wanted</span> **Water.** Footprint, scarcity, and hydrological modelling.
+- <span class="wanted">Wanted</span> **Input–output analysis, forecasting & scenario modelling.** The original three
   gaps, still open.
 
-#### AI techniques with no tag
+### AI techniques with no tag
 
 Tags are added together with their first entry, so these stay out of the vocabulary until
 someone brings a paper that earns one.
 
-- `Wanted` **Uncertainty quantification & Bayesian methods.** Uncertainty is this discipline's
-  central methodological concern and the map has no column for it. Conformal prediction included.
-- `Wanted` **Graph neural networks & network analysis.** Supply chains, IO tables, material-flow
+- <span class="wanted">Wanted</span> **Uncertainty quantification & Bayesian methods.** Uncertainty is this discipline's
+  central methodological concern, and the map has no column for it. Conformal prediction counts too.
+- <span class="wanted">Wanted</span> **Graph neural networks & network analysis.** Supply chains, IO tables, material-flow
   networks, molecular graphs: most IE data is a network, and nothing here treats it as one.
-- `Wanted` **Surrogate models & emulators.** Including physics-informed. This is how scenario
-  work actually gets done with ML, rather than in principle.
-- `Wanted` **Causal inference.** Rebound effects and policy attribution are causal claims,
+- <span class="wanted">Wanted</span> **Surrogate models & emulators.** Physics-informed ones included. This is how
+  scenario work gets done with ML in practice, not just in principle.
+- <span class="wanted">Wanted</span> **Causal inference.** Rebound effects and policy attribution are causal claims,
   usually made with correlational tools.
-- `Wanted` **Reinforcement learning.** Disassembly sequence planning and process control. The
+- <span class="wanted">Wanted</span> **Reinforcement learning.** Disassembly sequence planning and process control. The
   EoL paragraph above already discusses robotic disassembly with no technique tag behind it.
-- `Wanted` **Knowledge graphs & ontologies.** LCI interoperability and semantic flow matching,
+- <span class="wanted">Wanted</span> **Knowledge graphs & ontologies.** LCI interoperability and semantic flow matching,
   distinct from NLP extraction.
-- `Wanted` **Recommender & matching systems.** The method behind industrial symbiosis, and
+- <span class="wanted">Wanted</span> **Recommender & matching systems.** The method behind industrial symbiosis, and
   behind matching products to emission factors.
-- `Wanted` **Time-series & forecasting.** Distinct from tabular ML.
-- `Wanted` **Federated & privacy-preserving learning.** [Local AI & hardware](/tools/local-ai/)
+- <span class="wanted">Wanted</span> **Time-series & forecasting.** Distinct from tabular ML.
+- <span class="wanted">Wanted</span> **Federated & privacy-preserving learning.** [Local AI & hardware](/tools/local-ai/)
   argues for keeping sensitive data in-house; this is how institutions learn from data they
   are never going to pool.
-- `Wanted` **Explainability.** Whether a model-based assessment claim can be interrogated.
+- <span class="wanted">Wanted</span> **Explainability.** Whether someone can interrogate a claim from a model-based assessment.
 
-#### Where the gaps meet
+### Where the gaps meet
 
 Several of these are not separate holes but one cell each: **chemicals × graph neural
 networks**, **scenarios × surrogates**, **symbiosis × matching**, **EoL × reinforcement

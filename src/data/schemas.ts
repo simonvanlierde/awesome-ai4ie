@@ -1,6 +1,6 @@
-// One zod schema per data file, shared by the site build (content.config.ts),
-// the data tests, and the island components (via z.infer), so validation rules
-// and entry types live in exactly one place.
+// One zod schema per data file. The site build (content.config.ts), the data
+// tests and the islands (via z.infer) all use these, so the validation rules
+// and entry types live in one place.
 import { z } from "astro/zod";
 import { IE_TAGS, type IeTag, ML_TAGS, type MlTag, TYPE_TAGS, type TypeTag } from "./tags";
 
@@ -40,7 +40,7 @@ export const applicationSchema = z.object({
   ie: z.array(ieTag).min(1),
   ml: z.array(mlTag).min(1),
   summary: z.string().max(400),
-  maturity: z.string().max(200), // honest prose, no rubric codes
+  maturity: z.string().max(200), // plain prose, no rubric codes
   papers: z.array(z.string()).default([]), // ids into literature.yaml
   demo: z.string().optional(), // site-relative path (resolved against base) or full URL
 });

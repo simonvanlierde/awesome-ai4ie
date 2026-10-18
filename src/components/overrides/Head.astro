@@ -1,0 +1,12 @@
+---
+// Starlight's head, plus the self-hosted fonts from astro.config.mjs. Archivo
+// and the upright serif are preloaded: with font-display: optional, a font
+// that arrives late is skipped for that view instead of shifting the layout.
+import { Font } from "astro:assets";
+import Default from "@astrojs/starlight/components/Head.astro";
+---
+
+<Default />
+<Font cssVariable="--font-archivo" preload />
+<Font cssVariable="--font-source-serif" preload={[{ style: "normal" }]} />
+<Font cssVariable="--font-martian" />

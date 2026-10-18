@@ -6,4 +6,7 @@ import LiteratureBrowser from "./LiteratureBrowser";
 const entries = (await getCollection("literature")).map((e) => ({ id: e.id, ...e.data }));
 ---
 
+<noscript>
+  <p class="lit-noscript">Filtering and sorting need JavaScript. Every entry is listed below.</p>
+</noscript>
 <LiteratureBrowser client:load entries={entries} />

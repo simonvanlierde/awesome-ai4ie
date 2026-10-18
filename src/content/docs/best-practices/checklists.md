@@ -8,9 +8,9 @@ before results go anywhere near a paper.
 
 ## AI-assisted coding
 
-AI-generated code runs and looks plausible whether or not it's doing the right thing. That's
-most risky in data pipelines (LCA, MFA, ML). A wrong default or unit conversion there won't
-throw an error. It just quietly changes your results.
+AI-generated code runs and looks plausible whether or not it's doing the right thing. The
+risk is highest in data pipelines (LCA, MFA, ML). A wrong default or unit conversion there
+won't throw an error. It changes your results silently.
 
 - [ ] Did I read the actual diff, not just skim the chat summary of what changed?
 - [ ] Are units, defaults, and thresholds still what I intended, not silently changed?
@@ -20,8 +20,8 @@ throw an error. It just quietly changes your results.
 
 ## Machine learning reproducibility
 
-AI coding tools make it easier to use ML in applied research, and so they also lower the
-domain knowledge people bring to spotting reproducibility errors. The checklist below comes
+AI coding tools make it easier to use ML in applied research. So more people now run models
+without the domain knowledge to spot reproducibility errors. The checklist below comes
 from a CML literature review of ML reproducibility in IE research
 ([Rankin et al.](https://doi.org/10.21203/rs.3.rs-9270723/v1)). The two most common failure
 modes it found were **data leakage** and **poor computational reporting**.

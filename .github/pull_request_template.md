@@ -1,4 +1,4 @@
-<!-- One entry per PR is ideal. Small is easy to review. -->
+<!-- One entry per PR is ideal: small PRs are quick to review. -->
 
 **What this adds**
 <!-- Which page, which entry. -->
