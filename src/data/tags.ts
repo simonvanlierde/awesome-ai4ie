@@ -2,7 +2,8 @@
 // and the schema validation in content.config.ts. Add new tags here first;
 // the collections test enforces that data files only use tags defined here.
 // A new IE field also needs a `.field-<tag>` ink rule in src/styles/custom.css
-// (only five inks exist, see DESIGN.md); collections.test.ts checks for it.
+// (only five inks exist, see DESIGN.md) and a section on the map page;
+// chapters.test.ts checks for both.
 // Areas with no vetted entries yet are deliberately absent: add the tag together
 // with its first entry. The known gaps are named under "Not mapped yet" on the
 // applications map, so the absences stay visible instead of implicit.
@@ -63,6 +64,11 @@ export const SHORT_LABELS: Record<IeTag | MlTag, string> = {
   foundation: "Foundation models",
   "anomaly-detection": "Anomaly",
 };
+
+/** Short label for an IE or ML tag; falls back to the slug. */
+export function shortLabel(tag: string): string {
+  return (SHORT_LABELS as Record<string, string>)[tag] ?? tag;
+}
 
 /** What each dimension is called in the UI. */
 export const DIM_LABELS: Record<TagDim, string> = {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { sankeyLayout } from "./sankey";
+import { missingTechniques, sankeyLayout } from "./sankey";
 
 const entries = [
   { ie: ["lca"], ml: ["llm", "tabular-ml"] },
@@ -58,5 +58,15 @@ describe("sankeyLayout", () => {
 
   it("returns an empty figure for no tagged entries", () => {
     expect(sankeyLayout([], 100, 10)).toMatchObject({ bands: [], total: 0 });
+  });
+});
+
+describe("missingTechniques", () => {
+  it("lists vocabulary techniques with no node, in vocabulary order", () => {
+    const { mlNodes } = sankeyLayout(entries, 100, 10);
+    const missing = missingTechniques(mlNodes);
+    expect(missing).not.toContain("llm");
+    expect(missing).toContain("depth");
+    expect(missing.indexOf("segmentation")).toBeLessThan(missing.indexOf("depth"));
   });
 });

@@ -100,11 +100,12 @@ export default defineConfig({
       // Self-hosted variable fonts (no CDN: reproducible, offline-friendly,
       // fits the federated/local-hosting ethos). Archivo loads its width axis too:
       // titles, tables and tabs are set narrow. The serif stays weight-only.
+      // Each face is declared here with font-display: optional, so a late font
+      // never shifts the layout; Head.astro preloads the two main ones.
       customCss: [
-        "@fontsource-variable/archivo/wdth.css",
-        "@fontsource-variable/source-serif-4/wght.css",
-        "@fontsource-variable/source-serif-4/wght-italic.css",
-        "@fontsource-variable/martian-mono/wght.css",
+        "./src/styles/archivo.css",
+        "./src/styles/source-serif.css",
+        "./src/styles/martian-mono.css",
         "./src/styles/custom.css",
       ],
       // Sidebar order + labels. Add new pages here (slug = filename without .md).

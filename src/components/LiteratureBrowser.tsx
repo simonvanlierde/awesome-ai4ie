@@ -5,6 +5,7 @@ import { formatAuthors, isNew, paperLink } from "../lib/literature";
 import {
   DEFAULT_SORT,
   EMPTY_FILTER,
+  emptyMessage,
   type Filter,
   matchesFilter,
   parseView,
@@ -24,8 +25,9 @@ import TagChips from "./TagChips";
  * Each dimension is a disclosure button rather than a wall of chips. One
  * dimension's chips open at a time, in a panel that sits in the page flow under
  * the bar, so it never covers the active filters or the count. Escape closes it
- * and returns focus to its button. Whatever is actually filtering shows up as
- * removable pills.
+ * (from its button or a chip) and returns focus to the button. Whatever is
+ * actually filtering shows up as removable pills; removing one moves focus to
+ * the next pill, or to the count once none is left, never to the page top.
  */
 export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) {
   const [filter, setFilter] = useState<Filter>(EMPTY_FILTER);
@@ -33,6 +35,10 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
   const [hydrated, setHydrated] = useState(false);
   const [open, setOpen] = useState<TagDim | null>(null);
   const triggers = useRef<Partial<Record<TagDim, HTMLButtonElement | null>>>({});
+  const activeRow = useRef<HTMLDivElement | null>(null);
+  const countRef = useRef<HTMLSpanElement | null>(null);
+  // Index of the pill that was just removed: focus goes to whatever takes its place.
+  const refocus = useRef<number | null>(null);
 
   // Read the initial view from the URL after hydration (SSR shows everything).
   useEffect(() => {
@@ -46,8 +52,25 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
   // shared link reproduces both the filter and the order.
   useEffect(() => {
     if (!hydrated) return;
-    history.replaceState(null, "", window.location.pathname + toQuery({ filter, sort }));
+    const { pathname, hash } = window.location;
+    history.replaceState(null, "", pathname + toQuery({ filter, sort }) + hash);
   }, [filter, sort, hydrated]);
+
+  // After a pill is removed its button is gone; move focus to the pill now in
+  // its place, the last one, or the count.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: must run after each filter change, once the removed pill has left the DOM
+  useEffect(() => {
+    const i = refocus.current;
+    if (i === null) return;
+    refocus.current = null;
+    const pills = activeRow.current?.querySelectorAll<HTMLButtonElement>(".lit-pill") ?? [];
+    (pills[Math.min(i, pills.length - 1)] ?? countRef.current)?.focus();
+  }, [filter]);
+
+  function closePanel(dim: TagDim) {
+    triggers.current[dim]?.focus();
+    setOpen(null);
+  }
 
   function toggle(dim: TagDim, tag: string) {
     const active = filter[dim].includes(tag);
@@ -67,10 +90,6 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
     filter[dim].map((tag) => ({ id: `${dim}:${tag}`, dim, tag, label: tagLabel(dim, tag) })),
   );
   const anyActive = pills.length > 0 || filter.papers.length > 0;
-  // The filter rule in words: tags within a dimension OR, dimensions AND.
-  const emptyReason = TAG_DIMS.filter((d) => filter[d].length > 0)
-    .map((d) => filter[d].map((t) => tagLabel(d, t)).join(" or "))
-    .join(" and ");
 
   return (
     <div className="lit-browser not-content">
@@ -87,8 +106,12 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
               }}
               className="lit-facet-trigger"
               aria-expanded={open === dim}
-              aria-controls="lit-facet-panel"
+              // Only while open: the panel is not in the page otherwise.
+              aria-controls={open === dim ? "lit-facet-panel" : undefined}
               onClick={() => setOpen(open === dim ? null : dim)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape" && open === dim) closePanel(dim);
+              }}
             >
               {DIM_LABELS[dim]}
               {count > 0 && <span className="lit-facet-count">{count}</span>}
@@ -106,9 +129,7 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
               aria-pressed={filter[open].includes(tag)}
               onClick={() => toggle(open, tag)}
               onKeyDown={(e) => {
-                if (e.key !== "Escape") return;
-                triggers.current[open]?.focus();
-                setOpen(null);
+                if (e.key === "Escape") closePanel(open);
               }}
             >
               {label}
@@ -118,14 +139,17 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
       )}
 
       {anyActive && (
-        <div className="lit-active">
-          {pills.map((p) => (
+        <div className="lit-active" ref={activeRow}>
+          {pills.map((p, i) => (
             <button
               type="button"
               key={p.id}
               className="lit-pill"
               aria-label={`Remove filter: ${p.label}`}
-              onClick={() => toggle(p.dim, p.tag)}
+              onClick={() => {
+                refocus.current = i;
+                toggle(p.dim, p.tag);
+              }}
             >
               {p.label}
               <span aria-hidden="true">×</span>
@@ -136,20 +160,30 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
               type="button"
               className="lit-pill"
               aria-label="Remove filter: linked papers"
-              onClick={() => setFilter({ ...filter, papers: [] })}
+              onClick={() => {
+                refocus.current = pills.length;
+                setFilter({ ...filter, papers: [] });
+              }}
             >
               {filter.papers.length} linked {filter.papers.length === 1 ? "paper" : "papers"}
               <span aria-hidden="true">×</span>
             </button>
           )}
-          <button type="button" className="lit-clear" onClick={() => setFilter(EMPTY_FILTER)}>
+          <button
+            type="button"
+            className="lit-clear"
+            onClick={() => {
+              refocus.current = 0;
+              setFilter(EMPTY_FILTER);
+            }}
+          >
             Clear all
           </button>
         </div>
       )}
 
       <div className="lit-count">
-        <span role="status">
+        <span role="status" ref={countRef} tabIndex={-1}>
           {shown.length} of {entries.length} entries
         </span>
         <label className="lit-sort">
@@ -181,11 +215,7 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
           </li>
         ))}
       </ol>
-      {shown.length === 0 && (
-        <p className="lit-empty">
-          No entry is tagged {emptyReason || "with these filters"}. Remove one of the filters above.
-        </p>
-      )}
+      {shown.length === 0 && <p className="lit-empty">{emptyMessage(filter, tagLabel)}</p>}
     </div>
   );
 }

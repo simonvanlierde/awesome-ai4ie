@@ -52,6 +52,14 @@ describe("chapters", () => {
     for (const tag of Object.keys(IE_TAGS)) expect(css).toContain(`.field-${tag} {`);
   });
 
+  it("give every IE field a section on the map page", () => {
+    const map = readFileSync("src/content/docs/applications-map/index.mdx", "utf8");
+    for (const tag of Object.keys(IE_TAGS))
+      expect(map, `no <FieldApplications ie="${tag}" /> on the map`).toContain(
+        `<FieldApplications ie="${tag}" />`,
+      );
+  });
+
   it("keep the anchor Fig. 2 links to", () => {
     // Component links escape the build's link validator, which checks Markdown only.
     const map = readFileSync("src/content/docs/applications-map/index.mdx", "utf8");

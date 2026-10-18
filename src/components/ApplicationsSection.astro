@@ -4,7 +4,8 @@ import ApplicationsExplorer from "./ApplicationsExplorer";
 
 const entries = (await getCollection("applications"))
   .map((e) => ({ id: e.id, ...e.data }))
-  .sort((a, b) => a.name.localeCompare(b.name));
+  .sort((a, b) => a.name.localeCompare(b.name, "en"));
 ---
 
-<ApplicationsExplorer client:load entries={entries} />
+{/* The grid is server-rendered; the view switch only needs to work once seen. */}
+<ApplicationsExplorer client:visible entries={entries} />

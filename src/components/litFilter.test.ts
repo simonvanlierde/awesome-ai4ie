@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { matchesFilter, parseView, sortEntries, toQuery } from "./litFilter";
+import { emptyMessage, matchesFilter, parseView, sortEntries, toQuery } from "./litFilter";
 
 const entry = { ie: ["eol"], ml: ["cv", "segmentation"], type: ["method"] };
 
@@ -86,5 +86,22 @@ describe("sortEntries", () => {
     const copy = [...es];
     sortEntries(es, "title");
     expect(es).toEqual(copy);
+  });
+});
+
+describe("emptyMessage", () => {
+  const label = (_dim: string, tag: string) => tag.toUpperCase();
+  it("states the filter in the list's own logic", () => {
+    expect(emptyMessage({ ...none, ie: ["lca", "mfa"], ml: ["cv"] }, label)).toBe(
+      "No entry is tagged LCA or MFA and CV. Remove one of the filters above.",
+    );
+  });
+  it("puts a ?papers= selection first, so it does not blame a tag", () => {
+    expect(emptyMessage({ ...none, ie: ["lca"], papers: ["a", "b"] }, label)).toBe(
+      "None of the 2 linked papers is tagged LCA. Remove one of the filters above.",
+    );
+    expect(emptyMessage({ ...none, papers: ["gone"] }, label)).toBe(
+      "The linked paper is not in this list.",
+    );
   });
 });

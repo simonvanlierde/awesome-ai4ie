@@ -66,6 +66,37 @@ for (const colorScheme of ["light", "dark"]) {
     }
   }
 }
+// Interactions axe cannot reach by loading a page: open states and focus.
+function fail(msg) {
+  console.log(`interaction: ${msg}`);
+  violations += 1;
+}
+for (const [name, viewport] of Object.entries(VIEWPORTS)) {
+  const page = await (await browser.newContext({ viewport })).newPage();
+  await page.goto(new URL("literature/", root).href, { waitUntil: "networkidle" });
+  const trigger = page.getByRole("button", { name: "AI technique" });
+  await trigger.click();
+  if ((await trigger.getAttribute("aria-expanded")) !== "true")
+    fail(`${name}: filter button not expanded`);
+  const open = await new AxeBuilder({ page }).withTags(TAGS).analyze();
+  for (const v of open.violations) fail(`${name}: with the filter panel open, ${v.id}`);
+  await trigger.focus();
+  await page.keyboard.press("Escape");
+  if ((await trigger.getAttribute("aria-expanded")) !== "false")
+    fail(`${name}: Escape on the filter button left the panel open`);
+  await trigger.click();
+  await page.getByRole("button", { name: "Computer vision", exact: true }).click();
+  await page.getByRole("button", { name: "Remove filter: Computer vision" }).click();
+  if (await page.evaluate(() => document.activeElement === document.body))
+    fail(`${name}: removing a filter dropped focus to the page`);
+  await page.goto(new URL("applications-map/", root).href, { waitUntil: "networkidle" });
+  const extra = await page.$eval(".apx-grid-wrap", (w) => w.scrollWidth - w.offsetWidth);
+  const table = await page.$eval(".apx-grid", (t) => t.offsetWidth);
+  const wrap = await page.$eval(".apx-grid-wrap", (w) => w.offsetWidth);
+  if (extra > Math.max(0, table - wrap) + 1)
+    fail(`${name}: the map grid scrolls ${extra}px though its table needs ${table - wrap}px`);
+}
+
 await browser.close();
 for (const [key, n] of incomplete) console.log(`not decided by axe: ${key} (${n} node(s))`);
 console.log(

@@ -3,8 +3,8 @@
 // technique. Built from literature.yaml at build time; see sankeyLayout for
 // what the heights and numbers count.
 import { getCollection } from "astro:content";
-import { ML_TAGS, SHORT_LABELS, tagLabel } from "../data/tags";
-import { sankeyLayout } from "../lib/sankey";
+import { shortLabel, tagLabel } from "../data/tags";
+import { missingTechniques, sankeyLayout } from "../lib/sankey";
 import { litUrl } from "../lib/urls";
 
 // viewBox geometry, in user units: label column, flow, label column.
@@ -20,16 +20,13 @@ const HIT = 66;
 
 const entries = (await getCollection("literature")).map((e) => e.data);
 const { ieNodes, mlNodes, bands, total, papers } = sankeyLayout(entries, H, GAP);
-const short = (tag: string) => SHORT_LABELS[tag as keyof typeof SHORT_LABELS] ?? tag;
 // A node opens the list scoped to the flow (the other column's tags ORed), so
 // the list shows exactly the papers the node's number counts.
 const ieInFlow = ieNodes.map((n) => n.tag);
 const mlInFlow = mlNodes.map((n) => n.tag);
 // Techniques in the vocabulary with no paper in the flow yet: named in the
 // caption, so the figure does not imply the vocabulary ends at its right edge.
-const missing = Object.keys(ML_TAGS)
-  .filter((t) => !mlInFlow.includes(t))
-  .map((t) => tagLabel("ml", t));
+const missing = missingTechniques(mlNodes).map((t) => tagLabel("ml", t));
 const mid = (X0 + NODE + X1) / 2;
 const band = (b: (typeof bands)[number]) =>
   `M${X0 + NODE} ${b.y0}C${mid} ${b.y0} ${mid} ${b.y1} ${X1} ${b.y1}` +
@@ -62,7 +59,7 @@ const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT)
           <rect class="flow-hit" x="0" y={hitY(n)} width={X0 + NODE} height={Math.max(n.h, HIT)} />
           <rect class={`node field-${n.tag}`} x={X0} y={n.y} width={NODE} height={n.h} />
           <text x={X0 - 10} y={n.y + n.h / 2} text-anchor="end" dominant-baseline="middle">
-            {`${short(n.tag)} `}
+            {`${shortLabel(n.tag)} `}
             <tspan class="flow-n">{n.papers}</tspan>
           </text>
         </a>
@@ -74,7 +71,7 @@ const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT)
           <rect class="flow-hit" x={X1} y={hitY(n)} width={W - X1} height={Math.max(n.h, HIT)} />
           <rect class="node" x={X1} y={n.y} width={NODE} height={n.h} />
           <text x={X1 + NODE + 10} y={n.y + n.h / 2} dominant-baseline="middle">
-            {`${short(n.tag)} `}
+            {`${shortLabel(n.tag)} `}
             <tspan class="flow-n">{n.papers}</tspan>
           </text>
         </a>

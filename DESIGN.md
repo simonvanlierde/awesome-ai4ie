@@ -216,7 +216,7 @@ Two neutral stocks, one near-black ink, and five printing inks that each pass 4.
 
 ### Layout
 
-Starlight's shell with a 48rem content width. Reading blocks cap at 68ch. Section heads take 2.75rem above them. The home page uses Starlight's splash template, which has no sidebar: the cover is a two-column grid at 64rem and up (5fr title column, 7fr Fig. 1, 3rem gap) and a single column below, and a five-column numbered chapter index below it stands in for the thumb index (one column under 50rem). At 50rem and up each chapter title gets two lines of height so the gists share a baseline.
+Starlight's shell with a 48rem content width. Reading blocks cap at 68ch. Section heads take 2.75rem above them. The home page uses Starlight's splash template, which has no sidebar: the cover is a two-column grid at 64rem and up (6fr title column, 7fr Fig. 1, 3rem gap) and a single column below, and a five-column numbered chapter index below it stands in for the thumb index (one column under 50rem). At 50rem and up each chapter title gets two lines of height so the gists share a baseline.
 
 Every docs page opens with a running head: chapter number and title on the left, the site name on the right, over a 2px ink rule. Under 40rem the right-hand part is dropped. Fig. 1 keeps every node at phone width and enlarges its labels instead of simplifying the plate. Wide tables scroll inside their own wrapper. On coarse pointers, filter triggers, chips and pills grow to a 44px minimum height.
 

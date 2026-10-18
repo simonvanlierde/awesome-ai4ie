@@ -21,7 +21,7 @@ OWN-WORLD: Cool white stock (dark: blue-black stock), black ink, five printing i
 
 STORY: The reader sees the shape of the field at once (the flow), finds their field, follows a band to the evidence, and sees named gaps as invitations to add the first paper.
 
-FIRST VIEWPORT: Desktop: sidebar as a numbered thumb index; running head above the title; left column of title (Archivo narrow, ~56px), a two-sentence lede and one primary action "Open the applications map"; right column Fig. 1, a build-time Sankey of vetted papers per IE field to AI technique, each band a link to the filtered literature list, with a figure caption and Source line. Phone: title, lede and action within the first 500px, a simplified Fig. 1 below.
+FIRST VIEWPORT: Desktop: sidebar as a numbered thumb index; running head above the title; left column of title (Archivo narrow, ~56px), a two-sentence lede and one primary action "Open the applications map"; right column Fig. 1, a build-time Sankey of vetted papers per IE field to AI technique, each band a link to the filtered literature list, with a figure caption and Source line. Phone: title, lede and action within the first 500px, Fig. 1 below, with every node and larger labels.
 
 FORM: Hybrid of grounded candidates 4 (Statistical Yearbook, assigned) and 1 (Material Flow Atlas, pick), chosen by the author. Signature: the Sankey cover figure; second system: Table numbering with Source lines and shaded count cells with dashed Wanted gaps on the map grid. seed:ac75c6dbb13e923d
 

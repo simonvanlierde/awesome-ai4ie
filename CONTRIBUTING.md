@@ -17,7 +17,7 @@ You don't need to run anything locally to edit text. Edit the Markdown on GitHub
 
 ### Adding a paper or an application
 
-- Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR.
+- Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR, with a short label in `SHORT_LABELS` (the start of the full label, for Fig. 1 on the home page).
 - Literature entries need an `id` (the citation key), `title`, `authors`, `year`, a one-line `blurb` saying why it's worth reading, tags, and `added: YYYY-MM`. Write `authors` as a list with one `"Surname, I."` per author, and add `etAl: true` when you stop before the last author. Give a `doi` (the bare `10.…` id), an `arxiv` id (the bare id, such as `2401.01234`), or both.
 - An entry shows a "new" marker in the list for about two months after the start of its `added` month.
 - Application entries need both tag dimensions (`ie:` and `ml:`), an honest one-line `maturity:`, and `papers:` referencing literature ids.
@@ -65,13 +65,15 @@ Create `src/content/docs/your-section.md` with a `title:` in the front matter, t
 { label: 'Your section title', slug: 'your-section' },
 ```
 
-A page inside an existing chapter needs nothing else. A new top-level entry is a new chapter: it also needs an entry in [`src/lib/chapters.ts`](src/lib/chapters.ts) and one of the five inks in [`src/styles/custom.css`](src/styles/custom.css). All five are in use, so open an issue first. `npm test` checks that the three agree.
+A page inside an existing chapter needs nothing else. A new top-level entry is a new chapter: it also needs an entry in [`src/lib/chapters.ts`](src/lib/chapters.ts) and one of the five inks in [`src/styles/custom.css`](src/styles/custom.css) (an `--ink-N` pair and the sidebar's `li:nth-child` rule). All five are in use, so open an issue first. `npm test` checks that they agree.
 
 ### Look and feel
 
-[`DESIGN.md`](DESIGN.md) holds the visual rules: colours, fonts, spacing and components. [`PRODUCT.md`](PRODUCT.md) says who the site is for. Number every new figure or table ("Fig. 3", "Table 1.2") and give it a source line naming its data file. A new IE field needs a `.field-<tag>` ink rule and a short label in `SHORT_LABELS` ([`src/data/tags.ts`](src/data/tags.ts)); the type check and `npm test` flag a missing one. The `.impeccable/` folder holds the design tool's working records; `DESIGN.md` is the one to read.
+[`DESIGN.md`](DESIGN.md) holds the visual rules: colours, fonts, spacing and components. [`PRODUCT.md`](PRODUCT.md) says who the site is for. Number every new figure or table and give it a source line naming its data file. Tables are numbered by chapter ("Table 4.1" is the first table in chapter 4); figures run on from Fig. 1 and Fig. 2 on the home page. In Markdown, set the title as `<p class="table-title"><b>Table 4.1</b> …</p>` and the source as `<p class="table-src">Source: …</p>`. For a figure built from the data, start from [`src/components/PathFigure.astro`](src/components/PathFigure.astro): it counts entries at build time, so its numbers stay true as entries are added.
 
-To run the accessibility check locally: `npm run build`, then `npx astro preview` in one terminal and `npm run test:a11y` in another. It runs axe on every page in light and dark, at desktop and phone width.
+A new IE field needs three things beside its tag: a short label, a `.field-<tag>` ink rule, and a `<FieldApplications ie="<tag>" />` section on the map page. The type check and `npm test` flag a missing one. All five inks are taken, so a fifth field needs a maintainer decision first (see the Two Jobs Rule in DESIGN.md). The `.impeccable/` folder holds the design tool's working records; `DESIGN.md` is the one to read.
+
+To run the accessibility check locally: `npx playwright install chromium` once, then `npm run build`, `npx astro preview` in one terminal and `npm run test:a11y` in another. It runs axe on every page (and the 404 page) in light and dark, at desktop and phone width, fails on a page wider than the screen, and checks the literature filter's keyboard behaviour. Lines starting "not decided by axe" are listed but do not fail. The git hooks run lint, tests and the type check; the build and this check run in CI.
 
 ### Adding an interactive demo
 

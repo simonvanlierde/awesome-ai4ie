@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { StalledError, withStall } from "../lib/stall";
 
 type Result = { label: string; score: number };
 type Classifier = (img: string, labels: string[]) => Promise<Result[]>;
@@ -11,47 +12,35 @@ const DEFAULT_LABELS = "intact appliance, corroded metal part, circuit board, pl
 // version is pinned here instead of in the lockfile.
 const TRANSFORMERS_URL = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0";
 // The model is pinned to a commit of its Hugging Face repo, so a later push to
-// that repo cannot change what every visitor downloads.
+// that repo cannot change the files every visitor runs. (For its progress bar
+// the library also asks `main` for each file's size; those bytes are not used.)
 const MODEL = "Xenova/clip-vit-base-patch32";
 // biome-ignore lint/security/noSecrets: a public git commit id, not a secret
 const MODEL_REVISION = "d15189d7028b43f1d3e65039190477f6af591c2a";
 
-// A load that sends no progress for this long counts as stalled. Measured from
-// the last progress event, not the start, so a slow connection still finishes.
+// A load that sends no progress for this long counts as stalled (see withStall).
 const STALL_MS = 60_000;
-class StalledError extends Error {}
 
 let classifierPromise: Promise<Classifier> | null = null;
 function getClassifier(onProgress: (msg: string) => void): Promise<Classifier> {
-  if (classifierPromise) return classifierPromise;
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  let stall: (err: Error) => void = () => undefined;
-  const stalled = new Promise<never>((_, reject) => {
-    stall = reject;
-  });
-  const alive = () => {
-    clearTimeout(timer);
-    timer = setTimeout(() => stall(new StalledError("model load stalled")), STALL_MS);
-  };
-  alive();
-  const load = import(/* @vite-ignore */ TRANSFORMERS_URL).then(async ({ pipeline }) => {
+  classifierPromise ??= withStall(async (alive) => {
+    const { pipeline } = await import(/* @vite-ignore */ TRANSFORMERS_URL);
     alive();
     const pipe = await pipeline("zero-shot-image-classification", MODEL, {
       revision: MODEL_REVISION,
       progress_callback: (p: { status: string; file?: string; progress?: number }) => {
-        alive();
+        // After a stall the download keeps going; its progress must not
+        // overwrite the message that told the reader it stopped.
+        if (!alive()) return;
         if (p.status === "progress" && p.file?.endsWith(".onnx"))
           onProgress(`downloading model… ${Math.round(p.progress ?? 0)}%`);
       },
     });
     return (img: string, labels: string[]) => pipe(img, labels) as Promise<Result[]>;
+  }, STALL_MS).catch((err) => {
+    classifierPromise = null; // a failed load must not poison every retry
+    throw err;
   });
-  classifierPromise = Promise.race([load, stalled])
-    .finally(() => clearTimeout(timer))
-    .catch((err) => {
-      classifierPromise = null; // a failed load must not poison every retry
-      throw err;
-    });
   return classifierPromise;
 }
 
@@ -143,8 +132,8 @@ export default function ZeroShotDemo() {
         </button>
         <p className="zsd-hint" id="zsd-hint">
           {imageUrl
-            ? "The first run loads code from cdn.jsdelivr.net and the CLIP model (≈150 MB) from huggingface.co; later runs use the browser cache."
-            : "Pick a photo to enable Classify. The first run then loads code from cdn.jsdelivr.net and the CLIP model (≈150 MB) from huggingface.co."}
+            ? "The first run loads code from cdn.jsdelivr.net and the CLIP model (≈150 MB) from huggingface.co and its download host hf.co. The model then stays in this browser's cache until you clear the site's data."
+            : "Pick a photo to enable Classify. The first run then loads code from cdn.jsdelivr.net and the CLIP model (≈150 MB) from huggingface.co and its download host hf.co."}
         </p>
       </div>
       {imageUrl && <img src={imageUrl} alt="Your selected input" className="zsd-img" />}

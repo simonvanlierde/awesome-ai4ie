@@ -1,4 +1,4 @@
-import { TAG_DIMS } from "../data/tags";
+import { TAG_DIMS, type TagDim } from "../data/tags";
 import { surname } from "../lib/literature";
 
 export type Filter = { ie: string[]; ml: string[]; type: string[]; papers: string[] };
@@ -26,6 +26,21 @@ export const SORTS: { key: SortKey; label: string }[] = [
 export function matchesFilter(entry: Tagged, f: Filter): boolean {
   if (f.papers.length > 0 && !f.papers.includes(entry.id ?? "")) return false;
   return TAG_DIMS.every((d) => f[d].length === 0 || (entry[d] ?? []).some((t) => f[d].includes(t)));
+}
+
+/** Why a filter matches nothing, in the list's own logic: tags within a
+ * dimension OR, dimensions AND, all within any `?papers=` selection. */
+export function emptyMessage(f: Filter, label: (dim: TagDim, tag: string) => string): string {
+  const tags = TAG_DIMS.filter((d) => f[d].length > 0)
+    .map((d) => f[d].map((t) => label(d, t)).join(" or "))
+    .join(" and ");
+  const n = f.papers.length;
+  const remove = "Remove one of the filters above.";
+  if (n === 1 && !tags) return "The linked paper is not in this list.";
+  if (n === 1) return `The linked paper is not tagged ${tags}. ${remove}`;
+  if (n > 1 && !tags) return `None of the ${n} linked papers is in this list.`;
+  if (n > 1) return `None of the ${n} linked papers is tagged ${tags}. ${remove}`;
+  return `No entry is tagged ${tags}. ${remove}`;
 }
 
 /** Read a view from a query string. Unknown keys and unknown sort values are ignored. */

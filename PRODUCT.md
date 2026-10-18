@@ -73,5 +73,5 @@ Name: "Awesome AI for Industrial Ecology", short form AI4IE. Beyond the name, th
 
 ## Accessibility & Inclusion
 
-WCAG 2.2 AA. Axe runs in CI on the built site (11 pages, light and dark) and must stay at
+WCAG 2.2 AA. Axe runs in CI on the built site (12 pages including the 404, light and dark, desktop and phone) and must stay at
 zero violations in the repo's own code.

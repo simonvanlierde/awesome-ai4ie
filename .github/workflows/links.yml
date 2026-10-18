@@ -57,12 +57,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           issues="repos/${GITHUB_REPOSITORY}/issues"
+          # GitHub caps an issue body at 65,536 characters; a long report is cut.
+          head -c 60000 lychee/out.md > body.md
           number=$(gh api "${issues}?labels=broken-links&state=open" -q '.[0].number // empty')
           if [ -n "$number" ]; then
-            gh api -X PATCH "${issues}/${number}" -F body=@lychee/out.md >/dev/null
+            gh api -X PATCH "${issues}/${number}" -F body=@body.md >/dev/null
           else
             gh api "$issues" -f title="Broken links found by the weekly link check" \
-              -F body=@lychee/out.md -f 'labels[]=broken-links' >/dev/null
+              -F body=@body.md -f 'labels[]=broken-links' >/dev/null
           fi
 
       # A clean run closes the issue a previous run opened, so it never goes stale.

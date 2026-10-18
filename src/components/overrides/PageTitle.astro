@@ -1,8 +1,9 @@
 ---
 // Page title with a running head naming the chapter, in the chapter's ink.
+import Default from "@astrojs/starlight/components/PageTitle.astro";
 import { chapterOf } from "../../lib/chapters";
 
-const { id, data } = Astro.locals.starlightRoute.entry;
+const { id } = Astro.locals.starlightRoute.entry;
 const chapter = chapterOf(id);
 ---
 
@@ -16,4 +17,4 @@ const chapter = chapterOf(id);
     </p>
   )
 }
-<h1 id="_top">{data.title}</h1>
+<Default />

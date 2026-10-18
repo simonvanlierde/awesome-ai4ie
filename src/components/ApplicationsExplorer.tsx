@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { AppEntry } from "../data/schemas";
-import { DIM_LABELS, SHORT_LABELS, tagLabel } from "../data/tags";
+import { DIM_LABELS, shortLabel, tagLabel } from "../data/tags";
 import { litUrl } from "../lib/urls";
 import AppList from "./AppList";
 import { groupBy, toGrid } from "./appPivot";
@@ -76,9 +76,9 @@ function Grid({ entries }: { entries: AppEntry[] }) {
       tabIndex={0}
     >
       <p className="apx-grid-title" id="apx-grid-title">
-        <b>Table 1.1</b>Applications by AI technique and IE field
+        <b>Table 1.1</b> Applications by AI technique and IE field
       </p>
-      <table className="apx-grid" aria-labelledby="apx-grid-title">
+      <table className="apx-grid">
         <thead>
           <tr>
             <th aria-label="AI technique by IE field" />
@@ -87,7 +87,7 @@ function Grid({ entries }: { entries: AppEntry[] }) {
                 <a href={litUrl({ ie: [ie] })}>
                   <span className="apx-head-full">{tagLabel("ie", ie)}</span>
                   <span className="apx-head-short" aria-hidden="true">
-                    {SHORT_LABELS[ie as keyof typeof SHORT_LABELS] ?? ie}
+                    {shortLabel(ie)}
                   </span>
                 </a>
               </th>
