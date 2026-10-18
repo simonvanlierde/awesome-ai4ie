@@ -84,11 +84,11 @@ export function sankeyLayout(entries: readonly Tagged[], height: number, gap: nu
       out.set(p.ie, y0 + h);
       return { ...p, y0, y1: 0, h };
     });
-  for (const b of [...bands].sort(
+  for (const band of [...bands].sort(
     (a, b) => rank("ml", a.ml) - rank("ml", b.ml) || rank("ie", a.ie) - rank("ie", b.ie),
   )) {
-    b.y1 = inn.get(b.ml) ?? 0;
-    inn.set(b.ml, b.y1 + b.h);
+    band.y1 = inn.get(band.ml) ?? 0;
+    inn.set(band.ml, band.y1 + band.h);
   }
 
   return { ieNodes, mlNodes, bands, total, papers: flow.length };

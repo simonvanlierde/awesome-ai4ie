@@ -8,17 +8,22 @@ import { CHAPTERS, chapterOf } from "./chapters";
 // build time ties them together, so these tests do.
 const config = readFileSync("astro.config.mjs", "utf8");
 const css = readFileSync("src/styles/custom.css", "utf8");
+const SIDEBAR_END = /^ {6}\],/;
+const TOP_LEVEL_ENTRY = /^ {8}\{/;
+const HAS_TARGET = /(slug|link): "/;
+const TARGET = /(?:slug|link): "([^"]*)"/;
+const FIG2_ANCHOR = /^## What works today, per field$/m;
 
 /** First slug (or link) of each top-level sidebar entry, as its first path segment. */
 function sidebarTopLevel(): string[] {
   const block = config.slice(config.indexOf("sidebar: ["));
   const lines = block.split("\n");
-  const end = lines.findIndex((l) => /^ {6}\],/.test(l));
+  const end = lines.findIndex((l) => SIDEBAR_END.test(l));
   const out: string[] = [];
   lines.slice(1, end).forEach((line, i, rest) => {
-    if (!/^ {8}\{/.test(line)) return;
-    const first = rest.slice(i).find((l) => /(slug|link): "/.test(l)) ?? "";
-    const value = /(?:slug|link): "([^"]*)"/.exec(first)?.[1] ?? "";
+    if (!TOP_LEVEL_ENTRY.test(line)) return;
+    const first = rest.slice(i).find((l) => HAS_TARGET.test(l)) ?? "";
+    const value = TARGET.exec(first)?.[1] ?? "";
     out.push(value === "/" ? "/" : value.split("/")[0]);
   });
   return out;
@@ -50,6 +55,6 @@ describe("chapters", () => {
   it("keep the anchor Fig. 2 links to", () => {
     // Component links escape the build's link validator, which checks Markdown only.
     const map = readFileSync("src/content/docs/applications-map/index.mdx", "utf8");
-    expect(map).toMatch(/^## What works today, per field$/m);
+    expect(map).toMatch(FIG2_ANCHOR);
   });
 });

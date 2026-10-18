@@ -13,6 +13,7 @@ const TRANSFORMERS_URL = "https://cdn.jsdelivr.net/npm/@huggingface/transformers
 // The model is pinned to a commit of its Hugging Face repo, so a later push to
 // that repo cannot change what every visitor downloads.
 const MODEL = "Xenova/clip-vit-base-patch32";
+// biome-ignore lint/security/noSecrets: a public git commit id, not a secret
 const MODEL_REVISION = "d15189d7028b43f1d3e65039190477f6af591c2a";
 
 let classifierPromise: Promise<Classifier> | null = null;
