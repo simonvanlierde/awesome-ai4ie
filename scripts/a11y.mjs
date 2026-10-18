@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
  * Runs axe (WCAG 2.2 AA) on every page of the built site, in light and dark, at
- * desktop and phone width, and exits 1 on any violation or on a page wider than
- * a phone screen (WCAG 1.4.10 Reflow). Hugging Face Space iframes are
- * third-party and excluded. Checks axe could not decide ("incomplete", e.g.
- * contrast of text over a figure) are listed but do not fail the run.
+ * desktop and phone width. Exits 1 on any violation, or on a page wider than
+ * the screen at phone width or at 320px with text at 200% (WCAG 1.4.10
+ * Reflow). Hugging Face Space iframes are third-party and excluded. Checks
+ * axe could not decide ("incomplete", e.g. contrast of text over a figure) are
+ * listed but do not fail the run.
  *
  *   npm run build && npx astro preview &   # serves dist/ at the base path
  *   npm run test:a11y                      # defaults to http://localhost:4321/awesome-ai4ie/
@@ -63,6 +64,21 @@ for (const colorScheme of ["light", "dark"]) {
         console.log(`${where}: page is ${wider}px wider than the screen (reflow)`);
         violations += 1;
       }
+    }
+  }
+}
+// Reflow at the narrowest width WCAG names (320px) with text at 200%.
+{
+  const page = await (
+    await browser.newContext({ viewport: { width: 320, height: 700 } })
+  ).newPage();
+  for (const path of pages) {
+    await page.goto(new URL(path, root).href);
+    await page.addStyleTag({ content: "html { font-size: 200% !important; }" });
+    const wider = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+    if (wider > 0) {
+      console.log(`320px, 200% text /${path}: page is ${wider}px wider than the screen (reflow)`);
+      violations += 1;
     }
   }
 }

@@ -448,6 +448,7 @@ starlight-menu-button button {
   min-width: 0;
   overflow-wrap: anywhere;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.25rem;
   align-content: start;
 }
@@ -1298,6 +1299,7 @@ starlight-menu-button button {
 }
 .space-embed-load {
   max-width: 100%;
+  overflow-wrap: anywhere;
   text-align: start;
   border: 1px solid var(--sl-color-white);
   background: transparent;
