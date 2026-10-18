@@ -44,7 +44,7 @@ export default function ApplicationsExplorer({ entries }: { entries: AppEntry[] 
         <div>
           {[...groupBy(entries, mode)].map(([tag, apps]) => (
             <section key={tag} className="apx-group">
-              <h3 className={`apx-group-label apx-${mode}${mode === "ie" ? ` field-${tag}` : ""}`}>
+              <h3 className={`apx-group-label${mode === "ie" ? ` apx-ie field-${tag}` : ""}`}>
                 {tagLabel(mode, tag)}
               </h3>
               <ul className="apx-list">
@@ -92,7 +92,13 @@ function Grid({ entries }: { entries: AppEntry[] }) {
   const { rows: ies, cols: mls, cells } = toGrid(entries);
 
   return (
-    <div className="apx-grid-wrap">
+    // A focusable, named region: on a phone the table scrolls sideways inside it.
+    <section
+      className="apx-grid-wrap"
+      aria-labelledby="apx-grid-title"
+      // biome-ignore lint/a11y/noNoninteractiveTabindex: a scrollable region must be keyboard-reachable (WCAG 2.1.1)
+      tabIndex={0}
+    >
       <p className="apx-grid-title" id="apx-grid-title">
         <b>Table 1.1</b>Applications by AI technique and IE field
       </p>
@@ -151,6 +157,6 @@ function Grid({ entries }: { entries: AppEntry[] }) {
         Shade = number of applications; a dashed cell has none yet. Source:
         src/data/applications.yaml.
       </p>
-    </div>
+    </section>
   );
 }

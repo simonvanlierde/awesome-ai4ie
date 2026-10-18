@@ -63,7 +63,7 @@
   --ink-4: #855b05;
   --ink-5: #6d2f6b;
   --on-ink: #ffffff;
-  --band-opacity: 0.42;
+  --band-opacity: 0.55;
 
   --sl-color-white: #16181d;
   --sl-color-gray-1: #24272d;
@@ -101,9 +101,6 @@
 }
 
 /* ── Browser surfaces ────────────────────────────────────────────────────── */
-html {
-  accent-color: var(--sl-color-text-accent);
-}
 ::file-selector-button {
   margin-right: 0.75rem;
   padding: 0.3rem 0.75rem;
@@ -118,6 +115,7 @@ html {
   color: var(--sl-color-white);
 }
 html {
+  accent-color: var(--sl-color-text-accent);
   caret-color: var(--sl-color-text-accent);
   scrollbar-color: var(--sl-color-gray-5) transparent;
 }
@@ -147,6 +145,7 @@ h1#_top,
 .flow text,
 .running-head,
 .chapter-title,
+.path-verb,
 .sidebar-content .large {
   word-spacing: 0.1em;
 }
@@ -468,7 +467,7 @@ starlight-menu-button button {
   fill: var(--sl-color-gray-3);
 }
 .flow .band {
-  fill: var(--field);
+  fill: var(--field, var(--sl-color-gray-3));
   fill-opacity: var(--band-opacity);
   transition: fill-opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -486,11 +485,16 @@ starlight-menu-button button {
   outline: none;
 }
 .flow a:focus-visible :is(.band, .node) {
-  stroke: var(--sl-color-white);
-  stroke-width: 2;
+  stroke: var(--sl-color-text-accent);
+  stroke-width: 3;
+  paint-order: stroke;
 }
-.flow-node:hover text {
+.flow-node:is(:hover, :focus-visible) text {
   text-decoration: underline;
+}
+/* Invisible hit area so thin nodes are still easy to tap. */
+.flow-hit {
+  fill: transparent;
 }
 .flow figcaption {
   display: flex;
@@ -514,7 +518,7 @@ starlight-menu-button button {
 }
 @media (max-width: 40rem) {
   .flow text {
-    font-size: 28px; /* about 13px once the plate shrinks to phone width */
+    font-size: 32px; /* about 14px once the plate shrinks to phone width */
   }
 }
 
@@ -548,9 +552,6 @@ starlight-menu-button button {
 .chapter-index .running-no {
   margin: 0;
 }
-.chapter-gist {
-  grid-column: 2;
-}
 .chapter-title {
   font-family: var(--sl-font);
   font-weight: 750;
@@ -559,6 +560,7 @@ starlight-menu-button button {
   line-height: 1.2;
 }
 .chapter-gist {
+  grid-column: 2;
   font-family: var(--font-read);
   font-size: 0.9375rem;
   line-height: 1.4;
@@ -629,7 +631,6 @@ starlight-menu-button button {
   font-weight: 760;
   font-stretch: 80%;
   line-height: 1.1;
-  word-spacing: 0.1em;
 }
 .path a:hover .path-verb {
   text-decoration: underline;
@@ -755,6 +756,19 @@ starlight-menu-button button {
   background: var(--sl-color-white);
   color: var(--sl-color-black);
   font-variant-numeric: tabular-nums;
+}
+@media (max-width: 40rem) {
+  .lit-bar {
+    position: relative;
+  }
+  .lit-facet {
+    position: static;
+  }
+  .lit-bar .lit-facet-panel {
+    left: 0;
+    right: 0;
+    max-width: none;
+  }
 }
 .lit-facet-panel {
   position: absolute;
@@ -954,7 +968,7 @@ starlight-menu-button button {
   content: "";
   width: 0.75rem;
   height: 0.75rem;
-  background: var(--field);
+  background: var(--field, var(--sl-color-gray-3));
 }
 .apx-list {
   list-style: none;
@@ -994,6 +1008,7 @@ starlight-menu-button button {
 }
 /* The grid: Table 1.1, cells shaded by how many applications they hold. */
 .apx-grid-wrap {
+  position: relative;
   overflow-x: auto;
   margin-top: 1.25rem;
 }
@@ -1029,7 +1044,7 @@ starlight-menu-button button {
   content: "";
   width: 0.6rem;
   height: 0.6rem;
-  background: var(--field);
+  background: var(--field, var(--sl-color-gray-3));
 }
 .apx-grid tbody th {
   text-align: left;
@@ -1114,7 +1129,7 @@ starlight-menu-button button {
   color: var(--sl-color-black);
   cursor: pointer;
 }
-.zsd-controls button:disabled {
+.zsd-controls button[aria-disabled="true"] {
   opacity: 0.5;
   cursor: default;
 }
@@ -1164,6 +1179,9 @@ starlight-menu-button button {
 
 /* ── Click-to-load Hugging Face Space ────────────────────────────────────── */
 .space-embed {
+  display: block; /* a custom element is inline until told otherwise */
+  box-sizing: border-box;
+  max-width: 100%;
   border: 1px solid var(--sl-color-hairline);
   padding: 1rem;
   margin-block: 1rem;
@@ -1192,5 +1210,18 @@ starlight-menu-button button {
   .lit-facet-trigger::after,
   .flow .band {
     transition: none;
+  }
+}
+
+/* Windows high contrast: colours collapse to a few system colours, so pressed
+   toggles need their own system highlight to stay distinguishable. */
+@media (forced-colors: active) {
+  .lit-chip[aria-pressed="true"],
+  .lit-pill,
+  .apx-switch button[aria-pressed="true"] {
+    forced-color-adjust: none;
+    background: Highlight;
+    border-color: Highlight;
+    color: HighlightText;
   }
 }

@@ -142,9 +142,9 @@ components:
 
 The site is set like a statistical yearbook for industrial ecology. Each chapter has a number and a printing ink. A running head sits above every page title. Claims appear as numbered tables and figures, each with a source line. The cover figure is a material-flow (Sankey) plate, the field's own graphic: it shows the literature flowing from IE field to AI technique, and every band links to the filtered papers.
 
-The page is paper and ink. Dark is the default theme, a blue-black stock with near-white ink. Light is a cool white stock with near-black ink. Five printing inks (cobalt, vermilion, olive, ochre, plum) carry all colour, and each ink has two jobs: it marks a chapter, and four of them also mark an IE field. Everything else is grey. Corners are square, depth comes from rules rather than shadows, and type is narrow Archivo for anything that labels or structures and Source Serif 4 for anything to be read.
+The page is paper and ink. The theme follows the reader's system setting. Dark is a blue-black stock with near-white ink; light is a cool white stock with near-black ink. The dark values are the base tokens in custom.css. Five printing inks (cobalt, vermilion, olive, ochre, plum) carry all colour, and each ink has two jobs: it marks a chapter, and four of them also mark an IE field. Everything else is grey. Corners are square, depth comes from rules rather than shadows, and type is narrow Archivo for anything that labels or structures and Source Serif 4 for anything to be read.
 
-Density is that of a reference work: tight ruled tables, compact chips, reading text at a 68ch measure. The docs-site hero with a button pair and a card grid is rejected. The cover leads with the title, a lede, one primary action, and Fig. 1.
+Density is that of a reference work: tight ruled tables, compact chips, reading text at a 68ch measure. The docs-site hero with a button pair and a card grid is rejected. The cover leads with the title, a lede, one primary action beside a text link, and Fig. 1.
 
 **Key Characteristics:**
 
@@ -191,7 +191,7 @@ Two neutral stocks, one near-black ink, and five printing inks that each pass 4.
 ### Typography
 
 **Display Font:** Archivo Variable, width axis loaded (with ui-sans-serif, system-ui)
-**Body Font:** Source Serif 4 Variable, optical size axis loaded (with Georgia, Times New Roman)
+**Body Font:** Source Serif 4 Variable, weight axis only (with Georgia, Times New Roman)
 **Label/Mono Font:** Martian Mono Variable, for code only (with ui-monospace)
 
 **Character:** Archivo set narrow gives the dense, condensed voice of a yearbook's titles and tables. Source Serif 4 slows the reader down where the content is prose. All three are self-hosted through Fontsource.
@@ -281,7 +281,7 @@ Square corners throughout (0px): buttons, chips, tags, inputs, panels, sidebar i
 
 #### Flow plate (Fig. 1)
 
-The signature component. A build-time Sankey of vetted papers, IE field nodes on the left (8-unit bars in the field ink), AI technique nodes on the right (ink bars), bands filled with the source field's ink at `--band-opacity` (0.55 dark, 0.42 light). Labels are Archivo 650 at width 82% with the count in gray-3. Each band and node is a link to the filtered literature list. Pointing at or focusing a band raises it to 0.9 and drops the others to 0.12 (0.25s, `cubic-bezier(0.16, 1, 0.3, 1)`); keyboard focus also draws a 2px ink stroke. Under the plate, a caption over a hairline: bold "Fig. 1", the claim, and a gray-3 source line.
+The signature component. A build-time Sankey of vetted papers, IE field nodes on the left (8-unit bars in the field ink), AI technique nodes on the right (ink bars), bands filled with the source field's ink at `--band-opacity` (0.55 in both themes). Labels are Archivo 650 at width 82% with the number of papers in gray-3; band width counts field-technique pairings, and the caption says so. Each band and node is a link to the filtered literature list, and a node's list holds exactly the papers its number counts. Nodes are in the tab order with a 28-unit hit area; bands are pointer-only (the nodes and the literature filters reach the same lists). Pointing at or focusing a band raises it to 0.9 and drops the others to 0.12 (0.25s, `cubic-bezier(0.16, 1, 0.3, 1)`); keyboard focus draws a 3px accent stroke and underlines the label. Under the plate, a caption over a hairline: bold "Fig. 1", the claim, and a gray-3 source line.
 
 #### Numbered table with count cells (Table 1.1)
 

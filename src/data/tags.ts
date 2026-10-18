@@ -1,6 +1,8 @@
 // Shared tag vocabulary: used by the literature list, the applications map,
 // and the schema validation in content.config.ts. Add new tags here first;
 // the collections test enforces that data files only use tags defined here.
+// A new IE field also needs a `.field-<tag>` ink rule in src/styles/custom.css
+// (only five inks exist, see DESIGN.md); collections.test.ts checks for it.
 // Areas with no vetted entries yet are deliberately absent: add the tag together
 // with its first entry. The known gaps are named under "Not mapped yet" on the
 // applications map, so the absences stay visible instead of implicit.
@@ -40,6 +42,26 @@ export type TypeTag = keyof typeof TYPE_TAGS;
 export const TAGS = { ie: IE_TAGS, ml: ML_TAGS, type: TYPE_TAGS } as const;
 export type TagDim = keyof typeof TAGS;
 export const TAG_DIMS = Object.keys(TAGS) as TagDim[];
+
+/** Short names for Fig. 1 on the home page, whose labels must fit beside the
+ * nodes at phone width. Typed so that a new IE or ML tag fails the type check
+ * until it has one. */
+export const SHORT_LABELS: Record<IeTag | MlTag, string> = {
+  lca: "LCA",
+  mfa: "MFA",
+  eol: "Waste & EoL",
+  "urban-mining": "Urban mining",
+  llm: "LLMs",
+  "nlp-extraction": "NLP extraction",
+  cv: "Computer vision",
+  segmentation: "Segmentation",
+  depth: "Depth & 3D",
+  "remote-sensing": "Remote sensing",
+  "tabular-ml": "Tabular ML",
+  generative: "Generative",
+  foundation: "Foundation models",
+  "anomaly-detection": "Anomaly detection",
+};
 
 /** What each dimension is called in the UI. */
 export const DIM_LABELS: Record<TagDim, string> = {

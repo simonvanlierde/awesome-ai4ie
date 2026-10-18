@@ -65,6 +65,14 @@ Create `src/content/docs/your-section.md` with a `title:` in the front matter, t
 { label: 'Your section title', slug: 'your-section' },
 ```
 
+A page inside an existing chapter needs nothing else. A new top-level entry is a new chapter: it also needs an entry in [`src/lib/chapters.ts`](src/lib/chapters.ts) and one of the five inks in [`src/styles/custom.css`](src/styles/custom.css). All five are in use, so open an issue first. `npm test` checks that the three agree.
+
+### Look and feel
+
+[`DESIGN.md`](DESIGN.md) holds the visual rules: colours, fonts, spacing and components. [`PRODUCT.md`](PRODUCT.md) says who the site is for. Number every new figure or table ("Fig. 3", "Table 1.2") and give it a source line naming its data file. A new IE field needs a `.field-<tag>` ink rule and a short label in `SHORT_LABELS` ([`src/data/tags.ts`](src/data/tags.ts)); the type check and `npm test` flag a missing one. The `.impeccable/` folder holds the design tool's working records; `DESIGN.md` is the one to read.
+
+To run the accessibility check locally: `npm run build`, then `npx astro preview` in one terminal and `npm run test:a11y` in another. It runs axe on every page in light and dark, at desktop and phone width.
+
 ### Adding an interactive demo
 
 See [two ways to add a demo](https://simonvanlierde.github.io/awesome-ai4ie/demos/#two-ways-to-add-a-demo) on the demos page. Link new demos from the matching `demo:` field in `src/data/applications.yaml`.

@@ -36,9 +36,18 @@
       "linter": {
         "rules": {
           "suspicious": { "noConsole": "off" },
-          "correctness": { "noNodejsModules": "off" }
+          "correctness": { "noNodejsModules": "off" },
+          // Scripts drive one browser page at a time, so their awaits run in order on purpose.
+          "performance": { "noAwaitInLoops": "off" }
         }
       }
+    },
+    {
+      // The rule flags any later, less specific selector, even one that sets
+      // different properties on different elements; in this stylesheet that is
+      // every finding. Specificity bugs show up in the screenshots and axe runs.
+      "includes": ["**/*.css"],
+      "linter": { "rules": { "style": { "noDescendingSpecificity": "off" } } }
     },
     {
       // Tests read YAML fixtures off disk and import without extensions.

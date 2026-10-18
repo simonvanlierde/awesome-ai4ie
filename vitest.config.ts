@@ -4,6 +4,6 @@ import { defineConfig } from "vitest/config";
 // files no test imports too (the React islands), so they count as uncovered.
 export default defineConfig({
   test: {
-    coverage: { include: ["src/**/*.{ts,tsx}"], reporter: ["text", "lcov"] },
+    coverage: { include: ["src/**/*.{ts,tsx,mjs}"], reporter: ["text", "lcov"] },
   },
 });

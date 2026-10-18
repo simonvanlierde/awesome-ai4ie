@@ -53,14 +53,14 @@ name instead of left implicit.
 
 ## Brand Commitments
 
-Name: "Awesome AI for Industrial Ecology", short form AI4IE. The user stated that nothing in
-the current look (palette, mark, Starlight shell) is binding.
+Name: "Awesome AI for Industrial Ecology", short form AI4IE. Beyond the name, the look
+(palette, mark, Starlight shell) is open to change.
 
 ## Evidence on Hand
 
 - 75 literature entries and 17 application entries in `src/data/`.
 - Two worked skills in `skills/`, the CLIP demo, and two embedded Hugging Face Spaces.
-- The logo and mark SVGs in `src/assets/`, the social card `public/og.png`.
+- The logo SVGs in `src/assets/`, the favicon and the social card in `public/`.
 - No testimonials, adoption figures or user counts exist; do not invent any.
 
 ## Product Principles

@@ -76,14 +76,14 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
             <details className="lit-facet" name="lit-facet" key={dim}>
               <summary className="lit-facet-trigger">
                 {DIM_LABELS[dim]}
-                {count > 0 && <span className={`lit-facet-count lit-count-${dim}`}>{count}</span>}
+                {count > 0 && <span className="lit-facet-count">{count}</span>}
               </summary>
               <div className="lit-facet-panel">
                 {Object.entries(TAGS[dim]).map(([tag, label]) => (
                   <button
                     type="button"
                     key={tag}
-                    className={`lit-chip lit-chip-${dim}`}
+                    className="lit-chip"
                     aria-pressed={filter[dim].includes(tag)}
                     onClick={() => toggle(dim, tag)}
                   >
@@ -102,7 +102,7 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
             <button
               type="button"
               key={p.id}
-              className={`lit-pill lit-pill-${p.dim}`}
+              className="lit-pill"
               aria-label={`Remove filter: ${p.label}`}
               onClick={() => toggle(p.dim, p.tag)}
             >
@@ -113,7 +113,7 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
           {filter.papers.length > 0 && (
             <button
               type="button"
-              className="lit-pill lit-pill-papers"
+              className="lit-pill"
               aria-label="Remove filter: linked papers"
               onClick={() => setFilter({ ...filter, papers: [] })}
             >

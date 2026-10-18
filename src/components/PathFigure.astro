@@ -1,38 +1,46 @@
 ---
 // Fig. 2 on the home page: the see → read → try path, worked for one cell of
-// the map (waste & EoL × computer vision). Counts come from the data, so the
-// figure stays true as entries are added.
+// the map (waste & EoL × computer vision). Counts come from the data with the
+// literature list's own filter rule, so each number matches the page it links to.
 import { getCollection } from "astro:content";
+import { EMPTY_FILTER, matchesFilter } from "../components/litFilter";
+import { CHAPTERS, chapterOf } from "../lib/chapters";
 import { litUrl, siteUrl } from "../lib/urls";
 
-const has = (e: { ie?: readonly string[]; ml?: readonly string[] }) =>
-  (e.ie ?? []).includes("eol") && (e.ml ?? []).includes("cv");
-const apps = (await getCollection("applications")).filter((e) => has(e.data)).length;
-const papers = (await getCollection("literature")).filter((e) => has(e.data)).length;
+const cell = { ...EMPTY_FILTER, ie: ["eol"], ml: ["cv"] };
+const apps = (await getCollection("applications")).filter((e) =>
+  matchesFilter(e.data, cell),
+).length;
+const papers = (await getCollection("literature")).filter((e) =>
+  matchesFilter(e.data, cell),
+).length;
+const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
 const steps = [
   {
-    n: 1,
+    chapter: "applications-map",
     verb: "See what works today",
-    where: "Map of AI applications",
+    // The anchor is a heading in applications-map/index.mdx; chapters.test.ts checks it.
     href: siteUrl("applications-map/#what-works-today-per-field"),
-    fact: `${apps} computer-vision applications at end-of-life, each with a maturity call`,
+    fact: `${plural(apps, "computer-vision application", "computer-vision applications")} at end-of-life, each with a maturity call`,
   },
   {
-    n: 2,
+    chapter: "literature",
     verb: "Read the evidence",
-    where: "Literature, pre-filtered",
-    href: litUrl({ ie: ["eol"], ml: ["cv"] }),
-    fact: `${papers} papers tagged waste & EoL × computer vision`,
+    href: litUrl(cell),
+    fact: `${plural(papers, "paper", "papers")} tagged waste & EoL × computer vision`,
   },
   {
-    n: 5,
+    chapter: "demos",
     verb: "Try it",
-    where: "Demos",
     href: siteUrl("demos/"),
     fact: "Zero-shot recognition of your own photo, in this browser tab",
   },
-];
+].map((s) => ({
+  ...s,
+  n: chapterOf(s.chapter)?.n ?? 0,
+  where: CHAPTERS.find((c) => c.slug === s.chapter)?.title,
+}));
 ---
 
 <figure class="path not-content">
@@ -44,7 +52,8 @@ const steps = [
           <a href={s.href}>
             <span class="path-verb">{s.verb}</span>
             <span class="path-where">
-              <b class="running-no">{s.n}</b>
+              {/* The chapter number repeats the sidebar tab; screen readers get the name alone. */}
+              <b class="running-no" aria-hidden="true">{s.n}</b>
               {s.where}
             </span>
           </a>

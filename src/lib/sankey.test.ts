@@ -41,6 +41,21 @@ describe("sankeyLayout", () => {
     }
   });
 
+  it("labels each node with its distinct papers, not its pairings", () => {
+    // lca carries 3 pairings (height) from 2 papers; llm 2 pairings from 2 papers.
+    expect(ieNodes.map((n) => [n.tag, n.count, n.papers])).toEqual([
+      ["lca", 3, 2],
+      ["eol", 1, 1],
+    ]);
+    expect(mlNodes.find((n) => n.tag === "llm")?.papers).toBe(2);
+    expect(sankeyLayout(entries, 100, 10).papers).toBe(3);
+  });
+
+  it("counts a tag listed twice on one entry once", () => {
+    const { bands: twice } = sankeyLayout([{ ie: ["lca", "lca"], ml: ["cv"] }], 100, 10);
+    expect(twice.map((b) => b.count)).toEqual([1]);
+  });
+
   it("returns an empty figure for no tagged entries", () => {
     expect(sankeyLayout([], 100, 10)).toMatchObject({ bands: [], total: 0 });
   });

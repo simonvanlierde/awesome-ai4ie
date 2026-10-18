@@ -2,19 +2,28 @@
 // Home-page cover: the title column beside Fig. 1 (the literature as a flow
 // from IE field to AI technique), then the chapter index. The splash template
 // has no sidebar, so the index is this page's way into the chapters.
+// Starlight renders the hero on every page with `hero` frontmatter, which is the
+// home page and its built-in 404 page. The 404 keeps the title and the chapter
+// index (useful ways on) but not the running head or Fig. 1.
 import { LinkButton } from "@astrojs/starlight/components";
 import { CHAPTERS } from "../../lib/chapters";
 import { siteUrl } from "../../lib/urls";
 import FlowFigure from "../FlowFigure.astro";
 
-const { data } = Astro.locals.starlightRoute.entry;
+const { id, data } = Astro.locals.starlightRoute.entry;
+const isHome = id === "" || id === "index";
 const { title = data.title, tagline, actions = [] } = data.hero ?? {};
 ---
 
 <div class="cover">
-  <p class="running-head">
-    <span>Overview</span><span>A proposal for the AI4IE working group</span>
-  </p>
+  {
+    isHome && (
+      <p class="running-head">
+        <span>Overview</span>
+        <span>A proposal for the AI4IE working group</span>
+      </p>
+    )
+  }
   <div class="cover-grid">
     <div class="cover-copy">
       <h1 id="_top" data-page-title set:html={title} />
@@ -29,7 +38,7 @@ const { title = data.title, tagline, actions = [] } = data.hero ?? {};
         }
       </div>
     </div>
-    <FlowFigure />
+    {isHome && <FlowFigure />}
   </div>
   <nav class="chapter-index" aria-label="Chapters">
     <ol>
