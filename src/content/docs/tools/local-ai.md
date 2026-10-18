@@ -24,7 +24,7 @@ fit at all. The rules of thumb below assume 4-bit quantized weights (the practic
 default for local use) and a modest context length. For 8-bit, halve the model size.
 For full precision, quarter it. *(checked 2026-07)*
 
-**Table 4.1** What fits in memory at 4-bit
+<p class="table-title"><b>Table 4.1</b> What fits in memory at 4-bit</p>
 
 | Memory | Runs (4-bit) | Typical hardware |
 |---|---|---|
@@ -33,7 +33,7 @@ For full precision, quarter it. *(checked 2026-07)*
 | 24–32 GB | ~30B | RTX 4090/5090 workstation, MacBook M-Max |
 | 48–96 GB | ~70B | 2× consumer GPUs, RTX 6000-class, Mac Studio |
 
-Source: rules of thumb for 4-bit weights and a modest context, checked 2026-07.
+<p class="table-src">Source: rules of thumb for 4-bit weights and a modest context, checked 2026-07.</p>
 
 - **Laptop.** Modern Apple silicon (16 GB+) or a laptop RTX GPU runs 7–14B models usably via Ollama/LM Studio. *Good for:* drafting, summarization, code completion on confidential material. *Not for:* the quality you're used to from frontier hosted models; expect a clear step down.
 - **Workstation.** One consumer GPU (24–32 GB VRAM, roughly €2,000–3,500 for the card at 2026 prices) runs ~30B models fast and 70B slowly. *Good for:* a research group's shared "sensitive data" box running Ollama or vLLM.

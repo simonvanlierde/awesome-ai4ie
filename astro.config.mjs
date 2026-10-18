@@ -54,7 +54,11 @@ export default defineConfig({
       lastUpdated: true,
       // Wrap long lines: most blocks are prompts to copy, and a block that
       // scrolls sideways must also be reachable by keyboard (axe).
-      expressiveCode: { defaultProps: { wrap: true } },
+      expressiveCode: {
+        defaultProps: { wrap: true },
+        // Martian Mono runs wide, so the default size lands under 12px.
+        styleOverrides: { codeFontSize: "0.8125rem" },
+      },
       favicon: "/favicon.svg",
       // Constructed "AI4IE" wordmark; Starlight swaps the two by theme. The mark
       // replaces the title text in the top bar (title still drives <title>/SEO).

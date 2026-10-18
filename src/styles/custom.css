@@ -191,7 +191,8 @@ h1#_top,
 .sl-markdown-content a:not(:where(.not-content *, .sl-link-button)):hover {
   text-decoration-thickness: 2px;
 }
-.sl-markdown-content :is(code, kbd) {
+/* Inline code only: blocks take their size from Expressive Code (astro.config.mjs). */
+.sl-markdown-content :not(pre) > :is(code, kbd) {
   font-size: 0.82em;
 }
 .sl-markdown-content :not(pre) > code {
@@ -1023,12 +1024,14 @@ starlight-menu-button button {
   overflow-x: auto;
   margin-top: 1.25rem;
 }
-.apx-grid-title {
+.apx-grid-title,
+.sl-markdown-content .table-title {
   margin: 0 0 0.4rem;
   font-size: 0.875rem;
   font-weight: 700;
 }
-.apx-grid-title b {
+.apx-grid-title b,
+.sl-markdown-content .table-title b {
   margin-right: 0.5rem;
 }
 .apx-grid th,
@@ -1094,7 +1097,8 @@ starlight-menu-button button {
 .apx-grid td a:hover {
   outline: 2px solid var(--sl-color-white);
 }
-.apx-grid-src {
+.apx-grid-src,
+.sl-markdown-content .table-src {
   margin: 0.5rem 0 0;
   font-size: 0.8125rem;
   color: var(--sl-color-gray-3);
@@ -1254,18 +1258,19 @@ starlight-menu-button button {
   padding-inline-start: 0;
 }
 .sl-markdown-content .task-list-item label {
-  display: flex;
-  gap: 0.65rem;
-  align-items: baseline;
+  display: block;
+  position: relative;
+  padding-inline-start: 1.65rem;
 }
 .sl-markdown-content .task-list-item input[type="checkbox"] {
   appearance: none;
-  flex: none;
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.3em;
   width: 1rem;
   height: 1rem;
   margin: 0;
   border: 1.5px solid var(--sl-color-white);
-  transform: translateY(0.15em);
 }
 
 /* Starlight cards become ruled panels, like the chapter index: no box, no icon. */
@@ -1299,5 +1304,38 @@ starlight-menu-button button {
   }
   .apx-head-short {
     display: inline;
+  }
+}
+
+/* Captions and source lines of Markdown tables are Archivo, like Table 1.1's. */
+.sl-markdown-content .table-title,
+.sl-markdown-content .table-src {
+  font-family: var(--sl-font);
+  line-height: 1.45;
+}
+
+/* Asides keep the reading measure. */
+.starlight-aside__content > :is(p, ul, ol) {
+  max-width: 68ch;
+}
+
+/* Table 1.1 fits a phone: tighter cells, and a field swatch on the first line
+   of a wrapped head. */
+@media (max-width: 40rem) {
+  .apx-grid th,
+  .apx-grid td {
+    padding: 0.45rem 0.25rem;
+  }
+  .apx-grid td > *,
+  .apx-grid td[data-n="0"]::before {
+    min-width: 2.25rem;
+    width: 2.25rem;
+  }
+  .apx-grid thead th a {
+    align-items: flex-start;
+  }
+  .apx-grid thead th a::before {
+    flex: none;
+    margin-top: 0.3em;
   }
 }

@@ -14,9 +14,9 @@ const X0 = 200;
 const X1 = 480;
 const NODE = 8;
 const W = X1 + NODE + 290;
-// Node links get at least this tall a hit area: about 22px at phone width and
-// 42px on a desktop (WCAG 2.5.8 asks for 24px, or that much spacing).
-const HIT = 48;
+// Node links get at least this tall a hit area: 24px even at a 320px-wide
+// screen, where the plate shrinks to about 0.37 (WCAG 2.5.8).
+const HIT = 66;
 
 const entries = (await getCollection("literature")).map((e) => e.data);
 const { ieNodes, mlNodes, bands, total, papers } = sankeyLayout(entries, H, GAP);
