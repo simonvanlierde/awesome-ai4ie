@@ -1,0 +1,60 @@
+name: Suggest a tool
+description: Software, hardware or a service for the tools pages. No pull request needed.
+title: "[Tool] "
+labels: [entry, tool]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Name and link
+      placeholder: Zotero, https://www.zotero.org
+    validations:
+      required: true
+  - type: dropdown
+    id: page
+    attributes:
+      label: Which page?
+      options:
+        - Software tools
+        - Local AI & hardware
+        - Datasets & models
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What does it do, and what is it good for in IE work?
+      description: Say what it's not good for too. Honest limits help more than praise.
+    validations:
+      required: true
+  - type: dropdown
+    id: cost
+    attributes:
+      label: Cost
+      options:
+        - Free
+        - Free tier + paid
+        - Free for academics, otherwise paid
+        - Paid
+    validations:
+      required: true
+  - type: dropdown
+    id: data
+    attributes:
+      label: Does data leave your machine?
+      description: This matters for confidential industry data and anything under an NDA or a data-management plan.
+      options:
+        - Yes, data leaves your machine
+        - It can stay fully local
+        - No, data stays on your machine
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: checked
+    attributes:
+      label: When did you check this?
+      description: Prices, specs and model names go stale, so we date every entry.
+      placeholder: YYYY-MM
+    validations:
+      required: true

@@ -4,6 +4,14 @@ Anyone can contribute. If you've found hardware that works, a tool worth the tim
 
 ## The short version
 
+**No pull request needed.** [Suggest a paper](../../issues/new?template=paper.yml),
+[map an application](../../issues/new?template=application.yml),
+[suggest a tool](../../issues/new?template=tool.yml) or
+[suggest anything else](../../issues/new?template=other.yml). Each is a short form, and a
+maintainer turns it into an entry.
+
+To make the change yourself:
+
 1. **Papers and applications live in data files**, not in page text:
    [`src/data/literature.yaml`](src/data/literature.yaml) and
    [`src/data/applications.yaml`](src/data/applications.yaml). Copy a neighbouring
@@ -17,7 +25,7 @@ To edit text, you need no local setup: edit the Markdown on GitHub, or click the
 
 ### Adding a paper or an application
 
-- Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR, with a short label in `SHORT_LABELS` (the start of the full label, for Fig. 1 on the home page).
+- Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR, with a short label in `SHORT_LABELS` (the start of the full label, for Fig. 1 on the home page). Add its full label to the matching dropdown in the paper and application forms in [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) too. `npm test` checks that they match.
 - Literature entries need an `id` (the citation key), `title`, `authors`, `year`, a one-line `blurb` saying why it's worth reading, tags, and `added: YYYY-MM`.
 - Write `authors` as a list with one `"Surname, I."` per author. Add `etAl: true` when you stop before the last author.
 - Give a `doi` (the bare `10.…` id), an `arxiv` id (the bare id, such as `2401.01234`), or both.

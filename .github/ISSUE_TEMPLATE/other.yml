@@ -1,0 +1,30 @@
+name: Suggest something else
+description: A prompt, a checklist item, a pitfall, a demo, or a fix to any page.
+title: "[Suggestion] "
+labels: [entry]
+body:
+  - type: dropdown
+    id: page
+    attributes:
+      label: Which part of the site?
+      options:
+        - Map of AI applications
+        - Literature & resources
+        - Best practices & guides
+        - Tools & hardware
+        - Demos
+        - The site as a whole
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What should change?
+      description: The entry or the fix, with links. If it's a correction, say what's wrong now.
+    validations:
+      required: true
+  - type: textarea
+    id: limits
+    attributes:
+      label: Good for, not for
+      description: Optional. Where does it help, and where does it fall short?

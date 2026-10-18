@@ -14,9 +14,9 @@
   // A week gives a hijacked release time to be yanked.
   minimumReleaseAge: "7 days",
 
-  // Renovate merges once every check on the branch passes. GitHub's own
-  // auto-merge would merge straight away, since main requires no checks. A merge
-  // by the Renovate app is a push to main like any other, so it deploys.
+  // Renovate merges itself once every check on the branch passes, not through
+  // GitHub's auto-merge. A merge by the Renovate app is a push to main like any
+  // other, so it deploys.
   platformAutomerge: false,
 
   packageRules: [

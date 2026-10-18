@@ -6,6 +6,7 @@ description: A two-dimensional map of where AI is applied in industrial ecology,
 import ApplicationsSection from '../../../components/ApplicationsSection.astro';
 import FieldApplications from '../../../components/FieldApplications.astro';
 import Cite from '../../../components/Cite.astro';
+import SuggestPaper from '../../../components/SuggestPaper.astro';
 
 This map shows where AI is applied in industrial ecology, along **two
 dimensions**: the IE field (LCA, MFA, waste & circularity, …) and the AI technique
@@ -15,9 +16,10 @@ index into the reading list.
 
 :::note[A first pass]
 These entries are a first pass and certainly incomplete. Argue with them, and add
-what's missing: entries live in
-[`src/data/applications.yaml`](repo:blob/main/src/data/applications.yaml);
-see [Contributing](repo:blob/main/CONTRIBUTING.md).
+what's missing: [map an application](repo:issues/new?template=application.yml) in a
+short form, or edit
+[`src/data/applications.yaml`](repo:blob/main/src/data/applications.yaml) as
+[Contributing](repo:blob/main/CONTRIBUTING.md) describes.
 :::
 
 ## What works today, per field
@@ -87,26 +89,35 @@ instead of leaving them implicit. Two kinds of gap: **IE fields** with no vetted
 
 A caveat on how to read this: none of it claims the work doesn't exist. It claims we
 have not vetted any of it. Our sweep either found nothing that survived verification,
-or never looked. Each line is the easiest possible contribution: one paper, one entry.
+or never looked. Each line is the easiest possible contribution: one paper, one entry. Its
+link opens a short form with the gap filled in.
 
 ### IE fields with no entries
 
 - <span class="wanted">Wanted</span> **Chemicals, toxicity & QSAR.** Predicting properties and toxicity for substances
   nobody has tested, where LCA needs characterisation factors for tens of thousands of them.
   Plausibly the largest single hole in this map.
+  <SuggestPaper gap="Chemicals, toxicity & QSAR" />
 - <span class="wanted">Wanted</span> **Energy systems & industrial decarbonisation.** Marginal versus average grid
   factors, temporal accounting, process and heat-integration optimisation.
+  <SuggestPaper gap="Energy systems & industrial decarbonisation" />
 - <span class="wanted">Wanted</span> **Industrial symbiosis.** Matching one plant's waste to another's input is a
   recommender problem wearing an IE name.
+  <SuggestPaper gap="Industrial symbiosis" />
 - <span class="wanted">Wanted</span> **Supply chains, criticality & resource security.** Supply risk, critical raw
   materials, trade-network disruption.
+  <SuggestPaper gap="Supply chains, criticality & resource security" />
 - <span class="wanted">Wanted</span> **Agriculture, food & land use.** The field our remote-sensing tag most obviously
   serves, with nothing behind it.
+  <SuggestPaper gap="Agriculture, food & land use" />
 - <span class="wanted">Wanted</span> **Product lifetime, reuse & repair.** Survival analysis and failure prediction;
   feeds both MFA stock models and the EoL corner.
+  <SuggestPaper gap="Product lifetime, reuse & repair" />
 - <span class="wanted">Wanted</span> **Water.** Footprint, scarcity, and hydrological modelling.
+  <SuggestPaper gap="Water" />
 - <span class="wanted">Wanted</span> **Input–output analysis, forecasting & scenario modelling.** The original three
   gaps, still open.
+  <SuggestPaper gap="Input–output analysis, forecasting & scenario modelling" />
 
 ### AI techniques with no tag
 
@@ -115,23 +126,33 @@ someone brings a paper that earns one.
 
 - <span class="wanted">Wanted</span> **Uncertainty quantification & Bayesian methods.** Uncertainty is this discipline's
   central methodological concern, and the map has no column for it. Conformal prediction counts too.
+  <SuggestPaper gap="Uncertainty quantification & Bayesian methods" />
 - <span class="wanted">Wanted</span> **Graph neural networks & network analysis.** Supply chains, IO tables, material-flow
   networks, molecular graphs: most IE data is a network, and nothing here treats it as one.
+  <SuggestPaper gap="Graph neural networks & network analysis" />
 - <span class="wanted">Wanted</span> **Surrogate models & emulators.** Physics-informed ones included. This is how
   scenario work gets done with ML in practice, not just in principle.
+  <SuggestPaper gap="Surrogate models & emulators" />
 - <span class="wanted">Wanted</span> **Causal inference.** Rebound effects and policy attribution are causal claims,
   usually made with correlational tools.
+  <SuggestPaper gap="Causal inference" />
 - <span class="wanted">Wanted</span> **Reinforcement learning.** Disassembly sequence planning and process control. The
   EoL paragraph above already discusses robotic disassembly with no technique tag behind it.
+  <SuggestPaper gap="Reinforcement learning" />
 - <span class="wanted">Wanted</span> **Knowledge graphs & ontologies.** LCI interoperability and semantic flow matching,
   distinct from NLP extraction.
+  <SuggestPaper gap="Knowledge graphs & ontologies" />
 - <span class="wanted">Wanted</span> **Recommender & matching systems.** The method behind industrial symbiosis, and
   behind matching products to emission factors.
+  <SuggestPaper gap="Recommender & matching systems" />
 - <span class="wanted">Wanted</span> **Time-series & forecasting.** Distinct from tabular ML.
+  <SuggestPaper gap="Time-series & forecasting" />
 - <span class="wanted">Wanted</span> **Federated & privacy-preserving learning.** [Local AI & hardware](/tools/local-ai/)
   argues for keeping sensitive data in-house; this is how institutions learn from data they
   are never going to pool.
+  <SuggestPaper gap="Federated & privacy-preserving learning" />
 - <span class="wanted">Wanted</span> **Explainability.** Whether someone can interrogate a claim from a model-based assessment.
+  <SuggestPaper gap="Explainability" />
 
 ### Where the gaps meet
 

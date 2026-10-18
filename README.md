@@ -1,6 +1,6 @@
 # Awesome AI for Industrial Ecology
 
-A community-curated guide to using AI in industrial ecology (IE) research: an applications map, a literature list, tool and hardware guidance, working Claude skills, and in-browser demos. It started in the AI4IE working group, and [anyone can contribute](CONTRIBUTING.md).
+A community-curated guide to using AI in industrial ecology (IE) research: an applications map, a literature list, tool and hardware guidance, working Claude skills, and in-browser demos. It started in the AI4IE working group, and [anyone can contribute](CONTRIBUTING.md): a short form is enough to [suggest a paper](../../issues/new?template=paper.yml).
 
 [![Live site](https://img.shields.io/badge/live_site-ai4ie-2148a8)](https://simonvanlierde.github.io/awesome-ai4ie/)
 [![Contributing](https://img.shields.io/badge/contributing-guide-55661a)](CONTRIBUTING.md)
@@ -27,7 +27,7 @@ npm run dev        # → http://localhost:4321/awesome-ai4ie/
 npm test
 ```
 
-The pages are in [`src/content/docs/`](src/content/docs/) and their data is in [`src/data/`](src/data/). To ask a question, join the [AI4IE Discord](https://discord.gg/zhHAZakXHX).
+The pages are in [`src/content/docs/`](src/content/docs/) and their data is in [`src/data/`](src/data/). To ask a question, join the [AI4IE Discord](https://discord.gg/zhHAZakXHX). Maintainers: see [MAINTAINING.md](MAINTAINING.md).
 
 ## License
 

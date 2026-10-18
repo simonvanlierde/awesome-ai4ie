@@ -1,0 +1,76 @@
+name: Suggest a paper
+description: A paper for the reading list. No YAML or pull request needed.
+title: "[Paper] "
+labels: [entry, paper]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A maintainer turns this into an entry in the reading list. Only the id and the reason to read it are required. The rest saves us a step.
+  - type: input
+    id: id
+    attributes:
+      label: DOI or arXiv id
+      description: The bare id. We look up the title, authors and year from it.
+      placeholder: 10.1111/jiec.13313 or 2401.01234
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why read it?
+      description: One or two sentences for the reading list. What does it show, and how strong is the evidence? Honest limits help more than praise.
+    validations:
+      required: true
+  # The three dropdowns list the labels in src/data/tags.ts; forms.test.ts keeps them in step.
+  - type: dropdown
+    id: ie
+    attributes:
+      label: IE field
+      description: Pick all that apply. Leave it empty for an ML paper that isn't about IE.
+      multiple: true
+      options:
+        - LCA & footprinting
+        - MFA & stocks and flows
+        - Waste, EoL & circularity
+        - Urban mining & secondary resources
+  - type: dropdown
+    id: ml
+    attributes:
+      label: AI technique
+      description: Pick all that apply.
+      multiple: true
+      options:
+        - LLMs & agents
+        - NLP & information extraction
+        - Computer vision
+        - Detection & segmentation
+        - Depth & 3D geometry
+        - Remote sensing
+        - Tabular ML & regression
+        - Generative models
+        - Foundation models & transformers
+        - Anomaly & condition detection
+  - type: input
+    id: gap
+    attributes:
+      label: A field or technique that isn't listed
+      description: Such as a gap from "Not mapped yet" on the map page. A new tag comes in with its first paper.
+  - type: dropdown
+    id: type
+    attributes:
+      label: Kind of paper
+      multiple: true
+      options:
+        - ML landmark
+        - Research practice
+        - Review
+        - Method
+        - Dataset
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you send
+      options:
+        - label: I've read the paper, and it says what I wrote above. An AI summary or the abstract alone doesn't count.
+          required: true

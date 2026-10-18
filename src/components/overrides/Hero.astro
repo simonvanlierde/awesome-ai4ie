@@ -5,10 +5,11 @@
 // page and its built-in 404 page. The 404 keeps the title and the chapter
 // index but drops the running head and Fig. 1.
 // NOTE: unlike Starlight's own hero, this one ignores `hero.image`, the
-// draft notice and inline icon HTML; no page uses them.
+// draft notice and inline icon HTML; no page uses them. Action links resolve
+// like Markdown links: `/path/` against the base, `repo:` to GitHub.
 import { LinkButton } from "@astrojs/starlight/components";
 import { CHAPTERS } from "../../lib/chapters";
-import { siteUrl } from "../../lib/urls";
+import { contentUrl, siteUrl } from "../../lib/urls";
 import FlowFigure from "../FlowFigure.astro";
 
 const { id, data } = Astro.locals.starlightRoute.entry;
@@ -31,8 +32,8 @@ const { title = data.title, tagline, actions = [] } = data.hero ?? {};
       {tagline && <p class="cover-tagline" set:html={tagline} />}
       <div class="cover-actions">
         {
-          actions.map(({ attrs: { class: className, ...attrs } = {}, icon, link: href, text, variant }) => (
-            <LinkButton {href} {variant} icon={icon?.name} class:list={[className]} {...attrs}>
+          actions.map(({ attrs: { class: className, ...attrs } = {}, icon, link, text, variant }) => (
+            <LinkButton href={contentUrl(link)} {variant} icon={icon?.name} class:list={[className]} {...attrs}>
               {text}
             </LinkButton>
           ))

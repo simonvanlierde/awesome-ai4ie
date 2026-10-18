@@ -1,0 +1,14 @@
+---
+// The link at the end of each gap under "Not mapped yet": opens the paper form
+// with the gap's name in its free-text field, since GitHub can't prefill dropdowns.
+import { issueUrl } from "../lib/urls";
+
+interface Props {
+  gap: string;
+}
+const { gap } = Astro.props;
+---
+
+<a href={issueUrl("paper", { gap })}>
+  Suggest a paper<span class="sr-only"> on {gap}</span>&nbsp;→
+</a>
