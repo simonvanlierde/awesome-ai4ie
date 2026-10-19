@@ -114,8 +114,9 @@ export default defineConfig({
         }),
       ],
       // Head adds the fonts, Hero is the home cover (title beside Fig. 1), and
-      // PageTitle adds the running head above each title.
+      // PageTitle adds the running head above each title, and Footer the colophon.
       components: {
+        Footer: "./src/components/overrides/Footer.astro",
         Head: "./src/components/overrides/Head.astro",
         Hero: "./src/components/overrides/Hero.astro",
         PageTitle: "./src/components/overrides/PageTitle.astro",

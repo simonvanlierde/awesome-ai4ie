@@ -528,7 +528,7 @@ starlight-menu-button button {
 .flow-hit {
   fill: transparent;
 }
-:is(.flow, .path) figcaption {
+:is(.flow, .path, .plate) figcaption {
   margin-top: 0.75rem;
   padding-top: 0.5rem;
   border-top: 1px solid var(--sl-color-hairline);
@@ -537,7 +537,7 @@ starlight-menu-button button {
   line-height: 1.45;
   color: var(--sl-color-gray-2);
 }
-:is(.flow, .path) figcaption b {
+:is(.flow, .path, .plate) figcaption b {
   margin-right: 0.25rem;
   color: var(--sl-color-white);
 }
@@ -549,6 +549,71 @@ starlight-menu-button button {
 }
 .flow-src {
   color: var(--sl-color-gray-3);
+}
+
+/* ── The mark (Glyph.astro) ───────────────────────────────────────────────
+   Neutral ink, never cobalt on the page: cobalt is ink 1. DESIGN.md, "The mark". */
+.glyph {
+  display: block;
+  flex: none;
+}
+.glyph-fade {
+  stroke: var(--glyph-fade, var(--sl-color-gray-4));
+}
+/* On the cover's running head the mark is chapter 0, in a number block. */
+.running-glyph {
+  vertical-align: middle;
+}
+.running-glyph .glyph {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+.running-glyph .glyph-fade {
+  stroke: currentColor;
+  opacity: 0.45;
+}
+/* Fig. 404: the mark as a plate, framed by the dashed gap outline. */
+.plate {
+  margin: 0;
+  min-width: 0;
+  max-width: 22rem;
+}
+.plate-frame {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border: 1px dashed var(--sl-color-gray-3);
+  color: var(--sl-color-white);
+}
+/* Sized against the frame, not the text, so large text cannot widen the page. */
+.plate-frame .glyph {
+  width: min(12rem, 55%);
+  height: auto;
+  aspect-ratio: 1;
+}
+/* Colophon (Footer override): the end mark and the licences. */
+.colophon {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 3rem 0 0;
+  font-family: var(--sl-font);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-stretch: 85%;
+  color: var(--sl-color-gray-3);
+}
+.colophon .glyph {
+  width: 1rem;
+  height: 1rem;
+  color: var(--sl-color-white);
+}
+.colophon a {
+  color: inherit;
+}
+.colophon + footer .meta {
+  margin-top: 1.25rem;
 }
 @media (max-width: 40rem) {
   .flow text {

@@ -1,4 +1,4 @@
-# Awesome AI for Industrial Ecology
+<h1><img src="public/favicon.svg" width="36" height="36" alt=""> Awesome AI for Industrial Ecology</h1>
 
 A community-curated guide to using AI in industrial ecology (IE) research. Industrial ecology studies how materials and energy move through the economy: what products are made of, where they end up, and what that costs the environment. The guide has an applications map, a literature list, tool and hardware guidance, working Claude skills, and in-browser demos. It started in the AI4IE working group, and [anyone can contribute](CONTRIBUTING.md). To suggest a paper, a [short form](../../issues/new?template=paper.yml) is enough.
 

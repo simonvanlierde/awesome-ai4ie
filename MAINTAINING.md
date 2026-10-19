@@ -48,6 +48,9 @@ If a suggestion doesn't hold up, say why in the issue and close it.
   the check counts those as fine.
 - **Stale entries.** Tool entries carry the month they were checked. Recheck any older than a
   year: `rg -n 'checked 20' src/content/docs/tools/` lists them.
+- **Social card.** `public/og.png` is a picture of the home cover, so it goes stale when the
+  tagline or Fig. 1's counts change. Rebuild it with `npm run build`, `npx astro preview` and
+  then `npm run og`, and commit the PNG.
 
 ## What's tied to the owner's account
 
