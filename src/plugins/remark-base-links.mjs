@@ -9,7 +9,7 @@
  *
  * Links to files in the GitHub repo are written `repo:blob/main/CONTRIBUTING.md`
  * and become `${repoUrl}/blob/main/CONTRIBUTING.md`, so the repo URL lives only
- * in astro.config.mjs.
+ * in src/site.ts.
  */
 const TRAILING_SLASH = /\/$/;
 
@@ -17,8 +17,8 @@ export function remarkBaseLinks({ base, repoUrl }) {
   const prefix = base.replace(TRAILING_SLASH, "");
   const withBase = (url) => (url === prefix || url.startsWith(`${prefix}/`) ? url : prefix + url); // idempotent
 
-  // Only Markdown body links; frontmatter (e.g. Starlight hero actions) is read
-  // straight from the collection and must spell out the base itself.
+  // Only Markdown body links. Front matter (the home page's hero actions) is read
+  // straight from the collection; the Hero override resolves it with contentUrl.
   return (tree) => {
     visit(tree, (node) => {
       if (node.type !== "link") return;

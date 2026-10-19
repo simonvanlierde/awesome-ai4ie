@@ -8,17 +8,14 @@ import starlightLinksValidator from "starlight-links-validator";
 import { rehypeFocusableTables } from "./src/plugins/rehype-focusable-tables.mjs";
 import { rehypeTaskListLabels } from "./src/plugins/rehype-task-list-labels.mjs";
 import { remarkBaseLinks } from "./src/plugins/remark-base-links.mjs";
+import { basePath, repoUrl, site } from "./src/site.ts";
 
-// Repo coordinates: the one place to change when forking or renaming.
-const owner = "simonvanlierde";
-const repo = "awesome-ai4ie";
-const repoUrl = `https://github.com/${owner}/${repo}`;
-const base = `/${repo}`;
-const ogImage = `https://${owner}.github.io/${repo}/og.png`;
+const base = basePath || "/";
+const ogImage = `${site}${basePath}/og.png`;
 
 // https://astro.build/config
 export default defineConfig({
-  site: `https://${owner}.github.io`,
+  site,
   base,
 
   // Content writes internal links root-absolute (`/tools/`); remarkBaseLinks adds
@@ -100,15 +97,22 @@ export default defineConfig({
   ],
 
   // Old URLs that are live on the deployed site must keep working after a move.
-  // Astro adds `base` to the route but not to the destination, hence `${base}`.
-  redirects: { "/hardware/": `${base}/tools/local-ai/` },
+  // Astro adds `base` to the route but not to the destination, hence `basePath`.
+  redirects: { "/hardware/": `${basePath}/tools/local-ai/` },
 
   integrations: [
     react(), // islands: the literature list, the map explorer and the demos
     starlight({
       // Fails the build on a broken internal link, a missing heading anchor or a
       // relative link. Content links must be root-absolute so `base` gets added.
-      plugins: [starlightLinksValidator()],
+      // The home page's hero links are front matter, which the validator reads
+      // as written; the Hero override adds the base to them (contentUrl). At a
+      // domain's root there is no base, so they validate like any other link.
+      plugins: [
+        starlightLinksValidator({
+          exclude: basePath ? ["/applications-map/", "/#contributing"] : [],
+        }),
+      ],
       // Head adds the fonts, Hero is the home cover (title beside Fig. 1), and
       // PageTitle adds the running head above each title.
       components: {

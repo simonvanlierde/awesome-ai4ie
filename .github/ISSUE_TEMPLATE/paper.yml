@@ -1,0 +1,76 @@
+name: Suggest a paper
+description: A paper for the reading list. No YAML or pull request needed.
+title: "[Paper] "
+labels: [entry, paper]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A maintainer turns this into an entry in the reading list. The id, the reason to read it and the check at the end are required; the rest saves us a step.
+  - type: input
+    id: id
+    attributes:
+      label: DOI or arXiv id
+      description: The bare id. We look up the title, authors and year from it.
+      placeholder: 10.1111/jiec.13313 or 2401.01234
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why read it?
+      description: One or two sentences for the reading list. What does it show, and how strong is the evidence? Honest limits help more than praise.
+    validations:
+      required: true
+  - type: input
+    id: gap
+    attributes:
+      label: Does it fill a gap on the map?
+      description: If you came from a gap under "Not mapped yet", it's filled in here. A field or technique that isn't in the lists below gets its tag with its first paper.
+  # The three dropdowns list the labels in src/data/tags.ts; forms.test.ts keeps them in step.
+  - type: dropdown
+    id: ie
+    attributes:
+      label: IE field
+      description: Pick all that apply. Leave it empty for an ML paper that isn't about IE.
+      multiple: true
+      options:
+        - LCA & footprinting
+        - MFA & stocks and flows
+        - Waste, EoL & circularity
+        - Urban mining & secondary resources
+  - type: dropdown
+    id: ml
+    attributes:
+      label: AI technique
+      description: Pick all that apply.
+      multiple: true
+      options:
+        - LLMs & agents
+        - NLP & information extraction
+        - Computer vision
+        - Detection & segmentation
+        - Depth & 3D geometry
+        - Remote sensing
+        - Tabular ML & regression
+        - Generative models
+        - Foundation models & transformers
+        - Anomaly & condition detection
+  - type: dropdown
+    id: type
+    attributes:
+      label: Kind of paper
+      multiple: true
+      options:
+        - ML landmark
+        - Research practice
+        - Review
+        - Method
+        - Dataset
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you send
+      options:
+        - label: I've read the paper, and it says what I wrote above. An AI summary or the abstract alone doesn't count.
+          required: true

@@ -2,11 +2,26 @@
 // Starlight's head, plus the self-hosted fonts from astro.config.mjs. Archivo
 // and the upright serif are preloaded: with font-display: optional, a font
 // that arrives late is skipped for that view instead of shifting the layout.
+// At a custom domain's root, the 404 page also forwards old links that still
+// carry the repo path to the same page without it (`/awesome-ai4ie/tools/` →
+// `/tools/`).
 import { Font } from "astro:assets";
 import Default from "@astrojs/starlight/components/Head.astro";
+import { basePath, repo } from "../../site";
+
+const forwardOldPaths = !basePath && Astro.locals.starlightRoute.entry.id === "404";
 ---
 
 <Default />
 <Font cssVariable="--font-archivo" preload />
 <Font cssVariable="--font-source-serif" preload={[{ style: "normal" }]} />
 <Font cssVariable="--font-martian" />
+{
+  forwardOldPaths && (
+    <script is:inline define:vars={{ old: `/${repo}` }}>
+      const path = location.pathname;
+      if (path === old || path.startsWith(`${old}/`))
+        location.replace((path.slice(old.length) || "/") + location.search + location.hash);
+    </script>
+  )
+}

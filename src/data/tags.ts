@@ -2,7 +2,8 @@
 // data schemas. Add a tag here first: the collections test rejects data that
 // uses a tag not defined here. A new IE field also needs a `.field-<tag>` ink
 // rule in src/styles/custom.css (only five inks exist, see DESIGN.md) and a
-// section on the map page; chapters.test.ts checks both.
+// section on the map page; chapters.test.ts checks both. The issue forms in
+// .github/ISSUE_TEMPLATE/ list the labels too; forms.test.ts checks them.
 // Add a tag together with its first vetted entry, not before. The map page
 // names the known gaps under "Not mapped yet".
 export const IE_TAGS = {

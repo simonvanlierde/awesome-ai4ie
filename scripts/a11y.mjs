@@ -8,7 +8,7 @@
  * listed but do not fail the run.
  *
  *   npm run build && npx astro preview &   # serves dist/ at the base path
- *   npm run test:a11y                      # defaults to http://localhost:4321/awesome-ai4ie/
+ *   npm run test:a11y                      # defaults to localhost:4321 at the base path
  *
  * Needs a Chromium for Playwright: `npx playwright install chromium`.
  */
@@ -18,8 +18,9 @@ import process from "node:process";
 import AxeBuilder from "@axe-core/playwright";
 // biome-ignore lint/correctness/noUnresolvedImports: playwright re-exports chromium from playwright-core, which Biome does not follow
 import { chromium } from "playwright";
+import { basePath } from "../src/site.ts";
 
-const root = process.argv[2] ?? "http://localhost:4321/awesome-ai4ie/";
+const root = process.argv[2] ?? `http://localhost:4321${basePath}/`;
 const INDEX_HTML = /index\.html$/;
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
