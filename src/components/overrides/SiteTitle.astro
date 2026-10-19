@@ -1,0 +1,13 @@
+---
+// Starlight's wordmark, with the mark standing in for it on phones, where the
+// header is narrow. CSS shows one of the two links, never both.
+import Default from "@astrojs/starlight/components/SiteTitle.astro";
+import Glyph from "../Glyph.astro";
+
+const { siteTitle, siteTitleHref } = Astro.locals.starlightRoute;
+---
+
+<Default />
+<a href={siteTitleHref} class="site-glyph" aria-label={siteTitle}>
+  <Glyph />
+</a>

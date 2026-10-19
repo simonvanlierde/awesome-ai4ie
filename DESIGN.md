@@ -68,10 +68,11 @@ the page: the favicon and the README.
 
 - **Once per page, twice on the cover.** Inner pages show it only as the end mark in the
   colophon, before the licences. The cover adds it as chapter 0 in the running head. The 404
-  page shows it once, as Fig. 404 in a dashed frame (a missing page is a gap).
+  page shows it once, as Fig. 404 in a dashed frame (a missing page is a gap). On phones it
+  also replaces the wordmark in the header, where the wordmark's own 4 would otherwise sit.
 - **Never decoration.** No patterns, bullets, loaders or watermarks.
-- **Always beside text** that carries the meaning, so the SVG stays hidden from screen
-  readers.
+- **Always named by something else:** the text beside it, or the header link's label. The
+  SVG itself stays hidden from screen readers.
 
 ## Components
 

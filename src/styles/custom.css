@@ -615,6 +615,24 @@ starlight-menu-button button {
 .colophon + footer .meta {
   margin-top: 1.25rem;
 }
+/* Header (SiteTitle override): the wordmark, or the mark on phones. */
+.site-glyph {
+  display: none;
+  color: var(--sl-color-white);
+}
+.site-glyph .glyph {
+  width: 2rem;
+  height: 2rem;
+}
+@media (max-width: 40rem) {
+  .site-title {
+    display: none;
+  }
+  .site-glyph {
+    display: flex;
+    align-items: center;
+  }
+}
 @media (max-width: 40rem) {
   .flow text {
     font-size: 32px; /* about 14px once the plate shrinks to phone width */
