@@ -95,10 +95,9 @@ with the DNS at Cloudflare.
    the repo's Settings → Pages → Custom domain. Then merge straight away. No `CNAME` file is
    needed: the Actions deploy ignores one.
 5. Wait for GitHub's certificate, then turn on "Enforce HTTPS". The certificate can take a while.
-6. Check the live site, an old address (`<owner>.github.io/<repo>/tools/` should land on
-   `<domain>/tools/`), and the link preview of the address pasted into a chat.
-
-The 404 page forwards old paths that still carry the repo name to the same page at the root.
+6. Check the live site, an old address, and the link preview of the address pasted into a
+   chat. GitHub forwards `<owner>.github.io/<repo>/tools/` to `<domain>/tools/`, so old links
+   keep working while the repo stays with the same owner.
 
 To roll back, revert the pull request from step 4. Once the revert has deployed, clear the custom
 domain. Keep the DNS records until the old address works again. If the Pages site is ever

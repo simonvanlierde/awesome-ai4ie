@@ -100,7 +100,7 @@ The check runs axe on every page (and the 404 page) in light and dark, at deskto
 
 ### Adding an interactive demo
 
-See [two ways to add a demo](https://simonvanlierde.github.io/awesome-ai4ie/demos/#two-ways-to-add-a-demo) on the demos page. Link new demos from the matching `demo:` field in `src/data/applications.yaml`.
+See [two ways to add a demo](https://ai4ie.org/demos/#two-ways-to-add-a-demo) on the demos page. Link new demos from the matching `demo:` field in `src/data/applications.yaml`.
 
 ### Adding a Claude skill
 
