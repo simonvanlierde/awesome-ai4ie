@@ -33,20 +33,20 @@ the papers behind it, or see every paper in the [literature list](/literature/).
 Two things demonstrably work. The first is **tabular ML** for rapid impact screening
 and inventory gap-filling, validated repeatedly since 2017. The second is **LLM
 extraction** of inventory data from literature and reports: working systems reach
-an F1 score (accuracy from 0 to 1) of 0.82–0.86 <Cite id="kumarLargeLanguageModelbased2025" />, always with human verification. The consensus rule across this work: use LLMs to *extract*
-inventory data, never to generate it <Cite id="preussLargeLanguageModels2024" />. A 2025 benchmark found 37% of general-purpose
+an F1 score of 0.82–0.86 (1 would mean every value found and none wrong) <Cite id="kumarLargeLanguageModelbased2025" />, with a person checking the values. The papers here use LLMs to *extract*
+inventory data, not to generate it <Cite id="preussLargeLanguageModels2024" />. A 2025 benchmark found 37% of general-purpose
 LLM answers to LCA questions inaccurate or misleading, with hallucinated-citation
-rates up to 40% <Cite id="donaldsonExpertGroundedBenchmark2025" />. Automated footprinting deploys at catalog scale for common products <Cite id="balajiFlamingoEnvironmentalImpact2023" />
-and degrades for products outside that set. [Papers →](/literature/?ie=lca)
+rates up to 40% <Cite id="donaldsonExpertGroundedBenchmark2025" />. Automated footprinting works for products with a clear match in the emission-factor database. In one evaluation, a few wrong matches caused most of the error <Cite id="balajiFlamingoEnvironmentalImpact2023" />. [Papers →](/literature/?ie=lca)
 
 <FieldApplications ie="lca" />
 
 ### MFA & stocks and flows
 
-The most mature corner of the map. Satellite-based material stock mapping works at
+Satellite stock mapping is the furthest along here. It works at
 **national scale (10 m)** <Cite id="haberlHighResolutionMaps2021" /> from free data, and a **global estimate (90 m, 547 Gt in
-buildings)** <Cite id="haberlGlobalBuiltEnvironment2024" /> exists. Mind the validation spread: 53–200% against independent
-studies. That spread is the real accuracy ceiling. Night-lights proxies <Cite id="peledSpatialMaterialStock2021" /> and deep multi-source
+buildings)** <Cite id="haberlGlobalBuiltEnvironment2024" /> exists. Against independent
+studies, results range from 53% to 200%. Neither side is ground truth, so treat that
+spread as the uncertainty. Night-lights proxies <Cite id="peledSpatialMaterialStock2021" /> and deep multi-source
 fusion <Cite id="baoDeepLearningFusion2023" /> improve on single sources but still need ground data. Street-view CV for
 building attributes is demonstrated feasibility: good in the training city, sharply
 worse elsewhere <Cite id="huangImageBasedPrediction2024" />. [Papers →](/literature/?ie=mfa)
@@ -55,9 +55,9 @@ worse elsewhere <Cite id="huangImageBasedPrediction2024" />. [Papers →](/liter
 
 ### Waste, EoL & circularity
 
-The corner with the most publications. Task-tuned detection and counting of waste and
-components is well-validated <Cite id="majchrowskaDeepLearningbasedWaste2022" />. Camera-based flow characterization runs in operating
-e-waste (WEEE) sorting plants <Cite id="vogelgesangAutomatedMaterialFlow2025" />. Reading product labels with text recognition (OCR) is deployed in pilots, where readability
+The corner with the most publications. Detecting and counting waste and components is
+accurate on the benchmarks a model was tuned for, and untested on field photos <Cite id="majchrowskaDeepLearningbasedWaste2022" />. On a pilot-scale
+industrial sorter, cameras estimated the composition of shredded e-waste (WEEE) from recorded data; no plant runs it yet <Cite id="vogelgesangAutomatedMaterialFlow2025" />. Reading product labels with text recognition (OCR) is deployed in pilots, where readability
 collapses from 96% in repair shops to 40% at the recycler <Cite id="sterkensProductLabelIdentification2023" />. Worn, dirty and damaged
 products are the recurring failure mode. Foundation models (<Cite id="kirillovSegmentAnything2023">SAM</Cite>, <Cite id="radfordLearningTransferableVisual2021">CLIP</Cite>) demo
 impressively. They still need a class-assignment layer and sorting-grade evaluation
@@ -94,15 +94,15 @@ link opens a short form on GitHub with the gap filled in.
 
 ### IE fields with no entries
 
-- <span class="wanted">Wanted</span> **Chemicals, toxicity & QSAR.** Predicting properties and toxicity for substances
-  nobody has tested, where LCA needs characterisation factors for tens of thousands of them.
-  Plausibly the largest single hole in this map.
+- <span class="wanted">Wanted</span> **Chemicals, toxicity & QSAR.** One LCA entry screens chemicals' impacts from
+  their molecular structure. Nothing yet on toxicity characterisation factors for the tens of
+  thousands of substances nobody has tested. Plausibly the largest single hole in this map.
   <SuggestPaper gap="Chemicals, toxicity & QSAR" />
 - <span class="wanted">Wanted</span> **Energy systems & industrial decarbonisation.** Marginal versus average grid
   factors, temporal accounting, process and heat-integration optimisation.
   <SuggestPaper gap="Energy systems & industrial decarbonisation" />
-- <span class="wanted">Wanted</span> **Industrial symbiosis.** Matching one plant's waste to another's input is a
-  recommender problem wearing an IE name.
+- <span class="wanted">Wanted</span> **Industrial symbiosis.** Matching one plant's waste to another's input is, in
+  part, a recommender problem.
   <SuggestPaper gap="Industrial symbiosis" />
 - <span class="wanted">Wanted</span> **Supply chains, criticality & resource security.** Supply risk, critical raw
   materials, trade-network disruption.
@@ -113,10 +113,10 @@ link opens a short form on GitHub with the gap filled in.
 - <span class="wanted">Wanted</span> **Product lifetime, reuse & repair.** Survival analysis and failure prediction;
   feeds both MFA stock models and the EoL corner.
   <SuggestPaper gap="Product lifetime, reuse & repair" />
-- <span class="wanted">Wanted</span> **Water.** Footprint, scarcity, and hydrological modelling.
+- <span class="wanted">Wanted</span> **Water.** Water footprints, scarcity characterisation, and hydrological modelling.
   <SuggestPaper gap="Water" />
-- <span class="wanted">Wanted</span> **Input–output analysis, forecasting & scenario modelling.** The original three
-  gaps, still open.
+- <span class="wanted">Wanted</span> **Input–output analysis, forecasting & scenario modelling.** Economy-wide
+  footprints and what-if scenarios.
   <SuggestPaper gap="Input–output analysis, forecasting & scenario modelling" />
 
 ### AI techniques with no tag

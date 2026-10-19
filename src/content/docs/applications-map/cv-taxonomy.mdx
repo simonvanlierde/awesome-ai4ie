@@ -15,19 +15,24 @@ point, not settled work.
 Two axes: **physical scale** (product, component, material) and **information type**
 (identity, quantity, structure, condition). Structure means the bill of components (BoC):
 which parts a product has and how they are joined. Each filled cell is a CV task with a
-maturity verdict. The verdicts are mostly negative: no cell reaches *strong* when the photos
+maturity grade. The grades are mostly negative: no cell reaches *strong* when the photos
 are taken at end-of-life. The useful information is in the grades below that. Each section
 below says what its level covers, gives examples with their papers, and links a demo where
 one exists.
 
 | Scale ↓ / Info type → | Identity | Quantity | Structure (BoC) | Condition |
 | --- | --- | --- | --- | --- |
-| **Product** | Label OCR + retrieval (**P**) | Depth / multi-view geometry (**P**) | Not sensed | Wear / damage grading (**U**) |
+| **Product** | Label OCR + retrieval (**P**) | Depth / multi-view geometry (**P**) | Not sensed | Wear / damage grading (**E**) |
 | **Component** | Marking OCR + open-vocab naming (**P**) | Per-part geometry, occluded (**P**) | Detection (**P**) / attachment relations (**E**) | Connector-state grading (**U**) |
 | **Material** | Surface BoM classification (**P**); full BoM an open gap | Derived (geometry × density) | Not sensed | Corrosion / contamination (**U**) |
 
-**Maturity:** **P** partial · **E** emerging-but-narrow · **U** plausible-but-unvalidated ·
-*Not sensed* or *Derived*: not directly sensed.
+**Maturity grades,** from highest to lowest:
+
+- **Strong:** works across many kinds of product on a benchmark, works on field photos, and is used in practice. No cell is here yet.
+- **P, partial:** works across many kinds of product on a benchmark, but fails on field photos or is not yet used in practice.
+- **E, emerging-but-narrow:** works only for one narrow kind of product.
+- **U, plausible-but-unvalidated:** shown only in principle or in a neighbouring field.
+- *Not sensed* or *Derived:* no method reads it from a photo; at best it is computed from other cells.
 
 _A personal working taxonomy, still in draft, scoped to CV for product-scale data
 collection. Verdicts and coverage will shift as it develops._
@@ -40,19 +45,21 @@ collection. Verdicts and coverage will shift as it develops._
 
 - **Identity (partial).** OCR metadata extraction from labels (text detection, recognition,
   then fuzzy match to a reference database), with retrieval-based classification and VLM
-  scene-text reading as complements. Deployed precedent: non-experts ran a washing-machine label
-  pipeline on commodity phones. It read model numbers from 95.7% of label-visible images
-  in professional repair, but only 39.7% at a recycler <Cite id="sterkensProductLabelIdentification2023" />.
+  scene-text reading as complements. Field-tested on washing machines: the pipeline read
+  model numbers from 95.7% of label photos taken in professional repair, but only 39.7% of
+  those taken at a recycler <Cite id="sterkensProductLabelIdentification2023" />.
   Failure mode: label degradation at EoL, plus a database-coverage limit downstream.
 - **Quantity (partial, approximate).** Monocular metric depth (<Cite id="huMetric3DV22024">Metric3D v2</Cite>, <Cite id="bochkovskiiDepthProSharp2024">Depth Pro</Cite>,
   <Cite id="yangDepthAnythingV22024">Depth Anything v2</Cite>), feed-forward multi-view geometry (<Cite id="wangVGGTVisualGeometry2025">VGGT</Cite>, <Cite id="keethaMapAnythingUniversalFeedForward2025">MapAnything</Cite>), and
   photogrammetry / <Cite id="mildenhallNeRFRepresentingScenes2020">NeRF</Cite> / <Cite id="kerbl3DGaussianSplatting2023">3D Gaussian splatting</Cite> recover error-bounded geometry. Single-image
   mass estimation exists but is coarse. Visible surfaces only; reflective, transparent, and
   thin parts are the limiting cases.
-- **Condition (plausible but unvalidated).** Wear, damage, and corrosion recognition feeding
-  repair / reuse / recycle triage. The nearest method is zero-shot anomaly detection (<Cite id="jeongWinCLIPZeroFewShot2023">WinCLIP</Cite>,
-  <Cite id="zhouAnomalyCLIPObjectAgnostic2023">AnomalyCLIP</Cite>), which flags an anomaly's presence, not a graded per-unit condition. It is
-  unvalidated on worn consumer products.
+- **Condition (emerging but narrow).** Wear, damage, and corrosion recognition feeding
+  repair / reuse / recycle triage. Per-unit grading works for single product classes on
+  fixed camera rigs, such as phone buyback kiosks and laptop-cover inspection. None is
+  validated across product classes or on field photos. Zero-shot anomaly detection
+  (<Cite id="jeongWinCLIPZeroFewShot2023">WinCLIP</Cite>, <Cite id="zhouAnomalyCLIPObjectAgnostic2023">AnomalyCLIP</Cite>) is more general, but it flags that
+  something is wrong, not how worn a unit is.
 
 **Demo:** the [zero-shot identification demo](/demos/#in-this-browser-zero-shot-identification-clip)
 runs the open-vocabulary part of this cell in your browser.
@@ -64,8 +71,9 @@ runs the open-vocabulary part of this cell in your browser.
 **Examples:**
 
 - **Structure / BoC (partial detection, emerging-but-narrow relations).** The most populated
-  cell. Detecting, segmenting, and counting components is well-validated where task-tuned
-  (~98.8% mAP50 on a laptop-teardown benchmark). Foundation segmenters (<Cite id="kirillovSegmentAnything2023">SAM</Cite>, <Cite id="raviSAM2Segment2024">SAM 2</Cite>, <Cite id="carionSAM3Segment2025">SAM 3</Cite>,
+  cell. Detecting, segmenting, and counting components is accurate on the benchmarks a model was
+  tuned for: about 98.8% on a laptop-teardown set, in mAP50, the standard detection score
+  <Cite id="zhangEvaluatingLargeLightweight2026" />. It is untested on field photos. Foundation segmenters (<Cite id="kirillovSegmentAnything2023">SAM</Cite>, <Cite id="raviSAM2Segment2024">SAM 2</Cite>, <Cite id="carionSAM3Segment2025">SAM 3</Cite>,
   <Cite id="liuGroundingDINOMarrying2024">GroundingDINO</Cite>, <Cite id="renGroundedSAMAssembling2024">Grounded-SAM</Cite>) need an added class-assignment layer. Inferring
   component-to-component *attachment relations* is the weakest cell. Single-image methods
   (<Cite id="liuSINGAPOSingleImage2025">SINGAPO</Cite>, <Cite id="chenURDFormerPipelineConstructing2024">URDFormer</Cite>) exist only for a few articulated household categories and collapse out
@@ -90,8 +98,9 @@ parts.
 - **Identity / BoM (partial on visible surfaces, open gap for full BoM).** Surface material
   classification and segmentation of *visible* regions (<Cite id="bellMaterialRecognitionWild2015">MINC</Cite>'s 23-class in-the-wild baseline;
   one/few-shot similarity given a region mask; <Cite id="radfordLearningTransferableVisual2021">CLIP</Cite>-based recognition, fragile under domain
-  shift and multi-material compositeness). One deployed setting delivers image-based
-  composition: an industrial sensor sorter on shredded WEEE (<Cite id="redmonYouOnlyLook2015">YOLO</Cite>, mAP50 ≈ 0.99). But it
+  shift and multi-material compositeness). One setting delivers image-based
+  composition: an industrial sorter tested at pilot scale on shredded WEEE, using
+  <Cite id="redmonYouOnlyLook2015">YOLO</Cite> (mAP50 ≈ 0.99 on recorded data) <Cite id="vogelgesangAutomatedMaterialFlow2025" />. But it
   characterizes an aggregate flow at a central plant, not the per-component composition of an
   intact product. Occluded interior composition is an open gap.
 - **Quantity (derived, not sensed).** Per-material mass or volume would come from component

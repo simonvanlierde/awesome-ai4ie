@@ -39,9 +39,9 @@ modes it found were **data leakage** and **poor computational reporting**.
       data cutoff and provenance discussed as a possible source of test-set leakage?
 
 :::note[For reviewers]
-Three errors disqualify a study, and you don't need ML expertise to spot them: no hold-out
+Three errors are serious enough to doubt a study's results, and you don't need ML expertise to spot them: no hold-out
 test set, temporal leakage, or normalization/gap-filling performed before the train/test
-split. A withheld or proprietary dataset doesn't disqualify a study on its own, as long as
+split. A withheld or proprietary dataset isn't a reason to doubt a study on its own, as long as
 the rest of the study follows best practice and the reason is stated.
 :::
 

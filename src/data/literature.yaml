@@ -110,7 +110,7 @@
   authors: ["Preuss, N.", "Alshehri, A. S.", "You, F."]
   year: 2024
   doi: "10.1016/j.jclepro.2024.142824"
-  blurb: "The consensus recommendation in one paper: use LLMs to extract inventory data, never to invent it."
+  blurb: "A perspective on LLMs in LCA: where they help, where they hallucinate, and why a practitioner should review what they produce."
   ie: [lca]
   ml: [llm]
   type: [review]
@@ -265,9 +265,9 @@
   etAl: true
   year: 2025
   doi: "10.1111/jiec.70048"
-  blurb: "Predicts what's inside buildings from what's visible outside: ML as a shortcut around impossible surveys."
+  blurb: "Predicts interior walls and rooms from what's visible outside, facade images included: ML as a shortcut around impossible surveys."
   ie: [mfa, "urban-mining"]
-  ml: [tabular-ml]
+  ml: [tabular-ml, cv]
   type: [method]
   added: 2026-07
 
@@ -332,7 +332,7 @@
   etAl: true
   year: 2025
   doi: "10.1016/j.wasman.2025.114904"
-  blurb: "Camera-based deep learning characterizes shredded WEEE composition in an operating plant: CV feeding MFA directly."
+  blurb: "Camera-based deep learning estimates the composition of shredded WEEE on a pilot-scale industrial sorter: CV feeding MFA directly."
   ie: [eol, mfa]
   ml: [cv, segmentation]
   type: [method]
@@ -343,9 +343,9 @@
   etAl: true
   year: 2025
   doi: "10.1021/acs.est.5c01600"
-  blurb: "Couples CV-derived product counts to an MFA of recycling potential; CV and MFA in a single pipeline."
-  ie: [eol, mfa]
-  ml: [cv]
+  blurb: "Finds rooftop solar panels in satellite images and feeds a dynamic MFA of their recycling potential; CV and MFA in one pipeline."
+  ie: [mfa, urban-mining]
+  ml: [cv, remote-sensing]
   type: [method]
   added: 2026-07
 - id: majchrowskaDeepLearningbasedWaste2022
@@ -365,7 +365,7 @@
   etAl: true
   year: 2026
   doi: "10.1016/j.clwas.2026.100475"
-  blurb: "Do CLIP-class models sort waste without training data? A measured answer, at material-recovery-facility conditions."
+  blurb: "Do CLIP-class models sort waste without training data? A measured answer on curated, landfill and multi-material lab images."
   ie: [eol]
   ml: [cv, foundation]
   type: [method]

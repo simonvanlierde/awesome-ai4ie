@@ -35,8 +35,8 @@ than the barrier to noticing a broken one.
 - **Start with a baseline.** Report a simple model, such as a linear regression,
   alongside any complex one. If the gap is small, the complex model needs a reason
   to exist. Sometimes the honest answer is that the question didn't need ML.
-- **Isolate the test set first.** Data leakage is the single most common
-  reproducibility failure in IE ML work. It usually gets in through normalization,
+- **Isolate the test set first.** Data leakage is one of the two most common
+  reproducibility failures in IE ML work, in a recent review (a preprint). It usually gets in through normalization,
   gap-filling, or feature selection done before the split. Time-structured data
   needs a time-aware split, not a random one. The
   [ML-reproducibility checklist](/best-practices/checklists/#machine-learning-reproducibility)
@@ -49,11 +49,11 @@ than the barrier to noticing a broken one.
   ([evidence](/applications-map/#waste-eol--circularity)). Report where your model
   was validated, and don't claim beyond it.
 - **Validate against something independent.** Satellite-derived material stocks
-  land within 53–200% of independent studies
-  ([evidence](/applications-map/#mfa--stocks-and-flows)). That spread is the
-  accuracy ceiling, so it belongs in your results rather than an appendix.
-- **Use generative models to extract, not to generate.** The consensus in LCA work
-  is that LLMs can pull inventory data out of documents, with human verification.
+  range from 53% to 200% of independent studies
+  ([evidence](/applications-map/#mfa--stocks-and-flows)). Neither side is ground
+  truth, so that spread is your uncertainty. It belongs in your results, not an appendix.
+- **Use generative models to extract, not to generate.** The LCA papers on this use
+  LLMs to pull inventory data out of documents, with a person checking the values.
   They should not produce inventory values themselves
   ([evidence](/applications-map/#lca--footprinting)). The
   [extraction prompt](/best-practices/prompts-and-skills/#extract-without-inventing)
@@ -104,7 +104,9 @@ tracks; the third decides whether you can use a hosted service at all.
   of the references it produced and GPT-4 entirely fabricated 18%. Much of the remainder had
   substantive errors
   ([Walters & Wilder, 2023](https://doi.org/10.1038/s41598-023-41032-5)). Newer
-  models are better but not safe: US lawyers were sanctioned for filing a brief
+  models still invent sources: a 2025 benchmark on LCA questions found
+  hallucinated-citation rates up to 40%
+  ([evidence](/applications-map/#lca--footprinting)). The cost is real: US lawyers were sanctioned for filing a brief
   with six invented cases
   ([Mata v. Avianca](https://apnews.com/article/artificial-intelligence-chatgpt-fake-case-lawyers-d6ae9fa79d0542db9e1455397aef381c)).
   Rule: a citation an AI gives you does not exist until you've opened it.
