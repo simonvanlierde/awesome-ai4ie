@@ -37,8 +37,8 @@ evidence, try it.
 
 ## Capabilities and Constraints
 
-- Astro with Starlight, deployed to GitHub Pages under `/awesome-ai4ie/`, or at the root of
-  a custom domain once `src/site.ts` names one. No server: GitHub Pages sets no headers.
+- Astro with Starlight, deployed to GitHub Pages at ai4ie.org (`domain` in `src/site.ts`). No
+  server: GitHub Pages sets no headers.
 - Three React islands: the literature browser, the applications explorer, and an in-browser
   CLIP zero-shot demo that loads transformers.js from cdn.jsdelivr.net and a model from
   huggingface.co only on demand.

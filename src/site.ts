@@ -8,7 +8,7 @@ export const repo = "awesome-ai4ie";
 /** Custom domain without `https://`, such as "ai4ie.org". Empty serves the site
  * from `<owner>.github.io/<repo>/`. Set it in the same step as the Pages custom
  * domain setting (MAINTAINING.md): the site then moves to the domain's root. */
-export const domain = "";
+export const domain = "ai4ie.org";
 
 export const repoUrl = `https://github.com/${owner}/${repo}`;
 export const site = domain ? `https://${domain}` : `https://${owner}.github.io`;
