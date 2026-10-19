@@ -9,7 +9,10 @@
     "group:allNonMajor",
   ],
   // The npm preset's 3-day wait would beat the 7-day minimumReleaseAge below.
-  ignorePresets: ["security:minimumReleaseAgeNpm"],
+  // A weekly lock file refresh has no release date, so Renovate's age check
+  // never passes on it, and npm here has no release-age setting of its own to
+  // hold back fresh releases instead.
+  ignorePresets: ["security:minimumReleaseAgeNpm", ":maintainLockFilesWeekly"],
 
   // A week gives a hijacked release time to be yanked.
   minimumReleaseAge: "7 days",
