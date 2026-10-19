@@ -2,26 +2,39 @@
 // Home-page cover: the title beside Fig. 1, then the chapter index. The splash
 // template has no sidebar, so the index is the way into the chapters.
 // Starlight renders the hero on every page with `hero` frontmatter: the home
-// page and its built-in 404 page. The 404 keeps the title and the chapter
-// index but drops the running head and Fig. 1.
+// page and its built-in 404 page. The 404 keeps the chapter index, drops the
+// running head, and shows the mark as a plate where Fig. 1 would be.
 // NOTE: unlike Starlight's own hero, this one ignores `hero.image`, the
 // draft notice and inline icon HTML; no page uses them. Action links resolve
 // like Markdown links: `/path/` against the base, `repo:` to GitHub.
 import { LinkButton } from "@astrojs/starlight/components";
 import { CHAPTERS } from "../../lib/chapters";
-import { contentUrl, siteUrl } from "../../lib/urls";
+import { contentUrl, issueUrl, siteUrl } from "../../lib/urls";
 import FlowFigure from "../FlowFigure.astro";
+import Glyph from "../Glyph.astro";
 
 const { id, data } = Astro.locals.starlightRoute.entry;
 const isHome = id === "" || id === "index";
-const { title = data.title, tagline, actions = [] } = data.hero ?? {};
+const is404 = id === "404";
+let { title = data.title, tagline, actions = [] } = data.hero ?? {};
+if (is404) {
+  // Starlight's 404 is titled "404" with a generic tagline; the plate's
+  // caption already says 404, so the title says what happened instead.
+  title = "Page not found";
+  tagline = `Search at the top of the page, start from a chapter below, or <a href="${issueUrl("other")}">report a broken link</a>.`;
+}
 ---
 
 <div class="cover">
   {
     isHome && (
       <p class="running-head">
-        <span>Overview</span>
+        <span>
+          <span class="running-no running-glyph">
+            <Glyph />
+          </span>
+          Overview
+        </span>
         <span>A proposal for the AI4IE working group</span>
       </p>
     )
@@ -41,6 +54,21 @@ const { title = data.title, tagline, actions = [] } = data.hero ?? {};
       </div>
     </div>
     {isHome && <FlowFigure />}
+    {
+      is404 && (
+        // The dashed frame is the site's mark for a gap: a missing page is one.
+        <figure class="plate not-content">
+          <div class="plate-frame">
+            <Glyph />
+          </div>
+          <figcaption>
+            <span>
+              <b>Fig. 404</b> Nothing at this address. It may be mistyped, or the page has moved.
+            </span>
+          </figcaption>
+        </figure>
+      )
+    }
   </div>
   <nav class="chapter-index" aria-label="Chapters">
     <ol>

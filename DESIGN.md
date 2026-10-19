@@ -59,6 +59,20 @@ Columns of numbers use tabular figures.
 - On touch screens, filter controls are at least 44px tall; Fig. 1's labels have a hit area of
   at least 24px.
 
+## The mark
+
+The mark is an Æ with a 4 drawn inside it ([`Glyph.astro`](src/components/Glyph.astro)). It
+sits outside the five inks: on the page it is neutral ink, with the 4 at full strength and
+the A's leg and the E's arms faded to grey. Cobalt is ink 1, so the mark is cobalt only off
+the page: the favicon and the README.
+
+- **Once per page, twice on the cover.** Inner pages show it only as the end mark in the
+  colophon, before the licences. The cover adds it as chapter 0 in the running head. The 404
+  page shows it once, as Fig. 404 in a dashed frame (a missing page is a gap).
+- **Never decoration.** No patterns, bullets, loaders or watermarks.
+- **Always beside text** that carries the meaning, so the SVG stays hidden from screen
+  readers.
+
 ## Components
 
 - **Running head.** Chapter number and title on the left, site name on the right (dropped on
