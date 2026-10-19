@@ -10,20 +10,15 @@ data collection at end-of-life: a worked example of how one corner of the
 [applications map](/applications-map/) can be mapped in depth. Treat it as a starting
 point, not settled work.
 
-## How this map works
-
-For each taxonomy category:
-
-- **What it covers:** one or two lines, in plain terms.
-- **Examples:** real applications, tools, or papers (link them; don't fabricate).
-- **Demo:** an optional embedded web app that demonstrates the category.
-
 ## Taxonomy at a glance
 
 Two axes: **physical scale** (product, component, material) and **information type**
-(identity, quantity, structure, condition). Each populated cell is a CV task carrying a
-maturity verdict. Judged by its own rubric, the map is mostly negative: no cell reaches
-*strong* under end-of-life capture. The useful information is in the grades below that.
+(identity, quantity, structure, condition). Structure means the bill of components (BoC):
+which parts a product has and how they are joined. Each filled cell is a CV task with a
+maturity verdict. The verdicts are mostly negative: no cell reaches *strong* when the photos
+are taken at end-of-life. The useful information is in the grades below that. Each section
+below says what its level covers, gives examples with their papers, and links a demo where
+one exists.
 
 | Scale ↓ / Info type → | Identity | Quantity | Structure (BoC) | Condition |
 | --- | --- | --- | --- | --- |
@@ -32,8 +27,7 @@ maturity verdict. Judged by its own rubric, the map is mostly negative: no cell 
 | **Material** | Surface BoM classification (**P**); full BoM an open gap | Derived (geometry × density) | Not sensed | Corrosion / contamination (**U**) |
 
 **Maturity:** **P** partial · **E** emerging-but-narrow · **U** plausible-but-unvalidated ·
-*Not sensed* or *Derived*: not directly sensed. No cell is *strong* under decentralized EoL
-capture.
+*Not sensed* or *Derived*: not directly sensed.
 
 _A personal working taxonomy, still in draft, scoped to CV for product-scale data
 collection. Verdicts and coverage will shift as it develops._
@@ -102,7 +96,7 @@ parts.
   intact product. Occluded interior composition is an open gap.
 - **Quantity (derived, not sensed).** Per-material mass or volume would come from component
   geometry × material class × a density prior. No dedicated method exists, and the estimate
-  compounds the uncertainty of both inputs. Forward-looking.
+  compounds the uncertainty of both inputs.
 - **Condition (plausible but unvalidated).** Corrosion, degradation, and contamination.
   Surface segmentation can isolate regions, but per-region grading on arbitrary products is
   not validated.

@@ -22,7 +22,7 @@ won't throw an error. It changes your results silently.
 
 AI coding tools make it easier to use ML in applied research. So more people now run models
 without the domain knowledge to spot reproducibility errors. The checklist below comes
-from a CML literature review of ML reproducibility in IE research
+from a literature review of ML reproducibility in IE research
 ([Rankin et al.](https://doi.org/10.21203/rs.3.rs-9270723/v1)). The two most common failure
 modes it found were **data leakage** and **poor computational reporting**.
 

@@ -41,7 +41,7 @@ industry data and for anything under an NDA or a data-management plan).
 Python packages relevant to AI + IE work:
 
 - **[Brightway](https://docs.brightway.dev)**: open LCA framework; the computational backbone for scripted, reproducible LCA. *(checked 2026-07)*
-- **[Activity Browser](https://github.com/LCA-ActivityBrowser/activity-browser)**: GUI on top of Brightway, developed at CML. *Good for:* Brightway workflows without writing code. *(checked 2026-07)*
+- **[Activity Browser](https://github.com/LCA-ActivityBrowser/activity-browser)**: GUI on top of Brightway, developed at CML, Leiden University. *Good for:* Brightway workflows without writing code. *(checked 2026-07)*
 - **[premise](https://github.com/polca/premise)**: prospective LCA databases coupling ecoinvent with IAM scenarios. *(checked 2026-07)*
 - **[ODYM](https://github.com/IndEcol/ODYM)**: dynamic MFA framework. *(checked 2026-07)*
 - **[pymrio](https://github.com/IndEcol/pymrio)**: environmentally-extended multi-regional input–output analysis. *(checked 2026-07)*

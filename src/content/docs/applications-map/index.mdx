@@ -33,7 +33,7 @@ the papers behind it, or see every paper in the [literature list](/literature/).
 Two things demonstrably work. The first is **tabular ML** for rapid impact screening
 and inventory gap-filling, validated repeatedly since 2017. The second is **LLM
 extraction** of inventory data from literature and reports: working systems reach
-F1 ≈ 0.82–0.86 <Cite id="kumarLargeLanguageModelbased2025" />, always with human verification. The consensus rule across this work: use LLMs to *extract*
+an F1 score (accuracy from 0 to 1) of 0.82–0.86 <Cite id="kumarLargeLanguageModelbased2025" />, always with human verification. The consensus rule across this work: use LLMs to *extract*
 inventory data, never to generate it <Cite id="preussLargeLanguageModels2024" />. A 2025 benchmark found 37% of general-purpose
 LLM answers to LCA questions inaccurate or misleading, with hallucinated-citation
 rates up to 40% <Cite id="donaldsonExpertGroundedBenchmark2025" />. Automated footprinting deploys at catalog scale for common products <Cite id="balajiFlamingoEnvironmentalImpact2023" />
@@ -57,7 +57,7 @@ worse elsewhere <Cite id="huangImageBasedPrediction2024" />. [Papers →](/liter
 
 The corner with the most publications. Task-tuned detection and counting of waste and
 components is well-validated <Cite id="majchrowskaDeepLearningbasedWaste2022" />. Camera-based flow characterization runs in operating
-WEEE sorting plants <Cite id="vogelgesangAutomatedMaterialFlow2025" />. Label-OCR identification is deployed in pilots, where readability
+e-waste (WEEE) sorting plants <Cite id="vogelgesangAutomatedMaterialFlow2025" />. Reading product labels with text recognition (OCR) is deployed in pilots, where readability
 collapses from 96% in repair shops to 40% at the recycler <Cite id="sterkensProductLabelIdentification2023" />. Worn, dirty and damaged
 products are the recurring failure mode. Foundation models (<Cite id="kirillovSegmentAnything2023">SAM</Cite>, <Cite id="radfordLearningTransferableVisual2021">CLIP</Cite>) demo
 impressively. They still need a class-assignment layer and sorting-grade evaluation
