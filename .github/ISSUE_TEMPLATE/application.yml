@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        A maintainer turns this into an entry on the map. Every entry carries a maturity call backed by papers, so those two fields matter most. Without a paper we can still list it as a lead.
+        A maintainer turns this into an entry on the map. Every entry carries a maturity call backed by papers, so those two fields matter most. Papers are optional, but an entry with them is quicker to check.
   - type: input
     id: name
     attributes:

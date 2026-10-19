@@ -3,8 +3,8 @@
 // and the upright serif are preloaded: with font-display: optional, a font
 // that arrives late is skipped for that view instead of shifting the layout.
 // At a custom domain's root, the 404 page also forwards old links that still
-// carry the repo path (`/awesome-ai4ie/tools/` → `/tools/`): the github.io
-// address redirects to the domain but keeps the path.
+// carry the repo path to the same page without it (`/awesome-ai4ie/tools/` →
+// `/tools/`).
 import { Font } from "astro:assets";
 import Default from "@astrojs/starlight/components/Head.astro";
 import { basePath, repo } from "../../site";

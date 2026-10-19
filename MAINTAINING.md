@@ -10,7 +10,7 @@ advisory.
 ## Turning a form into an entry
 
 Issues from the forms arrive labelled `entry`, plus `paper`, `application` or `tool`. Treat what
-the form says as a lead, not as text to paste in: write the entry yourself and open every link
+the form says as a lead, not as text to paste in. Write the entry yourself, and open every link
 before you add it.
 
 1. Check that the source exists and says what the issue says. Read the paper, not only the
@@ -18,7 +18,7 @@ before you add it.
 2. For a paper, look up the title, authors and year from the DOI or arXiv id. For a DOI,
    `curl -s https://api.crossref.org/works/<doi> | jq '.message | {title, author, issued}'`
    prints them.
-3. Write the entry in [`src/data/literature.yaml`](src/data/literature.yaml):
+3. Write the entry. A paper goes in [`src/data/literature.yaml`](src/data/literature.yaml):
    - `id` is the citation key: the first author's surname, the first three title words with
      capitals, and the year, such as `donatiFutureArtificialIntelligence2022`. Zotero with
      Better BibTeX makes the same key.
@@ -26,8 +26,11 @@ before you add it.
    - Map the dropdown labels back to tag keys in [`src/data/tags.ts`](src/data/tags.ts). An
      answer under "Does it fill a gap on the map?" may ask for a new tag. Add it with this first
      entry, as CONTRIBUTING.md describes.
-   - Set `type`, and `added` to this month (`YYYY-MM`). A tool with no checked date gets the
-     month the issue was opened.
+   - Set `type`, and set `added` to this month (`YYYY-MM`).
+
+   An application goes in [`src/data/applications.yaml`](src/data/applications.yaml), with the
+   same tags. A tool goes on its page under `src/content/docs/tools/`, in the format of the
+   entries next to it. If the issue gives no checked date, use the month it was opened.
 4. Run `npm test`. It checks every field, tag and reference.
 5. Open a pull request with `Closes #<issue>` in its description, and thank the person who
    suggested it.
@@ -74,9 +77,8 @@ social card, the edit links and the accessibility check all follow it. The steps
 with the DNS at Cloudflare.
 
 1. **Verify the domain** for the account that owns the repo: Settings → Pages → Add a domain.
-   GitHub shows a TXT record. Add it in Cloudflare, then click Verify. A verified domain can't be
-   taken over by another GitHub user's site, so the DNS records can go in before the repo uses
-   the domain.
+   GitHub shows a TXT record. Add it in Cloudflare, then click Verify. No other GitHub user can
+   publish a site on a verified domain, so the DNS records can go in before the repo uses it.
 2. **Add the DNS records** in Cloudflare, each set to "DNS only" (a grey cloud). Cloudflare's
    proxy gets in the way of GitHub's certificate. Never add a wildcard record (`*`).
 
@@ -87,17 +89,18 @@ with the DNS at Cloudflare.
    | CNAME | `www` | `<owner>.github.io`, without the repo name |
 
 3. Wait until `dig +short <domain>` prints GitHub's four addresses. It can take up to a day.
-4. **Switch.** Open a pull request that sets `domain` in `src/site.ts` and changes the live-site
-   links in README.md and CONTRIBUTING.md. Once its CI passes, enter the domain under the repo's
-   Settings → Pages → Custom domain, then merge straight away. Until the deploy finishes, a few
-   minutes, the site shows unstyled. No `CNAME` file is needed: the Actions deploy ignores one.
+4. **Switch.** From the next two actions until the deploy finishes, a few minutes, the site
+   shows unstyled. Open a pull request that sets `domain` in `src/site.ts` and changes the
+   live-site links in README.md and CONTRIBUTING.md. Once its CI passes, enter the domain under
+   the repo's Settings → Pages → Custom domain. Then merge straight away. No `CNAME` file is
+   needed: the Actions deploy ignores one.
 5. Wait for GitHub's certificate, then turn on "Enforce HTTPS". The certificate can take a while.
 6. Check the live site, an old address (`<owner>.github.io/<repo>/tools/` should land on
    `<domain>/tools/`), and the link preview of the address pasted into a chat.
 
 The 404 page forwards old paths that still carry the repo name to the same page at the root.
 
-To roll back, revert the pull request from step 4 and clear the custom domain once the revert
-has deployed. Keep the DNS records until the old address works again. If the Pages site is ever
-switched off or the repo deleted, remove the DNS records too: a domain that points at GitHub
-Pages with no site behind it can be taken over.
+To roll back, revert the pull request from step 4. Once the revert has deployed, clear the custom
+domain. Keep the DNS records until the old address works again. If the Pages site is ever
+switched off or the repo deleted, remove the DNS records too. Another GitHub user can take over
+a domain that points at GitHub Pages with no site behind it.

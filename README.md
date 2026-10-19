@@ -1,6 +1,6 @@
 # Awesome AI for Industrial Ecology
 
-A community-curated guide to using AI in industrial ecology (IE) research: an applications map, a literature list, tool and hardware guidance, working Claude skills, and in-browser demos. It started in the AI4IE working group, and [anyone can contribute](CONTRIBUTING.md): a short form is enough to [suggest a paper](../../issues/new?template=paper.yml).
+A community-curated guide to using AI in industrial ecology (IE) research: an applications map, a literature list, tool and hardware guidance, working Claude skills, and in-browser demos. It started in the AI4IE working group, and [anyone can contribute](CONTRIBUTING.md). To suggest a paper, a [short form](../../issues/new?template=paper.yml) is enough.
 
 [![Live site](https://img.shields.io/badge/live_site-ai4ie-2148a8)](https://simonvanlierde.github.io/awesome-ai4ie/)
 [![Contributing](https://img.shields.io/badge/contributing-guide-55661a)](CONTRIBUTING.md)

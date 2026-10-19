@@ -8,8 +8,8 @@ Anyone can contribute. If you've found hardware that works, a tool worth the tim
 [map an application](../../issues/new?template=application.yml),
 [suggest a tool](../../issues/new?template=tool.yml) or
 [suggest anything else](../../issues/new?template=other.yml). Each is a short form, and a
-maintainer turns it into an entry. You need a free GitHub account; without one, post in the
-[AI4IE Discord](https://discord.gg/zhHAZakXHX).
+maintainer turns it into an entry. The forms need a free GitHub account. Without one, post in
+the [AI4IE Discord](https://discord.gg/zhHAZakXHX).
 
 To make the change yourself:
 
