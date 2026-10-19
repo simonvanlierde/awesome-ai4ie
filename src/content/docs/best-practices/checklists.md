@@ -22,7 +22,7 @@ won't throw an error. It changes your results silently.
 
 AI coding tools make it easier to use ML in applied research. So more people now run models
 without the domain knowledge to spot reproducibility errors. The checklist below comes
-from a CML literature review of ML reproducibility in IE research
+from a literature review of ML reproducibility in IE research
 ([Rankin et al.](https://doi.org/10.21203/rs.3.rs-9270723/v1)). The two most common failure
 modes it found were **data leakage** and **poor computational reporting**.
 
@@ -39,9 +39,9 @@ modes it found were **data leakage** and **poor computational reporting**.
       data cutoff and provenance discussed as a possible source of test-set leakage?
 
 :::note[For reviewers]
-Three errors disqualify a study, and you don't need ML expertise to spot them: no hold-out
+Three errors are serious enough to doubt a study's results, and you don't need ML expertise to spot them: no hold-out
 test set, temporal leakage, or normalization/gap-filling performed before the train/test
-split. A withheld or proprietary dataset doesn't disqualify a study on its own, as long as
+split. A withheld or proprietary dataset isn't a reason to doubt a study on its own, as long as
 the rest of the study follows best practice and the reason is stated.
 :::
 

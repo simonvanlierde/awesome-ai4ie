@@ -23,14 +23,14 @@
   ie: [lca]
   ml: [llm, nlp-extraction]
   summary: "Fine-tuned or retrieval-augmented LLMs pull inventory and impact data out of papers, reports, and MSDS into structured databases."
-  maturity: "Working systems exist (F1 ≈ 0.82–0.86); consensus is extraction with human verification, never generation of missing data."
+  maturity: "Working systems reach F1 ≈ 0.82–0.86. The papers here use LLMs to extract values for a person to check, not to generate missing data."
   papers: [kumarLargeLanguageModelbased2025, preussLargeLanguageModels2024, tuMitigatingGrandChallenges2024]
 - id: automated-carbon-footprinting
   name: "Automated product carbon footprinting"
   ie: [lca]
   ml: [llm, nlp-extraction]
-  summary: "Match products to emission factors semantically (zero-shot or LLM-driven) to produce carbon footprints at catalog scale."
-  maturity: "Deployed at company scale for common products; accuracy drops for less common products, and audit trails remain the weak point."
+  summary: "Match products to emission factors semantically (zero-shot or LLM-driven) to footprint whole product catalogs."
+  maturity: "Works for products with a clear database match. In one evaluation, a few wrong matches caused most of the error (MAPE 18% with a product-code filter, 144% without). Audit trails remain the weak point."
   papers: [balajiFlamingoEnvironmentalImpact2023, dengAutoPCFEfficientProduct2023]
 - id: corporate-report-extraction
   name: "Sustainability-indicator extraction from corporate reports"
@@ -53,8 +53,8 @@
   ie: [mfa]
   ml: [remote-sensing]
   summary: "Combine Earth-observation imagery, OSM, and material intensities to map building/infrastructure stocks without cadastral data."
-  maturity: "National 10 m maps and a global 90 m estimate exist; validation spreads of 53–200% against independent studies set the accuracy ceiling."
-  papers: [haberlHighResolutionMaps2021, haberlGlobalBuiltEnvironment2024]
+  maturity: "National 10 m maps and a global 90 m estimate exist. Compared with independent studies, results range from 53% to 200%; neither side is ground truth, so treat that spread as the uncertainty."
+  papers: [haberlHighResolutionMaps2021, haberlGlobalBuiltEnvironment2024, jiangBottomUpApproachIntegrating2025]
 - id: nightlights-stock-proxy
   name: "Night-lights & multi-source stock estimation"
   ie: [mfa]
@@ -72,9 +72,9 @@
 - id: interior-stock-prediction
   name: "Interior component stocks from exterior features"
   ie: [mfa, urban-mining]
-  ml: [tabular-ml]
-  summary: "Predict what's inside dwellings (pipes, radiators, wiring) from observable exterior features: a shortcut around impossible surveys."
-  maturity: "Early single-country demonstrations; useful priors, wide uncertainty per building."
+  ml: [tabular-ml, cv]
+  summary: "Predict interior wall length and room counts from exterior features and facade images, as input to building stock models: a shortcut around impossible surveys."
+  maturity: "One study, 2,000 UK houses; useful priors, wide uncertainty per building."
   papers: [daiModelingInteriorComponent2025]
 
 # ── Waste, EoL & circularity ─────────────────────────────────────────────────
@@ -96,15 +96,15 @@
   name: "Sensor-based material flow characterization in sorting plants"
   ie: [eol, mfa]
   ml: [cv, segmentation]
-  summary: "Camera systems on sorting lines characterize the composition of waste flows continuously, feeding MFA with live plant data."
-  maturity: "Running in operating plants for shredded WEEE; per-particle mass and less-common streams are still open."
-  papers: [vogelgesangAutomatedMaterialFlow2025, jiangBottomUpApproachIntegrating2025]
+  summary: "Cameras on sorting lines classify waste particles and estimate the composition of the flow, which could feed MFA with plant data."
+  maturity: "Tested on an industrial sorter at pilot scale with shredded WEEE (mAP50 ≈ 0.99, composition within about 5%), on recorded data. No plant runs it yet."
+  papers: [vogelgesangAutomatedMaterialFlow2025]
 - id: component-detection
   name: "Component detection & counting in opened products"
   ie: [eol]
   ml: [cv, segmentation]
   summary: "Detect, segment, and count components inside opened devices to build bills of components for disassembly and recycling."
-  maturity: "Well-validated where task-tuned; foundation segmenters (SAM) still need a class-assignment layer."
+  maturity: "Accurate on the benchmarks it was tuned for, untested on field photos. Foundation segmenters (SAM) still need a class-assignment layer."
   papers: [zhangEvaluatingLargeLightweight2026, kirillovSegmentAnything2023]
   demo: "demos/" # site-relative: the explorer prefixes the deploy base
 - id: zero-shot-eol-recognition
@@ -112,7 +112,7 @@
   ie: [eol]
   ml: [cv, foundation]
   summary: "CLIP-class models score user-chosen labels against images: recognition without task-specific training data."
-  maturity: "Works impressively in demos; evaluations under materials recovery facility (MRF) conditions show it's not yet sorting-grade."
+  maturity: "Without training, CLIP sorts single-material waste photos well (about 90% on a curated set, 79% on landfill photos) but drops to 40% when items carry several materials. Not yet sorting-grade."
   papers: [funkEvaluationVisionLanguage2026, radfordLearningTransferableVisual2021]
   demo: "demos/" # site-relative: the explorer prefixes the deploy base
 - id: single-image-geometry
@@ -120,7 +120,7 @@
   ie: [eol]
   ml: [depth, cv]
   summary: "Monocular depth and feed-forward 3D reconstruction recover error-bounded product geometry from ordinary photos."
-  maturity: "Foundation depth models generalize well; reflective, transparent, and thin parts are the failure cases."
+  maturity: "Gives approximate geometry from one photo. Accuracy on field photos of real products is untested; reflective, transparent, and thin parts fail."
   papers: [yangDepthAnythingV22024]
   demo: "demos/" # site-relative: the explorer prefixes the deploy base
 - id: robotic-disassembly
