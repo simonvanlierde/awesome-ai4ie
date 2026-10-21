@@ -4,10 +4,10 @@
  * the running head, title, tagline and Fig. 1, without the site chrome. Rerun it
  * when the cover's copy or Fig. 1's counts change, then commit the PNG.
  *
- *   npm run build && npx astro preview &
+ *   pnpm run build && pnpm exec astro preview &
  *   node scripts/og.mjs                     # defaults to localhost:4321 at the base path
  *
- * Needs a Chromium for Playwright: `npx playwright install chromium`.
+ * Needs a Chromium for Playwright: `pnpm exec playwright install chromium`.
  */
 
 import process from "node:process";

@@ -14,6 +14,11 @@
   // A week gives a hijacked release time to be yanked.
   minimumReleaseAge: "7 days",
 
+  // A lock refresh has no release date, so minimumReleaseAge would hold it at
+  // renovate/stability-days for good. pnpm's minimumReleaseAge keeps releases
+  // younger than a week out of the refresh instead.
+  lockFileMaintenance: { minimumReleaseAge: null },
+
   // Renovate merges itself once every check on the branch passes, not through
   // GitHub's auto-merge. A merge by the Renovate app is a push to main like any
   // other, so it deploys.
