@@ -31,7 +31,7 @@ before you add it.
    An application goes in [`src/data/applications.yaml`](src/data/applications.yaml), with the
    same tags. A tool goes on its page under `src/content/docs/tools/`, in the format of the
    entries next to it. If the issue gives no checked date, use the month it was opened.
-4. Run `npm test`. It checks every field, tag and reference.
+4. Run `pnpm test`. It checks every field, tag and reference.
 5. Open a pull request with `Closes #<issue>` in its description, and thank the person who
    suggested it.
 
@@ -49,8 +49,8 @@ If a suggestion doesn't hold up, say why in the issue and close it.
 - **Stale entries.** Tool entries carry the month they were checked. Recheck any older than a
   year: `rg -n 'checked 20' src/content/docs/tools/` lists them.
 - **Social card.** `public/og.png` is a picture of the home cover, so it goes stale when the
-  tagline or Fig. 1's counts change. Rebuild it with `npm run build`, `npx astro preview` and
-  then `npm run og`, and commit the PNG.
+  tagline or Fig. 1's counts change. Rebuild it with `pnpm run build`, `pnpm exec astro preview`
+  and then `pnpm run og`, and commit the PNG.
 
 ## What's tied to the owner's account
 

@@ -26,13 +26,13 @@ To edit text, you need no local setup: edit the Markdown on GitHub, or click the
 
 ### Adding a paper or an application
 
-- Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR, with a short label in `SHORT_LABELS` (the start of the full label, for Fig. 1 on the home page). Add its full label to the matching dropdown in the paper and application forms in [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) too. `npm test` checks that they match.
+- Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR, with a short label in `SHORT_LABELS` (the start of the full label, for Fig. 1 on the home page). Add its full label to the matching dropdown in the paper and application forms in [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) too. `pnpm test` checks that they match.
 - Literature entries need an `id` (the citation key), `title`, `authors`, `year`, a one-line `blurb` saying why it's worth reading, tags, and `added: YYYY-MM`.
 - Write `authors` as a list with one `"Surname, I."` per author. Add `etAl: true` when you stop before the last author.
 - Give a `doi` (the bare `10.…` id), an `arxiv` id (the bare id, such as `2401.01234`), or both.
 - An entry is marked "new" in the list for about two months from the start of its `added` month.
 - Application entries need both tag dimensions (`ie:` and `ml:`), an honest one-line `maturity:`, and `papers:` referencing literature ids.
-- `npm run test` checks every field, tag, and cross-reference. CI runs it on your PR.
+- `pnpm test` checks every field, tag, and cross-reference. CI runs it on your PR.
 
 ### Citing a source in prose
 
@@ -76,7 +76,7 @@ Create `src/content/docs/your-section.md` with a `title:` in the front matter. T
 { label: 'Your section title', slug: 'your-section' },
 ```
 
-A page inside an existing chapter needs nothing else. A new top-level entry is a new chapter, and it also needs an entry in [`src/lib/chapters.ts`](src/lib/chapters.ts) and one of the five inks in [`src/styles/custom.css`](src/styles/custom.css) (an `--ink-N` pair and the sidebar's `li:nth-child` rule). All five are in use, so open an issue first. `npm test` checks that they agree.
+A page inside an existing chapter needs nothing else. A new top-level entry is a new chapter, and it also needs an entry in [`src/lib/chapters.ts`](src/lib/chapters.ts) and one of the five inks in [`src/styles/custom.css`](src/styles/custom.css) (an `--ink-N` pair and the sidebar's `li:nth-child` rule). All five are in use, so open an issue first. `pnpm test` checks that they agree.
 
 ### Look and feel
 
@@ -92,9 +92,9 @@ Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUC
 
 The git hooks run lint, tests and the type check. The build and the accessibility check run in CI. To run the accessibility check locally:
 
-1. Run `npx playwright install chromium` (once).
-2. Run `npm run build`, then `npx astro preview` in one terminal.
-3. Run `npm run test:a11y` in another.
+1. Run `pnpm exec playwright install chromium` (once).
+2. Run `pnpm run build`, then `pnpm exec astro preview` in one terminal.
+3. Run `pnpm run test:a11y` in another.
 
 The check runs axe on every page (and the 404 page) in light and dark, at desktop and phone width. It fails on a page wider than the screen, also at 320px with text at 200%, and it checks the literature filter's keyboard behaviour. Lines starting "not decided by axe" are listed but don't fail.
 
