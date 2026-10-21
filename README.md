@@ -22,9 +22,9 @@ A community-curated guide to using AI in industrial ecology (IE) research. Indus
 To preview the site, you need Node 26+:
 
 ```bash
-npm install
-npm run dev        # → http://localhost:4321/
-npm test
+pnpm install
+pnpm run dev        # → http://localhost:4321/
+pnpm test
 ```
 
 The pages are in [`src/content/docs/`](src/content/docs/) and their data is in [`src/data/`](src/data/). To ask a question, join the [AI4IE Discord](https://discord.gg/zhHAZakXHX). Maintainers: see [MAINTAINING.md](MAINTAINING.md).

@@ -7,10 +7,10 @@
  * axe could not decide ("incomplete", e.g. contrast of text over a figure) are
  * listed but do not fail the run.
  *
- *   npm run build && npx astro preview &   # serves dist/ at the base path
- *   npm run test:a11y                      # defaults to localhost:4321 at the base path
+ *   pnpm run build && pnpm exec astro preview &   # serves dist/ at the base path
+ *   pnpm run test:a11y                            # defaults to localhost:4321 at the base path
  *
- * Needs a Chromium for Playwright: `npx playwright install chromium`.
+ * Needs a Chromium for Playwright: `pnpm exec playwright install chromium`.
  */
 
 import { readdir, readFile } from "node:fs/promises";
