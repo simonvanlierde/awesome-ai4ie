@@ -9,5 +9,7 @@ allowBuilds:
 
 # postcss-selector-parser fixes GHSA-rj75-hqrm-r3gf. Remove once @expressive-code/core depends on
 # postcss-nested 7 or later.
+# fast-uri 3.1.9 fixes four advisories in 3.1.8. Remove once ajv depends on fast-uri 3.1.9 or later.
 overrides:
+  fast-uri: "^3.1.9"
   postcss-selector-parser: "^7.1.6"
