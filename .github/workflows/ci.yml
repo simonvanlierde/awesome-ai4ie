@@ -59,7 +59,9 @@ jobs:
         with:
           node-version: ${{ steps.node.outputs.version }}
       # withastro/action leaves node_modules and dist/ in place, so axe can scan the build.
-      - run: pnpm exec playwright install --with-deps chromium
+      # No --with-deps: the runner has Chromium's libraries, and apt would only add
+      # fonts the site does not use, from a mirror that can take minutes for them.
+      - run: pnpm exec playwright install chromium
       - name: Accessibility (axe, WCAG 2.2 AA, light and dark)
         run: |
           pnpm exec astro preview --port 4321 &
