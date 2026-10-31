@@ -11,6 +11,8 @@ coverage:
       default:
         informational: true
 
-# Comment only when the project check fails: coverage_drop honours its 2-point threshold.
-comment:
-  require_changes: "coverage_drop"
+# No pull request comment. The coverage_drop condition reads its threshold from
+# coverage.status.project itself, not from project.default above, and a valid config
+# has none there. So it would comment on any drop at all. The status checks above
+# already show the numbers on each pull request.
+comment: false
