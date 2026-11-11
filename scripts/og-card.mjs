@@ -34,8 +34,8 @@ const CARD_CSS = `
   #og .url { top: 300px; width: auto; font: 600 30px/1 var(--sl-font); color: #2b2b2b; }
   #og h1 { position: absolute; left: 285px; top: 38px; width: 630px; margin: 0; font-size: 70px; line-height: 0.98; letter-spacing: -0.01em; }
   #og .line { top: 186px; margin: 0; font: 500 40px/1.22 var(--font-read, serif); text-wrap: balance; }
-  #og .flow { position: absolute; left: 0; top: 362px; width: 1200px; height: 268px; margin: 0; }
-  #og .flow svg { width: 1200px; height: 268px; overflow: visible; }
+  #og .flow { position: absolute; left: 0; top: 356px; width: 1200px; height: 232px; margin: 0; }
+  #og .flow svg { width: 1200px; height: 232px; overflow: visible; }
   #og .flow text { font-size: 26px; }
 `;
 
@@ -62,9 +62,9 @@ await page.evaluate(
 
     // Stretch the figure from its 778×420 box to the card: bands run long, labels keep their size.
     const svg = flow.querySelector("svg");
-    svg.setAttribute("viewBox", "0 0 1200 268");
+    svg.setAttribute("viewBox", "0 0 1200 232");
     svg.removeAttribute("width");
-    const [X0, X1, SY, LEFT, RIGHT] = [208, 480, 268 / 420, 215, 940];
+    const [X0, X1, SY, LEFT, RIGHT] = [208, 480, 232 / 420, 300, 900];
     const sx = (RIGHT - LEFT) / (X1 - X0);
     const bands = svg.querySelector(".flow-bands");
     bands.setAttribute("transform", `translate(${LEFT - X0 * sx} 0) scale(${sx} ${SY})`);
