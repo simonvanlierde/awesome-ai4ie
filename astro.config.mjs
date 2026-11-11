@@ -12,6 +12,8 @@ import { basePath, repoUrl, site } from "./src/site.ts";
 
 const base = basePath || "/";
 const ogImage = `${site}${basePath}/og.png`;
+const ogImageAlt =
+  "Awesome AI for Industrial Ecology, above a flow diagram that links four industrial ecology fields to the AI techniques papers apply to them.";
 
 // https://astro.build/config
 export default defineConfig({
@@ -150,6 +152,8 @@ export default defineConfig({
         },
         { tag: "meta", attrs: { property: "og:image:width", content: "1200" } },
         { tag: "meta", attrs: { property: "og:image:height", content: "630" } },
+        { tag: "meta", attrs: { property: "og:image:alt", content: ogImageAlt } },
+        { tag: "meta", attrs: { name: "twitter:image:alt", content: ogImageAlt } },
         { tag: "meta", attrs: { name: "twitter:card", content: "summary_large_image" } },
         {
           tag: "meta",

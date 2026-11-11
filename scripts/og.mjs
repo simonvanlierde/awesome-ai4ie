@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * Renders the social card (public/og.png, 1200×630) from the built home cover:
- * the running head, title, tagline and Fig. 1, without the site chrome. Rerun it
- * when the cover's copy or Fig. 1's counts change, then commit the PNG.
+ * the title and Fig. 1, without the site chrome. Rerun it
+ * when the cover's title or Fig. 1's counts change, then commit the PNG.
  *
  *   pnpm run build && pnpm exec astro preview &
  *   node scripts/og.mjs                     # defaults to localhost:4321 at the base path
@@ -17,16 +17,19 @@ import { basePath } from "../src/site.ts";
 
 const root = process.argv[2] ?? `http://localhost:4321${basePath}/`;
 
-// Everything but the cover goes; the cover fills the card with a 64px margin.
+// A poster: only the title and Fig. 1 stay, both inside the centred 630 px so a square
+// crop keeps them. The running head, tagline and buttons go; they are too small to read in a preview.
 const CARD_CSS = `
-  header.header, .skip-link, .cover-actions, .chapter-index, .flow figcaption,
-  .colophon, footer, .sl-sr-only, .sl-markdown-content { display: none !important; }
-  .running-glyph { min-width: 32px !important; height: 32px !important; }
-  .running-glyph .glyph { width: 22px !important; height: 22px !important; }
+  header.header, .skip-link, .cover-actions, .chapter-index, .flow figcaption, .running-head,
+  .cover-tagline, .colophon, footer, .sl-sr-only, .sl-markdown-content { display: none !important; }
   .page, .main-frame { padding: 0 !important; }
   .main-pane, .content-panel, .sl-container { max-width: none !important; padding: 0 !important; border: 0 !important; }
-  .cover { padding: 56px 64px 0 !important; width: 1200px; box-sizing: border-box; }
-  .cover-grid { grid-template-columns: minmax(0, 6fr) minmax(0, 7fr) !important; gap: 48px !important; align-items: center !important; }
+  .cover { position: relative; width: 1200px; height: 630px; padding: 0 !important; overflow: hidden; }
+  .cover-grid, .cover-copy { display: block !important; }
+  .cover-copy { position: absolute; left: 285px; top: 52px; width: 630px; }
+  .cover-copy h1 { font-size: 84px !important; line-height: 0.98 !important; margin: 0 !important; max-width: none !important; }
+  .flow { position: absolute; left: 285px; top: 234px; width: 630px; margin: 0 !important; }
+  .flow svg { width: 100% !important; height: auto !important; }
 `;
 
 const browser = await chromium.launch();
