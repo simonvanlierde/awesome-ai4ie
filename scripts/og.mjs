@@ -13,7 +13,7 @@
 import process from "node:process";
 // biome-ignore lint/correctness/noUnresolvedImports: playwright re-exports chromium from playwright-core, which Biome does not follow
 import { chromium } from "playwright";
-import { basePath } from "../src/site.ts";
+import { basePath, site } from "../src/site.ts";
 
 const root = process.argv[2] ?? `http://localhost:4321${basePath}/`;
 
@@ -28,8 +28,9 @@ const CARD_CSS = `
   .cover-grid, .cover-copy { display: block !important; }
   .cover-copy { position: absolute; left: 285px; top: 52px; width: 630px; }
   .cover-copy h1 { font-size: 84px !important; line-height: 0.98 !important; margin: 0 !important; max-width: none !important; }
-  .flow { position: absolute; left: 285px; top: 234px; width: 630px; margin: 0 !important; }
+  .flow { position: absolute; left: 285px; top: 226px; width: 600px; margin: 0 !important; }
   .flow svg { width: 100% !important; height: auto !important; }
+  .og-url { position: absolute; left: 285px; bottom: 20px; font: 600 30px/1 var(--sl-font, sans-serif); color: #2b2b2b; }
 `;
 
 const browser = await chromium.launch();
@@ -39,6 +40,16 @@ const page = await browser.newPage({
 });
 await page.goto(root, { waitUntil: "networkidle" });
 await page.addStyleTag({ content: CARD_CSS });
+// The card travels without its preview text (X shows only the image), so it names its address.
+await page.evaluate(
+  (url) => {
+    const el = document.createElement("div");
+    el.className = "og-url";
+    el.textContent = url;
+    document.querySelector(".cover")?.append(el);
+  },
+  `${site}${basePath}`.replace(/^https:\/\//, ""),
+);
 await page.evaluate(() => document.fonts.ready);
 await page.screenshot({ path: "public/og.png", clip: { x: 0, y: 0, width: 1200, height: 630 } });
 await browser.close();
