@@ -50,7 +50,7 @@ If a suggestion doesn't hold up, say why in the issue and close it.
   year: `rg -n 'checked 20' src/content/docs/tools/` lists them.
 - **Social card.** `public/og.png` is a picture of the logo, the title, the site description and Fig. 1, so it goes stale when
   any of them changes. Rebuild it with `pnpm run build`, `pnpm exec astro preview`
-  and then `pnpm run og-card`, and commit the PNG.
+  and then `pnpm run og-card`, and commit the PNG. The `?v=` hash in the og:image URL is computed from the PNG at build time, so there is nothing to bump.
 
 ## What's tied to the owner's account
 
