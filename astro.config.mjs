@@ -13,7 +13,7 @@ import { basePath, repoUrl, site } from "./src/site.ts";
 const base = basePath || "/";
 const ogImage = `${site}${basePath}/og.png`;
 const ogImageAlt =
-  "Awesome AI for Industrial Ecology, above a flow diagram that links four industrial ecology fields to the AI techniques papers apply to them.";
+  "AI4IE logo and the title Awesome AI for Industrial Ecology: a community-curated guide to using AI in industrial ecology, at ai4ie.org, above a flow diagram that links four industrial ecology fields to the AI techniques papers apply to them.";
 
 // https://astro.build/config
 export default defineConfig({
