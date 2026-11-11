@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Renders the social card (public/og.png, 1200×630) from the built home page: the site glyph, the
- * title, one line saying what the site is, the address, and Fig. 1 across the full width.
+ * title, one line saying what the site is, the address, and Fig. 1 below.
  * Rerun it when the title, the site description or Fig. 1's counts change, then commit the PNG.
  *
  *   pnpm run build && pnpm exec astro preview &
@@ -29,14 +29,14 @@ const CARD_CSS = `
   html, body { margin: 0; background: #f7f7f5; }
   #og { position: relative; width: 1200px; height: 630px; overflow: hidden; color: #16181d; }
   #og .col { position: absolute; left: 285px; width: 630px; }
-  #og .glyph { top: 104px; left: 779px; width: 136px; height: 136px; }
+  #og .glyph { top: 44px; left: 779px; width: 136px; height: 136px; }
   #og .glyph svg { width: 136px; height: 136px; display: block; border-radius: 26px; }
-  #og .url { top: 46px; width: auto; font: 600 30px/1 var(--sl-font); color: #2b2b2b; }
-  #og h1 { position: absolute; left: 285px; top: 100px; width: 630px; margin: 0; font-size: 70px; line-height: 0.98; letter-spacing: -0.01em; }
-  #og .line { top: 244px; margin: 0; font: 400 36px/1.25 var(--font-read, serif); text-wrap: balance; }
-  #og .flow { position: absolute; left: 0; top: 366px; width: 1200px; height: 250px; margin: 0; }
-  #og .flow svg { width: 1200px; height: 250px; overflow: visible; }
-  #og .flow text { font-size: 17px; }
+  #og .url { top: 300px; width: auto; font: 600 30px/1 var(--sl-font); color: #2b2b2b; }
+  #og h1 { position: absolute; left: 285px; top: 38px; width: 630px; margin: 0; font-size: 70px; line-height: 0.98; letter-spacing: -0.01em; }
+  #og .line { top: 186px; margin: 0; font: 500 40px/1.22 var(--font-read, serif); text-wrap: balance; }
+  #og .flow { position: absolute; left: 0; top: 362px; width: 1200px; height: 268px; margin: 0; }
+  #og .flow svg { width: 1200px; height: 268px; overflow: visible; }
+  #og .flow text { font-size: 26px; }
 `;
 
 const browser = await chromium.launch();
@@ -62,9 +62,9 @@ await page.evaluate(
 
     // Stretch the figure from its 778×420 box to the card: bands run long, labels keep their size.
     const svg = flow.querySelector("svg");
-    svg.setAttribute("viewBox", "0 0 1200 250");
+    svg.setAttribute("viewBox", "0 0 1200 268");
     svg.removeAttribute("width");
-    const [X0, X1, SY, LEFT, RIGHT] = [208, 480, 250 / 420, 270, 930];
+    const [X0, X1, SY, LEFT, RIGHT] = [208, 480, 268 / 420, 215, 940];
     const sx = (RIGHT - LEFT) / (X1 - X0);
     const bands = svg.querySelector(".flow-bands");
     bands.setAttribute("transform", `translate(${LEFT - X0 * sx} 0) scale(${sx} ${SY})`);
@@ -74,7 +74,16 @@ await page.evaluate(
       r.setAttribute("y", +r.getAttribute("y") * SY);
       r.setAttribute("height", +r.getAttribute("height") * SY);
     }
+    // Labels are 26 px: only the largest right-hand nodes keep one, so they stay clear of each other.
+    const KEEP = ["Computer vision", "Tabular ML", "LLMs", "Detection", "Remote sensing"];
     for (const t of svg.querySelectorAll("text")) {
+      if (
+        t.getAttribute("text-anchor") !== "end" &&
+        !KEEP.some((k) => t.textContent.startsWith(k))
+      ) {
+        t.remove();
+        continue;
+      }
       const left = t.getAttribute("text-anchor") === "end";
       t.setAttribute("x", left ? LEFT - 18 : RIGHT + 18);
       t.setAttribute("y", +t.getAttribute("y") * SY);
