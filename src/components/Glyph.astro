@@ -2,16 +2,29 @@
 // The AI4IE mark: an Æ with a 4 drawn inside it, as in public/favicon.svg but
 // without the square. The 4 takes currentColor; the A's leg and the E's arms
 // fade back to --glyph-fade. Always decorative: the text beside it carries the
-// meaning. DESIGN.md says where it may appear.
+// meaning. DESIGN.md says where it may appear. The stem is the I of AI4IE: it always takes a
+// lighter tint, and `large` also cuts a hairline gap beside it (too fine below about 64 px).
 interface Props {
   class?: string;
+  large?: boolean;
 }
-const { class: className } = Astro.props;
+const { class: className, large = false } = Astro.props;
 ---
 
 <svg class:list={["glyph", className]} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
   <g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
-    <path class="glyph-fade" d="M11.6 18.4 L6.9 25.5 M19.5 6.5 L25.3 6.5 M19.5 25.5 L25.3 25.5" />
-    <path d="M19.5 6.5 L19.5 25.5 M19.5 6.5 L11.6 18.4 L24.2 18.4" />
+    {
+      large && (
+        <mask id="glyph-gap">
+          <rect width="32" height="32" fill="#fff" stroke="none" />
+          <rect x="16.8" width="5.4" height="32" fill="#000" stroke="none" />
+        </mask>
+      )
+    }
+    <g mask={large ? "url(#glyph-gap)" : undefined}>
+      <path class="glyph-fade" d="M11.6 18.4 L6.9 25.5 M19.5 6.5 L25.3 6.5 M19.5 25.5 L25.3 25.5" />
+      <path d="M19.5 6.5 L11.6 18.4 L24.2 18.4" />
+    </g>
+    <path class="glyph-stem" d="M19.5 6.5 L19.5 25.5" />
   </g>
 </svg>

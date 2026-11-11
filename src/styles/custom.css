@@ -560,6 +560,9 @@ starlight-menu-button button {
 .glyph-fade {
   stroke: var(--glyph-fade, var(--sl-color-gray-4));
 }
+.glyph-stem {
+  stroke: color-mix(in srgb, currentColor 72%, var(--sl-color-bg));
+}
 /* On the cover's running head the mark is chapter 0, in a number block. */
 .running-glyph {
   vertical-align: middle;

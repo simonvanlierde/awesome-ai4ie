@@ -20,8 +20,8 @@ const root = process.argv[2] ?? `http://localhost:4321${basePath}/`;
 const address = `${site}${basePath}`.replace(/^https:\/\//, "");
 // The site description (README's opening sentence); the card makes no claim of its own.
 const LINE = "A community-curated guide to using AI in industrial ecology";
-// The favicon: the wordmark's pivot glyph (a 4 within the Æ) on the cobalt square.
-const glyph = await readFile(new URL("../public/favicon.svg", import.meta.url), "utf8");
+// The large mark: the favicon's glyph (a 4 within the Æ) with the I's hairline gaps, on the cobalt square.
+const glyph = await readFile(new URL("../src/assets/ai4ie-mark.svg", import.meta.url), "utf8");
 
 // Name, line and address stay inside the centred 630 px (x 285-915) so a square crop keeps
 // them; Fig. 1 runs the full card width below them.

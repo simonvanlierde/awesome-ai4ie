@@ -63,7 +63,8 @@ Columns of numbers use tabular figures.
 
 The mark is an Æ with a 4 drawn inside it ([`Glyph.astro`](src/components/Glyph.astro)). It
 sits outside the five inks: on the page it is neutral ink, with the 4 at full strength and
-the A's leg and the E's arms faded to grey. Cobalt is ink 1, so the mark is cobalt only off
+the A's leg and the E's arms faded to grey. The stem is the I of AI4IE, so it takes a lighter
+tint; the large mark (the 404 plate, the card) also cuts a hairline gap beside it. Cobalt is ink 1, so the mark is cobalt only off
 the page: the favicon and the README.
 
 - **Once per page, twice on the cover.** Inner pages show it only as the end mark in the
