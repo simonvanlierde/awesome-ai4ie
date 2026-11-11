@@ -1,5 +1,7 @@
 // @ts-check
 
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { unified } from "@astrojs/markdown-remark";
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
@@ -11,7 +13,11 @@ import { remarkBaseLinks } from "./src/plugins/remark-base-links.mjs";
 import { basePath, repoUrl, site } from "./src/site.ts";
 
 const base = basePath || "/";
-const ogImage = `${site}${basePath}/og.png`;
+// The hash in the URL makes Facebook, Slack, Discord and iMessage, which cache a preview by image URL, refetch a redrawn card.
+const ogHash = createHash("sha256").update(readFileSync("public/og.png")).digest("hex").slice(0, 8);
+const ogImage = `${site}${basePath}/og.png?v=${ogHash}`;
+const ogImageAlt =
+  "AI4IE logo and the title Awesome AI for Industrial Ecology: a community-curated guide to using AI in industrial ecology, at ai4ie.org, above a flow diagram that links four industrial ecology fields to the AI techniques papers apply to them.";
 
 // https://astro.build/config
 export default defineConfig({
@@ -150,6 +156,8 @@ export default defineConfig({
         },
         { tag: "meta", attrs: { property: "og:image:width", content: "1200" } },
         { tag: "meta", attrs: { property: "og:image:height", content: "630" } },
+        { tag: "meta", attrs: { property: "og:image:alt", content: ogImageAlt } },
+        { tag: "meta", attrs: { name: "twitter:image:alt", content: ogImageAlt } },
         { tag: "meta", attrs: { name: "twitter:card", content: "summary_large_image" } },
         {
           tag: "meta",
