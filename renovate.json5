@@ -25,6 +25,14 @@
   platformAutomerge: false,
 
   packageRules: [
+    // Renovate has no release date for a pin (renovatebot/renovate#40288), so minimumReleaseAge
+    // would hold pin PRs at renovate/stability-days for good. A pin keeps the version the lock
+    // already has, so it adds no new release to wait on. The ignored preset makes the same
+    // exception.
+    {
+      matchUpdateTypes: ["pin"],
+      minimumReleaseAge: null,
+    },
     // Majors stay manual.
     {
       matchUpdateTypes: ["minor", "patch", "pin", "digest"],
