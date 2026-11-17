@@ -81,15 +81,14 @@ const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT)
   <figcaption>
     <span><b>Fig. 1</b> What the {papers} AI-in-IE papers apply, from IE field to AI technique.
       Numbers count papers; band width counts field-technique pairings ({total}), since one paper
-      can sit in several bands. Follow a label or band to read the papers.
-      {
-        missing.length > 0 && (
-          <>
-            {" "}
-            <span class="wanted">Wanted</span> No paper yet applies {missing.join(", ")} to an IE field.
-          </>
-        )
-      }</span>
+      can sit in several bands. Follow a label or band to read the papers.</span>
+    {
+      missing.length > 0 && (
+        <span class="flow-gap">
+          <span class="wanted">Wanted</span> No paper yet applies {missing.join(", ")} to an IE field.
+        </span>
+      )
+    }
     <span class="flow-src">Source: src/data/literature.yaml</span>
   </figcaption>
 </figure>

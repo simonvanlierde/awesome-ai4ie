@@ -16,7 +16,7 @@ hero:
       icon: right-arrow
     - text: How to contribute
       link: /#contributing
-      variant: minimal
+      variant: secondary
 ---
 
 import PathFigure from "../../components/PathFigure.astro";
@@ -38,14 +38,24 @@ This website is in its demo phase. If something looks wrong or your subfield is 
 
 <PathFigure />
 
-## Who this is for
+<div class="home-pair">
+<div>
 
-- **A life cycle assessment (LCA) or material flow analysis (MFA) researcher.** Start with [what works in your field](/applications-map/#what-works-today-per-field), then the [ML-reproducibility checklist](/best-practices/checklists/#machine-learning-reproducibility) before your first model. *Contribute:* examples of AI in your field.
-- **A student.** Start with [getting started](/best-practices/) and the [ML landmarks](/literature/?type=landmark-ml) reading list. *Contribute:* the pitfall you wish someone had warned you about.
-- **A research software engineer (RSE) or tool builder.** Start with [tools & hardware](/tools/) and the [how-to-add-a-demo guide](/demos/#two-ways-to-add-a-demo). *Contribute:* a demo of your method, embedded or in-browser.
-- **Curious, or anyone else.** Start with Fig. 2 above, or [try the photo demo](/demos/). *Contribute:* an answer to any <span class="wanted">Wanted</span> mark on the site (each gap on the map links to a short form), or a pull request for any other change.
+## Where to start
+
+- **A life cycle assessment (LCA) or material flow analysis (MFA) researcher:** [what works in your field](/applications-map/#what-works-today-per-field), then the [ML-reproducibility checklist](/best-practices/checklists/#machine-learning-reproducibility) before your first model.
+- **A student:** [getting started](/best-practices/) and the [ML landmarks](/literature/?type=landmark-ml) reading list.
+- **A research software engineer (RSE) or tool builder:** [tools & hardware](/tools/) and the [how-to-add-a-demo guide](/demos/#two-ways-to-add-a-demo).
+- **Curious, or anyone else:** Fig. 2 above, or [try the photo demo](/demos/).
+
+</div>
+<div>
 
 ## Contributing
+
+What helps most: examples of AI in your field, the pitfall you wish someone had warned you
+about, a demo of your method (embedded or in-browser), or an answer to any
+<span class="wanted">Wanted</span> mark on the site (each gap on the map links to a short form).
 
 No pull request needed: [suggest a paper](repo:issues/new?template=paper.yml),
 [map an application](repo:issues/new?template=application.yml),
@@ -57,3 +67,6 @@ Without one, post your suggestion in the [Discord](https://discord.gg/zhHAZakXHX
 To make the change yourself, the [contributing guide](repo:blob/main/CONTRIBUTING.md)
 explains the format and where each type of entry goes. The data lives in two YAML
 files, and every page has an edit link.
+
+</div>
+</div>
