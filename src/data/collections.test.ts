@@ -35,6 +35,10 @@ describe("literature.yaml", () => {
     expect(literatureSchema.safeParse(bare).success).toBe(false);
     expect(literatureSchema.safeParse({ ...bare, arxiv: "2401.01234" }).success).toBe(true);
   });
+  it("keeps status: proposal and rejects any other status", () => {
+    expect(literatureSchema.parse({ ...lit[0], status: "proposal" }).status).toBe("proposal");
+    expect(literatureSchema.safeParse({ ...lit[0], status: "vetted" }).success).toBe(false);
+  });
 });
 
 describe("applications.yaml", () => {

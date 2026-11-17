@@ -203,6 +203,7 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
               {formatAuthors(e)} · {e.year}
               {/* After hydration only: "new" depends on today, not on the build date. */}
               {hydrated && isNew(e.added) && <span className="lit-new">new</span>}
+              {e.status === "proposal" && <span className="lit-proposal">proposal</span>}
             </span>
             <a href={paperLink(e).href} className="lit-title">
               {e.title}

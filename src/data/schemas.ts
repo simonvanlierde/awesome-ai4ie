@@ -32,6 +32,8 @@ export const literatureSchema = z
     ml: z.array(mlTag).default([]),
     type: z.array(typeTag).min(1),
     added: z.string().regex(/^\d{4}-\d{2}$/), // YYYY-MM; drives the "new" marker
+    // Proposed by a curator, not yet vetted by the group; shown with a "proposal" badge.
+    status: z.literal("proposal").optional(),
   })
   .refine((e) => e.doi || e.arxiv, { message: "set doi, arxiv or both" });
 
