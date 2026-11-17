@@ -83,7 +83,10 @@ the page: the favicon and the README.
 - **Fig. 1.** Built from `literature.yaml` at build time. Node numbers count papers; band width
   counts field-technique pairings, as the caption says. Each node opens the literature list
   holding exactly the papers it counts. Labels are the first words of each tag's full name.
-  Pointing at a band lifts it and fades the rest.
+  Pointing at a band lifts it and fades the rest. Pointing at, focusing or tapping a node
+  lights its bands and names its reach in a live readout line under the plate; on touch the
+  first tap lights a node and the second opens its list. On load the bands run in once from
+  the fields, the site's one entrance; reduced motion skips it.
 - **Fig. 2.** The see, read, try path for one map cell, each step topped by the ink of the
   chapter it links to.
 - **Numbered tables.** A bold "Table N.N" title above, a source line below. Numbering and

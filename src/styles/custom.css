@@ -514,13 +514,16 @@ starlight-menu-button button {
 .flow .node {
   fill: var(--field, var(--sl-color-white));
 }
-.flow-bands:has(a:is(:hover, :focus-visible)) .band {
+.flow-bands:has(a:is(:hover, :focus-visible)) .band,
+.flow svg.is-lit .band {
   fill-opacity: 0.12;
 }
-.flow-bands a:is(:hover, :focus-visible) .band {
+.flow-bands a:is(:hover, :focus-visible) .band,
+.flow svg.is-lit .band.lit {
   fill-opacity: 0.9;
 }
-.flow a:focus-visible {
+/* Keyboard focus shows as the node's accent stroke below; a tap needs no ring. */
+.flow a:focus {
   outline: none;
 }
 .flow a:focus-visible :is(.band, .node) {
@@ -528,12 +531,47 @@ starlight-menu-button button {
   stroke-width: 3;
   paint-order: stroke;
 }
-.flow-node:is(:hover, :focus-visible) text {
+.flow-node:is(:hover, :focus-visible, .lit) text {
   text-decoration: underline;
 }
 /* Invisible hit area so thin nodes are still easy to tap. */
 .flow-hit {
   fill: transparent;
+}
+/* Reserves the readout's longest line count, so lighting a node never moves
+   the caption: two lines on a phone, one from 40rem. */
+.flow-readout {
+  min-height: 2.9em;
+  margin: 0.75rem 0 0;
+  font-family: var(--sl-font);
+  font-size: 0.875rem;
+  font-weight: 650;
+  font-stretch: 88%;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+  color: var(--sl-color-gray-2);
+}
+@media (min-width: 40rem) {
+  .flow-readout {
+    min-height: 1.45em;
+  }
+}
+.flow svg.is-lit ~ .flow-readout {
+  color: var(--sl-color-white);
+}
+/* The one entrance: the flows run in from the fields once, on load. */
+@media (prefers-reduced-motion: no-preference) {
+  .flow-bands {
+    animation: flow-in 0.9s cubic-bezier(0.33, 1, 0.68, 1) backwards;
+  }
+}
+@keyframes flow-in {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
 }
 :is(.flow, .path, .plate) figcaption {
   margin-top: 0.75rem;
@@ -817,9 +855,6 @@ starlight-menu-button button {
   font-weight: 500;
   border-color: var(--sl-color-hairline);
 }
-.lit-tag-type {
-  color: var(--sl-color-gray-3);
-}
 .lit-tag-ie::before {
   content: "";
   width: 0.55rem;
@@ -828,6 +863,7 @@ starlight-menu-button button {
 }
 .lit-tag-type {
   border-style: dashed;
+  color: var(--sl-color-gray-3);
 }
 
 /* ── Literature browser ──────────────────────────────────────────────────── */
@@ -1021,7 +1057,6 @@ starlight-menu-button button {
   margin: 0.2rem 0;
   /* The blurb's 68ch, in rem, so title and blurb end on one measure. */
   max-width: 34rem;
-  text-wrap: pretty;
   text-decoration: none;
   color: var(--sl-color-white);
 }

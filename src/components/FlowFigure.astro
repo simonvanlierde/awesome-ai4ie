@@ -32,6 +32,17 @@ const band = (b: (typeof bands)[number]) =>
   `M${X0 + NODE} ${b.y0}C${mid} ${b.y0} ${mid} ${b.y1} ${X1} ${b.y1}` +
   `V${b.y1 + b.h}C${mid} ${b.y1 + b.h} ${mid} ${b.y0 + b.h} ${X0 + NODE} ${b.y0 + b.h}Z`;
 const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT) / 2;
+// What a lit node adds to its label: how far across the other column it reaches.
+const readout = (dim: "ie" | "ml", n: { tag: string; papers: number }) => {
+  const other = dim === "ie" ? "ml" : "ie";
+  const k = new Set(bands.filter((b) => b[dim] === n.tag).map((b) => b[other])).size;
+  const of =
+    dim === "ie"
+      ? `the ${mlNodes.length} AI techniques shown`
+      : `the ${ieNodes.length} IE fields shown`;
+  return `${tagLabel(dim, n.tag)}: ${n.papers} ${n.papers === 1 ? "paper" : "papers"}, ${dim === "ie" ? "applying" : "in"} ${k} of ${of}`;
+};
+const idle = "Point at, focus or tap a label to light its flows.";
 ---
 
 <figure class="flow not-content">
@@ -46,7 +57,7 @@ const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT)
             tabindex="-1"
             aria-label={`${tagLabel("ie", b.ie)} with ${tagLabel("ml", b.ml)}: ${b.count} ${b.count === 1 ? "paper" : "papers"}`}
           >
-            <path class={`band field-${b.ie}`} d={band(b)}>
+            <path class={`band field-${b.ie}`} data-ie={b.ie} data-ml={b.ml} d={band(b)}>
               <title>{`${tagLabel("ie", b.ie)} → ${tagLabel("ml", b.ml)}: ${b.count}`}</title>
             </path>
           </a>
@@ -55,7 +66,13 @@ const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT)
     </g>
     {
       ieNodes.map((n) => (
-        <a href={litUrl({ ie: [n.tag], ml: mlInFlow })} class="flow-node">
+        <a
+          href={litUrl({ ie: [n.tag], ml: mlInFlow })}
+          class="flow-node"
+          data-dim="ie"
+          data-tag={n.tag}
+          data-readout={readout("ie", n)}
+        >
           <rect class="flow-hit" x="0" y={hitY(n)} width={X0 + NODE} height={Math.max(n.h, HIT)} />
           <rect class={`node field-${n.tag}`} x={X0} y={n.y} width={NODE} height={n.h} />
           <text x={X0 - 10} y={n.y + n.h / 2} text-anchor="end" dominant-baseline="middle">
@@ -67,7 +84,13 @@ const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT)
     }
     {
       mlNodes.map((n) => (
-        <a href={litUrl({ ie: ieInFlow, ml: [n.tag] })} class="flow-node">
+        <a
+          href={litUrl({ ie: ieInFlow, ml: [n.tag] })}
+          class="flow-node"
+          data-dim="ml"
+          data-tag={n.tag}
+          data-readout={readout("ml", n)}
+        >
           <rect class="flow-hit" x={X1} y={hitY(n)} width={W - X1} height={Math.max(n.h, HIT)} />
           <rect class="node" x={X1} y={n.y} width={NODE} height={n.h} />
           <text x={X1 + NODE + 10} y={n.y + n.h / 2} dominant-baseline="middle">
@@ -78,6 +101,7 @@ const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT)
       ))
     }
   </svg>
+  <p class="flow-readout" aria-live="polite">{idle}</p>
   <figcaption>
     <span><b>Fig. 1</b> What the {papers} AI-in-IE papers apply, from IE field to AI technique.
       Numbers count papers; band width counts field-technique pairings ({total}), since one paper
@@ -92,3 +116,54 @@ const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT)
     <span class="flow-src">Source: src/data/literature.yaml</span>
   </figcaption>
 </figure>
+
+<script>
+  // Lighting a node fades every band but its own and names its reach in the
+  // readout. Mouse lights on hover, keyboard on focus. On touch the first tap
+  // on a node lights it and the second follows the link, since there is no
+  // hover; a click without a pointer (a screen reader, Enter) follows at once.
+  for (const fig of document.querySelectorAll<HTMLElement>(".flow")) {
+    const svg = fig.querySelector("svg");
+    const out = fig.querySelector(".flow-readout");
+    if (!svg || !out) continue;
+    const idle = out.textContent;
+    const nodes = [...svg.querySelectorAll<SVGAElement>(".flow-node")];
+    const bands = [...svg.querySelectorAll<SVGPathElement>(".band")];
+    let lit: SVGAElement | null = null;
+    let pointer = "";
+    const light = (node: SVGAElement | null) => {
+      if (node === lit) return;
+      lit = node;
+      svg.classList.toggle("is-lit", node !== null);
+      for (const n of nodes) n.classList.toggle("lit", n === node);
+      for (const b of bands)
+        b.classList.toggle("lit", node !== null && b.dataset[node.dataset.dim ?? ""] === node.dataset.tag);
+      out.textContent = node?.dataset.readout ?? idle;
+    };
+    for (const n of nodes) {
+      n.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && light(n));
+      n.addEventListener("pointerleave", (e) => e.pointerType === "mouse" && light(null));
+      n.addEventListener("pointerdown", (e) => {
+        pointer = e.pointerType;
+      });
+      n.addEventListener("focus", () => light(n));
+      n.addEventListener("click", (e) => {
+        if (pointer === "touch" && !n.classList.contains("armed")) {
+          e.preventDefault();
+          for (const m of nodes) m.classList.toggle("armed", m === n);
+          light(n);
+        }
+        pointer = "";
+      });
+    }
+    svg.addEventListener("focusout", (e) => {
+      if (!svg.contains(e.relatedTarget as Node)) light(null);
+    });
+    document.addEventListener("pointerdown", (e) => {
+      if (!svg.contains(e.target as Node)) {
+        for (const m of nodes) m.classList.remove("armed");
+        light(null);
+      }
+    });
+  }
+</script>

@@ -112,6 +112,21 @@ for (const [name, viewport] of Object.entries(VIEWPORTS)) {
   const wrap = await page.$eval(".apx-grid-wrap", (w) => w.offsetWidth);
   if (extra > Math.max(0, table - wrap) + 1)
     fail(`${name}: the map grid scrolls ${extra}px though its table needs ${table - wrap}px`);
+  // Fig. 1: keyboard focus on a node lights its bands and names its reach in
+  // the live readout, the same as pointing at it; leaving restores both.
+  await page.goto(root);
+  const readout = page.locator(".flow-readout");
+  const idle = await readout.textContent();
+  const node = page.locator(".flow-node").first();
+  await node.focus();
+  const lit = await page.locator(".flow .band.lit").count();
+  if (lit === 0 || (await readout.textContent()) === idle)
+    fail(`${name}: focusing a Fig. 1 node did not light its bands or update the readout`);
+  if ((await readout.getAttribute("aria-live")) !== "polite")
+    fail(`${name}: the Fig. 1 readout is not a polite live region`);
+  await node.blur();
+  if ((await readout.textContent()) !== idle || (await page.locator(".flow .band.lit").count()))
+    fail(`${name}: leaving a Fig. 1 node left it lit`);
 }
 
 await browser.close();
