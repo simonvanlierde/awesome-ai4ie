@@ -812,6 +812,14 @@ starlight-menu-button button {
   border: 1px solid var(--sl-color-hairline-light);
   color: var(--sl-color-gray-2);
 }
+.lit-tag-ml,
+.lit-tag-type {
+  font-weight: 500;
+  border-color: var(--sl-color-hairline);
+}
+.lit-tag-type {
+  color: var(--sl-color-gray-3);
+}
 .lit-tag-ie::before {
   content: "";
   width: 0.55rem;
@@ -1001,8 +1009,8 @@ starlight-menu-button button {
 .lit-proposal {
   margin-left: 0.5rem;
   padding: 0 0.35rem;
-  border: 1px dashed var(--sl-color-gray-4);
-  color: var(--sl-color-gray-2);
+  border: 1px dashed var(--sl-color-gray-3);
+  color: var(--sl-color-gray-1);
 }
 .lit-title {
   display: block;
@@ -1011,6 +1019,9 @@ starlight-menu-button button {
   font-size: 1.125rem;
   line-height: 1.3;
   margin: 0.2rem 0;
+  /* The blurb's 68ch, in rem, so title and blurb end on one measure. */
+  max-width: 34rem;
+  text-wrap: pretty;
   text-decoration: none;
   color: var(--sl-color-white);
 }
@@ -1027,12 +1038,12 @@ starlight-menu-button button {
   max-width: 68ch;
 }
 .lit-blurb {
-  margin: 0.2rem 0 0.5rem;
+  margin: 0.25rem 0 0.75rem;
 }
 .lit-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem;
+  gap: 0.4rem 0.35rem;
 }
 .lit-empty {
   font-family: var(--font-read);
