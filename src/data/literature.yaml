@@ -2,7 +2,8 @@
 # One entry per paper; id = citation key. Required fields: title, authors
 # (a list, one "Surname, I." per author; add `etAl: true` when the list is cut
 # short), year, doi (bare 10.x id) or arxiv (bare id) or both, blurb (one line,
-# why read this), type, added (YYYY-MM).
+# why read this), type, added (YYYY-MM). Optional: status: proposal, for an
+# entry a curator suggests before the group has vetted it.
 # Tags must exist in src/data/tags.ts; the test suite enforces this.
 # See CONTRIBUTING.md for how to add an entry.
 
@@ -48,6 +49,29 @@
   ie: [lca, mfa]
   type: [review]
   added: 2026-07
+
+- id: kumarArtificialIntelligenceMeets2026
+  title: "Artificial intelligence meets LCA: a critical analysis from technical, ethical, and organizational perspectives"
+  authors: ["Kumar, M."]
+  etAl: true
+  year: 2026
+  doi: "10.1007/s11367-026-02761-7"
+  blurb: "A UNEP Life Cycle Initiative group maps 145 AI applications in LCA and surveys 89 practitioners; only 7% of the applications report human validation."
+  ie: [lca]
+  ml: [llm]
+  type: [review]
+  added: 2026-11
+  status: proposal
+- id: rolnickTacklingClimateChange2022
+  title: "Tackling climate change with machine learning"
+  authors: ["Rolnick, D."]
+  etAl: true
+  year: 2022
+  doi: "10.1145/3485128"
+  blurb: "The field map of ML for climate work, from power grids to heavy industry; shows where IE questions sit in the wider AI-for-climate agenda."
+  type: [review]
+  added: 2026-11
+  status: proposal
 
 # ── LCA & footprinting ───────────────────────────────────────────────────────
 - id: ghoroghiAdvancesApplicationMachine2022
@@ -192,6 +216,53 @@
   ml: [nlp-extraction, llm]
   type: [method]
   added: 2026-07
+
+- id: zhaoDatacentricInvestigationChallenges2025
+  title: "A data-centric investigation on the challenges of machine learning methods for bridging life cycle inventory data gaps"
+  authors: ["Zhao, B.", "Jiang, J.", "Xu, M.", "Tu, Q."]
+  year: 2025
+  doi: "10.1111/jiec.70022"
+  blurb: "Why ML gap-filling for life cycle inventories gives unstable results: data imbalance, random train-test splits and database size drive the scores."
+  ie: [lca]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: zhangSustainabilityAssessmentUsing2026
+  title: "Sustainability assessment using multimodal artificial intelligence agents"
+  authors: ["Zhang, Z."]
+  etAl: true
+  year: 2026
+  doi: "10.1038/s41928-026-01653-w"
+  blurb: "AI agents build electronics inventories from PCB photos and datasheets; estimates land within 5-19% of company-reported footprints, not of independent LCAs."
+  ie: [lca]
+  ml: [cv, llm]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: raoPCFBenchDiagnosticBenchmark2026
+  title: "PCFBench: a diagnostic benchmark for product carbon footprint estimation"
+  authors: ["Rao, K."]
+  etAl: true
+  year: 2026
+  arxiv: "2608.27716"
+  blurb: "614 expert-labelled items split product carbon footprinting into six tasks; 25-55% of the bills of materials that agents generate break mass conservation."
+  ie: [lca]
+  ml: [llm]
+  type: [dataset]
+  added: 2026-11
+  status: proposal
+- id: schweidtmannChemEasCodeOpenSourcePlatform2026
+  title: "ChemE-as-Code: an open-source platform for agentic AI in chemical engineering"
+  authors: ["Schweidtmann, A. M."]
+  year: 2026
+  arxiv: "2611.07947"
+  blurb: "LLM agents design a chemical process on Git-versioned files; read it for the pattern: every value records its origin and calculations run outside the model."
+  ie: [lca]
+  ml: [llm]
+  type: [method]
+  added: 2026-11
+  status: proposal
 
 # ── MFA, stocks & flows ──────────────────────────────────────────────────────
 - id: haberlHighResolutionMaps2021
@@ -508,6 +579,19 @@
   blurb: "What's known about making AI itself less resource-hungry: an IE question applied to our own tools."
   type: [meta, review]
   added: 2026-07
+
+- id: ulissiEvaluationCriteriaAIassisted2026
+  title: "Evaluation criteria for AI-assisted product carbon footprinting systems: the cases of mapping and supply chain modeling"
+  authors: ["Ulissi, S."]
+  etAl: true
+  year: 2026
+  doi: "10.1007/s44498-026-00196-9"
+  blurb: "Criteria for judging AI-assisted carbon footprinting, tested on two production systems; vague product descriptions cut expert-accepted mappings from 91% to 60%."
+  ie: [lca]
+  ml: [llm]
+  type: [meta]
+  added: 2026-11
+  status: proposal
 
 # ── ML landmarks (understand today's tools) ──────────────────────────────────
 - id: dengImageNetLargescaleHierarchical2009
