@@ -1,0 +1,3 @@
+# `../../issues/new?template=...` resolves on GitHub only. The links.yml workflow reads
+# this file too.
+exclude = ["issues/new"]

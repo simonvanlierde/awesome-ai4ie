@@ -1,0 +1,26 @@
+# Managed by copier. Do not edit by hand. Run: copier update
+_commit: v0.16.1
+_src_path: gh:simonvanlierde/project-templates
+author_email: code@duinlab.nl
+author_name: Simon van Lierde
+customise: true
+decision_records: false
+dependency_bot: renovate
+extras:
+- codecov
+- cold_install
+github_user: simonvanlierde
+license: none
+node_version: '26'
+project_description: A community-curated guide to using AI in industrial ecology.
+project_name: awesome-ai4ie
+public: true
+site: none
+site_url: https://ai4ie.org
+stacks:
+- ts
+ts_dir: .
+ts_kind: web-app
+user_data: nothing
+web_framework: react
+worker: false

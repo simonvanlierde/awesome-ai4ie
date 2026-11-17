@@ -5,7 +5,6 @@ minimumReleaseAge: 10080
 # The only dependencies whose install scripts run.
 allowBuilds:
   fsevents: true
-  lefthook: true
 
 # postcss-selector-parser fixes GHSA-rj75-hqrm-r3gf. Remove once @expressive-code/core depends on
 # postcss-nested 7 or later.

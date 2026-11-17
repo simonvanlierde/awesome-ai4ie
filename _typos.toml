@@ -1,0 +1,9 @@
+[default.extend-identifiers]
+# Preserve the format plural before typos splits its acronym.
+PNGs = "PNGs"
+
+# Words typos must leave alone. Add your own below.
+[default.extend-words]
+# Mean absolute percentage error, and a court case's name.
+MAPE = "MAPE"
+Mata = "Mata"
