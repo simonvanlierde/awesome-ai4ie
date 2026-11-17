@@ -7,6 +7,7 @@ import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { defineConfig, fontProviders } from "astro/config";
 import starlightLinksValidator from "starlight-links-validator";
+import { cspInlineScripts } from "./src/plugins/csp-inline-scripts.mjs";
 import { rehypeFocusableTables } from "./src/plugins/rehype-focusable-tables.mjs";
 import { rehypeTaskListLabels } from "./src/plugins/rehype-task-list-labels.mjs";
 import { remarkBaseLinks } from "./src/plugins/remark-base-links.mjs";
@@ -102,11 +103,37 @@ export default defineConfig({
     },
   ],
 
+  // GitHub Pages cannot send headers, so the policy is a <meta> tag that Astro writes
+  // with a hash for each inline script and style. A meta tag cannot carry
+  // frame-ancestors, so the site can be framed. The extra sources are the zero-shot demo
+  // (transformers.js from jsDelivr, its model files from Hugging Face, an ONNX worker
+  // from a blob: URL) and the Hugging Face Space embeds.
+  security: {
+    csp: {
+      directives: [
+        "default-src 'self'",
+        "img-src 'self' data: blob:",
+        "connect-src 'self' blob: data: https://cdn.jsdelivr.net https://huggingface.co https://*.huggingface.co https://*.hf.co",
+        "frame-src https://*.hf.space",
+        "worker-src 'self' blob:",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+      ],
+      scriptDirective: {
+        resources: ["'self'", "https://cdn.jsdelivr.net", "'wasm-unsafe-eval'", "blob:"],
+      },
+      // Attribute styles cannot run script; the figures and Starlight set them.
+      styleDirective: { resources: [{ resource: "'unsafe-inline'", kind: "attribute" }] },
+    },
+  },
+
   // Old URLs that are live on the deployed site must keep working after a move.
   // Astro adds `base` to the route but not to the destination, hence `basePath`.
   redirects: { "/hardware/": `${basePath}/tools/local-ai/` },
 
   integrations: [
+    cspInlineScripts(), // after Astro writes the policy: hashes the scripts Starlight inlines
     react(), // islands: the literature list, the map explorer and the demos
     starlight({
       // Fails the build on a broken internal link, a missing heading anchor or a
