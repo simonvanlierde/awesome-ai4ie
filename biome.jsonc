@@ -87,6 +87,11 @@
       }
     }
   ],
+  // Biome 2.6 formats Markdown and YAML. Its Markdown output puts a blank line inside frontmatter
+  // and un-indents folded `description: >` blocks, which breaks the YAML, and its YAML output
+  // splits every one-line `papers: [...]` list across several lines. Both stay unformatted.
+  "markdown": { "formatter": { "enabled": false } },
+  "yaml": { "formatter": { "enabled": false } },
   "assist": {
     "enabled": true,
     "actions": {
