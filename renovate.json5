@@ -11,7 +11,8 @@
   // The npm preset's 3-day wait would beat the 7-day minimumReleaseAge below.
   ignorePresets: ["security:minimumReleaseAgeNpm"],
 
-  // A week gives a hijacked release time to be yanked.
+  // A week gives a hijacked release time to be yanked. Security fixes skip the wait (Renovate's
+  // default for vulnerabilityAlerts): a known vulnerability costs more than that small risk.
   minimumReleaseAge: "7 days",
 
   // A lock refresh has no release date, so minimumReleaseAge would hold it at
