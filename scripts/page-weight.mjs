@@ -21,7 +21,7 @@ export const DEFAULT_BUDGET_KB = 230;
 // Per-page overrides in KB, keyed by the path under dist/ (e.g. "literature/index.html").
 export const OVERRIDES = {};
 
-const TAG = /<(script|link|img)\b[^>]*>/g;
+const TAG = /<(script|link|img)\b[^>]*>/gi;
 const LINK_REL = /\b(stylesheet|preload|modulepreload|icon)\b/;
 const QUERY = /[?#]/;
 
@@ -32,7 +32,7 @@ function attr(tag, name) {
 /** Same-origin asset paths a page's HTML references, deduplicated. */
 export function extractAssets(html) {
   const found = new Set();
-  for (const [tag, name] of html.matchAll(TAG).map((m) => [m[0], m[1]])) {
+  for (const [tag, name] of html.matchAll(TAG).map((m) => [m[0], m[1].toLowerCase()])) {
     if (name === "link" && !LINK_REL.test(attr(tag, "rel") ?? "")) continue;
     const ref = attr(tag, name === "link" ? "href" : "src");
     // Root-relative only: skips https:, //host, data: and #fragments.
