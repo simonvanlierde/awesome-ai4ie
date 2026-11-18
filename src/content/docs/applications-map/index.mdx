@@ -67,6 +67,34 @@ the field. [Papers →](/literature/?ie=urban-mining)
 
 <FieldApplications ie="urban-mining" />
 
+### Symbiosis & by-product exchange
+
+In industrial symbiosis, matching one plant's waste to another's input is, in part, a
+recommender problem, and most of the work so far mines text for the matches. LLMs can build a waste-to-resource
+knowledge graph from the literature; one recovered 24 of 45 known exchanges in the Taranto
+district <Cite id="zhaoConstructionWastetoresourceKnowledge2025" />. Word vectors trained on
+patents and papers rank substitutes well at some eco-industrial parks and poorly at others,
+Kalundborg among them <Cite id="davisMachineLearningassistedIndustrial2022" />. Tagging
+free-text waste descriptions with European Waste Catalogue codes stays hard: top-10
+precision is 0.36 for plain term matching and 0.39 at best <Cite id="vancapelleveenBuildingRecommenderSystems2021" />.
+Recommenders built on past exchange cases have been demonstrated on single firms <Cite id="grimmelUrbanIndustrialSymbiosis2025" />.
+[Papers →](/literature/?ie=symbiosis)
+
+<FieldApplications ie="symbiosis" />
+
+### Uncertainty & Bayesian methods
+
+Bayesian material flow analysis is the most developed thread. It combines expert-elicited
+priors with noisy data <Cite id="dongExpertElicitationData2023" />, scales to disaggregated
+systems with around 180 flow and stock variables <Cite id="wangBayesianMaterialFlow2024" />,
+and can rank which flow is worth measuring next <Cite id="liaoIntelligentDataCollection2025" />.
+On the ML side, a model that predicts construction products' footprints from their
+declarations reports its own uncertainty: low between 3 and 500 kg CO₂e, significant below
+3 kg. That uncertainty covers the model, not the declarations it learned from <Cite id="baehrPredictingProductLife2024" />.
+[Papers →](/literature/?ie=uncertainty)
+
+<FieldApplications ie="uncertainty" />
+
 :::note[A first pass]
 These entries are a first pass and certainly incomplete. Argue with them, and add
 what's missing: [map an application](repo:issues/new?template=application.yml) in a
@@ -84,7 +112,7 @@ The same applications as a grid of IE field × AI technique, or grouped by techn
 ## Not mapped yet
 
 The gaps in this map matter as much as the filled cells, so we name them here
-instead of leaving them implicit. Two kinds of gap: **IE fields** with no vetted entries, and
+instead of leaving them implicit. Two kinds of gap: **IE fields** with no field of their own yet, and
 **AI techniques** with no tag in the vocabulary yet.
 
 A caveat on how to read this: none of it claims the work doesn't exist. It claims we
@@ -92,31 +120,36 @@ have not vetted any of it. Our sweep either found nothing that survived verifica
 or never looked. Each line is the easiest possible contribution: one paper, one entry. Its
 link opens a short form on GitHub with the gap filled in.
 
-### IE fields with no entries
+### IE fields with no section
 
 - <span class="wanted">Wanted</span> **Chemicals, toxicity & QSAR.** One LCA entry screens chemicals' impacts from
-  their molecular structure. Nothing yet on toxicity characterisation factors for the tens of
-  thousands of substances nobody has tested. Plausibly the largest single hole in this map.
+  their molecular structure. A review covers structure-based ML for chemicals' life-cycle impacts,
+  filed under LCA <Cite id="zhaoMachineLearningModels2025" />. Nothing yet on toxicity
+  characterisation factors for the tens of thousands of substances nobody has tested. Plausibly the largest single hole in this map.
   <SuggestPaper gap="Chemicals, toxicity & QSAR" />
 - <span class="wanted">Wanted</span> **Energy systems & industrial decarbonisation.** Marginal versus average grid
   factors, temporal accounting, process and heat-integration optimisation.
   <SuggestPaper gap="Energy systems & industrial decarbonisation" />
-- <span class="wanted">Wanted</span> **Industrial symbiosis.** Matching one plant's waste to another's input is, in
-  part, a recommender problem.
-  <SuggestPaper gap="Industrial symbiosis" />
 - <span class="wanted">Wanted</span> **Supply chains, criticality & resource security.** Supply risk, critical raw
   materials, trade-network disruption.
   <SuggestPaper gap="Supply chains, criticality & resource security" />
 - <span class="wanted">Wanted</span> **Agriculture, food & land use.** The field our remote-sensing tag most obviously
-  serves, with nothing behind it.
+  serves. The one entry, filed under LCA, is an LCA of demand forecasting against bakery
+  food waste <Cite id="hubnerMachinelearningbasedDemandForecasting2024" />.
   <SuggestPaper gap="Agriculture, food & land use" />
 - <span class="wanted">Wanted</span> **Product lifetime, reuse & repair.** Survival analysis and failure prediction;
-  feeds both MFA stock models and the EoL corner.
+  feeds both MFA stock models and the EoL corner. Entries so far sit in those two fields:
+  lifetime models in a road-stock MFA <Cite id="ebrahimiMachineLearningbasedStocks2022" />,
+  and grading and sorting of returned products for reuse <Cite id="wuEnhancingElectronicsGrading2025" /> <Cite id="schluterAIenhancedIdentificationInspection2021" />,
+  with a survey for remanufacturing <Cite id="kimUnlockingPotentialRemanufacturing2024" />.
+  Nothing yet on repair data.
   <SuggestPaper gap="Product lifetime, reuse & repair" />
-- <span class="wanted">Wanted</span> **Water.** Water footprints, scarcity characterisation, and hydrological modelling.
+- <span class="wanted">Wanted</span> **Water.** Water footprints, scarcity characterisation, and hydrological modelling. One
+  entry, filed under LCA, forecasts the AWARE water-scarcity factor with ML <Cite id="engbergForecastingFutureStates2026" />.
   <SuggestPaper gap="Water" />
 - <span class="wanted">Wanted</span> **Input–output analysis, forecasting & scenario modelling.** Economy-wide
-  footprints and what-if scenarios.
+  footprints and what-if scenarios. One dataset, filed under LCA, turns EXIOBASE into
+  ML-ready emission-factor tables <Cite id="guoGlobalEmissionFactor2026" />.
   <SuggestPaper gap="Input–output analysis, forecasting & scenario modelling" />
 
 ### AI techniques with no tag
@@ -124,9 +157,6 @@ link opens a short form on GitHub with the gap filled in.
 Tags are added together with their first entry, so these stay out of the vocabulary until
 someone brings a paper that earns one.
 
-- <span class="wanted">Wanted</span> **Uncertainty quantification & Bayesian methods.** Uncertainty is this discipline's
-  central methodological concern, and the map has no column for it. Conformal prediction counts too.
-  <SuggestPaper gap="Uncertainty quantification & Bayesian methods" />
 - <span class="wanted">Wanted</span> **Graph neural networks & network analysis.** Supply chains, IO tables, material-flow
   networks, molecular graphs: most IE data is a network, and nothing here treats it as one.
   <SuggestPaper gap="Graph neural networks & network analysis" />

@@ -11,7 +11,7 @@ Exact values (colours, sizes, breakpoints) live in
 ## Colour
 
 The theme follows the reader's system setting in a blueprint / cyanotype palette: a deep
-Prussian blueprint page in dark, a cool ice-slate page in light. Five printing inks carry all
+Prussian blueprint page in dark, a cool ice-slate page in light. Six printing inks carry all
 colour; everything else is slate grey.
 
 | Ink | Chapter | IE field |
@@ -20,12 +20,14 @@ colour; everything else is slate grey.
 | 2 cadmium red | Literature | Waste, EoL & circularity |
 | 3 verdigris teal | Best practices | MFA |
 | 4 brass | Tools | Urban mining |
-| 5 indigo | Demos | none |
+| 5 indigo | Demos | Symbiosis & by-product exchange |
+| 6 moss | none | Uncertainty & Bayesian methods |
 
 Cobalt is also the accent: links, focus rings, the primary button.
 
 - **One meaning per ink.** An ink marks its chapter and its field, nothing else, never
-  decoration. A new chapter or field needs an ink no other meaning uses; all five are taken.
+  decoration. A new chapter or field needs an ink no other meaning uses; all six are taken.
+  Ink 6 marks a field only, so the five chapters keep five tab colours.
 - **Swatch, not fill.** Outside Fig. 1, an IE field shows its ink as a small square beside
   its label, never as a filled chip or coloured text.
 - **One hue for counts.** The map grid shades counts in cobalt at three strengths (1, 2,
@@ -62,7 +64,7 @@ Columns of numbers use tabular figures.
 ## The mark
 
 The mark is an Æ with a 4 drawn inside it ([`Glyph.astro`](src/components/Glyph.astro)). It
-sits outside the five inks: on the page it is neutral ink, with the 4 at full strength and
+sits outside the six inks: on the page it is neutral ink, with the 4 at full strength and
 the A's leg and the E's arms faded to grey. The stem is the I of AI4IE, so it takes a lighter
 tint; the large mark (the 404 plate, the card) also cuts a hairline gap beside it. Cobalt is ink 1, so the mark is cobalt only off
 the page: the favicon and the README.

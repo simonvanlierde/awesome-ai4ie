@@ -130,3 +130,21 @@
   summary: "Perception + planning pipelines locate fasteners and components to disassemble products robotically for reuse and recycling."
   maturity: "Working cells exist for narrow product families (phones); generalization across products is the open problem."
   papers: [ameurFutureRoboticDisassembly2025, liuRAISERobotAssistedSelective2025]
+
+# ── Industrial symbiosis ─────────────────────────────────────────────────────
+- id: symbiosis-matching
+  name: "Waste-to-resource matching for industrial symbiosis"
+  ie: [symbiosis]
+  ml: [nlp-extraction, llm]
+  summary: "Suggest which company could use another's waste stream, from knowledge graphs, word vectors or past exchange cases built out of papers, patents and reported synergies."
+  maturity: "Research prototypes, each tested on its own parks or firms. One recovers 24 of 45 known exchanges in one district; word vectors fail at some parks, Kalundborg among them."
+  papers: [zhaoConstructionWastetoresourceKnowledge2025, davisMachineLearningassistedIndustrial2022, vancapelleveenBuildingRecommenderSystems2021, grimmelUrbanIndustrialSymbiosis2025]
+
+# ── Uncertainty & Bayesian methods ───────────────────────────────────────────
+- id: bayesian-mfa
+  name: "Bayesian material flow analysis"
+  ie: [mfa, uncertainty]
+  ml: [tabular-ml]
+  summary: "Treat MFA flows as uncertain variables, combine expert priors with noisy data by Bayesian inference, and use the posterior to choose which data to collect next."
+  maturity: "Methods papers, tested on US steel and global aluminium cycles; each releases code or data."
+  papers: [dongExpertElicitationData2023, wangBayesianMaterialFlow2024, liaoIntelligentDataCollection2025]

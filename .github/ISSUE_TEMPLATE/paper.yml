@@ -39,6 +39,8 @@ body:
         - MFA & stocks and flows
         - Waste, EoL & circularity
         - Urban mining & secondary resources
+        - Symbiosis & by-product exchange
+        - Uncertainty & Bayesian methods
   - type: dropdown
     id: ml
     attributes:

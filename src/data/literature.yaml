@@ -264,6 +264,112 @@
   added: 2026-11
   status: proposal
 
+- id: abubakarNaturallanguageInterfaceParameterlevel2026
+  title: "A natural-language interface for parameter-level scenario analysis in parameterised life cycle assessment models"
+  authors: ["Abubakar, S.", "Cepero Mejias, F."]
+  year: 2026
+  doi: "10.1007/s44498-026-00163-4"
+  blurb: "An LLM calls predefined tools to edit parameters and run scenarios in OpenLCA; across 175 diagnostic runs, task-correct output ranged from 40% to 91.4% by model."
+  ie: [lca]
+  ml: [llm]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: kallitsisAutomatingLifeCycle2026
+  title: "Automating life cycle inventory modelling with large language models"
+  authors: ["Kallitsis, E."]
+  etAl: true
+  year: 2026
+  doi: "10.1016/j.procir.2026.05.044"
+  blurb: "Open-source Python tool where an LLM maps inventory flows to ecoinvent; matched expert choices on a 16-flow battery case but only 3 of 10 recycling flows."
+  ie: [lca]
+  ml: [llm]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: lazarYouSpeakLCA2026
+  title: "Do you speak LCA? FAULDIER: a framework for large language model assisted life cycle inventories in life cycle assessment"
+  authors: ["Lazar, L."]
+  year: 2026
+  doi: "10.1016/j.softx.2026.102602"
+  blurb: "LLM-assisted mapping of raw inventory data to an LCI database; about 57% of processes were mapped correctly in one test case, as judged by a single expert."
+  ie: [lca]
+  ml: [llm, nlp-extraction]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: tsironisLCAiLifeCycle2026
+  title: "LCAi: life cycle assessment with big data fusion and retrieval-augmented generation-assisted interpretation"
+  authors: ["Tsironis, G."]
+  etAl: true
+  year: 2026
+  arxiv: "2606.26857"
+  blurb: "A retrieval-augmented GPT-5 nano pipeline turns LCA hotspots into a 2030 hydrogen roadmap for Italian apples; a proof-of-concept, with benchmarking left to future work."
+  ie: [lca]
+  ml: [llm]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: preussAutomatingLifeCycle2026
+  title: "Automating life cycle assessments through artificial intelligence agents and integrated assessment models"
+  authors: ["Preuss, N.", "You, F."]
+  year: 2026
+  doi: "10.1021/acs.est.5c14493"
+  blurb: "Review of 75 papers on AI agents and integrated assessment models for automating LCA; finds too little research to judge the quality of automated LCA."
+  ie: [lca]
+  ml: [llm]
+  type: [review]
+  added: 2026-11
+  status: proposal
+- id: guoGlobalEmissionFactor2026
+  title: "Global emission factor dataset for Scope 3 machine learning applications"
+  authors: ["Guo, Y."]
+  etAl: true
+  year: 2026
+  doi: "10.1038/s41597-026-06699-1"
+  blurb: "Open ML-ready emission-factor tables from Exiobase 3.8.2 (49 regions, 1995-2022) with a GHG regression baseline where gradient boosting nearly matches deep models."
+  ie: [lca]
+  ml: [tabular-ml]
+  type: [dataset]
+  added: 2026-11
+  status: proposal
+- id: engbergForecastingFutureStates2026
+  title: "Forecasting future states of the environment with machine learning: a case study on water scarcity"
+  authors: ["Engberg, N."]
+  etAl: true
+  year: 2026
+  doi: "10.1007/s44498-026-00010-6"
+  blurb: "N-BEATS forecasts of the AWARE water-scarcity factor for 1,463 large basins to 2032: it picks up seasonality but not long-term trends. Code and forecasts on Zenodo."
+  ie: [lca]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: zhaoMachineLearningModels2025
+  title: "Machine learning models for rapid prediction of chemicals' life-cycle environmental impacts: current status, challenges, and future directions"
+  authors: ["Zhao, K."]
+  etAl: true
+  year: 2025
+  doi: "10.1016/j.greenca.2025.05.004"
+  blurb: "Review of ML models that predict chemicals' life-cycle impacts from molecular structure: the largest training set has 547 data points and much industry data is unpublished."
+  ie: [lca]
+  ml: [tabular-ml]
+  type: [review]
+  added: 2026-11
+  status: proposal
+- id: hubnerMachinelearningbasedDemandForecasting2024
+  title: "Machine-learning-based demand forecasting against food waste: life cycle environmental impacts and benefits of a bakery case study"
+  authors: ["Hübner, N."]
+  etAl: true
+  year: 2024
+  doi: "10.1111/jiec.13528"
+  blurb: "LCA of a bakery demand-forecasting service: ML cut returns about 30%, and avoided-return benefits outweigh the service's own impacts by one to three orders of magnitude."
+  ie: [lca, eol]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+  status: proposal
+
 # ── MFA, stocks & flows ──────────────────────────────────────────────────────
 - id: haberlHighResolutionMaps2021
   title: "High-resolution maps of material stocks in buildings and infrastructures in Austria and Germany"
@@ -341,6 +447,19 @@
   ml: [tabular-ml, cv]
   type: [method]
   added: 2026-07
+
+- id: ebrahimiMachineLearningbasedStocks2022
+  title: "Machine learning-based stocks and flows modeling of road infrastructure"
+  authors: ["Ebrahimi, B."]
+  etAl: true
+  year: 2022
+  doi: "10.1111/jiec.13232"
+  blurb: "Regression trees fill in missing road-layer data and Cox/Weibull lifetime models drive a dynamic MFA of Norway's roads to 2050; the authors say results illustrate the method only."
+  ie: [mfa]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+  status: proposal
 
 # ── Waste, EoL & circularity ─────────────────────────────────────────────────
 - id: sterkensProductLabelIdentification2023
@@ -493,6 +612,140 @@
   ml: [depth, cv]
   type: [method]
   added: 2026-07
+
+- id: kimUnlockingPotentialRemanufacturing2024
+  title: "Unlocking the potential of remanufacturing through machine learning and data-driven models: a survey"
+  authors: ["Kim, Y. H."]
+  etAl: true
+  year: 2024
+  doi: "10.3390/a17120562"
+  blurb: "Survey of ML and data-driven methods in remanufacturing: an LDA topic map of about 6000 Web of Science papers, then applications by task; names data curation and explainability as open problems."
+  ie: [eol]
+  ml: [cv, tabular-ml]
+  type: [review]
+  added: 2026-11
+  status: proposal
+- id: schluterAIenhancedIdentificationInspection2021
+  title: "AI-enhanced identification, inspection and sorting for reverse logistics in remanufacturing"
+  authors: ["Schlüter, M."]
+  etAl: true
+  year: 2021
+  doi: "10.1016/j.procir.2021.01.107"
+  blurb: "Concept for ML-assisted identification, inspection and sorting of returned cores, from 10 remanufacturer interviews; a vision test on 1,440 automotive parts reaches 96.36% on same-part images."
+  ie: [eol]
+  ml: [cv]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: wuEnhancingElectronicsGrading2025
+  title: "Enhancing electronics grading: detection-guided SAM inference for scratch segmentation and measurement"
+  authors: ["Wu, Y."]
+  etAl: true
+  year: 2025
+  doi: "10.1016/j.procir.2024.12.143"
+  blurb: "Detector-prompted SAM segments laptop scratches and K3M thinning measures their length for reuse grading: 83.7% mAP, 1.60 mm mean error; over 90% of the scratches were made by hand."
+  ie: [eol]
+  ml: [segmentation, foundation]
+  type: [method]
+  added: 2026-11
+  status: proposal
+# ── Industrial symbiosis ─────────────────────────────────────────────────────
+- id: zhaoConstructionWastetoresourceKnowledge2025
+  title: "Construction of waste-to-resource knowledge graph for industrial symbiosis identification using large language models"
+  authors: ["Zhao, L."]
+  etAl: true
+  year: 2025
+  doi: "10.1038/s41467-025-66599-7"
+  blurb: "Builds a waste-to-resource knowledge graph from literature with LLMs (33,679 links); it captures 24 of 45 known Taranto symbiosis exchanges."
+  ie: [symbiosis]
+  ml: [llm, nlp-extraction]
+  type: [method, dataset]
+  added: 2026-11
+  status: proposal
+- id: davisMachineLearningassistedIndustrial2022
+  title: "Machine learning-assisted industrial symbiosis: testing the ability of word vectors to estimate similarity for material substitutions"
+  authors: ["Davis, C.", "Aid, G."]
+  year: 2022
+  doi: "10.1111/jiec.13245"
+  blurb: "fastText word vectors from 2.5 GB of waste-reuse patents and papers rank waste-to-industry matches; F-measure about 50% above a co-occurrence baseline, but poor at Kalundborg."
+  ie: [symbiosis]
+  ml: [nlp-extraction]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: vancapelleveenBuildingRecommenderSystems2021
+  title: "Toward building recommender systems for the circular economy: exploring the perils of the European Waste Catalogue"
+  authors: ["Van Capelleveen, G."]
+  etAl: true
+  year: 2021
+  doi: "10.1016/j.jenvman.2020.111430"
+  blurb: "Tags 311 short waste descriptions with one of 841 EWC codes by term matching, a thesaurus and Word2vec; top-10 micro precision is 0.36 baseline, 0.39 best."
+  ie: [symbiosis]
+  ml: [nlp-extraction]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: grimmelUrbanIndustrialSymbiosis2025
+  title: "Urban–industrial symbiosis recommendation platform for urban factories: leveraging historical exchange patterns through feature analysis for real-world applications"
+  authors: ["Grimmel, P."]
+  etAl: true
+  year: 2025
+  doi: "10.1111/jiec.70015"
+  blurb: "Ranks symbiosis partners from reported exchange cases with a k-nearest-neighbour score; demonstrated on one firm each in Braunschweig and Singapore."
+  ie: [symbiosis]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+  status: proposal
+# ── Uncertainty & Bayesian methods ───────────────────────────────────────────
+- id: dongExpertElicitationData2023
+  title: "Expert elicitation and data noise learning for material flow analysis using Bayesian inference"
+  authors: ["Dong, J."]
+  etAl: true
+  year: 2023
+  doi: "10.1111/jiec.13399"
+  blurb: "Expert-elicited priors and learned data noise for Bayesian MFA, tested on 2012 US steel flows with eight experts; multi-year data cut noise uncertainty further."
+  ie: [mfa, uncertainty]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: wangBayesianMaterialFlow2024
+  title: "Bayesian material flow analysis for systems with multiple levels of disaggregation and high dimensional data"
+  authors: ["Wang, J."]
+  etAl: true
+  year: 2024
+  doi: "10.1111/jiec.13550"
+  blurb: "Bayesian MFA that relaxes mass balance and handles disaggregated processes; on a global aluminum cycle with about 180 variables, weak priors still captured the reported flows."
+  ie: [mfa, uncertainty]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: liaoIntelligentDataCollection2025
+  title: "Intelligent data collection for reducing network structure uncertainty in material flow analysis using Bayesian optimal experimental design"
+  authors: ["Liao, J."]
+  etAl: true
+  year: 2025
+  doi: "10.1111/jiec.70111"
+  blurb: "Bayesian optimal experimental design picks which MFA data to collect to cut network-structure uncertainty; on US steel the best pair is not the two best single flows."
+  ie: [mfa, uncertainty]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: baehrPredictingProductLife2024
+  title: "Predicting product life cycle environmental impacts with machine learning: uncertainties and implications for future reporting requirements"
+  authors: ["Baehr, J."]
+  etAl: true
+  year: 2024
+  doi: "10.1016/j.spc.2024.11.005"
+  blurb: "ANN on construction EPDs predicts life cycle GWP (R2 0.97 with a residual-GPR uncertainty layer); uncertainty is high below 3 kg CO2e, and EPD reporting gaps limit use."
+  ie: [lca, uncertainty]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+  status: proposal
 
 # ── Research practice (using AI well) ────────────────────────────────────────
 - id: rankinCallEnsureReproducibility2026
