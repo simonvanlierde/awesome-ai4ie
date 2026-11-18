@@ -2,7 +2,8 @@
 # One entry per paper; id = citation key. Required fields: title, authors
 # (a list, one "Surname, I." per author; add `etAl: true` when the list is cut
 # short), year, doi (bare 10.x id) or arxiv (bare id) or both, blurb (one line,
-# why read this), type, added (YYYY-MM).
+# why read this), type, added (YYYY-MM). Optional: status: proposal, for an
+# entry a curator suggests before the group has vetted it.
 # Tags must exist in src/data/tags.ts; the test suite enforces this.
 # See CONTRIBUTING.md for how to add an entry.
 
@@ -267,7 +268,6 @@
   ml: [llm]
   type: [method]
   added: 2026-11
-  status: proposal
 - id: kallitsisAutomatingLifeCycle2026
   title: "Automating life cycle inventory modelling with large language models"
   authors: ["Kallitsis, E."]
@@ -279,7 +279,6 @@
   ml: [llm]
   type: [method]
   added: 2026-11
-  status: proposal
 - id: lazarYouSpeakLCA2026
   title: "Do you speak LCA? FAULDIER: a framework for large language model assisted life cycle inventories in life cycle assessment"
   authors: ["Lazar, L."]
@@ -290,7 +289,6 @@
   ml: [llm, nlp-extraction]
   type: [method]
   added: 2026-11
-  status: proposal
 - id: tsironisLCAiLifeCycle2026
   title: "LCAi: life cycle assessment with big data fusion and retrieval-augmented generation-assisted interpretation"
   authors: ["Tsironis, G."]
@@ -302,7 +300,6 @@
   ml: [llm]
   type: [method]
   added: 2026-11
-  status: proposal
 - id: preussAutomatingLifeCycle2026
   title: "Automating life cycle assessments through artificial intelligence agents and integrated assessment models"
   authors: ["Preuss, N.", "You, F."]
@@ -313,7 +310,6 @@
   ml: [llm]
   type: [review]
   added: 2026-11
-  status: proposal
 - id: guoGlobalEmissionFactor2026
   title: "Global emission factor dataset for Scope 3 machine learning applications"
   authors: ["Guo, Y."]
@@ -325,7 +321,6 @@
   ml: [tabular-ml]
   type: [dataset]
   added: 2026-11
-  status: proposal
 - id: engbergForecastingFutureStates2026
   title: "Forecasting future states of the environment with machine learning: a case study on water scarcity"
   authors: ["Engberg, N."]
@@ -337,7 +332,6 @@
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
-  status: proposal
 - id: zhaoMachineLearningModels2025
   title: "Machine learning models for rapid prediction of chemicals' life-cycle environmental impacts: current status, challenges, and future directions"
   authors: ["Zhao, K."]
@@ -349,7 +343,6 @@
   ml: [tabular-ml]
   type: [review]
   added: 2026-11
-  status: proposal
 - id: hubnerMachinelearningbasedDemandForecasting2024
   title: "Machine-learning-based demand forecasting against food waste: life cycle environmental impacts and benefits of a bakery case study"
   authors: ["Hübner, N."]
@@ -361,7 +354,6 @@
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
-  status: proposal
 
 # ── MFA, stocks & flows ──────────────────────────────────────────────────────
 - id: haberlHighResolutionMaps2021
@@ -452,7 +444,6 @@
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
-  status: proposal
 
 # ── Waste, EoL & circularity ─────────────────────────────────────────────────
 - id: sterkensProductLabelIdentification2023
@@ -617,7 +608,6 @@
   ml: [cv, tabular-ml]
   type: [review]
   added: 2026-11
-  status: proposal
 - id: schluterAIenhancedIdentificationInspection2021
   title: "AI-enhanced identification, inspection and sorting for reverse logistics in remanufacturing"
   authors: ["Schlüter, M."]
@@ -629,7 +619,6 @@
   ml: [cv]
   type: [method]
   added: 2026-11
-  status: proposal
 - id: wuEnhancingElectronicsGrading2025
   title: "Enhancing electronics grading: detection-guided SAM inference for scratch segmentation and measurement"
   authors: ["Wu, Y."]
@@ -641,7 +630,6 @@
   ml: [segmentation, foundation]
   type: [method]
   added: 2026-11
-  status: proposal
 # ── Industrial symbiosis ─────────────────────────────────────────────────────
 - id: zhaoConstructionWastetoresourceKnowledge2025
   title: "Construction of waste-to-resource knowledge graph for industrial symbiosis identification using large language models"
@@ -654,7 +642,6 @@
   ml: [llm, nlp-extraction]
   type: [method, dataset]
   added: 2026-11
-  status: proposal
 - id: davisMachineLearningassistedIndustrial2022
   title: "Machine learning-assisted industrial symbiosis: testing the ability of word vectors to estimate similarity for material substitutions"
   authors: ["Davis, C.", "Aid, G."]
@@ -665,7 +652,6 @@
   ml: [nlp-extraction]
   type: [method]
   added: 2026-11
-  status: proposal
 - id: vancapelleveenBuildingRecommenderSystems2021
   title: "Toward building recommender systems for the circular economy: exploring the perils of the European Waste Catalogue"
   authors: ["Van Capelleveen, G."]
@@ -677,7 +663,6 @@
   ml: [nlp-extraction]
   type: [method]
   added: 2026-11
-  status: proposal
 - id: grimmelUrbanIndustrialSymbiosis2025
   title: "Urban–industrial symbiosis recommendation platform for urban factories: leveraging historical exchange patterns through feature analysis for real-world applications"
   authors: ["Grimmel, P."]
@@ -689,7 +674,6 @@
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
-  status: proposal
 # ── Uncertainty & Bayesian methods ───────────────────────────────────────────
 - id: dongExpertElicitationData2023
   title: "Expert elicitation and data noise learning for material flow analysis using Bayesian inference"
@@ -702,7 +686,6 @@
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
-  status: proposal
 - id: wangBayesianMaterialFlow2024
   title: "Bayesian material flow analysis for systems with multiple levels of disaggregation and high dimensional data"
   authors: ["Wang, J."]
@@ -714,7 +697,6 @@
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
-  status: proposal
 - id: liaoIntelligentDataCollection2025
   title: "Intelligent data collection for reducing network structure uncertainty in material flow analysis using Bayesian optimal experimental design"
   authors: ["Liao, J."]
@@ -726,7 +708,6 @@
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
-  status: proposal
 - id: baehrPredictingProductLife2024
   title: "Predicting product life cycle environmental impacts with machine learning: uncertainties and implications for future reporting requirements"
   authors: ["Baehr, J."]
@@ -738,7 +719,6 @@
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
-  status: proposal
 
 # ── Research practice (using AI well) ────────────────────────────────────────
 - id: rankinCallEnsureReproducibility2026
