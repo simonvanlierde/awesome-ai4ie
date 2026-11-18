@@ -53,7 +53,7 @@ export function parseAtom(xml) {
 }
 
 function bibEscape(s) {
-  return s.replace(/\\/g, "\\textbackslash{}").replace(/([&%$#_])/g, "\\$1");
+  return s.replace(/[\\&%$#_]/g, (c) => (c === "\\" ? "\\textbackslash{}" : `\\${c}`));
 }
 
 export function arxivBibtex(id, key, { title, year, authors, category }) {
