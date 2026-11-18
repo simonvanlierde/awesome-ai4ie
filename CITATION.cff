@@ -1,0 +1,20 @@
+# GitHub reads this for its "Cite this repository" button. Software indexes read
+# codemeta.json, which the citesync hook keeps in step with this file.
+cff-version: 1.2.0
+message: If you use this resource, please cite it as below.
+type: software
+title: "Awesome AI for Industrial Ecology"
+abstract: "A community-curated guide to using AI in industrial ecology: literature, tools, skills and in-browser demos, proposed to the AI4IE working group."
+authors:
+  - given-names: "Simon"
+    family-names: "van Lierde"
+    orcid: "https://orcid.org/0009-0006-6953-909X"
+repository-code: "https://github.com/simonvanlierde/awesome-ai4ie"
+url: "https://ai4ie.org/"
+license:
+  - MIT
+  - CC-BY-4.0
+keywords:
+  - "ai"
+  - "awesome-list"
+  - "industrial-ecology"

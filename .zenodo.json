@@ -1,0 +1,23 @@
+{
+  "upload_type": "software",
+  "title": "Awesome AI for Industrial Ecology",
+  "description": "A community-curated guide to using AI in industrial ecology: literature, tools, skills and in-browser demos, proposed to the AI4IE working group.",
+  "creators": [
+    {
+      "name": "van Lierde, Simon",
+      "orcid": "0009-0006-6953-909X"
+    }
+  ],
+  "keywords": [
+    "ai",
+    "awesome-list",
+    "industrial-ecology"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/simonvanlierde/awesome-ai4ie",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

@@ -7,7 +7,15 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**/*", "!**/node_modules", "!**/dist", "!**/build"]
+    // citesync writes these two; its formatting must win, or each `citesync write` fights biome.
+    "includes": [
+      "**/*",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/build",
+      "!codemeta.json",
+      "!.zenodo.json"
+    ]
   },
   "formatter": {
     "enabled": true,
