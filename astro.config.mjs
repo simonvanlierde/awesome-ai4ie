@@ -154,12 +154,14 @@ export default defineConfig({
       ],
       // Head adds the fonts, SiteTitle renders the wordmark in Archivo, Hero is
       // the home cover (title beside Fig. 1), PageTitle adds the running head
-      // above each title, and Footer adds the colophon.
+      // above each title, Search adds meaning search over the reading list, and
+      // Footer adds the colophon.
       components: {
         Footer: "./src/components/overrides/Footer.astro",
         Head: "./src/components/overrides/Head.astro",
         Hero: "./src/components/overrides/Hero.astro",
         PageTitle: "./src/components/overrides/PageTitle.astro",
+        Search: "./src/components/overrides/Search.astro",
         SiteTitle: "./src/components/overrides/SiteTitle.astro",
       },
       // Each page shows the date of its last commit, so readers can see how current it is.
