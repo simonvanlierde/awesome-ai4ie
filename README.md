@@ -17,17 +17,39 @@ A community-curated guide to using AI in industrial ecology (IE) research. Indus
   <img src=".github/screenshot.png" alt="The AI4IE site homepage" width="800">
 </a>
 
-## Quick start
+## Development
 
-To preview the site, you need Node 26+:
+You need Node 26 and pnpm. To build the site and run the checks:
 
 ```bash
 pnpm install
-pnpm run dev        # → http://localhost:4321/
+pnpm run check
+pnpm run lint
 pnpm test
+pnpm run build
 ```
 
-The pages are in [`src/content/docs/`](src/content/docs/) and their data is in [`src/data/`](src/data/). To ask a question, join the [AI4IE Discord](https://discord.gg/zhHAZakXHX). Maintainers: see [MAINTAINING.md](MAINTAINING.md).
+Preview it with `pnpm run dev`, at <http://localhost:4321/>. The pages are in [`src/content/docs/`](src/content/docs/) and their data is in [`src/data/`](src/data/). To ask a question, join the [AI4IE Discord](https://discord.gg/zhHAZakXHX). Maintainers: see [MAINTAINING.md](MAINTAINING.md).
+
+## How it works
+
+[Astro](https://astro.build) with the Starlight docs theme builds a static site. Pages are Markdown and MDX. The papers and applications are YAML files that Astro reads into typed collections, so a field, tag or reference that does not fit fails the build or `pnpm test`. React islands add the filterable lists, the map explorer and the in-browser demos.
+
+```mermaid
+flowchart LR
+  pages["Pages<br/>src/content/docs/"] --> astro["Astro and Starlight<br/>astro.config.mjs"]
+  data["Data<br/>src/data/*.yaml"] -->|schemas.ts checks| astro
+  plugins["Markdown plugins<br/>src/plugins/"] --> astro
+  components["Components and islands<br/>src/components/"] --> astro
+  astro --> dist["Static site<br/>dist/"]
+  dist -->|axe scan in CI| ci["CI<br/>.github/workflows/ci.yml"]
+  ci -->|push to main| pages_host["GitHub Pages<br/>ai4ie.org"]
+```
+
+- [`src/data/schemas.ts`](src/data/schemas.ts) defines the shape of an entry, and [`src/data/tags.ts`](src/data/tags.ts) the tag vocabulary that the entries, the issue forms and the home page's Fig. 1 share.
+- [`src/lib/`](src/lib/) holds the logic that has tests: filtering, the Sankey layout and the chapter list.
+- [`src/components/overrides/`](src/components/overrides/) replaces Starlight's head, hero, page title and footer.
+- [`scripts/a11y.mjs`](scripts/a11y.mjs) runs axe over every built page. CI deploys to GitHub Pages only after the checks, the build and that scan pass.
 
 ## License
 

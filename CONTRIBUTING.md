@@ -22,7 +22,7 @@ To make the change yourself:
    Copy the format of the entries next to yours.
 3. Open a pull request. One entry per PR is fine.
 
-To edit text, you need no local setup: edit the Markdown on GitHub, or click the **edit pencil** on any page of the live site. To preview locally, see the [quick start](README.md#quick-start).
+To edit text, you need no local setup: edit the Markdown on GitHub, or click the **edit pencil** on any page of the live site. To preview locally, see the [development section](README.md#development).
 
 ### Adding a paper or an application
 
@@ -86,11 +86,11 @@ Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUC
 - Tables are numbered by chapter: "Table 4.1" is the first table in chapter 4. Figures continue from Fig. 1 and Fig. 2 on the home page.
 - In Markdown, set the title as `<p class="table-title"><b>Table 4.1</b> …</p>` and the source as `<p class="table-src">Source: …</p>`.
 - For a figure built from the data, start from [`src/components/PathFigure.astro`](src/components/PathFigure.astro). It counts entries at build time, so its numbers stay true as entries are added.
-- A new IE field needs three things beside its tag: a short label, a `.field-<tag>` ink rule, and a `<FieldApplications ie="<tag>" />` section on the map page. The type check and `npm test` flag a missing one. All five inks are taken, so a fifth field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md).
+- A new IE field needs three things beside its tag: a short label, a `.field-<tag>` ink rule, and a `<FieldApplications ie="<tag>" />` section on the map page. The type check and `pnpm test` flag a missing one. All five inks are taken, so a fifth field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md).
 
 ### Checking accessibility
 
-The git hooks run lint, tests and the type check. The build and the accessibility check run in CI. To run the accessibility check locally:
+The git hooks (run with [prek](https://prek.j178.dev/); `pnpm exec prek install` sets them up) run lint on each commit, and the type check and the tests before each push. The build and the accessibility check run in CI. To run the accessibility check locally:
 
 1. Run `pnpm exec playwright install chromium` (once).
 2. Run `pnpm run build`, then `pnpm exec astro preview` in one terminal.
@@ -105,6 +105,19 @@ See [two ways to add a demo](https://ai4ie.org/demos/#two-ways-to-add-a-demo) on
 ### Adding a Claude skill
 
 One folder per skill under `skills/`, with a `SKILL.md` and any supporting files. Start from [`skills/SKILL-template.md`](skills/SKILL-template.md), or use [`skills/ml-reproducibility/SKILL.md`](skills/ml-reproducibility/SKILL.md) as an example. Keep it generic enough that someone else can use it without editing.
+
+## Changing code
+
+A change to code comes with tests. A fix adds a test that fails without it, and a feature adds
+one for what it does. Run `pnpm run check`, `pnpm run lint` and `pnpm test` before you push; CI
+runs them on every pull request.
+
+Coding standards: [Biome](https://biomejs.dev) formats and lints everything, so run
+`pnpm run lint:fix` rather than formatting by hand. Comments say why, not what. A new
+dependency needs a licence the `pnpm run licenses` check allows.
+
+Name the pull request like a commit, `type(scope): summary`, such as `fix(literature): sort
+by year`. The title becomes the squash commit.
 
 ## Questions
 
