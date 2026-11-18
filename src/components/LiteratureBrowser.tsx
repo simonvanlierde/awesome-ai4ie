@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { LitEntry } from "../data/schemas";
 import { DIM_LABELS, TAG_DIMS, TAGS, type TagDim, tagLabel } from "../data/tags";
+import { citationFile, FORMATS } from "../lib/citations";
 import { formatAuthors, isNew, paperLink } from "../lib/literature";
 import {
   DEFAULT_SORT,
@@ -65,6 +66,19 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
     const pills = activeRow.current?.querySelectorAll<HTMLButtonElement>(".lit-pill") ?? [];
     (pills[Math.min(i, pills.length - 1)] ?? countRef.current)?.focus();
   }, [filter]);
+
+  // The records are a separate chunk, fetched on the first export click.
+  async function download(ids: string[], format: (typeof FORMATS)[number], name: string) {
+    const { default: cache } = await import("../data/citations.json");
+    const blob = new Blob([citationFile(ids, cache, format.key)], {
+      type: `${format.mime};charset=utf-8`,
+    });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${name}.${format.ext}`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
 
   function closePanel(dim: TagDim) {
     triggers.current[dim]?.focus();
@@ -185,6 +199,27 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
         <span role="status" ref={countRef} tabIndex={-1}>
           {shown.length} of {entries.length} entries
         </span>
+        <fieldset className="lit-export" aria-label="Export shown entries">
+          Export
+          {FORMATS.map((f) => (
+            <button
+              type="button"
+              key={f.key}
+              className="lit-clear"
+              disabled={shown.length === 0}
+              aria-label={`Export ${shown.length} shown ${shown.length === 1 ? "entry" : "entries"} as ${f.label}`}
+              onClick={() =>
+                download(
+                  shown.map((e) => e.id),
+                  f,
+                  "ai4ie-literature",
+                )
+              }
+            >
+              {f.label}
+            </button>
+          ))}
+        </fieldset>
         <label className="lit-sort">
           Sort
           <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
@@ -210,6 +245,20 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
             <p className="lit-blurb">{e.blurb}</p>
             <span className="lit-tags">
               <TagChips ie={e.ie} ml={e.ml} type={e.type} />
+            </span>
+            <span className="lit-cite">
+              Cite
+              {FORMATS.map((f) => (
+                <button
+                  type="button"
+                  key={f.key}
+                  className="lit-clear"
+                  aria-label={`Download ${f.label} for ${e.title}`}
+                  onClick={() => download([e.id], f, e.id)}
+                >
+                  {f.label}
+                </button>
+              ))}
             </span>
           </li>
         ))}

@@ -1137,6 +1137,35 @@ starlight-menu-button button {
   text-decoration: underline;
   cursor: pointer;
 }
+.lit-export,
+.lit-cite {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--sl-color-gray-3);
+}
+.lit-export {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.lit-cite {
+  margin-top: 0.4rem;
+}
+.lit-export .lit-clear:disabled {
+  color: var(--sl-color-gray-4);
+  cursor: default;
+}
+@media (pointer: coarse) {
+  .lit-export .lit-clear,
+  .lit-cite .lit-clear {
+    min-height: 44px;
+    padding-inline: 0.4rem;
+  }
+}
 .lit-sort {
   display: inline-flex;
   align-items: center;
