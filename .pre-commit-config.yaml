@@ -118,12 +118,12 @@ repos:
         # _typos.toml.
         exclude: ^LICENSES/|^\.copier-answers\.yml$|\.po$|(^|/)locales/
 
-  # binary with an unpinned install script, so this takes upstream's wheel from PyPI
-  # at an exact version instead.
+  # Dead relative links in Markdown and HTML. Offline, so a commit never waits on the
+  # network: the weekly links.yml checks the web links. The site's pages write links
+  # root-absolute (`/tools/`), which the build's link validator checks, so src/content
+  # is skipped. lychee's own hook installs its binary with an unpinned install script,
+  # so this takes upstream's wheel from PyPI at an exact version instead.
   - repo: local
-    # Dead relative links in Markdown and HTML. Offline, so a commit never waits on the
-    # network: the weekly links.yml checks the web links. The site's pages write links
-    # root-absolute (`/tools/`), which the build's link validator checks, so src/content is skipped. lychee's own hook installs its
     hooks:
       - id: lychee
         name: lychee --offline
@@ -141,13 +141,14 @@ repos:
         language: system
         files: \.(m?[jt]sx?|astro|jsonc?|css)$
 
-      # Before a push, not each commit: both take longer than a lint.
+      # Before a push, not each commit: both take longer than a lint. always_run, because
+      # the tests check src/data, which the top-level exclude hides from every hook.
       - id: astro-check
         name: astro check
         entry: pnpm run check
         language: system
         pass_filenames: false
-        files: \.(m?[jt]sx?|astro)$
+        always_run: true
         stages: [pre-push]
 
       - id: vitest
@@ -155,5 +156,5 @@ repos:
         entry: pnpm test
         language: system
         pass_filenames: false
-        files: \.(m?[jt]sx?|astro|ya?ml|css)$
+        always_run: true
         stages: [pre-push]
