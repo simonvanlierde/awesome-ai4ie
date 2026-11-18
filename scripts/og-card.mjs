@@ -44,6 +44,8 @@ const browser = await chromium.launch();
 const page = await browser.newPage({
   viewport: { width: 1200, height: 630 },
   colorScheme: "light",
+  // The card CSS is an injected style, which the page's style-src would block.
+  bypassCSP: true,
 });
 await page.goto(root, { waitUntil: "networkidle" });
 await page.addStyleTag({ content: CARD_CSS });
@@ -57,15 +59,18 @@ await page.evaluate(
       <p class="col line">${text}</p>`;
     card.append(h1, flow);
     document.body.replaceChildren(card);
-    document.querySelectorAll("#og .flow figcaption, #og .flow-hit").forEach((el) => {
-      el.remove();
-    });
+    document
+      .querySelectorAll("#og .flow figcaption, #og .flow-readout, #og .flow-hit")
+      .forEach((el) => {
+        el.remove();
+      });
 
-    // Stretch the figure from its 778×420 box to the card: bands run long, labels keep their size.
+    // Stretch the figure from its box to the card: bands run long, labels keep their size.
+    // X0 and X1 are where the bands start and end: X0 + NODE and X1 in FlowFigure.astro.
     const svg = flow.querySelector("svg");
     svg.setAttribute("viewBox", "0 0 1200 232");
     svg.removeAttribute("width");
-    const [X0, X1, SY, LEFT, RIGHT] = [208, 480, 232 / 420, 300, 900];
+    const [X0, X1, SY, LEFT, RIGHT] = [183, 455, 232 / 420, 300, 900];
     const sx = (RIGHT - LEFT) / (X1 - X0);
     const bands = svg.querySelector(".flow-bands");
     bands.setAttribute("transform", `translate(${LEFT - X0 * sx} 0) scale(${sx} ${SY})`);
