@@ -10,6 +10,8 @@ const DEFAULT_LABELS = "intact appliance, corroded metal part, circuit board, pl
 // the bundled browser build). Keeping it out of package.json keeps ~340 MB of
 // ONNX runtimes out of node_modules and a 23 MB wasm out of every deploy; the
 // version is pinned here instead of in the lockfile.
+// NOTE: the CSP in astro.config.mjs allows this exact URL and the onnxruntime-web build it
+// loads; a version bump must update both there.
 const TRANSFORMERS_URL = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0";
 // The model is pinned to a commit of its Hugging Face repo, so a later push to
 // that repo cannot change the files every visitor runs. (For its progress bar

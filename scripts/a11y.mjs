@@ -44,8 +44,16 @@ const incomplete = new Map();
 for (const colorScheme of ["light", "dark"]) {
   for (const [name, viewport] of Object.entries(VIEWPORTS)) {
     const page = await (await browser.newContext({ colorScheme, viewport })).newPage();
+    // axe reads only the DOM, so a script the CSP blocks (theme toggle, search) would pass.
+    let where = "";
+    page.on("console", (msg) => {
+      if (msg.text().includes("Content Security Policy")) {
+        console.log(`${where}: blocked by the CSP: ${msg.text()}`);
+        violations += 1;
+      }
+    });
     for (const path of pages) {
-      const where = `${colorScheme} ${name} /${path}`;
+      where = `${colorScheme} ${name} /${path}`;
       await page.goto(new URL(path, root).href);
       const result = await new AxeBuilder({ page }).withTags(TAGS).exclude("iframe").analyze();
       for (const v of result.violations) {

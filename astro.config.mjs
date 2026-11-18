@@ -113,7 +113,7 @@ export default defineConfig({
       directives: [
         "default-src 'self'",
         "img-src 'self' data: blob:",
-        "connect-src 'self' blob: data: https://cdn.jsdelivr.net https://huggingface.co https://*.huggingface.co https://*.hf.co",
+        "connect-src 'self' blob: data: https://cdn.jsdelivr.net/npm/onnxruntime-web@1.26.0-dev.20260416-b7804b056c/dist/ https://huggingface.co https://*.huggingface.co https://*.hf.co",
         "frame-src https://*.hf.space",
         "worker-src 'self' blob:",
         "object-src 'none'",
@@ -121,7 +121,13 @@ export default defineConfig({
         "form-action 'self'",
       ],
       scriptDirective: {
-        resources: ["'self'", "https://cdn.jsdelivr.net", "'wasm-unsafe-eval'", "blob:"],
+        resources: [
+          "'self'",
+          "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0",
+          "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.26.0-dev.20260416-b7804b056c/dist/",
+          "'wasm-unsafe-eval'",
+          "blob:",
+        ],
       },
       // Attribute styles cannot run script; the figures and Starlight set them.
       styleDirective: { resources: [{ resource: "'unsafe-inline'", kind: "attribute" }] },
