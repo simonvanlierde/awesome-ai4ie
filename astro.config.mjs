@@ -119,13 +119,15 @@ export default defineConfig({
           exclude: basePath ? ["/applications-map/", "/#contributing"] : [],
         }),
       ],
-      // Head adds the fonts, Hero is the home cover (title beside Fig. 1), and
-      // PageTitle adds the running head above each title, and Footer the colophon.
+      // Head adds the fonts, SiteTitle renders the wordmark in Archivo, Hero is
+      // the home cover (title beside Fig. 1), PageTitle adds the running head
+      // above each title, and Footer adds the colophon.
       components: {
         Footer: "./src/components/overrides/Footer.astro",
         Head: "./src/components/overrides/Head.astro",
         Hero: "./src/components/overrides/Hero.astro",
         PageTitle: "./src/components/overrides/PageTitle.astro",
+        SiteTitle: "./src/components/overrides/SiteTitle.astro",
       },
       // Each page shows the date of its last commit, so readers can see how current it is.
       lastUpdated: true,
@@ -137,13 +139,6 @@ export default defineConfig({
         styleOverrides: { codeFontSize: "0.8125rem" },
       },
       favicon: "/favicon.svg",
-      // Constructed "AI4IE" wordmark; Starlight swaps the two by theme. The mark
-      // replaces the title text in the top bar (title still drives <title>/SEO).
-      logo: {
-        light: "./src/assets/ai4ie-logo.svg",
-        dark: "./src/assets/ai4ie-logo-dark.svg",
-        replacesTitle: true,
-      },
       title: "Awesome AI for Industrial Ecology",
       description:
         "A community-curated guide to using AI in industrial ecology, open to contributions from anyone.",

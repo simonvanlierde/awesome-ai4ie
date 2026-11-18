@@ -1,0 +1,74 @@
+---
+// Morphing AI4IE brand mark: the Æ-4 monogram and the geometric AI4IE wordmark
+// share one set of drafting strokes. In `wordmark` mode (header), AI4IE unfolds
+// at rest and collapses to Æ4 on hover/focus (or at narrow phone widths). In
+// `glyph` mode (404 plate), Æ4 sits centered at rest and blooms into AI4IE.
+interface Props {
+  mode?: "wordmark" | "glyph";
+  large?: boolean;
+  class?: string;
+}
+
+const { mode = "wordmark", large = false, class: className } = Astro.props;
+const maskId = large ? "bm-gap" : undefined;
+---
+
+<svg
+  class:list={["brand-mark", `brand-mark--${mode}`, className]}
+  viewBox="0 0 86 32"
+  aria-hidden="true"
+  focusable="false"
+>
+  {
+    large && (
+      <mask id="bm-gap">
+        <rect x="-32" y="0" width="150" height="32" fill="#fff" stroke="none" />
+        <rect class="bm-gap-cut" x="16.8" y="0" width="5.4" height="32" fill="#000" stroke="none" />
+      </mask>
+    )
+  }
+  <g
+    class="bm-root"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="3.2"
+    stroke-linecap="butt"
+    stroke-linejoin="miter"
+  >
+    <g class="bm-a">
+      <path class="bm-a-leg bm-fade" mask={maskId ? `url(#${maskId})` : undefined} d="M11.6 18.4 L6.4 26.2" />
+      <path
+        class="bm-a-full"
+        fill="currentColor"
+        fill-rule="evenodd"
+        stroke="none"
+        d="M4.2 27.1 L10.2 4.9 L13.8 4.9 L19.8 27.1 L16.4 27.1 L14.8 20.8 L9.2 20.8 L7.6 27.1 Z M12.0 9.6 L10.0 17.6 L14.0 17.6 Z"
+      />
+    </g>
+    <g class="bm-i1">
+      <path class="bm-stem" d="M19.5 4.9 L19.5 27.1" />
+    </g>
+    <g class="bm-4">
+      <path
+        mask={maskId ? `url(#${maskId})` : undefined}
+        d="M19.5 6.5 L11.6 18.4 L24.2 18.4"
+      />
+      <path class="bm-4-stem" d="M19.5 4.9 L19.5 27.1" />
+    </g>
+    <g class="bm-i2">
+      <path class="bm-stem" d="M19.5 4.9 L19.5 27.1" />
+    </g>
+    <g class="bm-e">
+      <path
+        class="bm-e-base bm-fade"
+        mask={maskId ? `url(#${maskId})` : undefined}
+        d="M19.5 6.5 L25.3 6.5 M19.5 25.5 L25.3 25.5"
+      />
+      <path class="bm-stem" d="M19.5 4.9 L19.5 27.1" />
+      <path
+        class="bm-e-ext"
+        d="M25.0 6.5 L30.5 6.5 M19.5 16 L29.0 16 M25.0 25.5 L30.5 25.5"
+      />
+    </g>
+  </g>
+</svg>

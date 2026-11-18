@@ -10,17 +10,17 @@ Exact values (colours, sizes, breakpoints) live in
 
 ## Colour
 
-The theme follows the reader's system setting: a blue-black page with
-near-white text in dark, a cool white page with near-black text in light. Five printing inks
-carry all colour; everything else is grey.
+The theme follows the reader's system setting in a blueprint / cyanotype palette: a deep
+Prussian blueprint page in dark, a cool ice-slate page in light. Five printing inks carry all
+colour; everything else is slate grey.
 
 | Ink | Chapter | IE field |
 | --- | --- | --- |
 | 1 cobalt | Map | LCA |
-| 2 vermilion | Literature | Waste, EoL & circularity |
-| 3 olive | Best practices | MFA |
-| 4 ochre | Tools | Urban mining |
-| 5 plum | Demos | none |
+| 2 cadmium red | Literature | Waste, EoL & circularity |
+| 3 verdigris teal | Best practices | MFA |
+| 4 brass | Tools | Urban mining |
+| 5 indigo | Demos | none |
 
 Cobalt is also the accent: links, focus rings, the primary button.
 
@@ -67,9 +67,10 @@ the A's leg and the E's arms faded to grey. The stem is the I of AI4IE, so it ta
 tint; the large mark (the 404 plate, the card) also cuts a hairline gap beside it. Cobalt is ink 1, so the mark is cobalt only off
 the page: the favicon and the README.
 
-- **Once per page, twice on the cover.** Inner pages show it only as the end mark in the
-  colophon, before the licences. The cover adds it as chapter 0 in the running head. The 404
-  page shows it once, as Fig. 404 in a dashed frame (a missing page is a gap).
+- **Header, colophon, and 404.** The top bar shows the unfolded `AI4IE` drafting wordmark,
+  which collapses to the Æ-4 mark on hover/focus and on narrow screens; the 404 plate shows
+  the Æ-4 mark in a dashed frame and expands it into `AI4IE` on hover/focus. Every inner page
+  and the home page also carry the mark in the colophon before the licences.
 - **Never decoration.** No patterns, bullets, loaders or watermarks.
 - **Always beside text** that carries the meaning, so the SVG stays hidden from screen
   readers.

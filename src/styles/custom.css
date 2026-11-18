@@ -4,34 +4,34 @@
    order of --ink-1 to --ink-5 must match it.
    ============================================================================ */
 
-/* ── Tokens: dark (Starlight's default root) ─────────────────────────────── */
+/* ── Tokens: dark (Starlight's default root) — Blueprint / Cyanotype ──────── */
 :root {
-  --ink-1: #8eaaff;
-  --ink-2: #ff8f70;
-  --ink-3: #b9cb70;
-  --ink-4: #e9b85a;
-  --ink-5: #dca0d9;
-  --on-ink: #121419;
+  --ink-1: #5cb3ff;
+  --ink-2: #ff856d;
+  --ink-3: #4fd1c5;
+  --ink-4: #f2b84b;
+  --ink-5: #b49eff;
+  --on-ink: #091322;
   --band-opacity: 0.55;
 
-  --sl-color-white: #f1f2f4;
-  --sl-color-gray-1: #dcdfe3;
-  --sl-color-gray-2: #bcc1c8;
-  --sl-color-gray-3: #969ca5;
-  --sl-color-gray-4: #5f656e;
-  --sl-color-gray-5: #3a3f47;
-  --sl-color-gray-6: #22262c;
-  --sl-color-black: #121419;
-  --sl-color-bg: #121419;
-  --sl-color-bg-nav: #121419;
-  --sl-color-bg-sidebar: #121419;
-  --sl-color-hairline: #2c3038;
-  --sl-color-hairline-light: #3a3f47;
-  --sl-color-hairline-shade: #2c3038;
-  --sl-color-accent-low: #1c2648;
-  --sl-color-accent: #8eaaff;
-  --sl-color-accent-high: #d3ddff;
-  --sl-color-text-accent: #8eaaff;
+  --sl-color-white: #d5e0f0;
+  --sl-color-gray-1: #bccbe0;
+  --sl-color-gray-2: #9db1cc;
+  --sl-color-gray-3: #7d94b5;
+  --sl-color-gray-4: #52688d;
+  --sl-color-gray-5: #293c59;
+  --sl-color-gray-6: #101e33;
+  --sl-color-black: #091322;
+  --sl-color-bg: #091322;
+  --sl-color-bg-nav: #091322;
+  --sl-color-bg-sidebar: #091322;
+  --sl-color-hairline: #1b2e4a;
+  --sl-color-hairline-light: #263954;
+  --sl-color-hairline-shade: #1b2e4a;
+  --sl-color-accent-low: #102d54;
+  --sl-color-accent: #5cb3ff;
+  --sl-color-accent-high: #cde7ff;
+  --sl-color-text-accent: #5cb3ff;
 
   --sl-font: var(--font-archivo);
   --font-read: var(--font-source-serif);
@@ -39,35 +39,35 @@
   --sl-content-width: 48rem;
 }
 
-/* ── Tokens: light ───────────────────────────────────────────────────────── */
+/* ── Tokens: light — Blueprint / Cyanotype ───────────────────────────────── */
 :root[data-theme="light"] {
-  --ink-1: #2148a8;
-  --ink-2: #b4391f;
-  --ink-3: #55661a;
-  --ink-4: #855b05;
-  --ink-5: #6d2f6b;
+  --ink-1: #0353a4;
+  --ink-2: #b83219;
+  --ink-3: #0f6b66;
+  --ink-4: #8c5800;
+  --ink-5: #5b3cc4;
   --on-ink: #ffffff;
   --band-opacity: 0.55;
 
-  --sl-color-white: #16181d;
-  --sl-color-gray-1: #24272d;
-  --sl-color-gray-2: #3a3e45;
-  --sl-color-gray-3: #5b616a;
-  --sl-color-gray-4: #8a9098;
-  --sl-color-gray-5: #c9cdd2;
-  --sl-color-gray-6: #eaecee;
-  --sl-color-gray-7: #f1f2f1;
-  --sl-color-black: #f7f8f6;
-  --sl-color-bg: #f7f8f6;
-  --sl-color-bg-nav: #f7f8f6;
-  --sl-color-bg-sidebar: #f7f8f6;
-  --sl-color-hairline: #d6d9dd;
-  --sl-color-hairline-light: #e3e5e8;
-  --sl-color-hairline-shade: #d6d9dd;
-  --sl-color-accent-low: #dfe6f7;
-  --sl-color-accent: #2148a8;
-  --sl-color-accent-high: #142f73;
-  --sl-color-text-accent: #2148a8;
+  --sl-color-white: #1b2d45;
+  --sl-color-gray-1: #2a3e59;
+  --sl-color-gray-2: #425875;
+  --sl-color-gray-3: #536a87;
+  --sl-color-gray-4: #7f95b0;
+  --sl-color-gray-5: #c4d2e3;
+  --sl-color-gray-6: #e1e9f3;
+  --sl-color-gray-7: #ffffff;
+  --sl-color-black: #f1f5f9;
+  --sl-color-bg: #f1f5f9;
+  --sl-color-bg-nav: #f1f5f9;
+  --sl-color-bg-sidebar: #f1f5f9;
+  --sl-color-hairline: #cdd9e6;
+  --sl-color-hairline-light: #dde6f0;
+  --sl-color-hairline-shade: #cdd9e6;
+  --sl-color-accent-low: #d6e6f9;
+  --sl-color-accent: #0353a4;
+  --sl-color-accent-high: #023870;
+  --sl-color-text-accent: #0353a4;
 }
 
 /* Field inks share the chapter inks (DESIGN.md). */
@@ -286,6 +286,153 @@ h1#_top,
 .header {
   border-bottom-color: var(--sl-color-hairline);
 }
+.site-title {
+  color: var(--sl-color-white);
+  width: calc(1.75rem * 86 / 32);
+  overflow: hidden;
+}
+.brand-mark {
+  display: block;
+  flex: none;
+  overflow: visible;
+}
+.brand-mark--wordmark {
+  width: calc(1.75rem * 86 / 32);
+  height: 1.75rem;
+}
+.brand-mark :is(.bm-root, .bm-a, .bm-i1, .bm-4, .bm-i2, .bm-e) {
+  transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.brand-mark :is(.bm-a-leg, .bm-a-full, .bm-e-ext, .bm-e-base, .bm-i1, .bm-i2, .bm-stem) {
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.brand-mark .bm-4 {
+  transition:
+    transform 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* Expanded AI4IE state: default in the header, and on hover/focus of the 404 plate. */
+.brand-mark--wordmark .bm-root,
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-root {
+  transform: translateX(0);
+}
+.brand-mark--wordmark .bm-a,
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a {
+  transform: translateX(0);
+}
+.brand-mark--wordmark .bm-a-leg,
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a-leg {
+  opacity: 0;
+}
+.brand-mark--wordmark .bm-a-full,
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a-full {
+  opacity: 1;
+}
+.brand-mark--wordmark .bm-i1,
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-i1 {
+  transform: translateX(8.5px);
+  opacity: 1;
+}
+.brand-mark--wordmark .bm-4,
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-4 {
+  transform: translateX(28.5px);
+  color: var(--ink-1);
+}
+.brand-mark--wordmark .bm-4 > path,
+.brand-mark--wordmark .bm-4-stem,
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-4 > path,
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-4-stem {
+  stroke: currentColor;
+}
+.brand-mark--wordmark .bm-i2,
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-i2 {
+  transform: translateX(41px);
+  opacity: 1;
+}
+.brand-mark--wordmark .bm-e,
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e {
+  transform: translateX(51px);
+}
+.brand-mark--wordmark .bm-e-base,
+.brand-mark--wordmark .bm-e .bm-stem,
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e-base,
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e .bm-stem {
+  stroke: currentColor;
+}
+.brand-mark--wordmark .bm-e-ext,
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e-ext {
+  opacity: 1;
+}
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-gap-cut {
+  opacity: 0;
+}
+
+/* Collapsed Æ4 state: on hover/focus in the header, at phone width, and at rest on 404. */
+.site-title:is(:hover, :focus-visible)
+  .brand-mark--wordmark
+  :is(.bm-a, .bm-i1, .bm-4, .bm-i2, .bm-e),
+.brand-mark--glyph :is(.bm-a, .bm-i1, .bm-4, .bm-i2, .bm-e) {
+  transform: translateX(0);
+}
+.brand-mark--glyph .bm-root {
+  transform: translateX(27px);
+}
+.site-title:is(:hover, :focus-visible) .brand-mark--wordmark .bm-a-leg,
+.brand-mark--glyph .bm-a-leg {
+  opacity: 1;
+  stroke: var(--sl-color-gray-4);
+}
+.site-title:is(:hover, :focus-visible) .brand-mark--wordmark .bm-a-full,
+.brand-mark--glyph .bm-a-full {
+  opacity: 0;
+}
+.site-title:is(:hover, :focus-visible) .brand-mark--wordmark :is(.bm-i1, .bm-i2, .bm-e-ext),
+.brand-mark--glyph :is(.bm-i1, .bm-i2, .bm-e-ext) {
+  opacity: 0;
+}
+.site-title:is(:hover, :focus-visible) .brand-mark--wordmark .bm-e-base,
+.brand-mark--glyph .bm-e-base {
+  stroke: var(--sl-color-gray-4);
+}
+.site-title:is(:hover, :focus-visible) .brand-mark--wordmark .bm-e .bm-stem,
+.brand-mark--glyph .bm-e .bm-stem,
+.brand-mark--glyph .bm-4-stem {
+  stroke: color-mix(in srgb, currentColor 72%, var(--sl-color-bg));
+}
+.brand-mark--glyph .bm-4 {
+  color: inherit;
+}
+
+@media (max-width: 30rem) {
+  .site-title {
+    width: 1.9rem;
+  }
+  .brand-mark--wordmark :is(.bm-a, .bm-i1, .bm-4, .bm-i2, .bm-e) {
+    transform: translateX(0);
+  }
+  .brand-mark--wordmark .bm-a-leg {
+    opacity: 1;
+    stroke: var(--sl-color-gray-4);
+  }
+  .brand-mark--wordmark :is(.bm-a-full, .bm-i1, .bm-i2, .bm-e-ext) {
+    opacity: 0;
+  }
+  .brand-mark--wordmark .bm-e-base {
+    stroke: var(--sl-color-gray-4);
+  }
+  .brand-mark--wordmark .bm-e .bm-stem {
+    stroke: color-mix(in srgb, currentColor 72%, var(--sl-color-bg));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark :is(.bm-root, .bm-a, .bm-i1, .bm-4, .bm-i2, .bm-e) {
+    transition: none;
+  }
+  .brand-mark :is(.bm-a-leg, .bm-a-full, .bm-e-ext, .bm-e-base, .bm-i1, .bm-i2, .bm-stem) {
+    transition: opacity 0.15s ease;
+  }
+}
 site-search button[data-open-modal],
 site-search dialog,
 .pagination-links a,
@@ -435,7 +582,7 @@ starlight-menu-button button {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 2rem;
-  margin-top: 2rem;
+  margin-top: 0;
 }
 @media (min-width: 64rem) {
   .cover-grid {
@@ -613,18 +760,6 @@ starlight-menu-button button {
 .glyph-stem {
   stroke: color-mix(in srgb, currentColor 72%, var(--sl-color-bg));
 }
-/* On the cover's running head the mark is chapter 0, in a number block. */
-.running-glyph {
-  vertical-align: middle;
-}
-.running-glyph .glyph {
-  width: 1.1rem;
-  height: 1.1rem;
-}
-.running-glyph .glyph-fade {
-  stroke: currentColor;
-  opacity: 0.45;
-}
 /* Fig. 404: the mark as a plate, framed by the dashed gap outline. */
 .plate {
   margin: 0;
@@ -637,12 +772,15 @@ starlight-menu-button button {
   aspect-ratio: 1;
   border: 1px dashed var(--sl-color-gray-3);
   color: var(--sl-color-white);
+  text-decoration: none;
+}
+.plate-link:is(:hover, :focus-visible) {
+  border-color: var(--ink-1);
 }
 /* Sized against the frame, not the text, so large text cannot widen the page. */
-.plate-frame .glyph {
-  width: min(12rem, 55%);
+.plate-frame .brand-mark {
+  width: 88%;
   height: auto;
-  aspect-ratio: 1;
 }
 /* Colophon (Footer override): the end mark and the licences. */
 .colophon {

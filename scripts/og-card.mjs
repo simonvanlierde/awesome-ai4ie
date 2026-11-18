@@ -26,15 +26,16 @@ const glyph = await readFile(new URL("../src/assets/ai4ie-mark.svg", import.meta
 // Name, line and address stay inside the centred 630 px (x 285-915) so a square crop keeps
 // them; Fig. 1 runs the full card width below them.
 const CARD_CSS = `
-  html, body { margin: 0; background: #f7f7f5; }
-  #og { position: relative; width: 1200px; height: 630px; overflow: hidden; color: #16181d; }
+  html, body { margin: 0; background: #f1f5f9; }
+  #og { position: relative; width: 1200px; height: 630px; overflow: hidden; color: #1b2d45; }
   #og .col { position: absolute; left: 285px; width: 630px; }
   #og .glyph { top: 44px; left: 779px; width: 136px; height: 136px; }
   #og .glyph svg { width: 136px; height: 136px; display: block; border-radius: 26px; }
-  #og .url { top: 300px; width: auto; font: 600 30px/1 var(--sl-font); color: #2b2b2b; }
+  #og .url { top: 300px; width: auto; font: 600 30px/1 var(--sl-font); color: #425875; }
   #og h1 { position: absolute; left: 285px; top: 38px; width: 630px; margin: 0; font-size: 70px; line-height: 0.98; letter-spacing: -0.01em; }
   #og .line { top: 186px; margin: 0; font: 500 40px/1.22 var(--font-read, serif); text-wrap: balance; }
   #og .flow { position: absolute; left: 0; top: 356px; width: 1200px; height: 232px; margin: 0; }
+  #og .flow-bands { animation: none; }
   #og .flow svg { width: 1200px; height: 232px; overflow: visible; }
   #og .flow text { font-size: 26px; }
 `;

@@ -1,0 +1,13 @@
+---
+// Header brand lockup: geometric AI4IE wordmark that folds into the Æ-4 mark on
+// hover/focus (and rests as Æ-4 on narrow screens). Kept aria-hidden beside the
+// sr-only site title so screen readers announce the full site name.
+import BrandMark from "../BrandMark.astro";
+
+const { siteTitle, siteTitleHref } = Astro.locals.starlightRoute;
+---
+
+<a href={siteTitleHref} class="site-title sl-flex">
+  <BrandMark mode="wordmark" />
+  <span class="sr-only" translate="no">{siteTitle}</span>
+</a>
