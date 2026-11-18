@@ -56,7 +56,7 @@ Name: "Awesome AI for Industrial Ecology", short form AI4IE. Beyond the name, th
 
 - 75 literature entries and 17 application entries in `src/data/`.
 - Two worked skills in `skills/`, the CLIP demo, and two embedded Hugging Face Spaces.
-- The logo SVGs in `src/assets/`, the favicon and the social card in `public/`.
+- The mark SVG in `src/assets/`, the favicon and the social card in `public/`.
 - No testimonials, adoption figures or user counts exist; do not invent any.
 
 ## Product Principles
