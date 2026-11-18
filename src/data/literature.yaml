@@ -2,8 +2,7 @@
 # One entry per paper; id = citation key. Required fields: title, authors
 # (a list, one "Surname, I." per author; add `etAl: true` when the list is cut
 # short), year, doi (bare 10.x id) or arxiv (bare id) or both, blurb (one line,
-# why read this), type, added (YYYY-MM). Optional: status: proposal, for an
-# entry a curator suggests before the group has vetted it.
+# why read this), type, added (YYYY-MM).
 # Tags must exist in src/data/tags.ts; the test suite enforces this.
 # See CONTRIBUTING.md for how to add an entry.
 
@@ -61,7 +60,6 @@
   ml: [llm]
   type: [review]
   added: 2026-11
-  status: proposal
 - id: rolnickTacklingClimateChange2022
   title: "Tackling climate change with machine learning"
   authors: ["Rolnick, D."]
@@ -71,7 +69,6 @@
   blurb: "The field map of ML for climate work, from power grids to heavy industry; shows where IE questions sit in the wider AI-for-climate agenda."
   type: [review]
   added: 2026-11
-  status: proposal
 
 # ── LCA & footprinting ───────────────────────────────────────────────────────
 - id: ghoroghiAdvancesApplicationMachine2022
@@ -227,7 +224,6 @@
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
-  status: proposal
 - id: zhangSustainabilityAssessmentUsing2026
   title: "Sustainability assessment using multimodal artificial intelligence agents"
   authors: ["Zhang, Z."]
@@ -239,7 +235,6 @@
   ml: [cv, llm]
   type: [method]
   added: 2026-11
-  status: proposal
 - id: raoPCFBenchDiagnosticBenchmark2026
   title: "PCFBench: a diagnostic benchmark for product carbon footprint estimation"
   authors: ["Rao, K."]
@@ -251,7 +246,6 @@
   ml: [llm]
   type: [dataset]
   added: 2026-11
-  status: proposal
 - id: schweidtmannChemEasCodeOpenSourcePlatform2026
   title: "ChemE-as-Code: an open-source platform for agentic AI in chemical engineering"
   authors: ["Schweidtmann, A. M."]
@@ -262,7 +256,6 @@
   ml: [llm]
   type: [method]
   added: 2026-11
-  status: proposal
 
 - id: abubakarNaturallanguageInterfaceParameterlevel2026
   title: "A natural-language interface for parameter-level scenario analysis in parameterised life cycle assessment models"
@@ -844,7 +837,6 @@
   ml: [llm]
   type: [meta]
   added: 2026-11
-  status: proposal
 
 # ── ML landmarks (understand today's tools) ──────────────────────────────────
 - id: dengImageNetLargescaleHierarchical2009
