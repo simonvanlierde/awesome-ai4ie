@@ -600,12 +600,13 @@ starlight-menu-button button {
 }
 @media (min-width: 64rem) {
   .cover-grid {
-    grid-template-columns: minmax(0, 6fr) minmax(0, 7fr);
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
     gap: 3rem;
     align-items: start;
   }
 }
 .cover-copy {
+  container-type: inline-size;
   min-width: 0;
   overflow-wrap: anywhere;
   display: grid;
@@ -614,7 +615,8 @@ starlight-menu-button button {
   align-content: start;
 }
 .cover h1#_top {
-  font-size: clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem);
+  /* 14cqi keeps "Industrial Ecology" on one line in the narrower copy column. */
+  font-size: min(clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem), 14cqi);
   margin: 0;
 }
 .cover-tagline {
