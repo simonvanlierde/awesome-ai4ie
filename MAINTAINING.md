@@ -46,6 +46,9 @@ If a suggestion doesn't hold up, say why in the issue and close it.
   or updates the open one, when a link on the site or a DOI in `literature.yaml` breaks. It
   doesn't check README.md or this file. Publishers that block crawlers answer 403 or 429, and
   the check counts those as fine.
+- **Every October.** Move `Expires` in [`public/.well-known/security.txt`](public/.well-known/security.txt)
+  a year on (an expired file is invalid), and review the
+  [accessibility statement](src/content/docs/accessibility.md) and its date.
 - **Stale entries.** Tool entries carry the month they were checked. Recheck any older than a
   year: `rg -n 'checked 20' src/content/docs/tools/` lists them.
 - **Social card.** `public/og.png` is a picture of the logo, the title, the site description and Fig. 1, so it goes stale when

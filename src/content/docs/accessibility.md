@@ -16,7 +16,7 @@ You can:
 
 - read it in a light or a dark theme, which follows your device's setting;
 - use the pages on a phone, and at 320 px wide with text at 200% without scrolling sideways;
-- reach the literature filter with a keyboard.
+- close the literature filter's menus with Escape, and keep keyboard focus when you remove a filter.
 
 ## Known problems
 

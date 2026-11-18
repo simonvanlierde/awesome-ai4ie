@@ -20,7 +20,8 @@ To make the change yourself:
 2. **Everything else** is a Markdown page under `src/content/docs/`:
    `best-practices/`, `tools/`, `demos.mdx`, `applications-map/index.mdx`.
    Copy the format of the entries next to yours.
-3. Open a pull request. One entry per PR is fine.
+3. Open a pull request. One entry per PR is fine. Name it like a commit, such as
+   `feat(literature): add Smith 2025`: a check fails on a title such as "Update literature.yaml".
 
 To edit text, you need no local setup: edit the Markdown on GitHub, or click the **edit pencil** on any page of the live site. To preview locally, see the [development section](README.md#development).
 
@@ -90,7 +91,7 @@ Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUC
 
 ### Checking accessibility
 
-The git hooks (run with [prek](https://prek.j178.dev/); `pnpm exec prek install` sets them up) run lint on each commit, and the type check and the tests before each push. The build and the accessibility check run in CI. To run the accessibility check locally:
+`pnpm install` sets up the git hooks, which run with [prek](https://prek.j178.dev/). On each commit they check formatting, spelling, links, the workflows and the commit message; before each push they run the type check and the tests. A hook that fixes a file fails the commit: `git add` the file and commit again. The build and the accessibility check run in CI. To run the accessibility check locally:
 
 1. Run `pnpm exec playwright install chromium` (once).
 2. Run `pnpm run build`, then `pnpm exec astro preview` in one terminal.
