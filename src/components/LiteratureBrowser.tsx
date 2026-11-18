@@ -77,7 +77,8 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
     a.href = URL.createObjectURL(blob);
     a.download = `${name}.${format.ext}`;
     a.click();
-    URL.revokeObjectURL(a.href);
+    // Revoking in the same task can cancel the download in Firefox and Safari.
+    setTimeout(() => URL.revokeObjectURL(a.href), 0);
   }
 
   function closePanel(dim: TagDim) {
