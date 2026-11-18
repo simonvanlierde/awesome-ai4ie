@@ -179,6 +179,15 @@ export default defineConfig({
       // default, so shared links would otherwise preview as bare text.
       head: [
         {
+          tag: "link",
+          attrs: {
+            rel: "alternate",
+            type: "application/rss+xml",
+            title: "AI4IE: new literature",
+            href: `${basePath}/literature/feed.xml`,
+          },
+        },
+        {
           tag: "meta",
           attrs: { property: "og:image", content: ogImage },
         },
