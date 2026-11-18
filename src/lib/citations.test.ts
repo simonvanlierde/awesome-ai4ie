@@ -49,6 +49,10 @@ describe("arXiv formatting", () => {
     expect(bib).toContain("title = {{Attention \\& Co: A Title}}");
     expect(bib).toContain("author = {Ashish Vaswani and Noam Shazeer}");
   });
+  it("escapes a backslash before the other specials", () => {
+    const bib = arxivBibtex("1706.03762", "k", { ...rec, title: "a\\b_c" });
+    expect(bib).toContain("title = {{a\\textbackslash{}b\\_c}}");
+  });
   it("writes RIS", () => {
     expect(arxivRis("1706.03762", rec)).toBe(
       [
