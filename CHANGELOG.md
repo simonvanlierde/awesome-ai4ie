@@ -9,6 +9,7 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- An RSS feed of new literature entries at `/literature/feed.xml`, linked from the Literature page.
 - An accessibility statement at `/accessibility/`, linked from the footer.
 - A Content-Security-Policy `<meta>` tag on every page, and `/.well-known/security.txt`.
 - Weekly OpenSSF Scorecard and advisory audits, a cold-install check of the README's
@@ -18,6 +19,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - An architecture description in the README.
 - CITATION.cff, codemeta.json and .zenodo.json, kept in agreement by the citesync hook,
   so GitHub shows "Cite this repository".
+- A page-weight budget (`pnpm run page-weight`): CI fails when a built page's first-visit
+  transfer goes over its budget.
 
 ### Changed
 
