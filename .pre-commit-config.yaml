@@ -118,12 +118,12 @@ repos:
         # _typos.toml.
         exclude: ^LICENSES/|^\.copier-answers\.yml$|\.po$|(^|/)locales/
 
-  # Dead relative links in Markdown and HTML. Offline, so a commit never waits on the
-  # network: the weekly links.yml checks the web links. The site's pages write links
-# root-absolute (`/tools/`), which the build's link validator checks, so src/content is skipped. lychee's own hook installs its
   # binary with an unpinned install script, so this takes upstream's wheel from PyPI
   # at an exact version instead.
   - repo: local
+    # Dead relative links in Markdown and HTML. Offline, so a commit never waits on the
+    # network: the weekly links.yml checks the web links. The site's pages write links
+    # root-absolute (`/tools/`), which the build's link validator checks, so src/content is skipped. lychee's own hook installs its
     hooks:
       - id: lychee
         name: lychee --offline

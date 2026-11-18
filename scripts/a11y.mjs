@@ -68,10 +68,11 @@ for (const colorScheme of ["light", "dark"]) {
     }
   }
 }
-// Reflow at the narrowest width WCAG names (320px) with text at 200%.
+// Reflow at the narrowest width WCAG names (320px) with text at 200%. bypassCSP lets the
+// injected font-size style past the page's style-src.
 {
   const page = await (
-    await browser.newContext({ viewport: { width: 320, height: 700 } })
+    await browser.newContext({ viewport: { width: 320, height: 700 }, bypassCSP: true })
   ).newPage();
   for (const path of pages) {
     await page.goto(new URL(path, root).href);
