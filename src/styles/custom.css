@@ -1036,6 +1036,12 @@ starlight-menu-button button {
   font-variant-numeric: tabular-nums;
   color: var(--sl-color-gray-3);
 }
+/* inline-block: the badges sit right after the year with no space, so as plain inlines
+   "2026newproposal" could not wrap and overflowed a 320px screen at 200% text. */
+.lit-new,
+.lit-proposal {
+  display: inline-block;
+}
 .lit-new {
   margin-left: 0.5rem;
   padding: 0 0.35rem;
