@@ -36,7 +36,7 @@ const CARD_CSS = `
   #og .line { top: 186px; margin: 0; font: 500 40px/1.22 var(--font-read, serif); text-wrap: balance; }
   #og .flow { position: absolute; left: 0; top: 356px; width: 1200px; height: 232px; margin: 0; }
   #og .flow-bands { animation: none; }
-  #og .flow svg { width: 1200px; height: 232px; overflow: visible; }
+  #og .flow svg { display: block; width: 1200px; height: 232px; overflow: visible; }
   #og .flow text { font-size: 26px; }
 `;
 
@@ -60,13 +60,16 @@ await page.evaluate(
     card.append(h1, flow);
     document.body.replaceChildren(card);
     document
-      .querySelectorAll("#og .flow figcaption, #og .flow-readout, #og .flow-hit")
+      .querySelectorAll(
+        "#og .flow figcaption, #og .flow-readout, #og .flow-hit, #og .flow-plate--wide",
+      )
       .forEach((el) => {
         el.remove();
       });
 
     // Stretch the figure from its box to the card: bands run long, labels keep their size.
-    // X0 and X1 are where the bands start and end: X0 + NODE and X1 in FlowFigure.astro.
+    // The card stretches the compact plate. X0 and X1 are where its bands start and end:
+    // X0 + NODE and the compact X1 in FlowFigure.astro.
     const svg = flow.querySelector("svg");
     svg.setAttribute("viewBox", "0 0 1200 232");
     svg.removeAttribute("width");

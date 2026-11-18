@@ -598,15 +598,31 @@ starlight-menu-button button {
   gap: 2rem;
   margin-top: 0;
 }
+/* From 64rem the copy runs in two columns over a full-width Fig. 1. */
 @media (min-width: 64rem) {
   .cover-grid {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-    gap: 3rem;
+    gap: 2.5rem;
+  }
+  .cover-copy {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: "mark mark" "title tagline" "title actions";
+    column-gap: 3rem;
     align-items: start;
+  }
+  .cover-mark {
+    grid-area: mark;
+  }
+  .cover h1#_top {
+    grid-area: title;
+  }
+  .cover-tagline {
+    grid-area: tagline;
+  }
+  .cover-actions {
+    grid-area: actions;
   }
 }
 .cover-copy {
-  container-type: inline-size;
   min-width: 0;
   overflow-wrap: anywhere;
   display: grid;
@@ -615,8 +631,7 @@ starlight-menu-button button {
   align-content: start;
 }
 .cover h1#_top {
-  /* 14cqi keeps "Industrial Ecology" on one line in the narrower copy column. */
-  font-size: min(clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem), 14cqi);
+  font-size: clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem);
   margin: 0;
 }
 .cover-tagline {
@@ -837,9 +852,18 @@ starlight-menu-button button {
     font-size: 26px; /* about 13.5px once the plate shrinks to phone width; FlowFigure's label columns fit it */
   }
 }
+.flow svg.flow-plate--wide {
+  display: none;
+}
 @media (min-width: 64rem) {
+  .flow svg.flow-plate--wide {
+    display: block;
+  }
+  .flow svg.flow-plate--compact {
+    display: none;
+  }
   .flow text {
-    font-size: 19px; /* the plate is narrowest here: about 12px at 1024px */
+    font-size: 19px; /* the wide plate: about 16px at 1024px, 18px at 1280px */
   }
 }
 

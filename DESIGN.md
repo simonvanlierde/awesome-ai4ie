@@ -83,7 +83,8 @@ the page: the favicon and the README.
   phones), over a 2px ink rule.
 - **Sidebar.** Each chapter carries a square number block in its ink; the current page gets a
   light tint of that ink.
-- **Fig. 1.** Built from `literature.yaml` at build time. Node numbers count papers; band width
+- **Fig. 1.** Built from `literature.yaml` at build time. From 64rem it spans the cover below the
+  title, wide and short with long bands; narrower screens get a compact plate. Node numbers count papers; band width
   counts field-technique pairings, as the caption says. Each node opens the literature list
   holding exactly the papers it counts. Labels are the first words of each tag's full name.
   Pointing at a band lifts it and fades the rest. Pointing at, focusing or tapping a node

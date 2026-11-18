@@ -126,7 +126,7 @@ for (const [name, viewport] of Object.entries(VIEWPORTS)) {
   await page.goto(root);
   const readout = page.locator(".flow-readout");
   const idle = await readout.textContent();
-  const node = page.locator(".flow-node").first();
+  const node = page.locator(".flow svg:visible .flow-node").first();
   await node.focus();
   const lit = await page.locator(".flow .band.lit").count();
   if (lit === 0 || (await readout.textContent()) === idle)
