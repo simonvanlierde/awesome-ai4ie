@@ -801,6 +801,31 @@ starlight-menu-button button {
   width: 100%;
   height: auto;
 }
+/* Then the title spells the mark out: the rest of each word fades in around the
+   initials, and "for" arrives in the 4's cobalt. */
+@media (prefers-reduced-motion: no-preference) {
+  .cover-expand .x {
+    animation: spell-out 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.75s backwards;
+  }
+  .cover-expand .x-for {
+    animation: spell-out-for 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.55s backwards;
+  }
+}
+@keyframes spell-out {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes spell-out-for {
+  from {
+    opacity: 0;
+    color: var(--ink-1);
+  }
+  45% {
+    opacity: 1;
+    color: var(--ink-1);
+  }
+}
 /* Fig. 404: the mark as a plate, framed by the dashed gap outline. */
 .plate {
   margin: 0;

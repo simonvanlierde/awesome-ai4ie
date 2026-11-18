@@ -70,7 +70,9 @@ the page: the favicon and the README.
 - **Header, home cover, colophon, and 404.** The top bar shows the unfolded `AI4IE` drafting
   wordmark, which collapses to the Æ-4 mark on hover/focus and on narrow screens. The home
   cover shows the mark large above the title: Æ-4 unfolds into `AI4IE` once on load, while the
-  Fig. 1 flows run in, and again on hover or tap. The 404 plate shows the Æ-4 mark in a dashed
+  Fig. 1 flows run in, and again on hover or tap. Then the title spells it out: the letters
+  A, I, I and E stay, the rest fades in around them, and "for" arrives in the 4's cobalt.
+  The full title is in the HTML throughout; only its opacity animates. The 404 plate shows the Æ-4 mark in a dashed
   frame and expands it into `AI4IE` on hover/focus. Every inner page
   and the home page also carry the mark in the colophon before the licences.
 - **Never decoration.** No patterns, bullets, loaders or watermarks.
@@ -90,7 +92,8 @@ the page: the favicon and the README.
   Pointing at a band lifts it and fades the rest. Pointing at, focusing or tapping a node
   lights its bands and names its reach in a live readout line under the plate; on touch the
   first tap lights a node and the second opens its list. On load the bands run in once from
-  the fields while the cover mark unfolds: together the site's one entrance. Reduced motion
+  the fields while the cover mark unfolds and the title spells it out: together the site's
+  one entrance, about 1.2 seconds. Reduced motion
   skips both.
 - **Fig. 2.** The see, read, try path for one map cell, each step topped by the ink of the
   chapter it links to.

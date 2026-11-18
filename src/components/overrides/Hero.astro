@@ -15,8 +15,24 @@ import FlowFigure from "../FlowFigure.astro";
 
 const { id, data } = Astro.locals.starlightRoute.entry;
 const isHome = id === "" || id === "index";
+// The home title spells out AI4IE: the letters of the mark stay, and the rest of the
+// title fades in around them after the mark unfolds. Every letter is in the HTML from
+// the start, so readers, search and the layout see the full title; custom.css fades.
+const ACRONYM: Record<string, string> = {
+  Awesome: '<span class="x">Awesome</span>',
+  AI: "AI",
+  for: '<span class="x x-for">for</span>',
+};
+const spellOut = (t: string) => {
+  const words = t.split(" ");
+  const done = words.map(
+    (w) => ACRONYM[w] ?? (/^[IE]/.test(w) ? `${w[0]}<span class="x">${w.slice(1)}</span>` : null),
+  );
+  return done.every((w) => w !== null) ? done.join(" ") : null;
+};
 const is404 = id === "404";
 let { title = data.title, tagline, actions = [] } = data.hero ?? {};
+const expanded = isHome ? spellOut(title) : null;
 if (is404) {
   // Starlight's 404 is titled "404" with a generic tagline; the plate's
   // caption already says 404, so the title says what happened instead.
@@ -29,7 +45,13 @@ if (is404) {
   <div class="cover-grid">
     <div class="cover-copy">
       {isHome && <div class="cover-mark"><BrandMark mode="glyph" large /></div>}
-      <h1 id="_top" data-page-title set:html={title} />
+      {
+        expanded ? (
+          <h1 id="_top" data-page-title class="cover-expand" set:html={expanded} />
+        ) : (
+          <h1 id="_top" data-page-title set:html={title} />
+        )
+      }
       {tagline && <p class="cover-tagline" set:html={tagline} />}
       <div class="cover-actions">
         {
