@@ -355,6 +355,84 @@
   type: [method]
   added: 2026-11
 
+- id: houEstimateEcotoxicityCharacterization2020
+  title: "Estimate ecotoxicity characterization factors for chemicals in life cycle assessment using machine learning models"
+  authors: ["Hou, P."]
+  etAl: true
+  year: 2020
+  doi: "10.1016/j.envint.2019.105393"
+  blurb: "Random forest on physical-chemical properties estimates missing USEtox ecotoxicity HC50 (test R2 0.63, beating ECOSAR) and fills characterization factors for 552 chemicals."
+  ie: [lca]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: sunImprovedMachineLearningModels2022
+  title: "Improved machine learning models by data processing for predicting life-cycle environmental impacts of chemicals"
+  authors: ["Sun, Y."]
+  etAl: true
+  year: 2022
+  doi: "10.1021/acs.est.2c04945"
+  blurb: "ANNs predict six life-cycle impacts of 187 Ecoinvent organic chemicals; feature and source-data selection give R2 0.73-0.86, but the small sample risks overfitting."
+  ie: [lca]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: aboagyeLeveragingMachineLearning2025
+  title: "Leveraging machine learning algorithms to predict life cycle inventory assessments (LCIA) to facilitate sustainable process design"
+  authors: ["Aboagye, E."]
+  etAl: true
+  year: 2025
+  doi: "10.1016/j.compchemeng.2025.109217"
+  blurb: "ANN and XGBoost predict cradle-to-gate impacts of 350 chemicals from 10 properties; ANN test R2 is 0.957 for human health but only 0.599 for global warming."
+  ie: [lca]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: liUsingMachineLearning2026
+  title: "Using machine learning models to estimate ecotoxicity effect factors for various nanomaterials in life cycle assessment"
+  authors: ["Li, X."]
+  etAl: true
+  year: 2026
+  doi: "10.1016/j.jhazmat.2026.143071"
+  blurb: "Eight ML models predict freshwater ecotoxicity of nanomaterials from 837 samples; AdaBoost is best (test R2 0.681) and Monte Carlo gives graphene effect factors."
+  ie: [lca]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: liMachineLearningModeling2023
+  title: "Machine learning modeling of water footprint in crop production distinguishing water supply and irrigation method scenarios"
+  authors: ["Li, Z."]
+  etAl: true
+  year: 2023
+  doi: "10.1016/j.jhydrol.2023.130171"
+  blurb: "Random forest and LightGBM emulate AquaCrop water footprints of four Chinese grain crops (site R2 0.70-0.82); the models learn simulator output, not measurements."
+  ie: [lca]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: huangNovelMachineLearning2025
+  title: "A novel machine learning framework for advanced driving force analysis of individuals' dietary water footprint"
+  authors: ["Huang, K."]
+  etAl: true
+  year: 2025
+  doi: "10.1029/2024ef005061"
+  blurb: "Gradient-boosted trees and SHAP on 18,067 Chinese diet records rank what drives individual dietary water footprint; AUC-PR is 0.73 against 0.71 for logistic regression."
+  ie: [lca]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: nikkhahMachineLearningbasedLife2024
+  title: "Machine learning-based life cycle assessment for environmental sustainability optimization of a food supply chain"
+  authors: ["Nikkhah, A."]
+  etAl: true
+  year: 2024
+  doi: "10.1002/ieam.4954"
+  blurb: "An ANN, Delphi-set input bounds and a genetic algorithm on LCA data for rain-fed pomegranate in Iran cut modelled global warming by 46%; the result is not validated."
+  ie: [lca]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+
 # ── MFA, stocks & flows ──────────────────────────────────────────────────────
 - id: haberlHighResolutionMaps2021
   title: "High-resolution maps of material stocks in buildings and infrastructures in Austria and Germany"
@@ -630,6 +708,17 @@
   ml: [segmentation, foundation]
   type: [method]
   added: 2026-11
+- id: gaoSpatiotemporalMachineLearning2026
+  title: "Spatiotemporal machine learning for building demolition risk modelling"
+  authors: ["Gao, H.", "Fivet, C."]
+  year: 2026
+  doi: "10.1016/j.compenvurbsys.2026.102481"
+  blurb: "Gradient-boosted trees rank Swiss buildings by demolition risk 1 to 4 years ahead; the top 0.1% of the 4-year ranking is 85% precise, but data are on request only."
+  ie: [urban-mining]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+
 # ── Industrial symbiosis ─────────────────────────────────────────────────────
 - id: zhaoConstructionWastetoresourceKnowledge2025
   title: "Construction of waste-to-resource knowledge graph for industrial symbiosis identification using large language models"
@@ -674,6 +763,18 @@
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
+- id: zhaoNovelMachineLearningbased2025
+  title: "A novel machine learning-based method for identifying industrial symbiosis opportunities"
+  authors: ["Zhao, L."]
+  etAl: true
+  year: 2025
+  doi: "10.1016/j.jclepro.2025.145607"
+  blurb: "Predicts from text whether a waste is an input or output of an activity, trained on ecoinvent; F1 is above 0.82 on test data but 0.63-0.73 on external symbiosis cases."
+  ie: [symbiosis]
+  ml: [nlp-extraction, foundation]
+  type: [method]
+  added: 2026-11
+
 # ── Uncertainty & Bayesian methods ───────────────────────────────────────────
 - id: dongExpertElicitationData2023
   title: "Expert elicitation and data noise learning for material flow analysis using Bayesian inference"
@@ -716,6 +817,18 @@
   doi: "10.1016/j.spc.2024.11.005"
   blurb: "ANN on construction EPDs predicts life cycle GWP (R2 0.97 with a residual-GPR uncertainty layer); uncertainty is high below 3 kg CO2e, and EPD reporting gaps limit use."
   ie: [lca, uncertainty]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+
+- id: masonBayesianMaterialFlow2025
+  title: "Bayesian material flow analysis of the construction aggregate cycle in England"
+  authors: ["Mason, A. R."]
+  etAl: true
+  year: 2025
+  doi: "10.1016/j.resconrec.2025.108135"
+  blurb: "Applies Bayesian MFA to England's 2019 construction aggregates: reported data cover 20% of the system, expert priors fill the rest, giving 146 stocks and flows with credible intervals."
+  ie: [mfa, uncertainty]
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
