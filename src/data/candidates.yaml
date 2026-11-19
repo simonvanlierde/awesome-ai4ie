@@ -1,0 +1,988 @@
+# Leads from OpenAlex (scripts/openalex-candidates.mjs), for a curator.
+# status: new, then rejected (add a one-line why) or listed (it is in literature.yaml).
+# The script never re-adds a DOI that is here, so keep rejected leads.
+- doi: 10.31223/x5jf17
+  title: "ARIA: Artificial Intelligence for Sustainability Assessment"
+  year: 2025
+  found: 2026-11-19
+  status: rejected
+  why: software-summary preprint of the same tool; superseded by the peer-reviewed
+    Procedia CIRP paper (same authors, same workflow, plus evaluation)
+- doi: 10.1007/s10614-024-10641-1
+  title: Estimating Input Coefficients for Regional Input–Output Tables Using Deep
+    Learning with Mixup
+  year: 2024
+  found: 2026-11-19
+  status: rejected
+  why: regional input-output estimation with no environmental or IE angle
+- doi: 10.1038/s41598-026-45382-8
+  title: "Keeping up with the regions: a hybrid machine learning framework for
+    estimating regional input-output tables"
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: regional input-output estimation with no environmental or IE angle;
+    validated on national and world tables, not regional ones
+- doi: 10.1016/j.joule.2021.06.005
+  title: The challenge and opportunity of battery lifetime prediction from field data
+  year: 2021
+  found: 2026-11-19
+  status: rejected
+  why: battery prognostics perspective; second life is one section and circularity
+    only motivation, no stock, flow or reuse analysis
+- doi: 10.1016/j.isci.2023.106547
+  title: Evaluating the feasibility of batteries for second-life applications
+    using machine learning
+  year: 2023
+  found: 2026-11-19
+  status: rejected
+  why: lab-aged cells, no stock or circularity link
+- doi: 10.1038/s44435-025-00003-0
+  title: "A review of smart integrated energy systems towards industrial carbon
+    neutrality: Opportunity and challenge"
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: energy-systems operation and control review; no footprint, MFA or
+    circularity framing
+- doi: 10.1186/s13717-025-00594-0
+  title: High-resolution global modeling of wheat’s water footprint using a
+    machine learning ensemble approach
+  year: 2025
+  found: 2026-11-19
+  status: rejected
+  why: weak evaluation (random split, headline figures from one cluster, blue WF
+    R2 0.40) and no code; surrogate of a process crop model
+- doi: 10.1016/j.jclepro.2024.140715
+  title: "Applications of machine learning to water resources management: A review
+    of present status and future opportunities"
+  year: 2024
+  found: 2026-11-19
+  status: rejected
+  why: water-resources-management review (groundwater, streamflow, floods,
+    hydropower); no IE framing
+- doi: 10.3390/w15040620
+  title: "Application of Machine Learning in Water Resources Management: A
+    Systematic Literature Review"
+  year: 2023
+  found: 2026-11-19
+  status: rejected
+  why: water-resources-management review (prediction, clustering, RL); no IE framing
+- doi: 10.1080/00207543.2025.2575841
+  title: Enhancing supply chain visibility with knowledge graphs and large
+    language models
+  year: 2025
+  found: 2026-11-19
+  status: rejected
+  why: supply-chain visibility and risk framing; no IE accounting (sustainability
+    named only as future work); extracted text is the preprint
+- doi: 10.1080/00207543.2025.2532142
+  title: Αn AI-driven approach to assess sentiments and interpret context in a
+    critical mineral supply chain
+  year: 2025
+  found: 2026-11-19
+  status: rejected
+  why: LLM sentiment analysis of cobalt news for supply-chain decision-making;
+    operations-management framing, no IE accounting
+- doi: 10.1038/s41598-024-52138-9
+  title: Mapping the diversity of land uses following deforestation across Africa
+  year: 2024
+  found: 2026-11-19
+  status: rejected
+  why: land-use mapping from satellite imagery; no LCA, footprint or flow
+    accounting in the paper
+- doi: 10.1016/j.rcradv.2025.200263
+  title: Machine learning applications for carbon emission estimation
+  year: 2025
+  found: 2026-11-19
+  status: rejected
+  why: "adjacent: review of ML for CO2 emission forecasting, mostly transport and
+    country-level, not footprinting/LCA/MFA; no IE tag fits"
+- doi: 10.1016/j.ccst.2025.100471
+  title: Perspective on artificial intelligence for carbon capture utilization and
+    storage (CCUS) in Petrochemical Industry
+  year: 2025
+  found: 2026-11-19
+  status: rejected
+  why: "adjacent: perspective on AI for CCUS process and catalyst design; LCA
+    appears in one subsection (2.4) only"
+- doi: 10.1016/j.rser.2020.110208
+  title: "Recent advances on industrial data-driven energy savings: Digital twins
+    and infrastructures"
+  year: 2021
+  found: 2026-11-19
+  status: rejected
+  why: "adjacent: Industry 4.0 digital twins and data infrastructure for plant
+    energy savings; no IE framing (LCA appears only as a blockchain table row)"
+- doi: 10.1016/j.procir.2024.01.057
+  title: "Collaboration Platform for Enabling Industrial Symbiosis: Integrated
+    Knowledge Graph Database"
+  year: 2024
+  found: 2026-11-19
+  status: rejected
+  why: Same group, cities (Braunschweig, Singapore) and exchange databases as
+    grimmelUrbanIndustrialSymbiosis2025, already listed; ML is only an NLP step
+    to fill class
+- doi: 10.1016/j.scitotenv.2024.174262
+  title: Improving rapeseed carbon footprint evaluation via the integration of
+    remote sensing technology into an LCA approach
+  year: 2024
+  found: 2026-11-19
+  status: rejected
+  why: "No ML: rapeseed mapped from Sentinel-1/2 with region-specific thresholds,
+    then fed to an LCA; remote sensing plus LCA, not AI/ML. No overlap with
+    round-1 entrie"
+- doi: 10.1016/j.jclepro.2023.140010
+  title: Industrial carbon emission forecasting considering external factors based
+    on linear and machine learning models
+  year: 2024
+  found: 2026-11-19
+  status: rejected
+  why: generic city-level CO2 time-series forecast (ARIMA+SVR, 29 annual points);
+    no IE framing (no LCA/MFA/footprint method); no data statement; no overlap
+    with liste
+- doi: 10.1080/09535314.2021.1952404
+  title: A scenario-based method for projecting multi-regional input–output tables
+  year: 2021
+  found: 2026-11-19
+  status: rejected
+  why: "no ML: SPIN is a Leontief plus RAS/GRAS balancing method; ML terms absent
+    from the full text; Zhao et al. (2022) cite it only as a baseline family"
+- doi: 10.1080/17421772.2021.1959046
+  title: Application of machine-learning models to estimate regional input
+    coefficients and multipliers
+  year: 2021
+  found: 2026-11-19
+  status: rejected
+  why: regional input coefficients with no environmental angle
+- doi: 10.1111/wej.12945
+  title: "Advancements in machine learning modelling for energy and emissions
+    optimization in wastewater treatment plants: A systematic review"
+  year: 2024
+  found: 2026-11-19
+  status: rejected
+  why: plant-level process control and energy optimisation review of WWTPs; no IE
+    framing (no LCA, footprint or MFA scope); not a listed overlap
+- doi: 10.15480/882.3589
+  title: "Using natural language processing for supply chain mapping: a systematic
+    review of current approaches"
+  year: 2021
+  found: 2026-11-19
+  status: rejected
+  why: generic supply chain management review of company-relation extraction,
+    pre-LLM, no materials or IE framing; CEUR workshop paper with 12 included
+    studies
+- doi: 10.1016/j.ress.2025.111462
+  title: "Lifetime Early Prediction for Second-Life Lithium-Ion Battery: A
+    Hierarchical Bayesian Learning Method"
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: cell-level battery degradation and cycle-life prediction in a
+    reliability-engineering venue; no stock, circularity or IE framing; data on
+    request; adjacent only
+- doi: 10.12688/openreseurope.13893.2
+  title: "Industrial symbiosis platforms for synergy identification and their most
+    important data points: a systematic review"
+  year: 2021
+  found: 2026-11-19
+  status: rejected
+  why: "not ML: a PRISMA review of IS platform features and data points;
+    recommenders get one passing sentence"
+- doi: 10.1111/jiec.70034
+  title: Bayesian model selection for network discrimination and risk-informed
+    decision-making in material flow analysis
+  year: 2025
+  found: 2026-11-19
+  status: rejected
+  why: overlaps the other Bayesian MFA entries
+- doi: 10.1002/ep.14644
+  title: "Uncertainty in inventories for life cycle assessment: State-of-the-art,
+    challenges, and new technologies"
+  year: 2025
+  found: 2026-11-19
+  status: rejected
+  why: little ML
+- doi: 10.3390/en17122997
+  title: "Artificial Intelligence and Digital Tools for Assisting Low-Carbon
+    Architectural Design: Merging the Use of Machine Learning, Large Language
+    Models, and Building Information Modeling for Life Cycle Assessment Tool
+    Development"
+  year: 2024
+  venue: Energies
+  oa: https://www.mdpi.com/1996-1073/17/12/2997/pdf?version=1718705198
+  hints:
+    ie:
+      - lca
+    topic:
+      - buildings
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+- doi: 10.48550/arxiv.2602.22500
+  title: Mapping the Landscape of Artificial Intelligence in Life Cycle Assessment
+    Using Large Language Models
+  year: 2026
+  venue: arXiv (Cornell University)
+  oa: https://arxiv.org/pdf/2602.22500
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+- doi: 10.70593/deepsci.0202012
+  title: Artificial intelligence, machine learning, deep learning, and big data
+    for circular economy, resilience, and sustainable development
+  year: 2026
+  venue: International Journal of Applied Resilience and Sustainability
+  oa: https://deepscipub.com/ijars/article/download/40/65
+  hints:
+    ie:
+      - eol
+  found: 2026-11-19
+  status: new
+- doi: 10.31235/osf.io/6qmhf
+  title: Challenges and Opportunities of Artificial Intelligence and Machine
+    Learning in Circular Economy
+  year: 2024
+  venue: SocArXiv (OSF Preprints)
+  oa: https://osf.io/6qmhf/download
+  hints:
+    ie:
+      - eol
+    topic:
+      - electronics
+  found: 2026-11-19
+  status: new
+- doi: 10.1080/00038628.2024.2350491
+  title: Artificial intelligence in building life cycle assessment
+  year: 2024
+  venue: Architectural Science Review
+  oa: https://upcommons.upc.edu/bitstreams/478bc4ca-3fa2-49c2-b7fe-d4e857bf2493/download
+  hints:
+    ie:
+      - lca
+    topic:
+      - buildings
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+- doi: 10.18280/ijei.070213
+  title: Machine Learning and Deep Learning Analysis of Vehicle Carbon Footprint
+  year: 2024
+  venue: International Journal of Environmental Impacts
+  oa: https://iieta.org/download/file/fid/137987
+  hints:
+    ie:
+      - lca
+    topic:
+      - food
+    ml:
+      - cv
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.xinn.2025.100866
+  title: Tracking the carbon footprint of global generative artificial intelligence
+  year: 2025
+  venue: The Innovation
+  oa: https://doi.org/10.1016/j.xinn.2025.100866
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+      - cv
+  found: 2026-11-19
+  status: rejected
+  why: the footprint of AI itself, not AI for IE
+- doi: 10.1002/bse.4291
+  title: "Utilising Artificial Intelligence to Enhance Firm Circular Economy
+    Maturity: A Thematic Review via Machine Learning"
+  year: 2025
+  venue: Business Strategy and the Environment
+  oa: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/bse.4291
+  hints:
+    ie:
+      - eol
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.jclepro.2025.146776
+  title: Intelligent application of large language model to life cycle assessment
+    methodology
+  year: 2025
+  venue: Journal of Cleaner Production
+  oa: null
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.buildenv.2026.114904
+  title: Construction supply-chain carbon footprint with graph neural
+    network-based input-output framework
+  year: 2026
+  venue: Building and Environment
+  oa: null
+  hints:
+    ie:
+      - lca
+    topic:
+      - buildings
+      - io
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.jfo.2024.104242
+  title: Role of artificial intelligence, machine learning and deep learning
+    models in corneal disorders – A narrative review
+  year: 2024
+  venue: Journal Français d Ophtalmologie
+  oa: null
+  hints: {}
+  found: 2026-11-19
+  status: rejected
+  why: medical imaging, no IE angle
+- doi: 10.1002/csr.2827
+  title: A conceptual model of artificial intelligence effects on circular economy
+    actions
+  year: 2024
+  venue: Corporate Social Responsibility and Environmental Management
+  oa: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/csr.2827
+  hints:
+    ie:
+      - eol
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.autcon.2024.105412
+  title: Predictive models in machine learning for strength and life cycle
+    assessment of concrete structures
+  year: 2024
+  venue: Automation in Construction
+  oa: null
+  hints:
+    ie:
+      - lca
+  found: 2026-11-19
+  status: new
+- doi: 10.1007/s44163-024-00149-w
+  title: "Green AI: exploring carbon footprints, mitigation strategies, and trade
+    offs in large language model training"
+  year: 2024
+  venue: Discover Artificial Intelligence
+  oa: https://doi.org/10.1007/s44163-024-00149-w
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+      - nlp-extraction
+  found: 2026-11-19
+  status: rejected
+  why: the footprint of AI itself, not AI for IE
+- doi: 10.1007/s10489-026-07208-y
+  title: "Towards sustainable artificial intelligence: a comprehensive review and
+    comparative analysis of deep learning models’ carbon footprint"
+  year: 2026
+  venue: Applied Intelligence
+  oa: https://arxiv.org/pdf/2608.09998
+  hints:
+    ie:
+      - lca
+  found: 2026-11-19
+  status: rejected
+  why: the footprint of AI itself, not AI for IE
+- doi: 10.1016/j.energy.2025.135064
+  title: "Integrating circular economy and life cycle assessment strategies in
+    climate-resilient buildings: An artificial intelligence approach to enhance
+    thermal comfort and minimize CO2 emissions in Iran"
+  year: 2025
+  venue: Energy
+  oa: null
+  hints:
+    ie:
+      - lca
+      - eol
+    topic:
+      - buildings
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.spc.2025.03.015
+  title: "Machine learning algorithms for supporting life cycle assessment
+    studies: An analytical review"
+  year: 2025
+  venue: Sustainable Production and Consumption
+  oa: https://doi.org/10.1016/j.spc.2025.03.015
+  hints:
+    ie:
+      - lca
+    ml:
+      - tabular-ml
+      - uncertainty
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.procir.2025.01.079
+  title: "Life Cycle Assessment of Artificial Intelligence Applications: Research
+    Gaps and Opportunities"
+  year: 2025
+  venue: Procedia CIRP
+  oa: https://doi.org/10.1016/j.procir.2025.01.079
+  hints:
+    ie:
+      - lca
+    topic:
+      - buildings
+      - chemicals
+      - water
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.eiar.2026.108816
+  title: "Artificial intelligence in life cycle assessment: methods, applications
+    and challenges"
+  year: 2026
+  venue: Environmental Impact Assessment Review
+  oa: https://doi.org/10.1016/j.eiar.2026.108816
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+      - uncertainty
+  found: 2026-11-19
+  status: new
+- doi: 10.1038/s41928-026-01652-x
+  title: Artificial intelligence agents automate life-cycle assessment
+  year: 2026
+  venue: Nature Electronics
+  oa: null
+  hints:
+    ie:
+      - lca
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.cesys.2024.100221
+  title: Frameworks for the application of machine learning in life cycle
+    assessment for process modeling
+  year: 2024
+  venue: Cleaner Environmental Systems
+  oa: https://doi.org/10.1016/j.cesys.2024.100221
+  hints:
+    ie:
+      - lca
+  found: 2026-11-19
+  status: new
+- doi: 10.65102/is2026792
+  title: Graph neural network modeling digital economy industrial ecology and
+    artificial intelligence collaborative development mechanism
+  year: 2026
+  venue: Ingegneria Sismica
+  oa: https://ingegneriasismica.com/articles/2026/IS-BJ096.pdf
+  hints:
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.jclepro.2025.145109
+  title: Machine learning-assisted life cycle assessment of biochar soil application
+  year: 2025
+  venue: Journal of Cleaner Production
+  oa: https://doi.org/10.1016/j.jclepro.2025.145109
+  hints:
+    ie:
+      - lca
+      - eol
+    topic:
+      - food
+    ml:
+      - tabular-ml
+      - uncertainty
+  found: 2026-11-19
+  status: new
+- doi: 10.33152/jmphss-10.4.10
+  title: "Artificial Intelligence and Circular Economy: A Systematic Literature
+    Review"
+  year: 2026
+  venue: Journal of Management Practices Humanities and Social Sciences
+  oa: https://global-jws.com/ojs/index.php/global-jws/article/download/783/637
+  hints:
+    ie:
+      - lca
+      - eol
+    topic:
+      - food
+      - lifetime
+    ml:
+      - cv
+  found: 2026-11-19
+  status: new
+- doi: 10.1007/s40831-025-01305-x
+  title: "Integrating Artificial Intelligence into Life Cycle Assessment: A
+    Framework for Balancing Automation and Human Expertise"
+  year: 2025
+  venue: Journal of Sustainable Metallurgy
+  oa: https://link.springer.com/content/pdf/10.1007/s40831-025-01305-x.pdf
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+- doi: 10.3390/su17031321
+  title: "PCF-RWKV: Large Language Model for Product Carbon Footprint Estimation"
+  year: 2025
+  venue: Sustainability
+  oa: https://www.mdpi.com/2071-1050/17/3/1321/pdf?version=1738841238
+  hints:
+    ie:
+      - lca
+    topic:
+      - buildings
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+- doi: 10.1021/acssuschemeng.3c07038
+  title: Enhanced Deep-Learning Model for Carbon Footprints of Chemicals
+  year: 2024
+  venue: ACS Sustainable Chemistry & Engineering
+  oa: https://pubs.acs.org/doi/pdf/10.1021/acssuschemeng.3c07038
+  hints:
+    ie:
+      - lca
+    topic:
+      - chemicals
+      - metals
+      - food
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.sftr.2025.100784
+  title: "Application of artificial intelligence in circular economy: A critical
+    analysis of the current research"
+  year: 2025
+  venue: Sustainable Futures
+  oa: https://doi.org/10.1016/j.sftr.2025.100784
+  hints:
+    ie:
+      - eol
+    topic:
+      - lifetime
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.coche.2025.101200
+  title: "Artificial intelligence and machine learning for process and policy
+    design in the transition towards circular economy systems: advancements and
+    opportunities"
+  year: 2025
+  venue: Current Opinion in Chemical Engineering
+  oa: https://doi.org/10.1016/j.coche.2025.101200
+  hints:
+    ie:
+      - eol
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.procir.2025.01.095
+  title: Waste-to-Resource Database Construction for Industrial Symbiosis Using
+    Large Language Models
+  year: 2025
+  venue: Procedia CIRP
+  oa: https://doi.org/10.1016/j.procir.2025.01.095
+  hints:
+    ie:
+      - eol
+      - symbiosis
+    topic:
+      - buildings
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+- doi: 10.2139/ssrn.7023558
+  title: The Energy and Carbon Footprint of Large Language Models in Healthcare
+    Documentation
+  year: 2026
+  venue: SSRN Electronic Journal
+  oa: https://doi.org/10.2139/ssrn.7023558
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+  found: 2026-11-19
+  status: rejected
+  why: the footprint of AI itself, not AI for IE
+- doi: 10.1108/ijlm-03-2023-0102
+  title: "Artificial intelligence-based reverse logistics for improving circular
+    economy performance: a developing country perspective"
+  year: 2024
+  venue: The International Journal of Logistics Management
+  oa: null
+  hints:
+    ie:
+      - lca
+      - eol
+    topic:
+      - lifetime
+    ml:
+      - uncertainty
+  found: 2026-11-19
+  status: new
+- doi: 10.3808/jei.202600562
+  title: Carbon Footprint Accounting Driven by Large Language Models and
+    Retrieval-Augmented Generation
+  year: 2026
+  venue: Journal of Environmental Informatics
+  oa: https://arxiv.org/pdf/2408.09713
+  hints:
+    ie:
+      - lca
+    topic:
+      - buildings
+      - metals
+      - energy
+    ml:
+      - llm
+      - uncertainty
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.seta.2025.104436
+  title: "Life Cycle Assessment and Circular Economy in Emerging Green and
+    Sustainable Energy Sectors: A Critical Review"
+  year: 2025
+  venue: Sustainable Energy Technologies and Assessments
+  oa: null
+  hints:
+    ie:
+      - lca
+      - eol
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.jclepro.2025.145613
+  title: "Automated machine learning-assisted enhanced product carbon footprint
+    tracking and analysis in refinery industry: A graph-based life cycle
+    assessment framework"
+  year: 2025
+  venue: Journal of Cleaner Production
+  oa: null
+  hints:
+    ie:
+      - lca
+  found: 2026-11-19
+  status: new
+- doi: 10.63456/tsrj-1-1-22
+  title: "Artificial Intelligence for Sustainable Textiles: A Review of Circular
+    Economy Applications"
+  year: 2025
+  venue: Textile Science & Research Journal
+  oa: https://textile-journal.com/index.php/textile/article/download/22/16
+  hints:
+    ie:
+      - eol
+    topic:
+      - chemicals
+    ml:
+      - cv
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+- doi: 10.17268/sciendo.2024.091
+  title: "Sustainable convergence: artificial intelligence and circular economy"
+  year: 2024
+  venue: SCIÉNDO
+  oa: https://revistas.unitru.edu.pe/index.php/SCIENDO/article/download/6202/6310
+  hints:
+    ie:
+      - eol
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.procir.2026.03.261
+  title: Implementation challenges of artificial intelligence in the circular economy
+  year: 2026
+  venue: Procedia CIRP
+  oa: https://www.sciencedirect.com/science/article/pii/S2212827126012011/pdf
+  hints:
+    ie:
+      - eol
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.conbuildmat.2024.136280
+  title: "Life cycle assessment of urban road networks: Quantifying carbon
+    footprints and forecasting future material stocks"
+  year: 2024
+  venue: Construction and Building Materials
+  oa: null
+  hints:
+    ie:
+      - lca
+      - mfa
+  found: 2026-11-19
+  status: new
+- doi: 10.1109/access.2024.3407839
+  title: "Carbon Footprint Management in Global Supply Chains: A Data-Driven
+    Approach Utilizing Artificial Intelligence Algorithms"
+  year: 2024
+  venue: IEEE Access
+  oa: https://doi.org/10.1109/access.2024.3407839
+  hints:
+    ie:
+      - lca
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.scitotenv.2024.174349
+  title: "Bioplastic derived from corn stover: Life cycle assessment and
+    artificial intelligence-based analysis of uncertainty and variability"
+  year: 2024
+  venue: The Science of The Total Environment
+  oa: null
+  hints:
+    ie:
+      - lca
+    ml:
+      - uncertainty
+  found: 2026-11-19
+  status: new
+- doi: 10.63371/ic.v5.n1.a686
+  title: "Inteligencia Artificial y Economía Circular: Problemas Éticos y Futuras
+    Perspectivas con Enfoque Sostenible"
+  year: 2026
+  venue: Ibero Ciencias - Revista Científica y Académica
+  oa: https://doi.org/10.63371/ic.v5.n1.a686
+  hints:
+    ie:
+      - eol
+  found: 2026-11-19
+  status: new
+- doi: 10.55041/isjem02353
+  title: Opportunity for scaling Product Carbon Footprinting using Large Language
+    Models
+  year: 2025
+  venue: International Scientific Journal of Engineering and Management
+  oa: null
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+- doi: 10.1371/journal.pclm.0000732
+  title: "Integrating machine learning into life cycle assessment: Review and
+    future outlook"
+  year: 2025
+  venue: PLOS Climate
+  oa: https://doi.org/10.1371/journal.pclm.0000732
+  hints:
+    ie:
+      - lca
+    topic:
+      - lifetime
+    ml:
+      - nlp-extraction
+      - uncertainty
+  found: 2026-11-19
+  status: new
+- doi: 10.1007/s43546-026-01140-6
+  title: "The intersection of circular economy and artificial intelligence: a
+    bibliometric review"
+  year: 2026
+  venue: SN Business & Economics
+  oa: https://link.springer.com/content/pdf/10.1007/s43546-026-01140-6.pdf
+  hints:
+    ie:
+      - eol
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.cogsc.2024.100979
+  title: Machine learning to support prospective life cycle assessment of emerging
+    chemical technologies
+  year: 2024
+  venue: Current Opinion in Green and Sustainable Chemistry
+  oa: https://doi.org/10.1016/j.cogsc.2024.100979
+  hints:
+    ie:
+      - lca
+    topic:
+      - chemicals
+  found: 2026-11-19
+  status: new
+- doi: 10.55845/joce-2025-3277
+  title: Harnessing Artificial Intelligence for the Integration and Advancement of
+    Circular Economy Practices
+  year: 2026
+  venue: Circular Economy
+  oa: https://circulareconomyjournal.org/ojs/JoCE/article/download/77/160
+  hints:
+    ie:
+      - eol
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.jclepro.2026.149235
+  title: A cradle-to-grave life cycle assessment of United States’ grain and pulse
+    carbon footprint using Bayesian machine learning and global uncertainty
+    analysis
+  year: 2026
+  venue: Journal of Cleaner Production
+  oa: null
+  hints:
+    ie:
+      - lca
+    ml:
+      - uncertainty
+  found: 2026-11-19
+  status: new
+- doi: 10.33002/nr2581.6853.0703ukr08
+  title: Artificial Intelligence in Waste Management in the Context of
+    Implementing Circular Economy
+  year: 2024
+  venue: Grassroots Journal of Natural Resources
+  oa: https://doi.org/10.33002/nr2581.6853.0703ukr08
+  hints:
+    ie:
+      - eol
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.jenvman.2025.126225
+  title: Addressing uncertainty in machine learning-integrated life cycle
+    assessment (ML+LCA)
+  year: 2025
+  venue: Journal of Environmental Management
+  oa: https://www.sciencedirect.com/science/article/am/pii/S0301479725022017
+  hints:
+    ie:
+      - lca
+    ml:
+      - uncertainty
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.bpj.2025.09.006
+  title: Molecular simulation and artificial intelligence for the circular economy
+    of bioenergy and bioproducts
+  year: 2025
+  venue: Biophysical Journal
+  oa: https://pmc.ncbi.nlm.nih.gov/articles/PMC12709439/
+  hints:
+    ie:
+      - eol
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.eti.2024.103685
+  title: New evidence about artificial intelligence and eco-investment as boosters
+    of the circular economy
+  year: 2024
+  venue: Environmental Technology & Innovation
+  oa: https://doi.org/10.1016/j.eti.2024.103685
+  hints:
+    ie:
+      - eol
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+- doi: 10.1080/13662716.2026.2713753
+  title: "Adoption of circular economy innovations: the role of Artificial
+    Intelligence"
+  year: 2026
+  venue: Industry and Innovation
+  oa: https://doi.org/10.1080/13662716.2026.2713753
+  hints:
+    ie:
+      - eol
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.jenvman.2025.125471
+  title: "Leveraging industry 4.0 technologies and industrial symbiosis: Advancing
+    circular economy practices in BRICS economies"
+  year: 2025
+  venue: Journal of Environmental Management
+  oa: null
+  hints:
+    ie:
+      - eol
+      - symbiosis
+  found: 2026-11-19
+  status: new
+- doi: 10.1007/s11831-025-10373-x
+  title: Progress in Computational Modelling for Concrete Durability and Its
+    Integration with Artificial Intelligence and Life-Cycle Assessment
+  year: 2025
+  venue: Archives of Computational Methods in Engineering
+  oa: https://link.springer.com/content/pdf/10.1007/s11831-025-10373-x.pdf
+  hints:
+    ie:
+      - lca
+    topic:
+      - chemicals
+      - lifetime
+      - energy
+  found: 2026-11-19
+  status: new
+- doi: 10.1016/j.tifs.2025.104996
+  title: "Sustainable kombucha production: A conceptual framework integrating life
+    cycle assessment and circular economy principles"
+  year: 2025
+  venue: Trends in Food Science & Technology
+  oa: null
+  hints:
+    ie:
+      - lca
+      - eol
+  found: 2026-11-19
+  status: new
+- doi: 10.3390/su162310601
+  title: Evaluating Artificial Intelligence Models for Resource Allocation in
+    Circular Economy Digital Marketplace
+  year: 2024
+  venue: Sustainability
+  oa: https://www.mdpi.com/2071-1050/16/23/10601/pdf?version=1733234484
+  hints:
+    ie:
+      - eol
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+- doi: 10.63090/ijitrs/3139.3209.0038
+  title: "Energy and Carbon Footprint of Artificial Intelligence: Measurement,
+    Disagreement and Mitigation"
+  year: 2026
+  venue: International Journal of Information Technology Research Studies (IJITRS)
+  oa: https://doi.org/10.63090/ijitrs/3139.3209.0038
+  hints:
+    ie:
+      - lca
+    topic:
+      - water
+  found: 2026-11-19
+  status: rejected
+  why: the footprint of AI itself, not AI for IE
+- doi: 10.1007/978-3-031-51601-6_14
+  title: "Role of Artificial Intelligence in Minimizing Carbon Footprint: A
+    Systematic Review of Recent Insights"
+  year: 2024
+  venue: Green energy and technology
+  oa: null
+  hints:
+    ie:
+      - lca
+  found: 2026-11-19
+  status: new
+- doi: 10.1108/bpmj-10-2024-0944
+  title: "Harnessing artificial intelligence for operational excellence: pathways
+    to a circular economy"
+  year: 2025
+  venue: Business Process Management Journal
+  oa: null
+  hints:
+    ie:
+      - eol
+  found: 2026-11-19
+  status: new

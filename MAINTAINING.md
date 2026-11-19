@@ -50,6 +50,15 @@ If a suggestion doesn't hold up, say why in the issue and close it.
   or updates the open one, when a link on the site or a DOI in `literature.yaml` breaks. It
   doesn't check README.md or this file. Publishers that block crawlers answer 403 or 429, and
   the check counts those as fine.
+- **Weekly candidates.** Every Monday [`candidates.yml`](.github/workflows/candidates.yml) asks
+  OpenAlex for new papers that pair an AI term with an industrial-ecology term. It adds up to
+  25 to `src/data/candidates.yaml` on the `openalex-candidates` branch, with one open pull request.
+  For each lead, read the paper: add it to `literature.yaml` and set `status: listed`, or set
+  `status: rejected` with a one-line `why`. Keep rejected leads, so the job never proposes them
+  again. A pull request opened by the workflow token starts no checks: close and reopen it to
+  run CI, then merge. It needs no secret, but the repository setting *Allow GitHub Actions to
+  create and approve pull requests* (Settings, Actions, General) must be on. To catch up on a
+  longer gap, run `node scripts/openalex-candidates.mjs --since <date> --limit <n>` locally.
 - **Citation records.** After a publisher corrects a record at Crossref, run
   `pnpm run citations -- --refresh` and review the diff of `src/data/citations.json` before
   you commit it.
