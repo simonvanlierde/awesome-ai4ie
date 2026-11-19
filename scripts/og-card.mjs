@@ -60,6 +60,8 @@ await page.evaluate(
     card.innerHTML = `<div class="col glyph">${glyphSvg}</div><div class="col url">${host}</div>
       <p class="col line">${text}</p>`;
     card.append(h1, flow);
+    // The card has its own, larger tile beside the title.
+    h1.querySelector(".glyph")?.remove();
     document.body.replaceChildren(card);
     document
       .querySelectorAll("#og .flow figcaption, #og .flow-readout, #og .flow-hit")

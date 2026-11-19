@@ -10,6 +10,7 @@ import { CHAPTERS } from "../../lib/chapters";
 import { issueUrl, siteUrl } from "../../lib/urls";
 import BrandMark from "../BrandMark.astro";
 import FlowFigure from "../FlowFigure.astro";
+import Glyph from "../Glyph.astro";
 
 const { id, data } = Astro.locals.starlightRoute.entry;
 const isHome = id === "" || id === "index";
@@ -24,7 +25,17 @@ if (is404) {
 <div class="cover">
   <div class="cover-grid">
     <div class="cover-copy">
-      <h1 id="_top" data-page-title set:html={title} />
+      {
+        isHome ? (
+          // The home title opens on the favicon tile, the site's lockup as on the social card.
+          <h1 id="_top" data-page-title class="cover-lockup">
+            <Glyph tile />
+            <span set:html={title} />
+          </h1>
+        ) : (
+          <h1 id="_top" data-page-title set:html={title} />
+        )
+      }
       {tagline && <p class="cover-tagline" set:html={tagline} />}
     </div>
     {
