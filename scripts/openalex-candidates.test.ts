@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { abstractText, newLeads, QUERY, suggestTags, toLead } from "./openalex-candidates.mjs";
+import {
+  abstractText,
+  floor,
+  nearest,
+  neighbourTags,
+  newLeads,
+  QUERY,
+  score,
+  toLead,
+} from "./openalex-candidates.mjs";
 
 const work = {
   doi: "https://doi.org/10.1000/ABC",
@@ -16,14 +25,6 @@ describe("openalex-candidates", () => {
     expect(abstractText(null)).toBe("");
   });
 
-  it("suggests tags from the title and abstract", () => {
-    expect(suggestTags("LLMs for life cycle assessment of water")).toEqual({
-      ie: ["lca"],
-      topic: ["water"],
-      ml: ["llm"],
-    });
-  });
-
   it("turns a work into a lead with a bare, lower-case DOI", () => {
     const lead = toLead(work, "2026-11-19");
     expect(lead).toMatchObject({
@@ -31,11 +32,6 @@ describe("openalex-candidates", () => {
       year: 2026,
       venue: "J. Ind. Ecol.",
       status: "new",
-    });
-    expect(lead?.hints).toEqual({
-      ie: ["mfa"],
-      topic: ["metals"],
-      ml: ["tabular-ml", "uncertainty"],
     });
     expect(toLead({ ...work, doi: null }, "2026-11-19")).toBeNull();
   });
@@ -48,5 +44,36 @@ describe("openalex-candidates", () => {
 
   it("needs an AI term and an IE term", () => {
     expect(QUERY).toMatch(/^\(.*"machine learning".*\) AND \(.*"life cycle assessment".*\)$/);
+  });
+
+  // unit vectors in 2-D: listed papers near the x axis, rejected ones near the y axis
+  const at = (deg: number) => [Math.cos((deg * Math.PI) / 180), Math.sin((deg * Math.PI) / 180)];
+  const listed = [0, 5, 10, 15].map((d, i) => ({
+    key: `l${i}`,
+    id: `lit-${i}`,
+    vec: at(d),
+    tags: { ie: i < 2 ? ["mfa"] : ["lca"], ml: ["cv"] },
+  }));
+  const rejected = [80, 85, 90].map((d, i) => ({ key: `r${i}`, vec: at(d) }));
+
+  it("finds the nearest references, leaving a paper itself out", () => {
+    expect(nearest(at(1), listed, 2).map((n: { id: string }) => n.id)).toEqual(["lit-0", "lit-1"]);
+    expect(nearest(listed[0].vec, listed, 1, "l0")[0].id).toBe("lit-1");
+  });
+
+  it("scores a lead near listed papers above one near rejected leads", () => {
+    expect(score(at(7), listed, rejected).score).toBeGreaterThan(
+      score(at(70), listed, rejected).score,
+    );
+  });
+
+  it("hints only the tags that two of the nearest papers share", () => {
+    expect(neighbourTags(nearest(at(0), listed, 3))).toEqual({ ie: ["mfa"], ml: ["cv"] });
+  });
+
+  it("sets the floor so a typical listed paper clears it and an off-topic one does not", () => {
+    const cut = floor(listed, rejected, 0);
+    expect(score(at(8), listed, rejected).score).toBeGreaterThanOrEqual(cut);
+    expect(score(at(85), listed, rejected).score).toBeLessThan(cut);
   });
 });

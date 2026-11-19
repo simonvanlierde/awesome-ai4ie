@@ -53,8 +53,13 @@ If a suggestion doesn't hold up, say why in the issue and close it.
 - **Weekly candidates.** Every Monday [`candidates.yml`](.github/workflows/candidates.yml) asks
   OpenAlex for new papers that pair an AI term with an industrial-ecology term. It adds up to
   25 to `src/data/candidates.yaml` on the `openalex-candidates` branch, with one open pull request.
-  For each lead, read the paper: add it to `literature.yaml` and set `status: listed`, or set
-  `status: rejected` with a one-line `why`. Keep rejected leads, so the job never proposes them
+  Each lead carries a `score` (closeness to listed papers minus closeness to rejected leads,
+  from a small local embedding model), the ids of its `near`est listed papers, and the tags
+  those share as `hints`. Open leads come first, best score first, and every run re-scores
+  them. Leads below the score of the least typical 6% of listed papers are left out. For
+  each lead, read the paper against the scope in [CONTRIBUTING.md](CONTRIBUTING.md#adding-a-paper-or-an-application):
+  add it to `literature.yaml` and set `status: listed`, or set `status: rejected` with a
+  one-line `why`. Keep rejected leads, so the job never proposes them
   again. A pull request opened by the workflow token starts no checks: close and reopen it to
   run CI, then merge. It needs no secret, but the repository setting *Allow GitHub Actions to
   create and approve pull requests* (Settings, Actions, General) must be on. To catch up on a
