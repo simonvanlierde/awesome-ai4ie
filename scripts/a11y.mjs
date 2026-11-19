@@ -202,6 +202,30 @@ for (const [name, viewport] of Object.entries(VIEWPORTS)) {
   await suggest.waitFor({ state: "hidden" });
   if (await results.getAttribute("data-unexpected-hit"))
     fail(`${name}: a previous search result appeared after the query changed`);
+
+  // Each way /api/search can fail shows its own status line.
+  for (const [n, answer, said] of [
+    [1, (route) => route.fulfill({ status: 429 }), "Too many searches"],
+    [2, (route) => route.fulfill({ status: 503 }), "Paper search is unavailable"],
+    [3, (route) => route.abort(), "Paper search did not respond"],
+  ]) {
+    await page.unroute("**/api/search");
+    await page.route("**/api/search", answer);
+    await searchInput.fill(`which papers sort waste ${n}`);
+    const shown = await page
+      .waitForFunction(
+        (t) => document.querySelector(".ss-status")?.textContent?.startsWith(t),
+        said,
+        {
+          timeout: 5000,
+        },
+      )
+      .then(
+        () => true,
+        () => false,
+      );
+    if (!shown) fail(`${name}: a failed paper search did not say "${said}"`);
+  }
 }
 
 await browser.close();
