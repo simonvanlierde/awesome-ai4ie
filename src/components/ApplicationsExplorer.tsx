@@ -41,23 +41,18 @@ export default function ApplicationsExplorer({ entries }: { entries: AppEntry[] 
         ))}
       </fieldset>
 
-      {mode !== "grid" && <GroupedApps entries={entries} mode={mode} />}
+      {mode !== "grid" && (
+        <div>
+          {[...groupBy(entries, mode)].map(([tag, apps]) => (
+            <section key={tag} className="apx-group">
+              <h3 className="apx-group-label">{tagLabel(mode, tag)}</h3>
+              <AppList apps={apps} />
+            </section>
+          ))}
+        </div>
+      )}
 
       {mode === "grid" && <Grid entries={entries} />}
-    </div>
-  );
-}
-
-/** Applications grouped under headings for one tag dimension. */
-export function GroupedApps({ entries, mode }: { entries: AppEntry[]; mode: "ml" }) {
-  return (
-    <div>
-      {[...groupBy(entries, mode)].map(([tag, apps]) => (
-        <section key={tag} className="apx-group">
-          <h3 className="apx-group-label">{tagLabel(mode, tag)}</h3>
-          <AppList apps={apps} />
-        </section>
-      ))}
     </div>
   );
 }

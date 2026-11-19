@@ -59,41 +59,43 @@ const MODEL_REVISION = "d15189d7028b43f1d3e65039190477f6af591c2a";
 // A load that sends no progress for this long counts as stalled (see withStall).
 const STALL_MS = 60_000;
 
-let classifierPromise: Promise<Classifier> | null = null;
-/** Load and cache the CLIP classifier, resetting the cache if loading fails. */
-export function getClassifier(
-  onProgress: (msg: string) => void,
-  loadPipeline: () => Promise<
-    (
-      task: string,
-      model: string,
-      opts: {
-        revision: string;
-        progress_callback: (p: { status: string; file?: string; progress?: number }) => void;
-      },
-    ) => Promise<(img: string, labels: string[]) => Promise<unknown>>
-  > = async () => (await import(/* @vite-ignore */ TRANSFORMERS_URL)).pipeline,
-): Promise<Classifier> {
-  classifierPromise ??= withStall(async (alive) => {
-    const pipeline = await loadPipeline();
-    alive();
-    const pipe = await pipeline("zero-shot-image-classification", MODEL, {
-      revision: MODEL_REVISION,
-      progress_callback: (p) => {
-        // After a stall the download keeps going; its progress must not
-        // overwrite the message that told the reader it stopped.
-        if (!alive()) return;
-        const msg = formatDownloadProgress(p);
-        if (msg) onProgress(msg);
-      },
+type ProgressEvent = { status: string; file?: string; progress?: number };
+type PipelineFn = (
+  task: string,
+  model: string,
+  opts: { revision: string; progress_callback: (p: ProgressEvent) => void },
+) => Promise<(img: string, labels: string[]) => Promise<unknown>>;
+
+/** Build a cached CLIP classifier loader that clears its cache after a failed load. */
+export function createClassifierLoader(
+  loadPipeline: () => Promise<PipelineFn> = async () =>
+    (await import(/* @vite-ignore */ TRANSFORMERS_URL)).pipeline,
+) {
+  let promise: Promise<Classifier> | null = null;
+  return (onProgress: (msg: string) => void): Promise<Classifier> => {
+    promise ??= withStall(async (alive) => {
+      const pipeline = await loadPipeline();
+      alive();
+      const pipe = await pipeline("zero-shot-image-classification", MODEL, {
+        revision: MODEL_REVISION,
+        progress_callback: (p) => {
+          // After a stall the download keeps going; its progress must not
+          // overwrite the message that told the reader it stopped.
+          if (!alive()) return;
+          const msg = formatDownloadProgress(p);
+          if (msg) onProgress(msg);
+        },
+      });
+      return (img: string, labels: string[]) => pipe(img, labels) as Promise<Result[]>;
+    }, STALL_MS).catch((err) => {
+      promise = null; // a failed load must not poison every retry
+      throw err;
     });
-    return (img: string, labels: string[]) => pipe(img, labels) as Promise<Result[]>;
-  }, STALL_MS).catch((err) => {
-    classifierPromise = null; // a failed load must not poison every retry
-    throw err;
-  });
-  return classifierPromise;
+    return promise;
+  };
 }
+
+const getClassifier = createClassifierLoader();
 
 /**
  * Zero-shot image classification (CLIP), running entirely in the browser via
@@ -182,22 +184,17 @@ export default function ZeroShotDemo() {
       <p className="zsd-status" role="status">
         {status}
       </p>
-      {results && <ResultsList results={results} />}
+      {results && (
+        <ul className="zsd-results">
+          {results.map((r) => (
+            <li key={r.label}>
+              <span className="zsd-result-label">{r.label}</span>
+              <span className="zsd-bar" style={{ width: `${Math.round(r.score * 100)}%` }} />
+              <span className="zsd-score">{(r.score * 100).toFixed(1)}%</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
-  );
-}
-
-/** Scored classification bars for the candidate labels. */
-export function ResultsList({ results }: { results: readonly Result[] }) {
-  return (
-    <ul className="zsd-results">
-      {results.map((r) => (
-        <li key={r.label}>
-          <span className="zsd-result-label">{r.label}</span>
-          <span className="zsd-bar" style={{ width: `${Math.round(r.score * 100)}%` }} />
-          <span className="zsd-score">{(r.score * 100).toFixed(1)}%</span>
-        </li>
-      ))}
-    </ul>
   );
 }

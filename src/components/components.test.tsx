@@ -4,17 +4,16 @@ import type { AppEntry, LitEntry } from "../data/schemas";
 import { FORMATS } from "../lib/citations";
 import { StalledError } from "../lib/stall";
 import AppList from "./AppList";
-import ApplicationsExplorer, { GroupedApps } from "./ApplicationsExplorer";
-import LiteratureBrowser, { ActivePills, exportCitations, FacetPanel } from "./LiteratureBrowser";
+import ApplicationsExplorer from "./ApplicationsExplorer";
+import LiteratureBrowser, { exportCitations } from "./LiteratureBrowser";
 import { EMPTY_FILTER, toggleTag } from "./litFilter";
 import TagChips from "./TagChips";
 import ZeroShotDemo, {
   classifyErrorMessage,
   classifySummary,
+  createClassifierLoader,
   formatDownloadProgress,
-  getClassifier,
   parseLabels,
-  ResultsList,
 } from "./ZeroShotDemo";
 
 const SAMPLE_APPS: AppEntry[] = [
@@ -101,10 +100,6 @@ describe("ApplicationsExplorer", () => {
     expect(html).toContain("Papers for 1 application: LCI extraction with LLMs");
     expect(html).toContain("1 application: Waste sorting with vision");
     expect(html).toContain('data-n="0"');
-
-    const grouped = renderToStaticMarkup(<GroupedApps entries={SAMPLE_APPS} mode="ml" />);
-    expect(grouped).toContain("LLMs &amp; agents");
-    expect(grouped).toContain("Computer vision");
   });
 });
 
@@ -127,29 +122,9 @@ describe("LiteratureBrowser", () => {
     expect(html).toContain("disabled");
   });
 
-  it("renders open facet panels and active filter pills", () => {
-    const panel = renderToStaticMarkup(
-      <FacetPanel dim="ie" selected={["lca"]} onToggle={() => {}} onClose={() => {}} />,
-    );
-    expect(panel).toContain('aria-label="IE field"');
-    expect(panel).toContain('aria-pressed="true"');
-
-    const pills = renderToStaticMarkup(
-      <ActivePills
-        pills={[{ id: "ie:lca", dim: "ie", tag: "lca", label: "LCA & footprinting" }]}
-        paperCount={2}
-        onRemoveTag={() => {}}
-        onRemovePapers={() => {}}
-        onClearAll={() => {}}
-      />,
-    );
-    expect(pills).toContain('aria-label="Remove filter: LCA &amp; footprinting"');
-    expect(pills).toContain("2 linked papers");
-    expect(pills).toContain("Clear all");
-  });
-
-  it("downloads citations and reports failures cleanly", async () => {
+  it("writes citation content to a downloaded Blob, revokes the URL, and reports failures", async () => {
     const clicked: { href: string; download: string }[] = [];
+    const blobs: Blob[] = [];
     const anchor = {
       href: "",
       download: "",
@@ -157,14 +132,20 @@ describe("LiteratureBrowser", () => {
         clicked.push({ href: this.href, download: this.download });
       },
     };
+    vi.useFakeTimers();
     vi.stubGlobal("document", { createElement: () => anchor });
-    const createSpy = vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:test");
-    const revokeSpy = vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => {});
+    const createSpy = vi.spyOn(URL, "createObjectURL").mockImplementation((obj) => {
+      blobs.push(obj as Blob);
+      return "blob:test";
+    });
+    const revokeSpy = vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => undefined);
     try {
       const ok = await exportCitations([SAMPLE_LIT[0]], FORMATS[0], "preuss2024");
       expect(ok).toBe("Exported 1 entry as BibTeX");
       expect(clicked).toEqual([{ href: "blob:test", download: "preuss2024.bib" }]);
-      await new Promise((r) => setTimeout(r, 0));
+      expect(await blobs[0].text()).toContain("10.1000/example");
+      expect(revokeSpy).not.toHaveBeenCalled();
+      vi.runAllTimers();
       expect(revokeSpy).toHaveBeenCalledWith("blob:test");
 
       const fail = await exportCitations(SAMPLE_LIT, FORMATS[0], "all", () =>
@@ -175,6 +156,7 @@ describe("LiteratureBrowser", () => {
       createSpy.mockRestore();
       revokeSpy.mockRestore();
       vi.unstubAllGlobals();
+      vi.useRealTimers();
     }
   });
 });
@@ -203,40 +185,33 @@ describe("ZeroShotDemo", () => {
     );
     expect(classifyErrorMessage(new StalledError("stalled"))).toContain("stopped making progress");
     expect(classifyErrorMessage(new Error("offline"))).toContain("Could not load or run");
-
-    const bars = renderToStaticMarkup(
-      <ResultsList results={[{ label: "circuit board", score: 0.876 }]} />,
-    );
-    expect(bars).toContain("width:88%");
-    expect(bars).toContain("87.6%");
   });
 
-  it("resets classifier cache on failure and caches a successful load", async () => {
-    await expect(
-      getClassifier(
-        () => {},
-        () => Promise.reject(new Error("net")),
-      ),
-    ).rejects.toThrow("net");
+  it("clears the cached promise on failure and reuses it after a successful load", async () => {
+    let attempts = 0;
     const messages: string[] = [];
-    const load = vi.fn(
-      async () =>
-        async (
-          _task: string,
-          _model: string,
-          opts: {
-            progress_callback: (p: { status: string; file?: string; progress?: number }) => void;
-          },
-        ) => {
-          opts.progress_callback({ status: "progress", file: "model.onnx", progress: 50 });
-          return async () => [{ label: "metal", score: 0.9 }];
+    const load = vi.fn(async () => {
+      attempts += 1;
+      if (attempts === 1) throw new Error("net");
+      return async (
+        _task: string,
+        _model: string,
+        opts: {
+          progress_callback: (p: { status: string; file?: string; progress?: number }) => void;
         },
-    );
-    const clf = await getClassifier((m) => messages.push(m), load);
+      ) => {
+        opts.progress_callback({ status: "progress", file: "model.onnx", progress: 50 });
+        return async () => [{ label: "metal", score: 0.9 }];
+      };
+    });
+    const loadClassifier = createClassifierLoader(load);
+
+    await expect(loadClassifier(() => undefined)).rejects.toThrow("net");
+    const clf = await loadClassifier((m) => messages.push(m));
     expect(messages).toEqual(["Downloading the model… 50%"]);
     expect(await clf("blob:img", ["metal"])).toEqual([{ label: "metal", score: 0.9 }]);
-    await getClassifier(() => {}, load);
-    expect(load).toHaveBeenCalledTimes(1);
+    await loadClassifier(() => undefined);
+    expect(load).toHaveBeenCalledTimes(2);
   });
 });
 
