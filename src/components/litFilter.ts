@@ -82,3 +82,12 @@ export function sortEntries<T extends Sortable>(entries: T[], key: SortKey): T[]
   };
   return [...entries].sort(cmp[key]);
 }
+
+/** Add `tag` to `filter[dim]`, or remove it if already active. */
+export function toggleTag(filter: Filter, dim: TagDim, tag: string): Filter {
+  const active = filter[dim].includes(tag);
+  return {
+    ...filter,
+    [dim]: active ? filter[dim].filter((t) => t !== tag) : [...filter[dim], tag],
+  };
+}
