@@ -57,10 +57,12 @@ jobs:
       # literature-index.json, so a first-time reader's phone embeds only the question
       # (about 11 s saved). The site embeds any entry without a vector itself, so a
       # failed download from jsDelivr or Hugging Face slows search but must not block a deploy.
+      # No cache here: withastro/action sets up pnpm again and caches the store
+      # itself, and this action's post-step then fails on the path it moved.
       - uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
         with:
           runtime: node@26
-          cache: true
+          cache: false
           install: false
       - run: pnpm install --frozen-lockfile
       # No --with-deps: the runner has Chromium's libraries, and apt would only add
