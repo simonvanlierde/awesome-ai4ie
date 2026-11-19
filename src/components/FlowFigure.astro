@@ -11,7 +11,9 @@ import { litUrl } from "../lib/urls";
 // columns fit the widest short labels ("Urban mining 4", "Foundation models 2") at the
 // phone font size in custom.css, the largest; wider columns only shrink the plate.
 // Two plates: a compact one up to 64rem, and from there a wide, short one that spans
-// the cover, with long bands (custom.css shows one of them).
+// the cover, with long bands (custom.css shows one of them). Each is a labelled group
+// with tabindex -1: Chromium otherwise gives the svg a Tab stop and maps it to img,
+// whose children (the links) are presentational.
 const GAP = 18;
 const X0 = 175;
 const NODE = 8;
@@ -48,13 +50,19 @@ const readout = (dim: "ie" | "ml", n: { tag: string; papers: number }) => {
       : `the ${ieNodes.length} IE fields shown`;
   return `${tagLabel(dim, n.tag)}: ${n.papers} ${n.papers === 1 ? "paper" : "papers"}, ${dim === "ie" ? "applying" : "in"} ${k} of ${of}`;
 };
-const idle = "Point at or tap a label to light its flows.";
+const idle = "Point at, focus or tap a label to light its flows.";
 ---
 
 <figure class="flow not-content">
   {
     layouts.map((p) => (
-  <svg class={`flow-plate flow-plate--${p.name}`} viewBox={`0 0 ${p.W} ${p.H}`}>
+  <svg
+    class={`flow-plate flow-plate--${p.name}`}
+    viewBox={`0 0 ${p.W} ${p.H}`}
+    role="group"
+    aria-label="IE fields, linked to the AI techniques their papers use"
+    tabindex="-1"
+  >
     <g class="flow-bands">
       {
         p.bands.map((b) => (

@@ -700,9 +700,13 @@ starlight-menu-button button {
 .flow svg.is-lit .band.lit {
   fill-opacity: 0.9;
 }
-/* Keyboard focus shows as the node's accent stroke below; a tap needs no ring. */
+/* Keyboard focus rings the whole node, label included, and strokes its bar; a tap needs no ring. */
 .flow a:focus {
   outline: none;
+}
+.flow a.flow-node:focus-visible {
+  outline: 2px solid var(--sl-color-text-accent);
+  outline-offset: 2px;
 }
 .flow a:focus-visible :is(.band, .node) {
   stroke: var(--sl-color-text-accent);
@@ -1410,6 +1414,10 @@ starlight-menu-button button {
 }
 /* Print: application entries print open, so descriptions and links survive. */
 @media print {
+  /* A media switch restarts the entrance, and a print can catch it half drawn. */
+  .flow-bands {
+    animation: none;
+  }
   .apx-entry details::details-content {
     content-visibility: visible;
     display: block;
