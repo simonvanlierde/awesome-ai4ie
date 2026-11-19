@@ -174,7 +174,7 @@
   kind: tool
   group: library
   blurb: "Dynamic MFA framework."
-  ie: [mfa]
+  ie: [sem]
   checked: 2026-07
 - id: pymrio
   title: pymrio
@@ -182,8 +182,7 @@
   kind: tool
   group: library
   blurb: "Environmentally-extended multi-regional input–output analysis."
-  ie: [lca]
-  topic: [io]
+  ie: [eeio]
   checked: 2026-07
 - id: scikit-learn
   title: scikit-learn
@@ -254,22 +253,21 @@
   url: https://www.database.industrialecology.uni-freiburg.de
   kind: dataset
   blurb: "Open IE datasets (stocks, flows, lifetimes) collected by Stefan Pauliuk's group; the closest thing the field has to a shared data home."
-  ie: [mfa]
+  ie: [sem]
   checked: 2026-07
 - id: exiobase
   title: EXIOBASE
   url: https://www.exiobase.eu
   kind: dataset
   blurb: "Global environmentally-extended MRIO database; free with registration."
-  ie: [lca]
-  topic: [io]
+  ie: [eeio, lca]
   checked: 2026-07
 - id: unep-irp-material-flows
   title: UNEP IRP Global Material Flows Database
   url: https://www.materialflows.net
   kind: dataset
   blurb: "Country-level material extraction, trade, and consumption. Free."
-  ie: [mfa]
+  ie: [sem]
   checked: 2026-07
 - id: ecoinvent
   title: ecoinvent
@@ -283,7 +281,7 @@
   url: https://doi.org/10.5281/zenodo.19703316
   kind: dataset
   blurb: "Open platform for collecting product-disassembly data, developed at CML, Leiden University."
-  ie: [eol]
+  ie: [circular]
   checked: 2026-07
 
 # ── Datasets: general ML sources (no ie tag) ─────────────────────────────────

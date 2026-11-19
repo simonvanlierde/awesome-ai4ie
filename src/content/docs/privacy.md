@@ -24,6 +24,11 @@ server, a Cloudflare Worker. The Worker sends the question to Cloudflare Workers
 into numbers it can compare, and then returns the closest papers. The site's code does not
 store your question.
 
+The site's MCP server, which lets AI assistants search the reading list, works the same way.
+When your assistant calls its `search_papers` tool, the question goes to the same Worker and
+on to Workers AI, as from the search dialog, and is not stored either. The other tools only
+read the site's own data.
+
 Cloudflare's Workers Logs record each request to the Worker: its time, your IP address and
 your browser. Cloudflare keeps these logs for at most 7 days
 ([Workers Logs limits](https://developers.cloudflare.com/workers/observability/logs/workers-logs/)).

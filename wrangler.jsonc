@@ -1,5 +1,5 @@
 // The site on Cloudflare Workers: the static Astro build in dist/, with headers from
-// public/_headers, plus worker/index.ts for /api/*. CI deploys main with `wrangler deploy`
+// public/_headers, plus worker/index.ts for /api/* and /mcp. CI deploys main with `wrangler deploy`
 // and each pull request with `wrangler preview --name pr-<number>` (.github/workflows/ci.yml).
 {
   "$schema": "node_modules/wrangler/config-schema.json",
@@ -10,9 +10,9 @@
     "directory": "./dist",
     // The Worker reads literature-index.json from here.
     "binding": "ASSETS",
-    // Only /api/* runs the Worker; every other request is a static file, which is not
+    // Only /api/* and /mcp run the Worker; every other request is a static file, which is not
     // billed or counted against the free plan's daily requests.
-    "run_worker_first": ["/api/*"],
+    "run_worker_first": ["/api/*", "/mcp"],
     "not_found_handling": "404-page"
   },
   // Workers AI always runs remotely, in `wrangler dev` too (needs `wrangler login`).
