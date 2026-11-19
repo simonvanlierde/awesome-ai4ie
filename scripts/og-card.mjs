@@ -43,6 +43,8 @@ const browser = await chromium.launch();
 const page = await browser.newPage({
   viewport: { width: 1200, height: 630 },
   colorScheme: "light",
+  // The settled page: no title hand-off, which would hide the title mid-fade.
+  reducedMotion: "reduce",
   // The card CSS is an injected style, which the page's style-src would block.
   bypassCSP: true,
 });
@@ -60,7 +62,7 @@ await page.evaluate(
     document.body.replaceChildren(card);
     document
       .querySelectorAll(
-        "#og .flow figcaption, #og .flow-readout, #og .flow-hit, #og .flow-plate--wide, #og .cover-endmark",
+        "#og .flow figcaption, #og .flow-readout, #og .flow-hit, #og .flow-plate--wide",
       )
       .forEach((el) => {
         el.remove();

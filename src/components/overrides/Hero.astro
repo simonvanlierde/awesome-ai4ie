@@ -6,7 +6,6 @@
 // NOTE: unlike Starlight's own hero, this one ignores `hero.image`, the
 // draft notice and inline icon HTML; no page uses them.
 import { Icon } from "@astrojs/starlight/components";
-import favicon from "../../../public/favicon.svg?raw";
 import { CHAPTERS } from "../../lib/chapters";
 import { issueUrl, siteUrl } from "../../lib/urls";
 import BrandMark from "../BrandMark.astro";
@@ -20,29 +19,46 @@ if (is404) {
   title = "Page not found";
   tagline = `Search the site, choose a chapter, or <a href="${issueUrl("other")}">report a broken link</a>.`;
 }
-// The home title ends on the favicon tile as its end mark. The no-break space keeps the
-// tile on the last word's line; the tile is hidden from readers, as the title names it.
-// pathLength="1" lets custom.css ink each stroke in with a unit dash; the strokes are
-// drawn twice, as a ghost the hover replay redraws over and as the ink itself.
-const endMark = favicon
-  .replace(/<!--[\s\S]*?-->/g, "")
-  .replaceAll("<path ", '<path pathLength="1" ')
-  .replace(
-    /<g [\s\S]*<\/g>/,
-    (g) =>
-      g.replace("<g ", '<g class="endmark-ghost" ') + g.replace("<g ", '<g class="endmark-ink" '),
-  )
-  .replace(
-    'role="img" aria-label="AI4IE"',
-    'class="cover-endmark" aria-hidden="true" focusable="false"',
-  );
-const heading = isHome ? `${title}&nbsp;${endMark}` : title;
+// The home title spells out AI4IE: "AI", "for" and the initials of "Industrial Ecology"
+// are the keys the header wordmark's letters fly onto on load (script below), and the
+// rest of each word fades in around them. Each word stays one nowrap box, because the
+// keys are inline blocks, which a line may otherwise break beside.
+const acronym = /^(.*) AI for Industrial Ecology$/.exec(title);
+const key = (k: string, text: string) => `<span class="ac" data-ac="${k}">${text}</span>`;
+const rest = (text: string) => `<span class="ac-rest">${text}</span>`;
+const word = (html: string) => `<span class="ac-word">${html}</span>`;
+const heading =
+  isHome && acronym
+    ? [
+        rest(acronym[1]),
+        word(key("a", "A") + key("i1", "I")),
+        key("4", "for"),
+        word(key("i2", "I") + rest("ndustrial")),
+        word(key("e", "E") + rest("cology")),
+      ].join(" ")
+    : title;
 ---
 
 <div class="cover">
   <div class="cover-grid">
     <div class="cover-copy">
       <h1 id="_top" data-page-title set:html={heading} />
+      {
+        isHome && acronym && (
+          // Runs before the page paints: the title's parts stay hidden until the hand-off
+          // script places them. Reduced motion, a seen session or blocked storage skips it,
+          // and the timeout shows the title if that script never runs.
+          <script is:inline>
+            try {
+              if (!matchMedia("(prefers-reduced-motion: reduce)").matches && !sessionStorage.getItem("ai4ie-handoff")) {
+                sessionStorage.setItem("ai4ie-handoff", "1");
+                document.documentElement.classList.add("ac-run");
+                setTimeout(() => document.documentElement.classList.remove("ac-run"), 2000);
+              }
+            } catch {}
+          </script>
+        )
+      }
       {tagline && <p class="cover-tagline" set:html={tagline} />}
     </div>
     {
@@ -74,17 +90,48 @@ const heading = isHome ? `${title}&nbsp;${endMark}` : title;
 </div>
 
 <script>
-  // Pointing at or tapping the end mark inks its strokes in again over a faint ghost.
-  // Each replay swaps between two same-shaped keyframe sets, which restarts the CSS
-  // animations; a hover during a run is ignored, so the strokes never jump mid-draw.
-  const tile = document.querySelector(".cover-endmark");
-  let started = 0;
-  let round = false;
-  tile?.addEventListener("pointerenter", () => {
-    if (performance.now() - started < 500) return;
-    started = performance.now();
-    round = !round;
-    tile.classList.remove("reink-a", "reink-b");
-    tile.classList.add(round ? "reink-a" : "reink-b");
-  });
+  // The hand-off: the header wordmark's letters fly to their keys in the title, measured
+  // live from both, then the header mark fades back. Once per tab session; the inline
+  // script after the title decides, so the title never flashes in its final place.
+  const root = document.documentElement;
+  const mark = document.querySelector<SVGSVGElement>(".site-title .brand-mark");
+  const h1 = document.querySelector<HTMLElement>(".cover h1");
+  if (root.classList.contains("ac-run") && mark && h1) {
+    const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
+    const box = mark.getBoundingClientRect();
+    // The strokes' cap runs from 4.9 to 27.1 of the mark's 32 units; Archivo's cap is 0.7em.
+    const srcCap = (box.height * 22.2) / 32;
+    const srcMid = box.top + (box.height * 16) / 32;
+    const cap = Number.parseFloat(getComputedStyle(h1).fontSize) * 0.7;
+    // All keys leave together on one curve, so they keep their order and never cross.
+    for (const k of ["a", "i1", "4", "i2", "e"]) {
+      const el = h1.querySelector<HTMLElement>(`[data-ac="${k}"]`);
+      const from = mark.querySelector(`.bm-${k}`)?.getBoundingClientRect();
+      if (!el || !from) continue;
+      const to = el.getBoundingClientRect();
+      const dx = from.left - to.left;
+      const dy = srcMid - (to.top + to.height / 2);
+      el.animate(
+        [
+          { opacity: 0, transform: `translate(${dx}px, ${dy}px) scale(${srcCap / cap})` },
+          { opacity: 1, offset: 0.15 },
+          { opacity: 1, transform: "none" },
+        ],
+        { duration: 700, easing: ease, fill: "backwards" },
+      );
+    }
+    h1.querySelectorAll(".ac-rest").forEach((el, i) =>
+      el.animate([{ opacity: 0 }, { opacity: 1 }], {
+        duration: 400,
+        delay: 600 + i * 60,
+        easing: "ease-out",
+        fill: "backwards",
+      }),
+    );
+    mark.animate([{ opacity: 0 }, { opacity: 0, offset: 0.75 }, { opacity: 1 }], {
+      duration: 1200,
+      easing: "ease-out",
+    });
+    root.classList.remove("ac-run");
+  }
 </script>

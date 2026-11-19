@@ -582,98 +582,17 @@ starlight-menu-button button {
   font-size: clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem);
   margin: 0;
 }
-/* Cap height of the narrow Archivo title, sitting on its baseline. */
-.cover-endmark {
+/* The title's acronym hand-off (script in Hero.astro). A key is an inline block, so it can
+   move; its word stays on one line. */
+.cover .ac-word {
+  white-space: nowrap;
+}
+.cover .ac {
   display: inline-block;
-  width: 0.7em;
-  height: 0.7em;
-  vertical-align: baseline;
+  transform-origin: left center;
 }
-/* On load the tile lands, then its strokes ink in as a draftsman would draw the mark:
-   the 4, its stem (the I), and last the faded A leg and E arms. It ends with the Fig. 1
-   bands, as part of the one entrance. The paths follow public/favicon.svg's order:
-   faded strokes, the 4, the stem. Pointing at the tile replays the inking, faster and
-   over a ghost of the mark (script in Hero.astro). The dash gap is three path lengths,
-   so an undrawn stroke leaves no sliver at either end. */
-.endmark-ghost {
+.ac-run .cover :is(.ac, .ac-rest) {
   opacity: 0;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .cover-endmark rect {
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: endmark-land 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
-  }
-  .endmark-ink path {
-    stroke-dasharray: 1 3;
-    animation: endmark-ink 0.3s cubic-bezier(0.65, 0, 0.35, 1) backwards;
-  }
-  .endmark-ink path:nth-child(2) {
-    animation-delay: 0.25s;
-  }
-  .endmark-ink path:nth-child(3) {
-    animation-delay: 0.45s;
-  }
-  .endmark-ink path:nth-child(1) {
-    animation-delay: 0.6s;
-  }
-  .reink-a .endmark-ink path {
-    animation-name: endmark-ink-a;
-  }
-  .reink-b .endmark-ink path {
-    animation-name: endmark-ink-b;
-  }
-  .cover-endmark:is(.reink-a, .reink-b) .endmark-ink path {
-    animation-duration: 0.2s;
-  }
-  .cover-endmark:is(.reink-a, .reink-b) .endmark-ink path:nth-child(2) {
-    animation-delay: 0s;
-  }
-  .cover-endmark:is(.reink-a, .reink-b) .endmark-ink path:nth-child(3) {
-    animation-delay: 0.15s;
-  }
-  .cover-endmark:is(.reink-a, .reink-b) .endmark-ink path:nth-child(1) {
-    animation-delay: 0.3s;
-  }
-  .reink-a .endmark-ghost {
-    animation: endmark-ghost-a 0.5s linear;
-  }
-  .reink-b .endmark-ghost {
-    animation: endmark-ghost-b 0.5s linear;
-  }
-}
-@keyframes endmark-land {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-}
-@keyframes endmark-ink {
-  from {
-    stroke-dashoffset: 1.01;
-  }
-}
-@keyframes endmark-ink-a {
-  from {
-    stroke-dashoffset: 1.01;
-  }
-}
-@keyframes endmark-ink-b {
-  from {
-    stroke-dashoffset: 1.01;
-  }
-}
-@keyframes endmark-ghost-a {
-  from,
-  80% {
-    opacity: 0.35;
-  }
-}
-@keyframes endmark-ghost-b {
-  from,
-  80% {
-    opacity: 0.35;
-  }
 }
 .cover-tagline {
   margin: 0;
