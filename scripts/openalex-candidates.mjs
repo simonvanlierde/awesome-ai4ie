@@ -88,7 +88,9 @@ function dot(a, b) {
   return a.reduce((s, x, i) => s + x * b[i], 0);
 }
 
-/** The k references most similar to `v` (unit vectors), best first, skipping `self`. * @param {string | null} [self]
+/**
+ * The k references most similar to `v` (unit vectors), best first, skipping `self`.
+ * @param {string | null} [self]
  */
 export function nearest(v, refs, k = K, self = null) {
   return refs
@@ -102,7 +104,9 @@ function mean(xs) {
   return xs.reduce((s, x) => s + x, 0) / xs.length;
 }
 
-/** Closeness to listed papers minus closeness to rejected leads; higher is likelier listed. * @param {string | null} [self]
+/**
+ * Closeness to listed papers minus closeness to rejected leads; higher is likelier listed.
+ * @param {string | null} [self]
  */
 export function score(v, listed, rejected, self = null) {
   const near = nearest(v, listed, K, self);
