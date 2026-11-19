@@ -1,90 +1,67 @@
 ---
 title: Demos
-description: Interactive demos of AI methods relevant to IE, in-browser and embedded, and how to add your own.
+description: Classify a photo, outline a region, or estimate depth from a single image.
 ---
 
 import Cite from '../../components/Cite.astro';
 import SpaceEmbed from '../../components/SpaceEmbed.astro';
 import ZeroShotDemo from '../../components/ZeroShotDemo.tsx';
 
-Seeing a method run on *your own* photo beats reading about it. There are three
-demos so far: one built into this page, two embedded from Hugging Face Spaces.
-Each is tied to a cell of the [applications map](/applications-map/) and notes what
-it does and doesn't show.
+<span id="in-this-browser-zero-shot-identification-clip"></span>
 
-## In this browser: zero-shot identification (CLIP)
+## Classify a photo with CLIP
 
-Zero-shot means you name the categories when you run it; the model was never trained on them.
-Pick a photo (a product, a part, a pile of scrap) and a set of candidate labels;
-<Cite id="radfordLearningTransferableVisual2021">CLIP</Cite> scores the labels against the image. It runs
-**entirely in this browser tab** via
-[transformers.js](https://huggingface.co/docs/transformers.js); the photo is never
-uploaded. On first use the page fetches two things: the transformers.js code from
-cdn.jsdelivr.net and the CLIP model from huggingface.co. To keep sensitive data in-house
-with bigger models, see [Local AI & hardware](/tools/local-ai/).
+Pick a photo and enter possible labels. <Cite id="radfordLearningTransferableVisual2021">CLIP</Cite>
+ranks those labels without training on your examples.
 
 <ZeroShotDemo client:visible />
 
-**What it shows:** open-vocabulary recognition with labels you choose at run time;
-the *identity* column of the [CV taxonomy](/applications-map/cv-taxonomy/).
-**What it doesn't:** reliability. Scores are relative to *your* candidate list, and a
-confident-looking score proves nothing about labels you didn't offer.
+<noscript>Enable JavaScript to classify a photo in this browser.</noscript>
 
-## Embedded: segmentation and depth
+<span id="embedded-segmentation-and-depth"></span>
+<span id="segment-anything-in-browser-webgpu"></span>
 
-### Segment Anything (in-browser, WebGPU)
+## Outline part of a photo with Segment Anything
 
-SAM segments whatever you click: the *detection & segmentation* step behind
-component-counting at end-of-life. This Space also runs fully client-side.
+Click a region to trace its outline. This Hugging Face demo runs on your device
+using WebGPU. It finds outlines. You still need to identify each part to build a
+component list.
 
 <SpaceEmbed
   title="Segment Anything WebGPU"
-  description="Upload a photo and click on it to cut out a region. The model runs on your GPU."
   href="https://huggingface.co/spaces/webml-community/segment-anything-webgpu"
   src="https://webml-community-segment-anything-webgpu.static.hf.space/index.html"
 />
 
-**What it doesn't show:** class assignment. SAM finds
-regions, not component types; you still need a classification step on top before
-you get a usable bill of components.
+<span id="depth-anything-v2-hosted"></span>
 
-### Depth Anything V2 (hosted)
+## Estimate depth with Depth Anything V2
 
-Estimates how far each point in a single photo is from the camera, which is the
-start of measuring a product's size and volume: the *quantity* column of the
-[CV taxonomy](/applications-map/cv-taxonomy/). This one calls a hosted GPU, so **your image leaves the
-browser**; use test images, not confidential ones.
+See which parts of a photo are closer to the camera. Use a test image.
+The demo sends the image to a Hugging Face server. The depth map alone
+doesn't give you measurements in centimetres.
 
 <SpaceEmbed
   title="Depth Anything V2"
-  description="Upload a photo and get a depth map back. The image is sent to a hosted GPU."
   href="https://huggingface.co/spaces/depth-anything/Depth-Anything-V2"
   src="https://depth-anything-depth-anything-v2.hf.space"
 />
 
-**What it doesn't show:** metric accuracy on the
-reflective, transparent, and thin parts that dominate real products.
+See how classification, segmentation and depth fit into
+[computer vision for products at end of life](/applications-map/cv-taxonomy/).
 
-## Two ways to add a demo
+<details id="two-ways-to-add-a-demo">
+<summary>Add a demo</summary>
 
-- **External app (most common):** anything that *calls a hosted model* needs a
-  backend, so host it separately (Hugging Face Space, an institute server, a small
-  FastAPI app) and embed it with an `<iframe>`. Keep a text link too, for when the
-  embed can't load. For a Hugging Face Space, use
-  [`SpaceEmbed`](repo:blob/main/src/components/SpaceEmbed.astro)
-  as above: the Space loads only when the reader clicks, not on every page view.
+- **Hosted app.** To add a Hugging Face Space, use
+  [`SpaceEmbed`](repo:blob/main/src/components/SpaceEmbed.astro). It loads when the
+  reader asks. For another host, embed the app with an `<iframe>` and include a link
+  in case it can't load.
+- **In-browser app.** Use [`ZeroShotDemo.tsx`](repo:blob/main/src/components/ZeroShotDemo.tsx)
+  as an example. Add `<YourDemo client:visible />` to the `.mdx` page.
 
-  ```html
-  <iframe src="https://example.org/your-demo/" width="100%"
-          style="height:480px;border:1px solid #ccc"
-          loading="lazy" title="Demo: category name"></iframe>
-  ```
+Set the `demo:` field in the matching
+[application entry](repo:blob/main/src/data/applications.yaml) so readers can open
+the demo from the [map](/applications-map/).
 
-- **In-page island:** a client-side widget ships as an Astro island and needs no
-  backend, even for real in-browser inference via transformers.js. Copy
-  [`src/components/ZeroShotDemo.tsx`](repo:blob/main/src/components/ZeroShotDemo.tsx),
-  then drop `<YourDemo client:visible />` into an `.mdx` page.
-
-When adding a demo, link it from the matching entry in
-[`src/data/applications.yaml`](repo:blob/main/src/data/applications.yaml)
-(`demo:` field) so the [map](/applications-map/) points to it.
+</details>

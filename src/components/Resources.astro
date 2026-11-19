@@ -28,7 +28,6 @@ const parts = (s: string) =>
         <strong>
           <a href={e.url}>{e.title}</a>
         </strong>
-        {e.status === "proposal" && <span class="lit-proposal">proposal</span>}
         {mixed && <span> ({RESOURCE_KINDS[e.kind].toLowerCase()})</span>}:{" "}
         {parts(e.blurb).map((p) => (p.href ? <a href={p.href}>{p.text}</a> : p.code ? <code>{p.text}</code> : p.text))}
         {e.good && (

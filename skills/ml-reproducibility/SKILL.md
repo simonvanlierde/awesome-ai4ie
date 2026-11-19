@@ -1,15 +1,13 @@
 ---
 name: ml-reproducibility
-description: Use when building, reviewing, or writing up a machine-learning model on research data (LCA, MFA, or any IE dataset); enforces a reproducibility-first workflow that prevents data leakage and under-reported pipelines.
+description: Use when building, reviewing or writing up a machine-learning model on research data, including LCA, MFA and other industrial ecology datasets. Check for data leakage and gaps in reporting.
 ---
 
 # ML reproducibility for IE research
 
-This skill follows the recommendations of
-[Rankin et al. (2026)](https://doi.org/10.21203/rs.3.rs-9270723/v1), a CML survey
-of ML use in industrial ecology. Two failure modes dominated that survey: **data
-leakage** and **poor computational reporting**. Every rule below traces to one of
-them.
+These checks follow [Rankin et al. (2026)](https://doi.org/10.21203/rs.3.rs-9270723/v1),
+who found data leakage and incomplete reporting in their survey of ML use in
+industrial ecology.
 
 ## When to apply
 
@@ -24,8 +22,7 @@ them.
    training set only. If the data has a time dimension, split by time
    (time-series cross-validation), never randomly.
 2. **Ask whether ML is needed at all.** If the hypothesis can be tested with
-   empirical data or a mechanistic model, prefer that. ML reproducibility errors
-   can't occur in an analysis that doesn't use ML.
+   empirical data or a mechanistic model, prefer that.
 3. **Fit the simplest model first.** Report a linear-regression (or equivalent)
    baseline before any complex model. If the complex model barely beats it, say so;
    several best-practice studies found linear models nearly as good.
@@ -34,8 +31,8 @@ them.
 5. **Describe the pipeline plainly, in order.** The write-up must say things like
    "we split the data, then normalized, then trained". A reader should be able to
    confirm the order of operations from the text alone.
-6. **Justify anything withheld.** If you can't share data, code, or model weights
-   (e.g. proprietary data), state why. Point to where readers can get similar data. Transparency is the default; withholding is the documented exception.
+6. **Explain what you can't share.** Give the reason for withholding any data,
+   code or model weights. Point readers to comparable data if it exists.
 7. **Hunt for assumptions.** Before trusting a good test metric, ask: does the data
    reflect the process being modeled? Are there hidden assumptions (sampling,
    temporal ordering, unit handling) that condition the result? Treat this like the
@@ -63,6 +60,5 @@ Then the softer checks:
 
 ## Output
 
-When you apply this skill, state which rules you checked and what you found
-("checked test-set isolation: split happens in `split.py` before the scaler
-is fit, OK"), not a generic "looks reproducible".
+Report what you checked and what you found. For example, "`split.py` creates
+the test set before fitting the scaler."

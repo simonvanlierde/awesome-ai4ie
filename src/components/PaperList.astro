@@ -17,7 +17,6 @@ const { papers } = Astro.props;
       <li class="lit-entry">
         <span class="lit-meta">
           {citeAuthors(p)}, {p.year}
-          {p.status === "proposal" && <span class="lit-proposal">proposal</span>}
         </span>
         <a href={paperUrl(p.id)} class="lit-title">
           {p.title}
@@ -27,8 +26,12 @@ const { papers } = Astro.props;
     ))
   }
 </ol>
-<p>
-  <a href={litUrl({ papers: papers.map((p) => p.id) })}>
-    Open {papers.length === 1 ? "this paper" : `these ${papers.length} papers`} in the literature list →
-  </a>
-</p>
+{
+  papers.length > 1 && (
+    <p>
+      <a href={litUrl({ papers: papers.map((p) => p.id) })}>
+        Open all {papers.length} papers in the literature list
+      </a>
+    </p>
+  )
+}

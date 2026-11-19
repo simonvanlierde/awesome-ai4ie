@@ -1,5 +1,5 @@
 name: Suggest a tool
-description: Software, hardware or a service for the tools pages. No pull request needed.
+description: Software, hardware or a service for the tools pages.
 title: "[Tool] "
 labels: [entry, tool]
 body:
@@ -24,7 +24,7 @@ body:
     id: what
     attributes:
       label: What does it do, and what is it good for in IE work?
-      description: Say what it's not good for too. Honest limits help more than praise.
+      description: Include any limits that affect when it's usable.
     validations:
       required: true
   - type: dropdown
@@ -54,5 +54,5 @@ body:
     id: checked
     attributes:
       label: When did you check this?
-      description: Prices, specs and model names go stale, so we date every entry. Leave it empty if it's this month.
+      description: Leave blank if you checked it this month.
       placeholder: YYYY-MM

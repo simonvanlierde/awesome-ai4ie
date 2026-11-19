@@ -1,19 +1,13 @@
 ---
 title: Prompts & skills
-description: Copy-pasteable prompts with use-when notes, and complete Agent Skill files ready to install.
+description: Prompts and Agent Skills for checking sources, code, and machine learning pipelines.
 ---
 
 import { Code } from '@astrojs/starlight/components';
 import mlReproducibility from '@skills/ml-reproducibility/SKILL.md?raw';
 import lcaSanityCheck from '@skills/lca-data-sanity-check/SKILL.md?raw';
 
-The copy-paste page: starter prompts to adapt, and complete Agent Skill files.
-When a vetted group version does better than something here, replace it.
-
 ## Reusable prompts
-
-Copy-pasteable prompts with a one-line "use when". Add your own in the same format:
-one fenced block, nothing project-specific.
 
 ### Verify a claim before citing it
 
@@ -82,30 +76,17 @@ the requested unit rather than converting it.
 
 ## Agent Skill files
 
-Reusable [Agent Skills](https://agentskills.io) package a workflow (checklist +
-instructions) so it triggers automatically. The format is open, and several coding
-agents read it.
-
-Two working skills follow in full. Open **Show the skill file** and use the copy
-button. Save the content as `SKILL.md` in your skills folder, or get the file from
+An [Agent Skill](https://agentskills.io) stores instructions a supported assistant can
+load for a task. Open **Show the skill file** to copy the instructions. Save them as
+`SKILL.md` in your assistant's skills folder, or get them from
 [`skills/`](repo:tree/main/skills) on GitHub.
 
 ### ml-reproducibility
 
-Enforces the [Rankin et al.](https://doi.org/10.21203/rs.3.rs-9270723/v1)
-recommendations whenever a model is trained or reviewed: test-set isolation before
-preprocessing, a linear baseline first, plain-language pipeline reporting, and the
-three disqualifying reviewer checks. It reports each rule it checked and what it found,
-not a general "looks reproducible".
-
-Example uses:
-
-- You trained a random forest to gap-fill an inventory and ask the agent to look over
-  the pipeline. It checks that the split happens before scaling and gap-filling, asks for
-  a linear baseline, and names each check with its result.
-- You review a manuscript that predicts building material stocks from yearly data.
-  Reviewer mode checks the three disqualifying errors first, among them a random split
-  on time-structured data.
+Use this to check how a model was trained or evaluated. It follows the
+[Rankin et al. recommendations](https://doi.org/10.21203/rs.3.rs-9270723/v1) on
+test-set isolation, baselines and pipeline reporting. For example, it checks whether
+you split an inventory dataset before scaling and gap-filling.
 
 <details>
 <summary>Show the skill file</summary>
@@ -114,26 +95,14 @@ Example uses:
 
 ### lca-data-sanity-check
 
-A structured pass over AI-written pipeline code: units, defaults, thresholds,
-mappings, a known-answer test, and a mass/energy balance check. A pass counts only
-when it names the known-answer case it ran.
-
-Example uses:
-
-- An agent edited a Brightway script and the impact scores moved. The pass compares the
-  database and method names with the originals character for character, then reruns
-  a case with a published answer.
-- An AI-written pandas step converts a flow table from tonnes to kilograms and adds a
-  `dropna`. The pass states the unit at each step, counts the rows the filter drops, and
-  checks that inputs still equal outputs plus stock change.
+Use this to check units, defaults, mappings, and mass or energy balances after
+an edit. For example, if an edit changes the result of a Brightway calculation,
+check the database and method names, then rerun a case with a known answer.
 
 <details>
 <summary>Show the skill file</summary>
 <Code code={lcaSanityCheck} lang="md" title="skills/lca-data-sanity-check/SKILL.md" />
 </details>
 
-To add your own, start from
-[`skills/SKILL-template.md`](repo:blob/main/skills/SKILL-template.md).
-Put each skill in its own folder under `skills/`.
-[CONTRIBUTING](repo:blob/main/CONTRIBUTING.md#adding-an-agent-skill) describes
-the format.
+[Add an Agent Skill](repo:blob/main/CONTRIBUTING.md#adding-an-agent-skill)
+using the [skill template](repo:blob/main/skills/SKILL-template.md).

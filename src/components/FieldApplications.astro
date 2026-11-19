@@ -4,7 +4,7 @@
 // no JavaScript, only printing does.
 import { getCollection } from "astro:content";
 import { type IeTag, tagLabel } from "../data/tags";
-import { siteUrl } from "../lib/urls";
+import { litUrl, siteUrl } from "../lib/urls";
 import AppList from "./AppList";
 
 interface Props {
@@ -18,14 +18,12 @@ const apps = (await getCollection("applications"))
 ---
 
 <div class="apx apx-field not-content">
-  <p class={`apx-group-label apx-ie field-${ie}`}>
-    {apps.length} {apps.length === 1 ? "application" : "applications"} in {tagLabel("ie", ie)}
-  </p>
-  <AppList apps={apps} />
+  {apps.length > 0 && <AppList apps={apps} />}
   <p class="apx-links">
-    <a href={siteUrl(`applications-map/${ie}/`)}>
-      {tagLabel("ie", ie)}: every technique, paper and demo →
-    </a>
+    <a href={siteUrl(`applications-map/${ie}/`)}>Explore {tagLabel("ie", ie)}</a>
+    {" · "}
+    <a href={litUrl({ ie: [ie] })}>Papers in {tagLabel("ie", ie)}</a>
+    {ie === "sem" && <>{" · "}<a href={litUrl({ ml: ["uncertainty"] })}>Papers on uncertainty</a></>}
   </p>
 </div>
 

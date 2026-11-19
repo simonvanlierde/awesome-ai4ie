@@ -7,7 +7,7 @@ import { groupBy, toGrid } from "./appPivot";
 
 type Mode = "ml" | "grid";
 
-// No "by IE field" view: the page's field sections above already list each
+// No "by IE field" view: the page's field sections already list each
 // field's applications. The grid comes first, so the page does not repeat the
 // whole list by default.
 const MODES: { key: Mode; label: string }[] = [
@@ -134,8 +134,7 @@ function Grid({ entries }: { entries: AppEntry[] }) {
         </tbody>
       </table>
       <p className="apx-grid-src">
-        Shade shows the number of applications: 1, 2, or 3 or more. A dashed cell has none yet.
-        Source: src/data/applications.yaml.
+        Numbers count applications. Links open their papers. A dashed cell has no entry.
       </p>
     </section>
   );

@@ -1,14 +1,9 @@
 ---
 name: lca-data-sanity-check
-description: Use when AI has written or edited code in an LCA/MFA/IO data pipeline; catches silently changed units, defaults, thresholds, and mappings that run without error but change results.
+description: Use after an AI-assisted change to an LCA, MFA or input-output data pipeline. Check units, defaults, thresholds and mappings against the original.
 ---
 
 # LCA / MFA data-pipeline sanity check
-
-AI-generated pipeline code usually *runs*. The dangerous failures in IE work are the
-ones that run silently: a unit conversion dropped, a default swapped, a
-characterization method substituted. This skill is a structured pass over an
-AI-produced diff before you trust its results.
 
 ## When to apply
 
@@ -18,8 +13,8 @@ AI-produced diff before you trust its results.
 
 ## The pass
 
-1. **Read the diff, not the summary.** Check every changed line against what you
-   asked for. Flag any change you didn't request, however plausible it looks.
+1. **Read the diff.** Check every changed line against the request. Flag any
+   unrelated changes.
 2. **Units.** For every quantity the change touches: what unit is it in at each
    step? Look specifically for kg↔t, MJ↔kWh, per-kg↔per-unit, and percent↔fraction
    flips. If the code has no unit annotations, add a comment stating the unit at
@@ -34,9 +29,8 @@ AI-produced diff before you trust its results.
    (e.g. product→material, sector→sector): spot-check entries against the
    authoritative source. Don't trust a generated mapping wholesale.
 6. **Known-answer test.** Run the pipeline on a case where the answer is known
-   (a published figure, a hand-calculated example, last release's output). "It
-   executed without error" is not verification. If no known-answer case exists,
-   create one tiny synthetic case and keep it as a regression test.
+   (a published figure, a hand-calculated example, last release's output). If no
+   case exists, create a small synthetic case and keep it as a regression test.
 7. **Mass/energy balance.** Where applicable, check totals: do inputs still equal
    outputs plus stock change within tolerance? A balance that held before the
    change and fails after it points straight at the bug.

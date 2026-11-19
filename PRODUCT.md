@@ -14,7 +14,7 @@ second.
 
 ## Product Purpose
 
-A community-curated guide to using AI in IE research: a map of applications by IE field and
+A proposed guide to using AI in IE research: a map of applications by IE field and
 AI technique, a tag-filterable literature list, best practices and checklists, tool and
 hardware guidance, and worked demos. A visit succeeds when the reader finds a trustworthy
 entry point for their own field, and some readers go on to contribute: open a pull request
@@ -22,9 +22,8 @@ or join the Discord.
 
 ## Positioning
 
-One shared tag vocabulary (IE field × AI technique) links the map, the literature and the
-demos, so every application area can be followed the same way: see what works, read the
-evidence, try it.
+One shared tag vocabulary connects the application map to its literature. Where an
+application has a demo, the map links to it.
 
 ## Operating Context
 
@@ -58,7 +57,7 @@ Name: "Awesome AI for Industrial Ecology", short form AI4IE. Beyond the name, th
 
 ## Evidence on Hand
 
-- 124 literature entries and 19 application entries in `src/data/`.
+- Literature, applications and resources in `src/data/`.
 - Two worked skills in `skills/`, the CLIP demo, and two embedded Hugging Face Spaces.
 - The mark SVG in `src/assets/`, the favicon and the social card in `public/`.
 - No testimonials, adoption figures or user counts exist; do not invent any.

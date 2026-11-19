@@ -1,9 +1,8 @@
 # Design
 
-The site is set like a statistical yearbook for industrial ecology. Each chapter has a number
-and a printing ink, a running head sits above every page title, and claims appear as numbered
-tables and figures with a source line. The home page opens on Fig. 1, a material-flow (Sankey)
-diagram of the literature, from IE field to AI technique.
+The site uses a statistical yearbook layout with one ink per chapter and ruled
+tables and figures. On the home page, the chapter links come before Fig. 1, which
+maps the literature by IE field and AI technique.
 
 Exact values (colours, sizes, breakpoints) live in
 [`src/styles/custom.css`](src/styles/custom.css). This file holds the rules behind them.
@@ -51,12 +50,11 @@ Columns of numbers use tabular figures.
 
 ## Layout and form
 
-- Starlight's shell, 48rem content width. The home page has no sidebar, so a numbered chapter
-  index under the cover stands in for it. No docs-site hero with a button pair and a card grid.
+- Starlight's shell, 48rem content width. The home page uses a chapter index in place of
+  the sidebar. The chapter names carry the navigation.
 - Square corners everywhere, Starlight's own controls included.
-- No shadows. Structure comes from rules: a 2px ink rule under running heads and over table
-  heads, 1px hairlines between rows. A panel that opens pushes content down instead of
-  covering it.
+- Rules give tables structure: 2px over table heads and 1px between rows.
+  Disclosures open in the page and push the following content down.
 - A dashed outline means a gap (the "Wanted" mark, an empty map cell) or a content-type tag.
   Never use it as decoration.
 - On touch screens, filter controls are at least 44px tall; Fig. 1's labels have a hit area of
@@ -85,21 +83,16 @@ or tapping the tile inks them in again.
 
 ## Components
 
-- **Running head.** Chapter number and title on the left, site name on the right (dropped on
-  phones), over a 2px ink rule.
 - **Sidebar.** Each chapter carries a square number block in its ink; the current page gets a
   light tint of that ink.
-- **Fig. 1.** Built from `literature.yaml` at build time. From 64rem it spans the cover below the
-  title, wide and short with long bands; narrower screens get a compact plate. Node numbers count papers; band width
+- **Fig. 1.** Built from `literature.yaml`. From 64rem it spans the cover below the
+  chapter index, wide and short with long bands; narrower screens get a compact plate. Node numbers count papers; band width
   counts field-technique pairings, as the caption says. Each node opens the literature list
   holding exactly the papers it counts. Labels are the first words of each tag's full name.
   Pointing at a band lifts it and fades the rest. Pointing at, focusing or tapping a node
   lights its bands and names its reach in a live readout line under the plate; on touch the
   first tap lights a node and the second opens its list. On load the bands run in once from
-  the fields while the title's end mark inks in: together the site's one entrance, under a
-  second. Reduced motion skips both.
-- **Fig. 2.** The see, read, try path for one map cell, each step topped by the ink of the
-  chapter it links to.
+  the fields while the title's end mark inks in. Reduced motion skips both.
 - **Numbered tables.** A bold "Table N.N" title above, a source line below. Numbering and
   markup are in [CONTRIBUTING.md](CONTRIBUTING.md#look-and-feel).
 - **Application entries.** On the map page, each field's section has its synthesis paragraph,

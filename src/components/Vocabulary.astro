@@ -79,7 +79,6 @@ const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": term
                       <dd>
                         <p>{c.definition}</p>
                         <p class="vocab-meta">
-                          {c.short && <span>Short label: {c.short}. </span>}
                           {meta(c).map(([name, links]) => (
                             <span>
                               {name}:{" "}

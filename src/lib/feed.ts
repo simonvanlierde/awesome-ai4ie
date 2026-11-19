@@ -54,7 +54,7 @@ export function buildFeed(entries: FeedEntry[], siteRoot: string): string {
   <channel>
     <title>AI4IE: new literature</title>
     <link>${esc(siteRoot)}/literature/</link>
-    <description>Papers newly added to the AI4IE reading list. Every entry is a first proposal that the AI4IE group has not reviewed yet.</description>
+    <description>New papers in the reading list, part of a proposal for the AI4IE working group.</description>
     <language>en</language>
 ${newest.length ? `    <lastBuildDate>${pubDate(newest[0].added)}</lastBuildDate>\n` : ""}    <atom:link href="${esc(siteRoot)}/literature/feed.xml" rel="self" type="application/rss+xml"/>
 ${items}

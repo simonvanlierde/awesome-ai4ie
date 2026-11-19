@@ -3,14 +3,7 @@ title: Verification checklists
 description: Checklists for AI-assisted coding and ML reproducibility, drawn from documented failure modes in IE research.
 ---
 
-AI output looks confident whether or not it's right. Run the matching checklist
-before results go anywhere near a paper.
-
 ## AI-assisted coding
-
-AI-generated code runs and looks plausible whether or not it's doing the right thing. The
-risk is highest in data pipelines (LCA, MFA, ML). A wrong default or unit conversion there
-won't throw an error. It changes your results silently.
 
 - [ ] Did I read the actual diff, not just skim the chat summary of what changed?
 - [ ] Are units, defaults, and thresholds still what I intended, not silently changed?
@@ -20,11 +13,8 @@ won't throw an error. It changes your results silently.
 
 ## Machine learning reproducibility
 
-AI coding tools make it easier to use ML in applied research. So more people now run models
-without the domain knowledge to spot reproducibility errors. The checklist below comes
-from a literature review of ML reproducibility in IE research
-([Rankin et al.](https://doi.org/10.21203/rs.3.rs-9270723/v1)). The two most common failure
-modes it found were **data leakage** and **poor computational reporting**.
+A preprint review of 50 ML studies in industrial ecology found computational
+reproducibility problems in 42 and clear data leakage in 14 ([Rankin et al.](https://doi.org/10.21203/rs.3.rs-9270723/v1)).
 
 - [ ] Is the test set isolated *before* any pre-processing, normalization, or gap-filling?
 - [ ] If the data has a time dimension, was splitting done in a way that avoids temporal leakage
@@ -39,11 +29,10 @@ modes it found were **data leakage** and **poor computational reporting**.
       data cutoff and provenance discussed as a possible source of test-set leakage?
 
 :::note[For reviewers]
-Three errors are serious enough to doubt a study's results, and you don't need ML expertise to spot them: no hold-out
-test set, temporal leakage, or normalization/gap-filling performed before the train/test
-split. A withheld or proprietary dataset isn't a reason to doubt a study on its own, as long as
-the rest of the study follows best practice and the reason is stated.
+Check for a missing hold-out test set, time leakage, and preprocessing before the
+split. If the authors withheld data, look for the reason and what you can still
+verify.
 :::
 
 The [`ml-reproducibility` skill](/best-practices/prompts-and-skills/#ml-reproducibility)
-runs this checklist automatically whenever an AI assistant touches a model.
+lets a supported assistant apply this checklist to a pipeline.

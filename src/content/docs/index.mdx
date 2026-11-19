@@ -1,6 +1,6 @@
 ---
 title: Awesome AI for Industrial Ecology
-description: A community-curated guide to using AI in industrial ecology, open to contributions from anyone.
+description: Papers, applications and practical guides on AI for industrial ecology.
 head:
   # The page title equals the site title, so Starlight's "page | site" pattern
   # would double it. Override with the plain name.
@@ -8,67 +8,11 @@ head:
     content: Awesome AI for Industrial Ecology
 template: splash
 hero:
-  tagline: What AI already does in industrial ecology (IE) research, the papers behind it, the gaps still open, and how to try it without getting burned.
-  actions:
-    - text: Open the applications map
-      # The Hero override resolves these like Markdown links (`/path/`, `repo:`).
-      link: /applications-map/
-      icon: right-arrow
-    - text: How to contribute
-      link: /#contributing
-      variant: secondary
+  tagline: Find papers, applications and practical guides. This site is a proposal for the AI4IE working group.
 ---
-
-import PathFigure from "../../components/PathFigure.astro";
-
-Industrial ecology studies how materials and energy move through the economy: what
-products are made of, how long they last, where they end up, and what that costs the
-environment. AI can help with a lot of that work, and it can also produce confident
-nonsense. This guide sorts the two and points to the papers behind each verdict.
-
-It's community-curated, started in the **AI4IE working group**: IE researchers
-scattered across institutes who meet on [Discord](https://discord.gg/zhHAZakXHX).
-Anyone can contribute.
-
-:::note[A proposal: argue with it]
-This website is in its demo phase. If something looks wrong or your subfield is missing, [tell us](repo:issues/new?template=other.yml) or [open a pull request](repo:blob/main/CONTRIBUTING.md).
-:::
-
-## How it fits together
-
-<PathFigure />
-
-<div class="home-pair">
-<div>
-
-## Where to start
-
-- **A life cycle assessment (LCA) or material flow analysis (MFA) researcher:** [what works in your field](/applications-map/#what-works-today-per-field), then the [ML-reproducibility checklist](/best-practices/checklists/#machine-learning-reproducibility) before your first model.
-- **A student:** [getting started](/best-practices/) and the [ML landmarks](/literature/?type=landmark-ml) reading list.
-- **A research software engineer (RSE) or tool builder:** [tools & hardware](/tools/) and the [how-to-add-a-demo guide](/demos/#two-ways-to-add-a-demo).
-- **Curious, or anyone else:** Fig. 2 above, or [try the photo demo](/demos/).
-- **Looking for something specific:** open **Search** (Ctrl K, or ⌘ K on a Mac) and ask in plain words, like "which papers sort waste with cameras?". It matches the reading list by meaning, not only by keyword.
-
-</div>
-<div>
 
 ## Contributing
 
-What helps most: examples of AI in your field, the pitfall you wish someone had warned you
-about, a demo of your method (embedded or in-browser), or an answer to any
-<span class="wanted">Wanted</span> mark on the site (each gap on the map links to a short form).
+[Suggest a paper](repo:issues/new?template=paper.yml) or [add an application](repo:issues/new?template=application.yml) with a GitHub account. You can also suggest changes in [Discord](https://discord.gg/zhHAZakXHX).
 
-No pull request needed: [suggest a paper](repo:issues/new?template=paper.yml),
-[map an application](repo:issues/new?template=application.yml),
-[suggest a tool](repo:issues/new?template=tool.yml),
-[suggest a course, video or post](repo:issues/new?template=resource.yml) or
-[suggest anything else](repo:issues/new?template=other.yml). Each is a short form on
-GitHub, and a maintainer turns it into an entry. The forms need a free GitHub account.
-Without one, post your suggestion in the [Discord](https://discord.gg/zhHAZakXHX).
-
-To make the change yourself, the [contributing guide](repo:blob/main/CONTRIBUTING.md)
-explains the format and where each type of entry goes. The data lives in three YAML
-files, and every page has an edit link.
-
-</div>
-</div>
+See the [contributing guide](repo:blob/main/CONTRIBUTING.md) for more ways to help. [Who maintains the site?](repo:blob/main/GOVERNANCE.md)

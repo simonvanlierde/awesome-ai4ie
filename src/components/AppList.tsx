@@ -28,9 +28,9 @@ export default function AppList({ apps }: { apps: readonly AppEntry[] }) {
                     : litUrl({ ie: a.ie, ml: a.ml })
                 }
               >
-                {a.papers.length > 0 ? `papers (${a.papers.length}) →` : "related reading →"}
+                {a.papers.length > 0 ? `Papers (${a.papers.length})` : "Related papers"}
               </a>
-              {a.demo && <a href={siteUrl(a.demo)}>demo →</a>}
+              {a.demo && <a href={siteUrl(a.demo)}>Try the demo</a>}
             </span>
           </details>
         </li>

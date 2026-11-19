@@ -1,25 +1,16 @@
 ---
 title: "Worked example: CV for product-scale data collection"
-description: A draft taxonomy of computer-vision tasks for product-scale data collection at end-of-life, with maturity verdicts per cell.
+description: A draft of what computer vision can measure in discarded products, components and materials.
 ---
 
 import Cite from '../../../components/Cite.astro';
 import Resources from '../../../components/Resources.astro';
 
-One member's **draft working taxonomy** of computer-vision tasks for product-scale
-data collection at end-of-life: a worked example of how one corner of the
-[applications map](/applications-map/) can be mapped in depth. Treat it as a starting
-point, not settled work.
+This draft covers what computer vision can tell us about products after use.
 
 ## Taxonomy at a glance
 
-Two axes: **physical scale** (product, component, material) and **information type**
-(identity, quantity, structure, condition). Structure means the bill of components (BoC):
-which parts a product has and how they are joined. Each filled cell is a CV task with a
-maturity grade. The grades are mostly negative: no cell reaches *strong* when the photos
-are taken at end-of-life. The useful information is in the grades below that. Each section
-below says what its level covers, gives examples with their papers, and links a demo where
-one exists.
+Structure means the bill of components (BoC), which lists a product's parts and how they join.
 
 | Scale ↓ / Info type → | Identity | Quantity | Structure (BoC) | Condition |
 | --- | --- | --- | --- | --- |
@@ -35,14 +26,7 @@ one exists.
 - **U, plausible-but-unvalidated:** shown only in principle or in a neighbouring field.
 - *Not sensed* or *Derived:* no method reads it from a photo; at best it is computed from other cells.
 
-_A personal working taxonomy, still in draft, scoped to CV for product-scale data
-collection. Verdicts and coverage will shift as it develops._
-
 ## Product-level tasks
-
-**What it covers:** data recoverable from an image of the whole product.
-
-**Examples:**
 
 - **Identity (partial).** OCR metadata extraction from labels (text detection, recognition,
   then fuzzy match to a reference database), with retrieval-based classification and VLM
@@ -67,19 +51,15 @@ runs the open-vocabulary part of this cell in your browser.
 
 ## Component-level tasks
 
-**What it covers:** data about the individual components inside an opened product.
-
-**Examples:**
-
-- **Structure / BoC (partial detection, emerging-but-narrow relations).** The most populated
-  cell. Detecting, segmenting, and counting components is accurate on the benchmarks a model was
-  tuned for: about 98.8% on a laptop-teardown set, in mAP50, the standard detection score
-  <Cite id="zhangEvaluatingLargeLightweight2026" />. It is untested on field photos. Foundation segmenters (<Cite id="kirillovSegmentAnything2023">SAM</Cite>, <Cite id="raviSAM2Segment2024">SAM 2</Cite>, <Cite id="carionSAM3Segment2025">SAM 3</Cite>,
-  <Cite id="liuGroundingDINOMarrying2024">GroundingDINO</Cite>, <Cite id="renGroundedSAMAssembling2024">Grounded-SAM</Cite>) need an added class-assignment layer. Inferring
-  component-to-component *attachment relations* is the weakest cell. Single-image methods
-  (<Cite id="liuSINGAPOSingleImage2025">SINGAPO</Cite>, <Cite id="chenURDFormerPipelineConstructing2024">URDFormer</Cite>) exist only for a few articulated household categories and collapse out
-  of distribution (~82% → ~39%). They also recover kinematic joints rather than the
-  fastener relations (screwed, glued, clipped) that a disassembly BoC needs.
+- **Structure / BoC (partial detection, emerging-but-narrow relations).** YOLOv8
+  segmented laptop components at 98.8% mAP50 on a benchmark of 1,456 annotated
+  images <Cite id="zhangEvaluatingLargeLightweight2026" />. That study used
+  controlled photos. Segmenters such as <Cite id="kirillovSegmentAnything2023">SAM</Cite>
+  outline regions, so identifying parts needs information about their class.
+  Single-photo methods such as <Cite id="liuSINGAPOSingleImage2025">SINGAPO</Cite> and
+  <Cite id="chenURDFormerPipelineConstructing2024">URDFormer</Cite> recover movable joints
+  for some household objects. A disassembly list also needs to record fasteners and
+  connections such as screws, glue and clips.
 - **Identity (partial).** OCR on component markings plus one-shot / retrieval recognition and
   open-vocabulary naming from a text prompt. Fine-grained brand- or part-specific identity is
   not reliably recovered.
@@ -90,11 +70,6 @@ runs the open-vocabulary part of this cell in your browser.
   per-unit condition *grading*.
 
 ## Material-level tasks
-
-**What it covers:** the material composition (bill of materials) of the product and its
-parts.
-
-**Examples:**
 
 - **Identity / BoM (partial on visible surfaces, open gap for full BoM).** Surface material
   classification and segmentation of *visible* regions (<Cite id="bellMaterialRecognitionWild2015">MINC</Cite>'s 23-class in-the-wild baseline;
@@ -112,9 +87,5 @@ parts.
   not validated.
 
 ## Learning the methods
-
-The cells above build on a few model families: image classifiers (CNNs and vision
-transformers), detectors such as YOLO, and segmenters. These courses teach them hands-on
-in Python:
 
 <Resources kind="course" ml="cv" />

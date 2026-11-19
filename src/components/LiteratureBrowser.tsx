@@ -267,6 +267,7 @@ export default function LiteratureBrowser({
           >
             Clear all
           </button>
+          <small>Copy the URL to share this filtered list.</small>
         </div>
       )}
 
@@ -332,7 +333,6 @@ export default function LiteratureBrowser({
               {formatAuthors(e)} · {e.year}
               {/* After hydration only: "new" depends on today, not on the build date. */}
               {hydrated && isNew(e.added) && <span className="lit-new">new</span>}
-              {e.status === "proposal" && <span className="lit-proposal">proposal</span>}
             </span>
             <a href={paperLink(e).href} className="lit-title">
               {e.title}
@@ -341,36 +341,22 @@ export default function LiteratureBrowser({
             <span className="lit-tags">
               <TagChips ie={e.ie} topic={e.topic} ml={e.ml} type={e.type} />
             </span>
-            <div className="lit-actions">
-              <fieldset className="lit-cite" aria-label={`Cite ${e.title}`}>
-                Cite
-                {FORMATS.map((f) => (
-                  <button
-                    type="button"
-                    key={f.key}
-                    className="lit-clear"
-                    onClick={() => download([e], f, e.id)}
-                  >
-                    {f.label}
-                  </button>
-                ))}
-              </fieldset>
-              <button
-                type="button"
-                className="lit-details-toggle"
-                aria-expanded={expanded.has(e.id)}
-                aria-controls={expanded.has(e.id) ? `${e.id}-details` : undefined}
-                aria-label={`Details: ${e.title}`}
-                onClick={() => toggleDetails(e.id)}
-              >
-                Details
-              </button>
-            </div>
+            <button
+              type="button"
+              className="lit-details-toggle"
+              aria-expanded={expanded.has(e.id)}
+              aria-controls={expanded.has(e.id) ? `${e.id}-details` : undefined}
+              aria-label={`Details: ${e.title}`}
+              onClick={() => toggleDetails(e.id)}
+            >
+              Details
+            </button>
             {expanded.has(e.id) && (
               <PaperDetails
                 entry={e}
                 extras={extras[e.id]}
                 byId={byId}
+                onExport={(format) => download([e], format, e.id)}
                 onCopy={() => copyLink(e)}
                 copyStatus={copied?.id === e.id ? copied.text : ""}
               />
@@ -388,12 +374,14 @@ export function PaperDetails({
   entry: e,
   extras,
   byId,
+  onExport,
   onCopy,
   copyStatus = "",
 }: {
   entry: LitEntry;
   extras?: PaperExtras;
   byId: Map<string, LitEntry>;
+  onExport: (format: (typeof FORMATS)[number]) => void;
   onCopy: () => void;
   copyStatus?: string;
 }) {
@@ -420,7 +408,19 @@ export function PaperDetails({
         {e.doi && <a href={`https://doi.org/${e.doi}`}>DOI {e.doi}</a>}
         {e.doi && e.arxiv && " · "}
         {e.arxiv && <a href={`https://arxiv.org/abs/${e.arxiv}`}>arXiv {e.arxiv}</a>}
-        {e.etAl && <span className="lit-details-note"> The full author list is there.</span>}
+      </dd>
+      <dt>Cite</dt>
+      <dd className="lit-details-links">
+        {FORMATS.map((format) => (
+          <button
+            key={format.key}
+            type="button"
+            className="lit-clear"
+            onClick={() => onExport(format)}
+          >
+            {format.label}
+          </button>
+        ))}
       </dd>
       {more.length > 0 && (
         <>

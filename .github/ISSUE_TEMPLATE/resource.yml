@@ -1,12 +1,12 @@
 name: Suggest a resource
-description: A course, video, post or community. No YAML or pull request needed.
+description: A course, video, post or community.
 title: "[Resource] "
 labels: [entry, resource]
 body:
   - type: markdown
     attributes:
       value: |
-        A maintainer turns this into an entry in the resources list. For software, a dataset or a model, use the tool form instead.
+        Use the tool form for software, datasets and models.
   - type: input
     id: link
     attributes:
@@ -30,8 +30,8 @@ body:
   - type: textarea
     id: why
     attributes:
-      label: Why is it worth the time?
-      description: One or two sentences for the list. Who is it for, and what will they learn or find? Honest limits help more than praise.
+      label: What will people find here?
+      description: In one or two sentences, say who it's for and what they can learn or use.
     validations:
       required: true
   # The three tag dropdowns list the labels in src/data/vocabulary.yaml; forms.test.ts keeps them in step.

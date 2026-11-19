@@ -1,7 +1,5 @@
 # Maintaining
 
-Notes for whoever looks after this repo. Contributors want [CONTRIBUTING.md](CONTRIBUTING.md).
-
 Maintainer: Simon van Lierde ([@simonvanlierde](https://github.com/simonvanlierde)). A second
 maintainer from the AI4IE working group is wanted. [`.github/CODEOWNERS`](.github/CODEOWNERS)
 asks the maintainers to review every pull request. Until there are two of us, that request is
@@ -9,12 +7,11 @@ advisory.
 
 ## Turning a form into an entry
 
-Issues from the forms arrive labelled `entry`, plus `paper`, `application` or `tool`. Treat what
-the form says as a lead, not as text to paste in. Write the entry yourself, and open every link
-before you add it.
+Find suggestions under the `entry` label. The forms also label papers, applications, tools
+and resources by type.
 
-1. Check that the source exists and says what the issue says. Read the paper, not only the
-   abstract. The ground rules in CONTRIBUTING.md apply to maintainers too.
+1. Open each link and check the claims against the source. For papers, read the full text.
+   Follow the [ground rules](CONTRIBUTING.md#ground-rules).
 2. For a paper, look up the title, authors and year from the DOI or arXiv id. For a DOI,
    `curl -s https://api.crossref.org/works/<doi> | jq '.message | {title, author, issued}'`
    prints them.
@@ -22,7 +19,7 @@ before you add it.
    - `id` is the citation key: the first author's surname, the first three title words with
      capitals, and the year, such as `donatiFutureArtificialIntelligence2022`. Zotero with
      Better BibTeX makes the same key.
-   - `blurb` comes from the "Why read it?" answer, in your own words.
+   - Write a `blurb` that explains what the paper shows.
    - Map the dropdown labels back to tag ids in [`src/data/vocabulary.yaml`](src/data/vocabulary.yaml). An
      answer under "Does it fill a gap on the map?" may ask for a new tag. Add it with this first
      entry, as CONTRIBUTING.md describes.
@@ -33,10 +30,11 @@ before you add it.
    [`src/data/resources.yaml`](src/data/resources.yaml): set `kind`, and for a tool its `group`
    (the list it sits in on the tools pages), `cost` and `data`. Set `checked` to the month you
    opened the link, or the month the issue was opened if it gives no date.
-4. For a paper, run `pnpm run citations`. It fetches the entry's BibTeX and RIS from Crossref or
-   arXiv into [`src/data/citations.json`](src/data/citations.json). Commit that file with the
-   entry. A `FAIL` line means Crossref or arXiv has no record yet, so rerun it later. Until then
-   the export falls back to a short record built from the YAML entry.
+4. For a paper, run `pnpm run citations` if the contributor hasn't fetched its records.
+   The command saves BibTeX and RIS from Crossref or arXiv in
+   [`src/data/citations.json`](src/data/citations.json). Include the updated cache with the
+   entry when available. If the fetch fails, check the message and retry later. The export
+   uses the YAML entry until the full record is available.
 5. Run `pnpm test`. It checks every field, tag and reference.
 6. Open a pull request with `Closes #<issue>` in its description, and thank the person who
    suggested it.
@@ -75,8 +73,8 @@ If a suggestion doesn't hold up, say why in the issue and close it.
 - **Every October.** Move `Expires` in [`public/.well-known/security.txt`](public/.well-known/security.txt)
   a year on (an expired file is invalid), and review the
   [accessibility statement](src/content/docs/accessibility.md) and its date.
-- **Stale entries.** Tool entries carry the month they were checked. Recheck any older than a
-  year: `rg -n 'checked 20' src/content/docs/tools/` lists them.
+- **Stale entries.** Recheck tool entries older than a year. Find the dates with
+  `rg -n 'checked:' src/data/resources.yaml`.
 - **Page weight.** CI fails a page that goes over its budget in
   [`scripts/page-weight.mjs`](scripts/page-weight.mjs). Raise `DEFAULT_BUDGET_KB` or a page's
   `OVERRIDES` entry only for a reason you can name in the pull request.

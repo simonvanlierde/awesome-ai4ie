@@ -21,12 +21,12 @@ const thin = thinTopics(entries, Astro.props.ie);
     <ul>
       {thin.map(({ topic, count }) => (
         <li>
-          <span class="wanted">Wanted</span> <b>{tagLabel("topic", topic)}.</b> {TOPIC_WANTED[topic]}{" "}
+          <b>{tagLabel("topic", topic)}.</b> {TOPIC_WANTED[topic]}{" "}
           {count === 0 ? (
             "No entry yet."
           ) : (
             <a href={litUrl({ topic: [topic] })}>
-              {count} {count === 1 ? "entry" : "entries"} so far
+              {count} {count === 1 ? "entry" : "entries"}
             </a>
           )}{" "}
           <SuggestPaper gap={tagLabel("topic", topic)} />

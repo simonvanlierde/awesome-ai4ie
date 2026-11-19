@@ -1,32 +1,25 @@
 # Contributing
 
-Anyone can contribute. If you've found hardware that works, a tool worth the time, a prompt that saves you an hour, or a place where AI is used in IE, please add it!
-
 ## The short version
 
-**No pull request needed.** [Suggest a paper](../../issues/new?template=paper.yml),
+[Suggest a paper](../../issues/new?template=paper.yml),
 [map an application](../../issues/new?template=application.yml),
 [suggest a tool](../../issues/new?template=tool.yml),
 [suggest a course, video or post](../../issues/new?template=resource.yml) or
-[suggest anything else](../../issues/new?template=other.yml). Each is a short form, and a
-maintainer turns it into an entry. The forms need a free GitHub account. Without one, post in
-the [AI4IE Discord](https://discord.gg/zhHAZakXHX).
+[pick another suggestion form](../../issues/new?template=other.yml). A maintainer reviews
+the suggestion. The forms need a GitHub account. You can also post in the
+[AI4IE Discord](https://discord.gg/zhHAZakXHX).
 
 To make the change yourself:
 
-1. **Papers, applications and resources live in data files**, not in page text:
-   [`src/data/literature.yaml`](src/data/literature.yaml),
-   [`src/data/applications.yaml`](src/data/applications.yaml) and
-   [`src/data/resources.yaml`](src/data/resources.yaml) (tools, datasets, models,
-   courses, videos, posts and communities). Copy a neighbouring entry and edit the
-   fields. The pages are built from the data.
-2. **Everything else** is a Markdown page under `src/content/docs/`:
-   `best-practices/`, `tools/`, `demos.mdx`, `applications-map/index.mdx`.
-   Copy the format of the entries next to yours.
-3. Open a pull request. One entry per PR is fine. Name it like a commit, such as
-   `feat(literature): add Smith 2025`: a check fails on a title such as "Update literature.yaml".
+1. Copy a nearby entry in [`literature.yaml`](src/data/literature.yaml),
+   [`applications.yaml`](src/data/applications.yaml) or [`resources.yaml`](src/data/resources.yaml).
+   For page copy, edit the Markdown under `src/content/docs/`.
+2. Open a pull request. Use a Conventional Commit title such as
+   `feat(literature): add Smith 2025`. One entry per pull request is enough.
 
-To edit text, you need no local setup: edit the Markdown on GitHub, or click the **edit pencil** on any page of the live site. To preview locally, see the [development section](README.md#development).
+Edit the file on GitHub or follow **Edit page** on the site. To run the site locally, see
+the [development section](README.md#development).
 
 ### Adding a paper, an application or a resource
 
@@ -47,7 +40,9 @@ When you reject a weekly lead, give the rule it fails as its `why`.
 - Resource entries need an `id`, `title`, `url`, a `kind`, a one-line `blurb` saying why it's worth the time, and `checked: YYYY-MM`, the month you last opened the link. A tool also takes `good` and `notFor` (the "Good for" and "Not for" verdict), `cost`, `data` (whether data leaves your machine) and `group` (its list on the tools pages).
 - Application entries need both tag dimensions (`ie:` and `ml:`), an honest one-line `maturity:`, and `papers:` referencing literature ids.
 - `pnpm test` checks every field, tag, and cross-reference. CI runs it on your PR.
-- A maintainer fetches the full BibTeX and RIS record for a new paper after merging. If you work locally, you can run `pnpm run citations` yourself.
+- If you work locally, run `pnpm run citations` and include the citation cache with the paper.
+  A maintainer can fetch the record for a GitHub-only edit. Until the cache has a record,
+  the site exports a short citation from the YAML entry.
 
 ### Listing resources on a page
 
@@ -158,9 +153,10 @@ both repos in the same change.
 Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUCT.md`](PRODUCT.md).
 
 - Number every new figure or table, and give it a source line that names its data file.
-- Tables are numbered by chapter: "Table 4.1" is the first table in chapter 4. Figures continue from Fig. 1 and Fig. 2 on the home page.
+- Number tables by chapter. Table 4.1 is the first table in chapter 4. Figure numbering
+  starts with Fig. 1 on the home page.
 - In Markdown, set the title as `<p class="table-title"><b>Table 4.1</b> …</p>` and the source as `<p class="table-src">Source: …</p>`.
-- For a figure built from the data, start from [`src/components/PathFigure.astro`](src/components/PathFigure.astro). It counts entries at build time, so its numbers stay true as entries are added.
+- For a figure that counts entries at build time, see [`FlowFigure.astro`](src/components/FlowFigure.astro).
 - A new IE field needs four things beside its concept in the vocabulary: a short label, a `.field-<tag>` ink rule, a `<FieldApplications ie="<tag>" />` section on the map page, and its own page at `src/content/docs/applications-map/<tag>.mdx`. That page holds a short definition of the field, `<FieldPage ie="<tag>" />`, and the field's gaps; copy an existing one. The type check and `pnpm test` flag a missing one. Ink 6 is the one left, so a new field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md). A domain such as water or chemicals is a topic, not a field: topics take no ink.
 
 ### Checking accessibility

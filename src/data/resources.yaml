@@ -18,7 +18,7 @@
   url: https://claude.ai
   kind: tool
   group: assistant
-  blurb: "General assistant; strong at long-document analysis, writing, and code."
+  blurb: "Chat assistant for working with documents, writing and code."
   good: "working through a paper or dataset description, drafting, code explanation."
   notFor: "facts without verification; check citations before using them (see [Best practices](/best-practices/))."
   cost: Free tier + paid
@@ -30,7 +30,7 @@
   url: https://chatgpt.com
   kind: tool
   group: assistant
-  blurb: "General assistant with the largest ecosystem (data analysis, custom GPTs)."
+  blurb: "Chat assistant with data analysis and custom GPTs."
   good: "exploratory data analysis on non-sensitive CSVs, brainstorming."
   notFor: "anything confidential on the free tier."
   cost: Free tier + paid
@@ -56,7 +56,7 @@
   url: https://docs.claude.com/en/docs/claude-code
   kind: tool
   group: coding
-  blurb: "Agentic coding in the terminal/IDE: reads the repo, edits files, runs tests."
+  blurb: "Coding assistant that reads and edits project files and runs tests."
   good: "multi-file changes, test-driven work, cleaning up research code."
   notFor: "unreviewed use; read the diffs (see the [coding checklist](/best-practices/checklists/#ai-assisted-coding))."
   cost: Paid
@@ -104,7 +104,7 @@
   url: https://www.semanticscholar.org
   kind: tool
   group: research
-  blurb: "Free scholarly search with a citation graph and a good API."
+  blurb: "Free literature search with citation links and an API."
   good: "checking whether a paper an AI cited actually exists."
   cost: Free
   checked: 2026-07
@@ -113,7 +113,7 @@
   url: https://www.connectedpapers.com
   kind: tool
   group: research
-  blurb: "Visual citation-graph exploration from a seed paper."
+  blurb: "Map papers related to a paper you choose."
   good: "getting into an unfamiliar literature quickly."
   cost: Free tier + paid
   checked: 2026-07
@@ -134,7 +134,7 @@
   url: https://notebooklm.google.com
   kind: tool
   group: research
-  blurb: "Grounded Q&A over documents you upload; answers cite the sources."
+  blurb: "Ask questions about documents you upload and follow the citations to the source passages."
   good: "interrogating a pile of reports or EPDs."
   notFor: "confidential documents."
   cost: Free
@@ -148,7 +148,7 @@
   url: https://docs.brightway.dev
   kind: tool
   group: library
-  blurb: "Open LCA framework; the computational backbone for scripted, reproducible LCA."
+  blurb: "Python framework for life cycle assessment."
   ie: [lca]
   checked: 2026-07
 - id: activity-browser
@@ -165,7 +165,7 @@
   url: https://github.com/polca/premise
   kind: tool
   group: library
-  blurb: "Prospective LCA databases coupling ecoinvent with IAM scenarios."
+  blurb: "Build prospective LCA databases by combining ecoinvent with scenarios from integrated assessment models."
   ie: [lca]
   checked: 2026-07
 - id: odym
@@ -173,7 +173,7 @@
   url: https://github.com/IndEcol/ODYM
   kind: tool
   group: library
-  blurb: "Dynamic MFA framework."
+  blurb: "Python framework for dynamic material flow analysis."
   ie: [sem]
   checked: 2026-07
 - id: pymrio
@@ -189,7 +189,7 @@
   url: https://scikit-learn.org
   kind: tool
   group: library
-  blurb: "Classical ML. Start here: fitting a linear baseline before any deep model is one of the [ML-reproducibility recommendations](/best-practices/checklists/#machine-learning-reproducibility)."
+  blurb: "Python library for fitting and evaluating models. The [reproducibility checklist](/best-practices/checklists/#machine-learning-reproducibility) shows where to start with a baseline."
   ml: [tabular-ml]
   checked: 2026-07
 - id: pytorch
@@ -197,7 +197,7 @@
   url: https://pytorch.org
   kind: tool
   group: library
-  blurb: "The default deep-learning framework in research; most CV/NLP models on the [map](/applications-map/) ship as PyTorch weights."
+  blurb: "Python framework for building, training and running neural networks."
   checked: 2026-07
 
 # ── Local AI: local and self-hosted inference ────────────────────────────────
@@ -206,7 +206,7 @@
   url: https://ollama.com
   kind: tool
   group: local
-  blurb: "One-command local model server with a curated library."
+  blurb: "Download models and run them locally through a command line or API."
   good: "getting a local model running in five minutes."
   cost: Free
   data: local
@@ -217,7 +217,7 @@
   url: https://lmstudio.ai
   kind: tool
   group: local
-  blurb: "Desktop GUI for discovering, downloading, and chatting with local models (incl. Apple-silicon MLX builds)."
+  blurb: "Download and chat with local models in a desktop app."
   good: "working in a GUI, or on a Mac."
   cost: Free for personal/academic use
   data: local
@@ -228,7 +228,7 @@
   url: https://github.com/ggml-org/llama.cpp
   kind: tool
   group: local
-  blurb: "The inference engine underneath much of the ecosystem; Ollama and LM Studio build on it."
+  blurb: "Run models in GGUF format on local CPUs and GPUs."
   good: "maximum control or minimal footprint."
   cost: Free, open source
   data: local
@@ -252,7 +252,7 @@
   title: Industrial Ecology Freiburg data commons
   url: https://www.database.industrialecology.uni-freiburg.de
   kind: dataset
-  blurb: "Open IE datasets (stocks, flows, lifetimes) collected by Stefan Pauliuk's group; the closest thing the field has to a shared data home."
+  blurb: "Open industrial ecology datasets on stocks, flows and product lifetimes."
   ie: [sem]
   checked: 2026-07
 - id: exiobase
@@ -273,7 +273,7 @@
   title: ecoinvent
   url: https://ecoinvent.org
   kind: dataset
-  blurb: "The standard LCI database. Paid license; check what your institution already has."
+  blurb: "Life cycle inventory database. Check whether your institution has a licence."
   ie: [lca]
   checked: 2026-07
 - id: relab
@@ -289,32 +289,32 @@
   title: Hugging Face Datasets
   url: https://huggingface.co/datasets
   kind: dataset
-  blurb: "The default host for ML datasets; one `load_dataset()` call away in Python."
+  blurb: "Find datasets and load them in Python with the Datasets library."
   checked: 2026-07
 - id: openml
   title: OpenML
   url: https://www.openml.org
   kind: dataset
-  blurb: "Curated, uniformly formatted datasets with tasks and benchmark results attached; strong sklearn/mlr integration."
+  blurb: "Machine learning datasets with defined tasks and uploaded benchmark results."
   ml: [tabular-ml]
   checked: 2026-07
 - id: kaggle-datasets
   title: Kaggle
   url: https://www.kaggle.com/datasets
   kind: dataset
-  blurb: "Broad dataset collection plus competitions; quality varies, licenses matter."
+  blurb: "Datasets from users and competitions. Check the licence for each dataset."
   checked: 2026-07
 - id: zenodo
   title: Zenodo
   url: https://zenodo.org
   kind: dataset
-  blurb: "DOI-issuing research repository; where to publish your own datasets as much as find others'."
+  blurb: "Find research datasets or deposit your own with a DOI."
   checked: 2026-07
 - id: uci-ml-repository
   title: UCI ML Repository
   url: https://archive.ics.uci.edu
   kind: dataset
-  blurb: "The classic benchmark collection; small, clean, good for baselines."
+  blurb: "Machine learning datasets for testing and comparing models."
   ml: [tabular-ml]
   checked: 2026-07
 
@@ -323,13 +323,13 @@
   title: Hugging Face Hub
   url: https://huggingface.co/models
   kind: model
-  blurb: "The central registry for pretrained models (LLMs, CV, audio); filter by task, license, and size. Most models on the [applications map](/applications-map/) live here."
+  blurb: "Browse pretrained models by task, licence or size."
   checked: 2026-07
 - id: ollama-library
   title: Ollama library
   url: https://ollama.com/library
   kind: model
-  blurb: "Curated open-weight LLMs packaged for one-command local use; pairs with the [local inference servers](/tools/local-ai/)."
+  blurb: "Models packaged for use with [Ollama](/tools/local-ai/)."
   ml: [llm]
   checked: 2026-07
 - id: kaggle-models
@@ -342,7 +342,7 @@
   title: timm
   url: https://huggingface.co/timm
   kind: model
-  blurb: "The standard collection of pretrained vision backbones for PyTorch."
+  blurb: "Pretrained image models for PyTorch."
   ml: [cv]
   checked: 2026-07
 
@@ -351,7 +351,7 @@
   title: Climate Change AI tutorials
   url: https://www.climatechange.ai/tutorials
   kind: course
-  blurb: "Worked notebooks that open in Colab, many with a walkthrough video. Most cover buildings, power systems and satellite imagery; none is on LCA or waste yet."
+  blurb: "Colab notebooks on buildings, power systems and satellite imagery, often with a video."
   topic: [buildings, energy]
   ml: [remote-sensing]
   checked: 2026-11
@@ -367,7 +367,7 @@
   title: Machine learning in Python with scikit-learn
   url: https://inria.github.io/scikit-learn-mooc/
   kind: course
-  blurb: "The scikit-learn developers' free beginner course: tabular data, pipelines, cross-validation, overfitting and model choice. A good first course before you fit a model to IE data."
+  blurb: "Free beginner course on tabular data, pipelines, cross-validation and model choice."
   ml: [tabular-ml]
   checked: 2026-11
   status: proposal
@@ -409,7 +409,7 @@
   title: "Intro to Large Language Models (Andrej Karpathy)"
   url: https://www.youtube.com/watch?v=zjkBMFhNj_g
   kind: video
-  blurb: "A one-hour talk for a general audience: what LLMs are, where they are headed, and their security problems. Recorded in November 2023, so the model names have moved on."
+  blurb: "A one-hour introduction to large language models and their security risks, recorded in November 2023."
   ml: [llm]
   checked: 2026-11
   status: proposal
@@ -434,7 +434,7 @@
   title: The Illustrated Transformer (Jay Alammar)
   url: https://jalammar.github.io/illustrated-transformer/
   kind: post
-  blurb: "The 'Attention is all you need' architecture drawn step by step: self-attention, multiple heads, positional encoding, the decoder. Read it with the paper open beside it."
+  blurb: "Diagrams of the original Transformer architecture, including self-attention, multiple heads, positional encoding and the decoder."
   ml: [foundation]
   checked: 2026-11
   status: proposal
@@ -451,13 +451,13 @@
   title: Climate Change AI
   url: https://www.climatechange.ai
   kind: community
-  blurb: "Non-profit at the meeting point of climate change and ML: a community platform, a monthly newsletter, a wiki, workshops and innovation grants."
+  blurb: "Non-profit that runs events, publishes guides and funds projects on machine learning for climate action."
   checked: 2026-11
   status: proposal
 - id: isie
   title: International Society for Industrial Ecology (ISIE)
   url: https://is4ie.org
   kind: community
-  blurb: "The field's society. Its subject sections (life cycle, input-output, metabolism, circular economy and more) are where each IE method community meets; none is about AI yet."
+  blurb: "Professional society for industrial ecology, with sections on life cycle assessment, input-output analysis, metabolism and circular economy."
   checked: 2026-11
   status: proposal

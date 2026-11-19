@@ -6,20 +6,19 @@
  */
 interface Props {
   title: string;
-  description: string;
   /** The Space page on huggingface.co. */
   href: string;
   /** The URL the iframe loads (the Space's *.hf.space app). */
   src: string;
 }
-const { title, description, href, src } = Astro.props;
+const { title, href, src } = Astro.props;
 ---
 
 <space-embed class="space-embed not-content" data-src={src} data-title={`Demo: ${title}`}>
-  <p class="space-embed-title">{title}</p>
-  <p>{description}</p>
-  <p><a href={href}>Open the Space on huggingface.co</a></p>
-  <button type="button" class="space-embed-load" hidden>Load {title} (runs on huggingface.co, which loads further scripts)</button>
+  <p><a href={href}>Open {title} on Hugging Face</a></p>
+  <button type="button" class="space-embed-load" aria-label={`Load demo for ${title}`} hidden>
+    Load demo
+  </button>
 </space-embed>
 
 <script>

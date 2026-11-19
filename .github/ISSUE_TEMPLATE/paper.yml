@@ -1,17 +1,13 @@
 name: Suggest a paper
-description: A paper for the reading list. No YAML or pull request needed.
+description: Add a paper to the reading list.
 title: "[Paper] "
 labels: [entry, paper]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        A maintainer turns this into an entry in the reading list. The id, the reason to read it and the check at the end are required; the rest saves us a step.
   - type: input
     id: id
     attributes:
       label: DOI or arXiv id
-      description: The bare id. We look up the title, authors and year from it.
+      description: Enter the ID without the URL. We use it to look up the title, authors and year.
       placeholder: 10.1111/jiec.13313 or 2401.01234
     validations:
       required: true
@@ -19,7 +15,7 @@ body:
     id: why
     attributes:
       label: Why read it?
-      description: One or two sentences for the reading list. What does it show, and how strong is the evidence? Honest limits help more than praise.
+      description: In one or two sentences, say what the paper shows and where the result applies.
     validations:
       required: true
   - type: input

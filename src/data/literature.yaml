@@ -14,7 +14,7 @@
   etAl: true
   year: 2022
   doi: "10.1111/jiec.13313"
-  blurb: "The JIE perspective on what AI can and cannot do for IE; a good starting point for this whole resource."
+  blurb: "A perspective on where AI could support industrial ecology research and where its use needs care."
   ie: [lca, sem, circular]
   type: [review]
   added: 2026-07
@@ -24,7 +24,7 @@
   etAl: true
   year: 2025
   doi: "10.1111/jiec.13612"
-  blurb: "Topic-model map of the IE-and-AI literature: which applications the field has actually been publishing on."
+  blurb: "Uses topic modelling to identify applications at the intersection of AI and industrial ecology."
   ie: [lca, sem, circular]
   type: [review]
   added: 2026-07
@@ -34,7 +34,7 @@
   etAl: true
   year: 2024
   doi: "10.1021/acs.est.3c08331"
-  blurb: "Status check on data science across CE applications, with a sober view of the data bottlenecks."
+  blurb: "Reviews data science applications in the circular economy and identifies data limitations."
   ie: [circular]
   ml: [tabular-ml]
   type: [review]
@@ -45,7 +45,7 @@
   etAl: true
   year: 2015
   doi: "10.1111/jiec.12241"
-  blurb: "The early (2015) case for data-intensive IE; useful context for everything newer on this list."
+  blurb: "A 2015 perspective on how industrial ecology could use large datasets."
   ie: [lca, sem]
   type: [review]
   added: 2026-07
@@ -67,7 +67,7 @@
   etAl: true
   year: 2022
   doi: "10.1145/3485128"
-  blurb: "The field map of ML for climate work, from power grids to heavy industry; shows where IE questions sit in the wider AI-for-climate agenda."
+  blurb: "Maps potential uses of machine learning for climate action, from power grids to heavy industry."
   type: [review]
   added: 2026-11
 
@@ -89,7 +89,7 @@
   etAl: true
   year: 2024
   doi: "10.1016/j.scitotenv.2023.168969"
-  blurb: "Newer ML-in-LCA review; useful as a cross-check on Ghoroghi et al.'s taxonomy of use cases."
+  blurb: "Reviews machine learning applications in LCA and complements the earlier review by Ghoroghi and colleagues."
   ie: [lca]
   ml: [tabular-ml]
   type: [review]
@@ -100,7 +100,7 @@
   etAl: true
   year: 2017
   doi: "10.1021/acs.est.7b02862"
-  blurb: "Early proof that ANNs can screen chemical impacts orders of magnitude faster than full characterization."
+  blurb: "Tests neural networks for screening chemical impacts faster than full characterisation."
   ie: [lca]
   topic: [chemicals]
   ml: [tabular-ml]
@@ -112,7 +112,7 @@
   etAl: true
   year: 2022
   doi: "10.1111/jiec.13305"
-  blurb: "The gap-filling problem stated properly: what's missing in LCI data and which estimation methods (including ML) apply."
+  blurb: "Reviews which data go missing in life cycle inventories and methods for estimating them."
   ie: [lca]
   ml: [tabular-ml]
   type: [review]
@@ -123,7 +123,7 @@
   etAl: true
   year: 2023
   doi: "10.1145/3616385"
-  blurb: "Zero-shot matching of products to impact factors; the Amazon-scale take on automating footprinting."
+  blurb: "Matches products in an Amazon catalogue to emission factors without training on those products."
   ie: [lca]
   ml: [nlp-extraction, llm]
   type: [method]
@@ -144,7 +144,7 @@
   etAl: true
   year: 2025
   doi: "10.1021/acs.est.5c05955"
-  blurb: "Fine-tuned LLaMA-2 with RAG extracts LCI data at F1 ≈ 0.82–0.86: good enough to accelerate, not to skip human checks."
+  blurb: "A retrieval-augmented language model answers questions about LCA papers. It scored 0.823 F1 for methanol production and 0.855 for plastic packaging at end-of-life."
   ie: [lca]
   ml: [llm, nlp-extraction]
   type: [method]
@@ -155,7 +155,7 @@
   etAl: true
   year: 2023
   doi: "10.48550/ARXIV.2308.04241"
-  blurb: "LLM pipeline for product carbon footprints via semantic matching of emission factors; an early working system."
+  blurb: "Uses a language model to match products to emission factors for carbon footprint estimates."
   ie: [lca]
   ml: [llm]
   type: [method]
@@ -166,7 +166,7 @@
   etAl: true
   year: 2024
   doi: "10.1021/acs.est.4c07634"
-  blurb: "Maps LCI's chronic data problems onto what LLMs can realistically fix, and what they make worse."
+  blurb: "Discusses which life cycle inventory data problems language models could address and where they can introduce errors."
   ie: [lca]
   ml: [llm]
   type: [review]
@@ -177,7 +177,7 @@
   etAl: true
   year: 2025
   doi: "10.48550/arXiv.2510.19886"
-  blurb: "Expert-grounded benchmark of eleven general-purpose LLMs on LCA questions. Experts judged 37% of answers inaccurate or misleading, and citation hallucination reached up to 40%."
+  blurb: "Experts judged 37% of responses inaccurate or misleading across 11 general-purpose models and 22 LCA tasks. Some models hallucinated citations at rates up to 40%."
   ie: [lca]
   ml: [llm]
   type: [review]
@@ -188,7 +188,7 @@
   etAl: true
   year: 2026
   doi: "10.1016/j.rser.2025.116577"
-  blurb: "The most current survey of ML/LLM-assisted LCI compilation; a good entry point as of 2026."
+  blurb: "Reviews machine learning and language models for compiling life cycle inventories."
   ie: [lca]
   ml: [llm, tabular-ml]
   type: [review]
@@ -206,11 +206,11 @@
   added: 2026-07
 - id: forsterExtractingSustainabilityIndicators2026
   title: "Assessing corporate sustainability with large language models: evidence from Europe"
-  authors: ["Forster, P."]
+  authors: ["Forster, K."]
   etAl: true
   year: 2026
   doi: "10.1038/s41467-026-75160-z"
-  blurb: "LLM extraction of 501 ESRS indicators from 9,173 corporate reports shows corpus-scale extraction works; the 29% hit rate is non-disclosure, not model failure."
+  blurb: "Across 9,173 corporate reports from 600 European firms, a language model returned numerical sustainability values for 29% of extraction prompts."
   ie: [lca]
   ml: [nlp-extraction, llm]
   type: [method]
@@ -254,7 +254,7 @@
   authors: ["Schweidtmann, A. M."]
   year: 2026
   arxiv: "2611.07947"
-  blurb: "LLM agents design a chemical process on Git-versioned files; read it for the pattern: every value records its origin and calculations run outside the model."
+  blurb: "Language model agents design chemical processes in versioned files, record the source of values, and run calculations outside the model."
   ie: [lca]
   topic: [chemicals]
   ml: [llm]
@@ -609,7 +609,7 @@
   etAl: true
   year: 2024
   doi: "10.1111/jiec.13585"
-  blurb: "Global building material stocks (547 Gt) at 90 m from Earth observation, with an honest 53–200% validation spread."
+  blurb: "Maps global building stocks at 90 m and estimates 547 Gt in 2019 (391–672 Gt). In local comparisons, independent estimates were 53–200% of the mapped values."
   ie: [sem]
   topic: [buildings]
   ml: [remote-sensing]
@@ -620,7 +620,7 @@
   authors: ["Peled, Y.", "Fishman, T."]
   year: 2021
   doi: "10.1016/j.resconrec.2021.105509"
-  blurb: "Night-lights radiance as a continent-scale proxy for built-up volume: MFA without a single site visit."
+  blurb: "Uses nighttime satellite images to estimate built-up volume at continental scale."
   ie: [sem]
   topic: [buildings]
   ml: [remote-sensing]
@@ -640,11 +640,11 @@
   added: 2026-07
 - id: huangImageBasedPrediction2024
   title: "Image-based prediction of residential building attributes with deep learning"
-  authors: ["Huang, Y."]
+  authors: ["Huang, W."]
   etAl: true
   year: 2024
   doi: "10.1111/jiec.13591"
-  blurb: "Street-view CV predicts floor area (~19% MAPE) and age (~70%) in Toronto, and degrades sharply in other cities; feasibility, not production."
+  blurb: "From Toronto street photos, a model predicted floor area with 19% mean absolute percentage error and classified building age with 70% accuracy. Age accuracy fell in all five other cities tested."
   ie: [sem]
   topic: [buildings]
   ml: [cv]
@@ -668,7 +668,7 @@
   etAl: true
   year: 2025
   doi: "10.1111/jiec.70048"
-  blurb: "Predicts interior walls and rooms from what's visible outside, facade images included: ML as a shortcut around impossible surveys."
+  blurb: "Estimates interior walls and room counts from exterior building characteristics and facade photos."
   ie: [sem]
   topic: [buildings]
   ml: [tabular-ml, cv]
@@ -708,7 +708,7 @@
   etAl: true
   year: 2023
   doi: "10.1111/jiec.13279"
-  blurb: "Deployed label-OCR pipeline for e-waste identification; reads 95.7% of labels in repair shops but 39.7% at the recycler."
+  blurb: "In a washing machine study, text recognition read model numbers in 95.7% of usable repair photos and 39.7% of usable recycler photos."
   ie: [circular]
   topic: [electronics]
   ml: [cv, nlp-extraction]
@@ -719,7 +719,7 @@
   authors: ["Lu, W.", "Chen, J."]
   year: 2022
   doi: "10.1016/j.wasman.2022.02.009"
-  blurb: "The critical review of CV-for-waste-sorting research, including why lab accuracies don't survive the sorting plant."
+  blurb: "Reviews computer vision for waste sorting and discusses why lab results can be difficult to reproduce in plants."
   ie: [circular]
   ml: [cv]
   type: [review]
@@ -741,7 +741,7 @@
   etAl: true
   year: 2025
   doi: "10.3389/frobt.2025.1584657"
-  blurb: "Where robotic disassembly stands: a systematic review of perception, planning, and human-robot collaboration."
+  blurb: "Systematic review of perception, planning and human–robot collaboration in robotic disassembly."
   ie: [circular]
   ml: [cv]
   type: [review]
@@ -752,7 +752,7 @@
   etAl: true
   year: 2024
   doi: "10.1007/s10163-024-01961-3"
-  blurb: "A CNN and a weight sensor identify individual device models on a sorting line: identity recovery under real EoL conditions."
+  blurb: "Combines a camera classifier and a weight sensor to identify individual device models on a sorting line."
   ie: [circular]
   topic: [electronics]
   ml: [cv]
@@ -764,7 +764,7 @@
   etAl: true
   year: 2025
   doi: "10.1016/j.wasman.2025.114904"
-  blurb: "Camera-based deep learning estimates the composition of shredded WEEE on a pilot-scale industrial sorter: CV feeding MFA directly."
+  blurb: "Cameras and mass estimates give the composition of shredded electronics on a pilot line, with 4.94% mean relative error on validation data."
   ie: [sem, circular]
   topic: [electronics]
   ml: [cv, segmentation]
@@ -794,11 +794,11 @@
   added: 2026-07
 - id: funkEvaluationVisionLanguage2026
   title: "Evaluation of vision–language models for waste classification: zero- and few-shot with a training-free tip-adapter"
-  authors: ["Funk, C."]
+  authors: ["Funk, J. V."]
   etAl: true
   year: 2026
   doi: "10.1016/j.clwas.2026.100475"
-  blurb: "Do CLIP-class models sort waste without training data? A measured answer on curated, landfill and multi-material lab images."
+  blurb: "Tests waste classification with vision-language models on curated images, landfill photos and lab images of items made of several materials."
   ie: [circular]
   ml: [cv, foundation]
   type: [method]
@@ -809,7 +809,7 @@
   etAl: true
   year: 2026
   doi: "10.48550/ARXIV.2603.27441"
-  blurb: "Head-to-head of foundation vs. lightweight segmenters on opened e-waste: what 'SAM needs a class layer' looks like in practice."
+  blurb: "Compares large and lightweight models for segmenting irregular components in opened electronic waste."
   ie: [circular]
   topic: [electronics]
   ml: [cv, segmentation, foundation]
@@ -853,7 +853,7 @@
   etAl: true
   year: 2024
   doi: "10.48550/ARXIV.2406.09414"
-  blurb: "Monocular depth that mostly just works; the geometry-from-one-photo building block. Try it on the demos page."
+  blurb: "Estimates depth from a single image. A version of the model is linked from the demos page."
   ml: [depth, cv]
   type: [method]
   added: 2026-07
@@ -1077,7 +1077,7 @@
   etAl: true
   year: 2024
   doi: "10.1016/j.spc.2024.11.005"
-  blurb: "ANN on construction EPDs predicts life cycle GWP (R2 0.97 with a residual-GPR uncertainty layer); uncertainty is high below 3 kg CO2e, and EPD reporting gaps limit use."
+  blurb: "Predicts life cycle impacts from construction product declarations and uses a second model to estimate prediction uncertainty. The input declarations limit what the model can learn."
   ie: [lca]
   topic: [buildings]
   ml: [tabular-ml, uncertainty]
@@ -1160,7 +1160,7 @@
   authors: ["Kapoor, S.", "Narayanan, A."]
   year: 2023
   doi: "10.1016/j.patter.2023.100804"
-  blurb: "The taxonomy of 8 data-leakage types that silently inflate ML results, found in 294 papers across 17 fields."
+  blurb: "Identifies eight ways data can leak into model evaluation, with examples from 294 papers across 17 fields."
   ml: [tabular-ml]
   type: [meta]
   added: 2026-07
@@ -1187,7 +1187,7 @@
   authors: ["Walters, W. H.", "Wilder, E. I."]
   year: 2023
   doi: "10.1038/s41598-023-41032-5"
-  blurb: "Measured, not anecdotal: 55% of GPT-3.5 and 18% of GPT-4 citations were fabricated; many real ones still had errors."
+  blurb: "In this test, GPT-3.5 fabricated 55% of its citations and GPT-4 fabricated 18%. Many genuine citations contained errors."
   ml: [llm]
   type: [meta]
   added: 2026-07
@@ -1268,7 +1268,7 @@
   etAl: true
   year: 2017
   arxiv: "1706.03762"
-  blurb: "The transformer architecture behind every modern LLM; worth knowing what 'attention' does."
+  blurb: "Introduces the Transformer, which uses attention to relate tokens in a sequence."
   ml: [foundation]
   type: [landmark-ml]
   added: 2026-07
@@ -1288,7 +1288,7 @@
   etAl: true
   year: 2020
   arxiv: "2005.14165"
-  blurb: "GPT-3: scale alone produced in-context learning. The paper that made 'prompting' a verb."
+  blurb: "Tests how GPT-3 performs on tasks described in its prompt, with and without examples."
   ml: [llm, foundation]
   type: [landmark-ml]
   added: 2026-07
@@ -1308,7 +1308,7 @@
   etAl: true
   year: 2020
   arxiv: "2010.11929"
-  blurb: "ViT: transformers displace convolutions in vision, the reason 'foundation model' now includes images."
+  blurb: "Applies a Transformer to image classification by splitting each image into patches."
   ml: [cv, foundation]
   type: [landmark-ml]
   added: 2026-07
@@ -1328,7 +1328,7 @@
   etAl: true
   year: 2021
   doi: "10.1038/s41586-021-03819-2"
-  blurb: "The clearest case of deep learning solving a real scientific problem, and the bar for 'AI for science' claims."
+  blurb: "Evaluates AlphaFold for predicting three-dimensional protein structures from amino acid sequences."
   type: [landmark-ml]
   added: 2026-07
 - id: ouyangTrainingLanguageModels2022
@@ -1347,7 +1347,7 @@
   etAl: true
   year: 2023
   doi: "10.48550/ARXIV.2304.02643"
-  blurb: "SAM: promptable segmentation of anything. Try it on the demos page, then note it can't tell you what the segments are."
+  blurb: "Segments objects from clicks or boxes. Try the demo to see which regions it outlines."
   ml: [cv, segmentation, foundation]
   type: [landmark-ml]
   added: 2026-07
@@ -1412,7 +1412,7 @@
   etAl: true
   year: 2020
   doi: "10.48550/ARXIV.2003.08934"
-  blurb: "The paper that made photorealistic 3D-from-photos routine. Slow to fit per scene, and the ancestor of everything that followed."
+  blurb: "Learns a 3D representation from photographs and renders new viewpoints. The model is fitted separately to each scene."
   ml: [depth, cv]
   type: [landmark-ml]
   added: 2026-07
@@ -1482,7 +1482,7 @@
   etAl: true
   year: 2024
   doi: "10.48550/ARXIV.2401.14159"
-  blurb: "Grounding DINO and SAM wired together, text prompt in and masks out; the pragmatic open-vocabulary segmentation stack."
+  blurb: "Combines Grounding DINO and SAM to turn text descriptions into object masks."
   ml: [cv, segmentation, foundation]
   type: [method]
   added: 2026-07
@@ -1512,7 +1512,7 @@
   etAl: true
   year: 2015
   doi: "10.1109/CVPR.2015.7298970"
-  blurb: "MINC: 23 material classes on real in-the-wild photos, and still the reference point for recognising what a surface is made of."
+  blurb: "Presents a dataset and benchmark for recognising 23 materials in everyday photographs."
   ml: [cv]
   type: [dataset]
   added: 2026-07
@@ -1522,7 +1522,7 @@
   etAl: true
   year: 2015
   doi: "10.48550/ARXIV.1506.02640"
-  blurb: "Detection as a single regression pass; the reason real-time object detection is cheap enough to run on a sorting line."
+  blurb: "Introduces YOLO, which predicts object boxes and classes in a single pass."
   ml: [cv, segmentation]
   type: [landmark-ml]
   added: 2026-07

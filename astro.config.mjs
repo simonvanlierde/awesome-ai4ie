@@ -156,23 +156,12 @@ export default defineConfig({
     starlight({
       // Fails the build on a broken internal link, a missing heading anchor or a
       // relative link. Content links must be root-absolute so `base` gets added.
-      // The home page's hero links are front matter, which the validator reads
-      // as written; the Hero override adds the base to them (contentUrl). At a
-      // domain's root there is no base, so they validate like any other link.
-      plugins: [
-        starlightLinksValidator({
-          exclude: basePath ? ["/applications-map/", "/#contributing"] : [],
-        }),
-      ],
-      // Head adds the fonts, SiteTitle renders the wordmark in Archivo, Hero is
-      // the home cover (title beside Fig. 1), PageTitle adds the running head
-      // above each title, Search adds meaning search over the reading list, and
-      // Footer adds the colophon.
+      plugins: [starlightLinksValidator()],
+      // Search adds paper matches to the Starlight dialog.
       components: {
         Footer: "./src/components/overrides/Footer.astro",
         Head: "./src/components/overrides/Head.astro",
         Hero: "./src/components/overrides/Hero.astro",
-        PageTitle: "./src/components/overrides/PageTitle.astro",
         Search: "./src/components/overrides/Search.astro",
         SiteTitle: "./src/components/overrides/SiteTitle.astro",
       },

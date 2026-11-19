@@ -8,22 +8,22 @@
   name: "Rapid impact screening with tabular ML"
   ie: [lca]
   ml: [tabular-ml]
-  summary: "Train regression/ANN models on existing characterization results to screen chemicals or products orders of magnitude faster than full assessment."
-  maturity: "Repeatedly demonstrated since 2017; screening-grade accuracy, not a replacement for characterization."
+  summary: "Train regression models on existing characterisation results to screen chemicals or products."
+  maturity: "Studies have demonstrated rapid screening since 2017. Use a full characterisation for decisions that need more precise estimates."
   papers: [songRapidLifeCycleImpact2017, ghoroghiAdvancesApplicationMachine2022, romeikoReviewMachineLearning2024]
 - id: lci-gap-filling
   name: "Inventory gap-filling & estimation"
   ie: [lca]
   ml: [tabular-ml]
-  summary: "Estimate missing life-cycle inventory values from similar processes and product attributes instead of leaving gaps or copying proxies."
-  maturity: "Active research area; method choice matters more than model class, and extrapolation beyond training data stays risky."
+  summary: "Estimate missing inventory values from similar processes or product attributes."
+  maturity: "Research studies show that results depend on the method and training data. Check estimates made outside that data's range."
   papers: [zargarReviewInventoryModeling2022, gkousisMachineLearningLarge2026]
 - id: llm-lci-extraction
   name: "LLM extraction of LCI data from literature"
   ie: [lca]
   ml: [llm, nlp-extraction]
-  summary: "Fine-tuned or retrieval-augmented LLMs pull inventory and impact data out of papers, reports, and MSDS into structured databases."
-  maturity: "Working systems reach F1 ≈ 0.82–0.86. The papers here use LLMs to extract values for a person to check, not to generate missing data."
+  summary: "Use a language model to retrieve reported inventory and impact values from papers and reports."
+  maturity: "One study reported F1 of 0.82 for methanol and 0.86 for plastic packaging at end-of-life. Verify extracted values against the source."
   papers: [kumarLargeLanguageModelbased2025, preussLargeLanguageModels2024, tuMitigatingGrandChallenges2024]
 - id: automated-carbon-footprinting
   name: "Automated product carbon footprinting"
@@ -36,15 +36,15 @@
   name: "Sustainability-indicator extraction from corporate reports"
   ie: [lca]
   ml: [nlp-extraction, llm]
-  summary: "Extract quantitative ESG/ESRS indicators from thousands of corporate reports at once, turning piles of PDFs into panel data."
-  maturity: "Corpus-scale extraction validated in 2026; the binding constraint is what companies disclose, not the model."
+  summary: "Extract numerical sustainability indicators from company reports."
+  maturity: "In one study of 9,173 reports, the model returned values for 29% of extraction prompts. That share alone cannot establish extraction accuracy."
   papers: [forsterExtractingSustainabilityIndicators2026]
 - id: household-consumption-modeling
   name: "Household consumption-footprint modeling"
   ie: [lca]
   ml: [tabular-ml]
-  summary: "Cluster household microdata and link archetypes to environmental extensions for regionalized, bottom-up consumption footprints."
-  maturity: "Demonstrated at national scale; depends on rich household microdata that most countries don't have."
+  summary: "Group households by consumption patterns and estimate their footprints by region."
+  maturity: "Demonstrated at national scale using detailed household data."
   papers: [froemeltMachineLearningBased2020]
 
 # ── Socio-economic metabolism ────────────────────────────────────────────────
@@ -52,8 +52,8 @@
   name: "Material stock mapping from satellite data"
   ie: [sem]
   ml: [remote-sensing]
-  summary: "Combine Earth-observation imagery, OSM, and material intensities to map building/infrastructure stocks without cadastral data."
-  maturity: "National 10 m maps and a global 90 m estimate exist. Compared with independent studies, results range from 53% to 200%; neither side is ground truth, so treat that spread as the uncertainty."
+  summary: "Map building and infrastructure stocks using satellite images, OpenStreetMap and material intensities."
+  maturity: "The studies produced national maps at 10 m and a global map at 90 m. In local comparisons, independent estimates were 53–200% of the global map values."
   papers: [haberlHighResolutionMaps2021, haberlGlobalBuiltEnvironment2024, jiangBottomUpApproachIntegrating2025]
 - id: nightlights-stock-proxy
   name: "Night-lights & multi-source stock estimation"
@@ -67,13 +67,13 @@
   ie: [sem]
   ml: [cv, segmentation]
   summary: "Predict floor area, age, and component counts (windows, doors) from street-view photos to feed urban stock models."
-  maturity: "Feasibility shown (≈19% MAPE floor area, ~70% age accuracy in-city); transfer between cities degrades sharply."
+  maturity: "In Toronto, the model had about 19% mean absolute percentage error for floor area and classified age correctly about 70% of the time. Age prediction was worse in all five other cities tested."
   papers: [huangImageBasedPrediction2024, arbabiScalableDataCollection2021]
 - id: interior-stock-prediction
   name: "Interior component stocks from exterior features"
   ie: [sem]
   ml: [tabular-ml, cv]
-  summary: "Predict interior wall length and room counts from exterior features and facade images, as input to building stock models: a shortcut around impossible surveys."
+  summary: "Estimate interior wall lengths and room counts from exterior features and photos."
   maturity: "One study, 2,000 UK houses; useful priors, wide uncertainty per building."
   papers: [daiModelingInteriorComponent2025]
 
@@ -82,22 +82,22 @@
   name: "Product identification from labels (OCR + retrieval)"
   ie: [circular]
   ml: [cv, nlp-extraction]
-  summary: "Read model/serial text off product labels and match it against a reference database to identify products at end-of-life."
-  maturity: "Deployed in pilots; reads 95.7% of labels in repair settings but 39.7% at the recycler; label wear is the limit."
+  summary: "Read model numbers from product labels and match them to a reference database."
+  maturity: "In one washing machine study, the system read model numbers in 95.7% of usable repair photos and 39.7% of usable recycler photos."
   papers: [sterkensProductLabelIdentification2023, koyanakaIndividualModelIdentification2024]
 - id: waste-stream-classification
   name: "Waste image classification & detection"
   ie: [circular]
   ml: [cv]
-  summary: "CNN/transformer classifiers recognize waste categories in images, from litter surveys to conveyor streams."
-  maturity: "The most-published application in the field; lab accuracies are high, but performance under plant conditions is the real test."
+  summary: "Classify waste in images from litter surveys and sorting conveyors."
+  maturity: "Studies show high scores on lab datasets. Check performance on photos from the intended sorting line."
   papers: [luComputerVisionSolid2022, wuApplicationsConvolutionalNeural2023, majchrowskaDeepLearningbasedWaste2022]
 - id: sorting-plant-characterization
   name: "Sensor-based material flow characterization in sorting plants"
   ie: [sem, circular]
   ml: [cv, segmentation]
-  summary: "Cameras on sorting lines classify waste particles and estimate the composition of the flow, which could feed MFA with plant data."
-  maturity: "Tested on an industrial sorter at pilot scale with shredded WEEE (mAP50 ≈ 0.99, composition within about 5%), on recorded data. No plant runs it yet."
+  summary: "Use images from a sorting line to classify particles and estimate the composition of shredded electronics."
+  maturity: "On pilot-line data, detection reached 0.99 mAP at the 0.5 threshold and estimated composition had 4.94% mean relative error on a validation set."
   papers: [vogelgesangAutomatedMaterialFlow2025]
 - id: component-detection
   name: "Component detection & counting in opened products"
@@ -112,22 +112,22 @@
   ie: [circular]
   ml: [cv, foundation]
   summary: "CLIP-class models score user-chosen labels against images: recognition without task-specific training data."
-  maturity: "Without training, CLIP sorts single-material waste photos well (about 90% on a curated set, 79% on landfill photos) but drops to 40% when items carry several materials. Not yet sorting-grade."
+  maturity: "CLIP reached about 90% accuracy on TrashNet without labelled examples. The study did not test a working sorting line."
   papers: [funkEvaluationVisionLanguage2026, radfordLearningTransferableVisual2021]
   demo: "demos/" # site-relative: the explorer prefixes the deploy base
 - id: single-image-geometry
   name: "Geometry & quantity from single images"
   ie: [circular]
   ml: [depth, cv]
-  summary: "Monocular depth and feed-forward 3D reconstruction recover error-bounded product geometry from ordinary photos."
-  maturity: "Gives approximate geometry from one photo. Accuracy on field photos of real products is untested; reflective, transparent, and thin parts fail."
+  summary: "Estimate depth or shape from one photograph."
+  maturity: "The estimates are approximate. Reflective, transparent and thin parts are difficult, and performance on field photos is unclear."
   papers: [yangDepthAnythingV22024]
   demo: "demos/" # site-relative: the explorer prefixes the deploy base
 - id: robotic-disassembly
   name: "Vision-guided robotic disassembly"
   ie: [circular]
   ml: [cv, segmentation]
-  summary: "Perception + planning pipelines locate fasteners and components to disassemble products robotically for reuse and recycling."
+  summary: "Locate components and fasteners so a robot can take a product apart for reuse or recycling."
   maturity: "Working cells exist for narrow product families (phones); generalization across products is the open problem."
   papers: [ameurFutureRoboticDisassembly2025, liuRAISERobotAssistedSelective2025]
 
@@ -136,7 +136,7 @@
   name: "Waste-to-resource matching for industrial symbiosis"
   ie: [symbiosis]
   ml: [nlp-extraction, llm]
-  summary: "Suggest which company could use another's waste stream, from knowledge graphs, word vectors or past exchange cases built out of papers, patents and reported synergies."
+  summary: "Suggest which company could use another's waste, drawing on papers, patents and records of past exchanges."
   maturity: "Research prototypes, each tested on its own parks or firms. One recovers 24 of 45 known exchanges in one district; word vectors fail at some parks, Kalundborg among them."
   papers: [zhaoConstructionWastetoresourceKnowledge2025, davisMachineLearningassistedIndustrial2022, vancapelleveenBuildingRecommenderSystems2021, grimmelUrbanIndustrialSymbiosis2025, zhaoNovelMachineLearningbased2025]
 
@@ -145,6 +145,6 @@
   name: "Bayesian material flow analysis"
   ie: [sem]
   ml: [tabular-ml, uncertainty]
-  summary: "Treat MFA flows as uncertain variables, combine expert priors with noisy data by Bayesian inference, and use the posterior to choose which data to collect next."
+  summary: "Combine expert estimates and reported data to estimate material flows and decide where to measure next."
   maturity: "Methods papers, tested on US steel and global aluminium cycles, plus one national case on England's construction aggregates; each releases code or data."
   papers: [dongExpertElicitationData2023, wangBayesianMaterialFlow2024, liaoIntelligentDataCollection2025, masonBayesianMaterialFlow2025]

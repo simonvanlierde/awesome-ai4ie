@@ -1,10 +1,15 @@
 # Governance
 
-Awesome AI for Industrial Ecology has one maintainer, Simon van Lierde ([@simonvanlierde](https://github.com/simonvanlierde)). I am looking for a second maintainer from the AI4IE working group (see [MAINTAINING.md](MAINTAINING.md)). This file says who decides and who has access.
+Awesome AI for Industrial Ecology is a proposal for the AI4IE working group. I'm the maintainer,
+Simon van Lierde ([@simonvanlierde](https://github.com/simonvanlierde)), and I'm looking for a
+second maintainer from the group. [Maintainer duties](MAINTAINING.md).
 
 ## Who decides
 
-I decide what goes into the site, the data files and the skills. Anyone can propose a change in an issue or a pull request. I weigh each proposal against [PRODUCT.md](PRODUCT.md), [DESIGN.md](DESIGN.md) and the ground rules in [CONTRIBUTING.md](CONTRIBUTING.md#ground-rules). If I turn a proposal down, I say why in the issue or pull request.
+Anyone can propose a change in an issue or pull request. I decide what goes in using
+[PRODUCT.md](PRODUCT.md), [DESIGN.md](DESIGN.md) and the
+[contribution rules](CONTRIBUTING.md#ground-rules). If I turn a proposal down, I say why in
+the issue or pull request.
 
 Planned work is in [ROADMAP.md](ROADMAP.md).
 

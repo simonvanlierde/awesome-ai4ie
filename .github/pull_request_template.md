@@ -1,12 +1,10 @@
-<!-- One entry per PR is ideal: small PRs are quick to review. -->
-
-**What this adds**
-<!-- Which page, which entry. -->
+**What changed?**
+<!-- Name the page or entry. -->
 
 **Ground rules** (see [CONTRIBUTING.md](../CONTRIBUTING.md))
 
-- [ ] Real and checkable: every tool, paper, or number exists and is linked.
-- [ ] Honest about limits: "good for X, not for Y", not a rave.
-- [ ] Dated: prices/specs/model names carry the month checked (`YYYY-MM`).
-- [ ] Sensitive data flagged: noted whether the tool sends data off-device.
-- [ ] Matched the existing format on the page; didn't restructure it.
+- [ ] Linked the sources for tools, papers and numbers.
+- [ ] Described where the method or tool works and where it falls short.
+- [ ] Dated prices, specs and model names with the month checked (`YYYY-MM`).
+- [ ] Said whether the tool sends data off-device.
+- [ ] Matched the page format in content changes.

@@ -1,12 +1,8 @@
 name: Map an application
-description: A place where AI is used in IE, for the applications map. No YAML or pull request needed.
+description: Add an example of AI use in industrial ecology to the map.
 title: "[Application] "
 labels: [entry, application]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        A maintainer turns this into an entry on the map. Every entry carries a maturity call backed by papers, so those two fields matter most. Papers are optional, but an entry with them is quicker to check.
   - type: input
     id: name
     attributes:
@@ -26,14 +22,14 @@ body:
     id: maturity
     attributes:
       label: How far along is it?
-      description: In plain words, with the evidence. Is it an idea, a lab demo, validated on real data, or in routine use somewhere? Say where it fails.
+      description: Is it an idea, a lab demo, tested on real data, or in routine use? Say what supports that assessment and where the method fails.
     validations:
       required: true
   - type: textarea
     id: papers
     attributes:
       label: Papers behind it
-      description: DOIs or arXiv ids, one per line. Papers that aren't on the reading list yet are welcome; we add both.
+      description: Add DOIs or arXiv IDs, one per line, if there are papers. They can be new to the reading list.
   # The two dropdowns list the labels in src/data/vocabulary.yaml; forms.test.ts keeps them in step.
   - type: dropdown
     id: ie

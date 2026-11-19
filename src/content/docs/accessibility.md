@@ -8,23 +8,22 @@ responsible for this page.
 
 ## How accessible the site is
 
-The site aims to meet [WCAG 2.2](https://www.w3.org/TR/WCAG22/) at level AA. Its conformance
-is **not assessed**: nobody has checked every WCAG 2.2 rule against it, and no outside expert
-has tested it. This statement describes what is checked.
+The site aims to meet [WCAG 2.2](https://www.w3.org/TR/WCAG22/) at level AA.
+Full conformance and screen reader use still need manual testing.
 
 You can:
 
-- read it in a light or a dark theme, which follows your device's setting;
-- use the pages on a phone, and at 320 px wide with text at 200% without scrolling sideways;
-- close the literature filter's menus with Escape, and keep keyboard focus when you remove a filter.
+- read it in a light or dark theme that follows your device's setting
+- use the pages at 320 px wide with text at 200% without scrolling sideways
+- close literature filter menus with Escape and keep keyboard focus when you remove a filter
 
 ## Known problems
 
-Axe cannot decide some contrast checks, such as text over a figure. They are listed in CI
-and have not been checked by hand.
+The automated checks flag some contrast cases, such as text over a figure, for
+manual review. Those reviews are pending.
 
-The demos load code and models from other sites (jsDelivr and Hugging Face). The embedded
-Hugging Face Spaces are third parties' apps, and this site does not test them.
+Other developers run the embedded Hugging Face demos. The site's accessibility
+checks cover the surrounding page.
 
 ## How it is checked
 
@@ -37,9 +36,8 @@ These checks run on every proposed change:
 - [Biome's accessibility rules](https://biomejs.dev/linter/rules/#a11y) check the code for
   problems such as missing alt text and invalid ARIA.
 
-Automatic tools find only some problems, so passing them does not mean there are none. Nobody
-has tested the site by hand with a screen reader. The site needs JavaScript for the filters,
-the map explorer and the demos; the pages themselves read without it.
+You can read the pages with JavaScript off. Turn it on to use the filters, map
+explorer and demos.
 
 ## Tell us about a problem
 
@@ -51,5 +49,5 @@ browser and assistive technology you use, if any. With a GitHub account you can 
 
 ## About this statement
 
-Prepared and last reviewed: 17 November 2026. Next review: within 12 months. Method:
-self-assessment, using the checks above.
+Self-assessed on 17 November 2026 using the checks above. The next review is due
+within 12 months.

@@ -20,11 +20,11 @@ body:
     id: what
     attributes:
       label: What should change?
-      description: The entry or the fix, with links. If it's a correction, say what's wrong now.
+      description: Describe the addition or correction and link to the relevant page or source.
     validations:
       required: true
   - type: textarea
     id: limits
     attributes:
-      label: Good for, not for
-      description: Optional. Where does it help, and where does it fall short?
+      label: Use and limits
+      description: Where does it help, and where does it fall short?

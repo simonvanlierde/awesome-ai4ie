@@ -1,18 +1,15 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { IE_TAGS } from "../data/tags";
-import { CHAPTERS, chapterOf } from "./chapters";
+import { CHAPTERS } from "./chapters";
 
-// The chapter order lives in astro.config.mjs (sidebar), chapters.ts (running
-// heads, home index, Fig. 2) and custom.css (tab inks by position). Nothing at
-// build time ties them together, so these tests do.
+// The sidebar, home index, and tab inks use the same chapter order.
 const config = readFileSync("astro.config.mjs", "utf8");
 const css = readFileSync("src/styles/custom.css", "utf8");
 const SIDEBAR_END = /^ {6}\],/;
 const TOP_LEVEL_ENTRY = /^ {8}\{/;
 const HAS_TARGET = /(slug|link): "/;
 const TARGET = /(?:slug|link): "([^"]*)"/;
-const FIG2_ANCHOR = /^## What works today, per field$/m;
 
 /** First slug (or link) of each top-level sidebar entry, as its first path segment. */
 function sidebarTopLevel(): string[] {
@@ -42,12 +39,6 @@ describe("chapters", () => {
     });
   });
 
-  it("resolve a page id to its chapter, and the home page to none", () => {
-    expect(chapterOf("tools/local-ai")?.n).toBe(4);
-    expect(chapterOf("literature")?.title).toBe("Literature & resources");
-    expect(chapterOf("index")).toBeUndefined();
-  });
-
   it("give every IE field an ink", () => {
     for (const tag of Object.keys(IE_TAGS)) expect(css).toContain(`.field-${tag} {`);
   });
@@ -72,11 +63,5 @@ describe("chapters", () => {
   it("keep the generated topic gaps on the map page", () => {
     const map = readFileSync("src/content/docs/applications-map/index.mdx", "utf8");
     expect(map).toContain("<TopicGaps />");
-  });
-
-  it("keep the anchor Fig. 2 links to", () => {
-    // Component links escape the build's link validator, which checks Markdown only.
-    const map = readFileSync("src/content/docs/applications-map/index.mdx", "utf8");
-    expect(map).toMatch(FIG2_ANCHOR);
   });
 });

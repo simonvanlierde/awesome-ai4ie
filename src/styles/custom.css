@@ -132,9 +132,7 @@ h1#_top {
 h1#_top,
 .sl-markdown-content :is(h2, h3),
 .flow text,
-.running-head,
 .chapter-title,
-.path-verb,
 .sidebar-content .large {
   word-spacing: 0.1em;
 }
@@ -189,48 +187,6 @@ h1#_top,
   padding: 0.1em 0.3em;
 }
 
-/* ── Running head (PageTitle and Hero overrides) ─────────────────────────── */
-.running-head {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.25rem 1rem;
-  margin: 0 0 1.25rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 2px solid var(--sl-color-white);
-  font-family: var(--sl-font);
-  font-size: 0.875rem;
-  font-weight: 600;
-  font-stretch: 85%;
-  color: var(--sl-color-gray-3);
-}
-@media (max-width: 40rem) {
-  .running-head > span + span {
-    display: none;
-  }
-}
-.running-head > span:first-child {
-  color: var(--sl-color-gray-2);
-}
-/* The chapter number badge, here and on the sidebar's thumb-index tabs. */
-.running-no,
-.sidebar-content .top-level > li:not(:first-child) > a::before,
-.sidebar-content .top-level > li:not(:first-child) > details > summary .group-label::before {
-  display: inline-grid;
-  place-items: center;
-  height: 1.5rem;
-  color: var(--on-ink);
-  font-weight: 800;
-  font-stretch: 75%;
-}
-.running-no {
-  min-width: 1.5rem;
-  margin-right: 0.35rem;
-  background: var(--chapter-ink, var(--sl-color-white));
-  letter-spacing: 0;
-}
-
 /* ── Sidebar as a thumb index ────────────────────────────────────────────────
    Top-level items 2-6 are chapters 1-5 in astro.config.mjs's sidebar order. */
 .sidebar-content .top-level > li:nth-child(2) {
@@ -262,6 +218,12 @@ h1#_top,
 .sidebar-content .top-level > li:not(:first-child) > a::before,
 .sidebar-content .top-level > li:not(:first-child) > details > summary .group-label::before {
   content: counter(chapter);
+  display: inline-grid;
+  place-items: center;
+  height: 1.5rem;
+  color: var(--on-ink);
+  font-weight: 800;
+  font-stretch: 75%;
   width: 1.5rem;
   margin-right: 0.6rem;
   background: var(--chapter-ink);
@@ -590,14 +552,14 @@ starlight-menu-button button {
   gap: 2rem;
   margin-top: 0;
 }
-/* From 64rem the copy runs in two columns over a full-width Fig. 1. */
+/* From 64rem the cover title and description sit side by side. */
 @media (min-width: 64rem) {
   .cover-grid {
     gap: 2.5rem;
   }
   .cover-copy {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-areas: "title tagline" "title actions";
+    grid-template-areas: "title tagline";
     column-gap: 3rem;
     align-items: start;
   }
@@ -606,9 +568,6 @@ starlight-menu-button button {
   }
   .cover-tagline {
     grid-area: tagline;
-  }
-  .cover-actions {
-    grid-area: actions;
   }
 }
 .cover-copy {
@@ -724,26 +683,6 @@ starlight-menu-button button {
   line-height: 1.5;
   color: var(--sl-color-gray-1);
 }
-.cover-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem 1.5rem;
-}
-/* Starlight's link buttons never wrap; on the cover at large text sizes they
-   must, or they widen the page. */
-.cover-actions .sl-link-button {
-  max-width: 100%;
-  white-space: normal;
-}
-/* The second cover action: a 1px outline beside the one filled button. */
-.cover-actions .sl-link-button.secondary {
-  border-color: var(--sl-color-white);
-}
-.cover-actions .sl-link-button.secondary:hover {
-  background: color-mix(in srgb, var(--sl-color-white) 8%, transparent);
-}
-
 /* Fig. 1: the flow plate. */
 .flow {
   margin: 0;
@@ -837,7 +776,10 @@ starlight-menu-button button {
     clip-path: inset(0);
   }
 }
-:is(.flow, .path, .plate) figcaption {
+.flow figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
   margin-top: 0.75rem;
   padding-top: 0.5rem;
   border-top: 1px solid var(--sl-color-hairline);
@@ -846,15 +788,9 @@ starlight-menu-button button {
   line-height: 1.45;
   color: var(--sl-color-gray-2);
 }
-:is(.flow, .path, .plate) figcaption b {
+.flow figcaption b {
   margin-right: 0.25rem;
   color: var(--sl-color-white);
-}
-.flow figcaption {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.4rem 1.5rem;
 }
 .flow figcaption > :first-child {
   flex-basis: 100%;
@@ -924,7 +860,7 @@ starlight-menu-button button {
 }
 @media (max-width: 40rem) {
   .flow text {
-    font-size: 26px; /* about 13.5px once the plate shrinks to phone width; FlowFigure's label columns fit it */
+    font-size: 26px;
   }
 }
 .flow svg.flow-plate--wide {
@@ -950,7 +886,7 @@ starlight-menu-button button {
 /* Chapter index: the thumb-index tabs laid out across the cover. */
 .chapter-index ol {
   list-style: none;
-  margin: 2.5rem 0 0;
+  margin: 1.5rem 0;
   padding: 0;
   display: grid;
   gap: 0.25rem 1rem;
@@ -959,14 +895,10 @@ starlight-menu-button button {
   .chapter-index ol {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
-  /* Two title lines for every chapter, so the gists share a baseline. */
-  .chapter-index a {
-    grid-template-rows: 2.6rem auto;
-  }
 }
 .chapter-index a {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   overflow-wrap: anywhere;
   gap: 0.15rem 0.6rem;
@@ -975,9 +907,6 @@ starlight-menu-button button {
   border-top: 3px solid var(--chapter-ink);
   text-decoration: none;
   color: var(--sl-color-white);
-}
-.chapter-index .running-no {
-  margin: 0;
 }
 .chapter-title {
   font-family: var(--sl-font);
@@ -993,116 +922,11 @@ starlight-menu-button button {
 .chapter-index a:hover .chapter-arrow {
   color: var(--sl-color-white);
 }
-.chapter-gist {
-  grid-column: 2 / -1;
-  align-self: start;
-  font-family: var(--font-read);
-  font-size: 0.9375rem;
-  line-height: 1.4;
-  color: var(--sl-color-gray-2);
-}
-
-/* Fig. 2: the see → read → try path, three steps joined by a ruled arrow. */
-.path {
-  margin: 1.5rem 0 0;
-}
-.path ol {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 1.25rem;
-}
-@media (min-width: 40rem) {
-  .path ol {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2.5rem;
-  }
-}
-.path li {
-  position: relative;
-  display: grid;
-  gap: 0.35rem;
-  align-content: start;
-  padding-top: 0.6rem;
-  border-top: 3px solid var(--chapter-ink);
-}
-@media (min-width: 40rem) {
-  .path li + li::before {
-    content: "";
-    position: absolute;
-    top: -0.55rem;
-    left: -2.1rem;
-    width: 0.8rem;
-    height: 0.8rem;
-    border: solid var(--sl-color-gray-3);
-    border-width: 2px 2px 0 0;
-    transform: rotate(45deg);
-  }
-}
-.path-step {
-  font-family: var(--sl-font);
-  font-size: 0.875rem;
-  font-weight: 600;
-  font-stretch: 85%;
-  color: var(--sl-color-gray-3);
-}
-.path a {
-  display: grid;
-  gap: 0.4rem;
-  color: var(--sl-color-white);
-  text-decoration: none;
-}
-.path-verb {
-  font-family: var(--sl-font);
-  font-size: 1.375rem;
-  font-weight: 760;
-  font-stretch: 80%;
-  line-height: 1.1;
-}
-.chapter-index a:hover .chapter-title,
-.path a:hover .path-verb {
+.chapter-index a:hover .chapter-title {
   text-decoration: underline;
   text-decoration-color: var(--chapter-ink);
   text-decoration-thickness: 2px;
   text-underline-offset: 0.2em;
-}
-.path-where {
-  display: flex;
-  align-items: center;
-  font-family: var(--sl-font);
-  font-size: 0.9375rem;
-  font-weight: 650;
-  font-stretch: 88%;
-  color: var(--sl-color-gray-1);
-}
-.path-fact {
-  font-family: var(--font-read);
-  font-size: 1rem;
-  line-height: 1.45;
-  color: var(--sl-color-gray-2);
-}
-.path figcaption {
-  margin-top: 1rem;
-}
-/* On a phone the chapter sits beside the verb, not under it. */
-@media (max-width: 39.99rem) {
-  .path a {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: baseline;
-  }
-}
-
-/* Home: where to start and how to contribute, side by side when there is room. */
-@media (min-width: 64rem) {
-  .home-pair {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 3rem;
-  }
-}
-.home-pair > * {
-  margin-top: 0;
 }
 
 /* ── Tags, shared by both islands (TagChips) ─────────────────────────────── */
@@ -1267,38 +1091,24 @@ starlight-menu-button button {
   text-decoration: underline;
   cursor: pointer;
 }
-.lit-export,
-.lit-cite {
+.lit-export {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--sl-color-gray-3);
-  /* Both are fieldsets: drop the browser's border and padding. */
   border: 0;
   padding: 0;
   margin: 0;
   min-width: 0;
-}
-.lit-cite {
-  margin-top: 0.4rem;
-}
-.lit-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem 1.25rem;
-  margin-top: 0.4rem;
-}
-.lit-actions .lit-cite {
-  margin-top: 0;
 }
 /* Same chevron as the application disclosures on the map. */
 .lit-details-toggle {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+  margin-top: 0.4rem;
   padding: 0;
   border: 0;
   background: none;
@@ -1440,7 +1250,6 @@ starlight-menu-button button {
 }
 @media (pointer: coarse) {
   .lit-export .lit-clear,
-  .lit-cite .lit-clear,
   .lit-details-toggle,
   .lit-details .lit-clear {
     min-height: 44px;
@@ -1484,23 +1293,12 @@ starlight-menu-button button {
   font-variant-numeric: tabular-nums;
   color: var(--sl-color-gray-3);
 }
-/* inline-block: the badges sit right after the year with no space, so as plain inlines
-   "2026newproposal" could not wrap and overflowed a 320px screen at 200% text. */
-.lit-new,
-.lit-proposal {
-  display: inline-block;
-}
 .lit-new {
+  display: inline-block;
   margin-left: 0.5rem;
   padding: 0 0.35rem;
   background: var(--sl-color-accent-low);
   color: var(--sl-color-accent-high);
-}
-.lit-proposal {
-  margin-left: 0.5rem;
-  padding: 0 0.35rem;
-  border: 1px dashed var(--sl-color-gray-3);
-  color: var(--sl-color-gray-1);
 }
 .lit-title {
   display: block;
@@ -1932,10 +1730,6 @@ starlight-menu-button button {
 }
 .space-embed p {
   margin: 0 0 0.4rem;
-}
-.space-embed-title {
-  font-family: var(--sl-font);
-  font-weight: 700;
 }
 .space-embed-load {
   max-width: 100%;

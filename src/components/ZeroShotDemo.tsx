@@ -39,7 +39,7 @@ export function classifySummary(scored: readonly Result[]): string {
 export function classifyErrorMessage(err: unknown): string {
   return err instanceof StalledError
     ? "The model download stopped making progress. Check your connection, then press Classify to try again."
-    : "Could not load or run the model. Check your connection, then press Classify to try again.";
+    : "Could not classify the photo. Try another image or check your connection and retry.";
 }
 
 // transformers.js loads from the CDN on first classify (the `jsdelivr` entry is
@@ -126,11 +126,11 @@ export default function ZeroShotDemo() {
     if (busy) return;
     const candidates = parseLabels(labels);
     if (candidates.length === 0) {
-      setStatus("Add at least one label, separated by commas.");
+      setStatus("Enter at least one label. Separate multiple labels with commas.");
       return;
     }
     setBusy(true);
-    setStatus("Loading the model (≈150 MB on first use, then cached)…");
+    setStatus("Loading the model…");
     try {
       const classifier = await getClassifier(setStatus);
       setStatus("Classifying…");
@@ -173,9 +173,8 @@ export default function ZeroShotDemo() {
           Classify
         </button>
         <p className="zsd-hint" id="zsd-hint">
-          {imageUrl
-            ? "The first run loads code from cdn.jsdelivr.net and the CLIP model (≈150 MB) from huggingface.co and its download host hf.co. The model then stays in this browser's cache until you clear the site's data."
-            : "Pick a photo to enable Classify. The first run then loads code from cdn.jsdelivr.net and the CLIP model (≈150 MB) from huggingface.co and its download host hf.co."}
+          Your photo stays in this browser. The first run downloads code from jsDelivr and a model
+          of about 150 MB from Hugging Face.
         </p>
       </div>
       {imageUrl && <img src={imageUrl} alt="Your selected input" className="zsd-img" />}
@@ -185,15 +184,21 @@ export default function ZeroShotDemo() {
         {status}
       </p>
       {results && (
-        <ul className="zsd-results">
-          {results.map((r) => (
-            <li key={r.label}>
-              <span className="zsd-result-label">{r.label}</span>
-              <span className="zsd-bar" style={{ width: `${Math.round(r.score * 100)}%` }} />
-              <span className="zsd-score">{(r.score * 100).toFixed(1)}%</span>
-            </li>
-          ))}
-        </ul>
+        <>
+          <p className="zsd-hint">
+            Scores compare only the labels you entered. Add or change labels to test another
+            possibility.
+          </p>
+          <ul className="zsd-results">
+            {results.map((r) => (
+              <li key={r.label}>
+                <span className="zsd-result-label">{r.label}</span>
+                <span className="zsd-bar" style={{ width: `${Math.round(r.score * 100)}%` }} />
+                <span className="zsd-score">{(r.score * 100).toFixed(1)}%</span>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );

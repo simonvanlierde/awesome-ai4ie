@@ -9,19 +9,16 @@ import { issueUrl, siteUrl } from "../../lib/urls";
 
 <Default />
 
-<semantic-search hidden data-suggest={issueUrl("paper")}>
+<semantic-search hidden>
   <p class="ss-hint">
-    You can also ask in plain words, to match the reading list by meaning.
+    Searches of three or more words go to the server to find related papers.
+    <a href={siteUrl("privacy/")}>Search privacy</a>
     <button type="button" class="ss-example">Try an example</button>
   </p>
-  <p class="ss-hint">
-    Questions of three or more words go to this site's server to be matched by meaning
-    (<a href={siteUrl("privacy/")}>privacy</a>).
-  </p>
   <p class="ss-status" role="status"></p>
-  <ol class="ss-results" aria-label="Papers that match by meaning"></ol>
+  <ol class="ss-results" aria-label="Related papers"></ol>
   <p class="ss-gap" hidden>
-    Know a paper on this? <a class="ss-suggest">Suggest it for the reading list, with your question filled in</a>
+    <a href={issueUrl("paper")}>Suggest a paper on GitHub</a>
   </p>
 </semantic-search>
 
@@ -57,7 +54,6 @@ import { issueUrl, siteUrl } from "../../lib/urls";
       const status = $(".ss-status");
       const list = $<HTMLOListElement>(".ss-results");
       const gap = $(".ss-gap");
-      const suggest = $<HTMLAnchorElement>(".ss-suggest");
       let input: HTMLInputElement | null = null;
       let keywordPlaceholder = "";
       let timer: ReturnType<typeof setTimeout> | undefined;
@@ -104,17 +100,14 @@ import { issueUrl, siteUrl } from "../../lib/urls";
           } else if (status === 429)
             show([], "Too many searches. Wait a minute, then type again.");
           else if (status !== 200)
-            show([], "Meaning search is unavailable right now. The keyword results below still work.");
-          else if (n) show(hits, `${n} ${n === 1 ? "paper matches" : "papers match"} by meaning`);
-          else {
-            suggest.href = `${this.dataset.suggest}&gap=${encodeURIComponent(`Searched for: ${q}`)}`;
-            show([], "No paper in the reading list is close to that question.", true);
-          }
+            show([], "Paper search is unavailable. You can still search by keyword.");
+          else if (n) show(hits, `${n} related ${n === 1 ? "paper" : "papers"}`);
+          else show([], "No related papers found.", true);
         } catch (err) {
           // biome-ignore lint/suspicious/noConsole: the status line cannot show the cause; the console keeps it for debugging
           console.error(err);
           if (mine !== seq) return;
-          show([], "Meaning search did not answer. Check your connection, then type again to retry.");
+          show([], "Paper search did not respond. Check your connection and try again.");
         }
       };
 

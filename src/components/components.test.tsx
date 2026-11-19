@@ -87,9 +87,9 @@ describe("AppList", () => {
   it("renders paper count links, related reading fallback, and demo links", () => {
     const html = renderToStaticMarkup(<AppList apps={SAMPLE_APPS} />);
     expect(html).toContain("LCI extraction with LLMs");
-    expect(html).toContain("papers (1) →");
-    expect(html).toContain("demo →");
-    expect(html).toContain("related reading →");
+    expect(html).toContain("Papers (1)");
+    expect(html).toContain("Try the demo");
+    expect(html).toContain("Related papers");
   });
 });
 
@@ -106,12 +106,12 @@ describe("ApplicationsExplorer", () => {
 });
 
 describe("LiteratureBrowser", () => {
-  it("renders entries, author formatting, proposal badge and export controls", () => {
+  it("renders entries, formatted authors and export controls without a proposal badge", () => {
     const html = renderToStaticMarkup(<LiteratureBrowser entries={SAMPLE_LIT} />);
     expect(html).toContain("2 of 2 entries");
     expect(html).toContain("Preuss, N. &amp; You, F.");
     expect(html).toContain("Donati, F., et al.");
-    expect(html).toContain("proposal");
+    expect(html).not.toContain("lit-proposal");
     expect(html).toContain("https://doi.org/10.1000/example");
     expect(html).toContain("https://arxiv.org/abs/2501.00001");
     expect(html).toContain("BibTeX");
@@ -174,7 +174,7 @@ describe("ZeroShotDemo", () => {
     expect(html).toContain("intact appliance, corroded metal part");
     expect(html).toContain('aria-disabled="true"');
     expect(html).toContain('role="status"');
-    expect(html).toContain("Pick a photo to enable Classify");
+    expect(html).toContain("Your photo stays in this browser.");
   });
 
   it("parses labels, formats progress and summary, and distinguishes stalled errors", () => {
@@ -190,7 +190,7 @@ describe("ZeroShotDemo", () => {
       "Done: circuit board scores highest, 87.6%.",
     );
     expect(classifyErrorMessage(new StalledError("stalled"))).toContain("stopped making progress");
-    expect(classifyErrorMessage(new Error("offline"))).toContain("Could not load or run");
+    expect(classifyErrorMessage(new Error("offline"))).toContain("check your connection");
   });
 
   it("clears the cached promise on failure and reuses it after a successful load", async () => {
@@ -248,13 +248,16 @@ describe("PaperDetails", () => {
           similar: ["preuss2024", "gone"],
         }}
         byId={byId}
+        onExport={() => undefined}
         onCopy={() => undefined}
       />,
     );
     expect(html).toContain('id="draft2025-details"');
     expect(html).toContain("https://doi.org/10.1000/both");
     expect(html).toContain("https://arxiv.org/abs/2501.00001");
-    expect(html).toContain("The full author list is there.");
+    expect(html).toContain("<dt>Cite</dt>");
+    expect(html).toContain("BibTeX");
+    expect(html).toContain("RIS");
     expect(html).toContain('href="/applications-map/circular/"');
     expect(html).toContain("field-circular");
     expect(html).toContain("topic=buildings");
@@ -272,6 +275,7 @@ describe("PaperDetails", () => {
       <PaperDetails
         entry={{ ...SAMPLE_LIT[0], ml: [], ie: [] }}
         byId={byId}
+        onExport={() => undefined}
         onCopy={() => undefined}
       />,
     );

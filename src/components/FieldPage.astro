@@ -48,17 +48,16 @@ const parts = sections.map((s) => {
 {
   apps.length === 0 && (
     <>
-      <p>No application is mapped in {tagLabel("ie", ie)} yet. These are its papers so far.</p>
-      <h2 id="papers">Papers in {tagLabel("ie", ie)}</h2>
+      <p>No applications mapped yet.</p>
+      <h2 id="papers">Papers</h2>
       <PaperList papers={fieldPapers} />
     </>
   )
 }
 
 {
-  sections.length > 0 && (
+  sections.length > 1 && (
     <nav class="field-jump" aria-label="AI techniques on this page">
-      <span>{sections.length === 1 ? "Technique" : "Techniques"}:</span>
       <ul>
         {sections.map((s) => (
           <li>
@@ -79,18 +78,18 @@ const parts = sections.map((s) => {
           <h3 id={a.id}>{a.name}</h3>
           <p>{a.summary}</p>
           <p>
-            <strong>How mature:</strong> {a.maturity}
+            {a.maturity}
           </p>
           {a.demo && (
             <p>
-              <a href={siteUrl(a.demo)}>Try the demo →</a>
+              <a href={siteUrl(a.demo)}>Try the demo</a>
             </p>
           )}
         </>
       ))}
       {s.repeated.length > 0 && (
         <p>
-          Also using {s.label}, described above:{" "}
+          Other applications:{" "}
           {s.repeated.map((a, i) => (
             <>
               {i > 0 && ", "}
@@ -99,15 +98,12 @@ const parts = sections.map((s) => {
           ))}.
         </p>
       )}
-      <h3>
-        Papers on {s.label} in {tagLabel("ie", ie)}
-      </h3>
+      <h3>Papers</h3>
       <PaperList papers={s.papers} />
     </section>
   ))
 }
 
 <p>
-  Missing an application here? <a href={issueUrl("application")}>Map one</a> in a short form
-  on GitHub.
+  <a href={issueUrl("application")}>Suggest an application</a>
 </p>

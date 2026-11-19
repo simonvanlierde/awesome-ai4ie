@@ -1,6 +1,8 @@
 # Roadmap
 
-What I plan to work on over the next year. It is a plan, not a promise. The guide has one maintainer ([GOVERNANCE.md](GOVERNANCE.md)), and the order changes when contributors open issues or pull requests. Shipped changes are in [CHANGELOG.md](CHANGELOG.md), and routine upkeep is in [MAINTAINING.md](MAINTAINING.md#routine).
+Planned work for the next year. Issues and pull requests can change the order.
+[Governance](GOVERNANCE.md), [released changes](CHANGELOG.md) and
+[routine upkeep](MAINTAINING.md#routine).
 
 Last reviewed: 2026-11-19
 
