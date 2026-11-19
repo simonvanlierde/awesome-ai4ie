@@ -6,7 +6,6 @@ import { litUrl } from "../lib/urls";
 
 export async function GET() {
   const entries = (await getCollection("literature")).map(({ id, data: e }) => ({
-    id,
     title: e.title,
     year: e.year,
     blurb: e.blurb,

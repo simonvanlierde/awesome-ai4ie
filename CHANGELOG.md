@@ -14,6 +14,9 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   records come from Crossref and arXiv, cleaned and cached in `src/data/citations.json` by
   `pnpm run citations`. An entry with no cached record yet exports a short one built from its
   YAML fields.
+- Search can also match the reading list by meaning: ask in plain words, like "which papers
+  sort waste with cameras?", and turn on **Search by meaning** in the search dialog. It runs in
+  your browser after a one-time 23 MB download.
 - An accessibility statement at `/accessibility/`, linked from the footer.
 - A Content-Security-Policy `<meta>` tag on every page, and `/.well-known/security.txt`.
 - Weekly OpenSSF Scorecard and advisory audits, a cold-install check of the README's

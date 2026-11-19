@@ -106,8 +106,9 @@ export default defineConfig({
   // GitHub Pages cannot send headers, so the policy is a <meta> tag that Astro writes
   // with a hash for each inline script and style. A meta tag cannot carry
   // frame-ancestors, so the site can be framed. The extra sources are the zero-shot demo
-  // (transformers.js from jsDelivr, its model files from Hugging Face, an ONNX worker
-  // from a blob: URL) and the Hugging Face Space embeds.
+  // and the search dialog's meaning search (transformers.js from jsDelivr, its model
+  // files from Hugging Face, an ONNX worker from a blob: URL) and the Hugging Face
+  // Space embeds.
   security: {
     csp: {
       directives: [

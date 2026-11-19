@@ -4,74 +4,90 @@
 // closest literature entries above the keyword results. The embedding model runs
 // in the browser and loads only after the reader turns the search on.
 import Default from "@astrojs/starlight/components/Search.astro";
+import { issueUrl } from "../../lib/urls";
 ---
 
 <Default />
 
-<semantic-search hidden>
-  <p class="ss-hint">
-    <span data-off>
-      Tip: you can also ask in plain words, like “which papers sort waste with cameras?”
-      <button type="button" class="ss-enable">Search the reading list by meaning</button>
-      <span class="ss-note">Runs in your browser. The first time, it downloads code from cdn.jsdelivr.net and a 23 MB model from huggingface.co. Your query stays on your device.</span>
-    </span>
-    <span data-on hidden>Questions of three words or more also search the reading list by meaning.</span>
+<semantic-search hidden data-suggest={issueUrl("paper")}>
+  <div class="ss-hint" data-off>
+    <p>
+      You can also ask in plain words.
+      <button type="button" class="ss-on" aria-describedby="ss-note">Search by meaning</button>
+    </p>
+    <p class="ss-note" id="ss-note">
+      Matches the reading list on your device, after a one-time 23 MB download from
+      cdn.jsdelivr.net and huggingface.co (hf.co). This browser remembers the choice.
+    </p>
+  </div>
+  <p class="ss-hint" data-on hidden>
+    Meaning search is on for questions of three words or more.
+    <button type="button" class="ss-example">Try an example</button>
+    <button type="button" class="ss-off">Turn off</button>
   </p>
   <p class="ss-status" role="status"></p>
-  <ol class="ss-results" aria-label="Closest papers in the reading list"></ol>
+  <ol class="ss-results" aria-label="Papers that match by meaning"></ol>
+  <p class="ss-gap" hidden>
+    Know a paper on this? <a class="ss-suggest">Suggest it for the reading list</a>
+  </p>
 </semantic-search>
 
 <script>
-  import { STALL_MS, TRANSFORMERS_URL } from "../../lib/transformers";
   import { type IndexEntry, isPhrase, rank } from "../../lib/semantic";
-  import { StalledError, withStall } from "../../lib/stall";
+  import { StalledError } from "../../lib/stall";
+  import { loadPipeline } from "../../lib/transformers";
   import { siteUrl } from "../../lib/urls";
 
-  // Pinned to a commit of the Hugging Face repo, like the zero-shot demo's model.
   const MODEL = "Xenova/all-MiniLM-L6-v2";
   // biome-ignore lint/security/noSecrets: a public git commit id, not a secret
   const MODEL_REVISION = "751bff37182d3f1213fa05d7196b954e230abad9";
   const OPT_IN = "ai4ie-meaning-search";
+  const EXAMPLE = "which papers map building stocks from satellites?";
 
   type Embed = (texts: string | string[]) => Promise<number[][]>;
   type Search = { entries: IndexEntry[]; vectors: number[][]; embed: Embed };
+  type Pipe = (texts: string | string[], opts: object) => Promise<{ tolist(): number[][] }>;
 
+  // Load progress goes to whichever run is waiting now, not the one that started the load.
+  let report = (_msg: string) => {};
   let searchPromise: Promise<Search> | null = null;
-  function getSearch(onProgress: (msg: string) => void): Promise<Search> {
-    searchPromise ??= withStall(async (alive) => {
-      const [{ pipeline }, entries] = await Promise.all([
-        import(/* @vite-ignore */ TRANSFORMERS_URL),
-        fetch(siteUrl("literature-index.json")).then((r) => r.json() as Promise<IndexEntry[]>),
-      ]);
-      alive();
-      const pipe = await pipeline("feature-extraction", MODEL, {
-        revision: MODEL_REVISION,
+  function getSearch(): Promise<Search> {
+    searchPromise ??= Promise.all([
+      loadPipeline<Pipe>("feature-extraction", MODEL, MODEL_REVISION, (m) => report(m), {
         dtype: "q8",
-        progress_callback: (p: { status: string; file?: string; progress?: number }) => {
-          if (!alive()) return;
-          if (p.status === "progress" && p.file?.endsWith(".onnx"))
-            onProgress(`Downloading the model… ${Math.round(p.progress ?? 0)}%`);
-        },
+      }),
+      fetch(siteUrl("literature-index.json")).then((r) => {
+        if (!r.ok) throw new Error(`literature-index.json: HTTP ${r.status}`);
+        return r.json() as Promise<IndexEntry[]>;
+      }),
+    ])
+      .then(async ([pipe, entries]) => {
+        const embed: Embed = async (texts) =>
+          (await pipe(texts, { pooling: "mean", normalize: true })).tolist();
+        report(`Reading the ${entries.length} papers…`);
+        // shortcut: embeds the entries in the browser (about a second for 82); precompute at build time if the list grows past a few hundred
+        return { entries, vectors: await embed(entries.map((e) => e.text)), embed };
+      })
+      .catch((err) => {
+        searchPromise = null; // a failed load must not poison every retry
+        throw err;
       });
-      const embed: Embed = async (texts) =>
-        (await pipe(texts, { pooling: "mean", normalize: true })).tolist();
-      onProgress("Reading the reading list…");
-      // shortcut: embeds the 82 entries in the browser (about a second); precompute at build time if the list grows past a few hundred
-      const vectors = await embed(entries.map((e) => e.text));
-      return { entries, vectors, embed };
-    }, STALL_MS).catch((err) => {
-      searchPromise = null; // a failed load must not poison every retry
-      throw err;
-    });
     return searchPromise;
   }
 
-  function remember(on: boolean) {
+  function saved(): boolean {
     try {
-      if (on) localStorage.setItem(OPT_IN, "1");
       return localStorage.getItem(OPT_IN) === "1";
     } catch {
       return false;
+    }
+  }
+  function save(on: boolean) {
+    try {
+      if (on) localStorage.setItem(OPT_IN, "1");
+      else localStorage.removeItem(OPT_IN);
+    } catch {
+      // private mode: the choice lasts for this page only
     }
   }
 
@@ -82,68 +98,95 @@ import Default from "@astrojs/starlight/components/Search.astro";
       // Moving into the Pagefind form below reconnects the element; set up once.
       if (this.#ready) return;
       this.#ready = true;
-      const status = this.querySelector<HTMLElement>(".ss-status")!;
-      const list = this.querySelector<HTMLOListElement>(".ss-results")!;
+
+      const $ = <T extends HTMLElement>(sel: string) => this.querySelector<T>(sel)!;
+      const status = $(".ss-status");
+      const list = $<HTMLOListElement>(".ss-results");
+      const gap = $(".ss-gap");
+      const suggest = $<HTMLAnchorElement>(".ss-suggest");
       let input: HTMLInputElement | null = null;
       let enabled = false;
       let timer: ReturnType<typeof setTimeout> | undefined;
       let seq = 0;
 
-      const show = (hits: IndexEntry[]) => {
+      const show = (hits: IndexEntry[], msg: string, noMatch = false) => {
         list.replaceChildren(
           ...hits.map((e) => {
             const li = document.createElement("li");
             const a = document.createElement("a");
             a.href = e.href;
-            a.textContent = `${e.title} (${e.year})`;
+            a.textContent = e.title;
+            const year = document.createElement("span");
+            year.className = "ss-year";
+            year.textContent = ` ${e.year}`;
             const p = document.createElement("p");
             p.textContent = e.blurb;
-            li.append(a, p);
+            li.append(a, year, p);
             return li;
           }),
         );
+        status.textContent = msg;
+        gap.hidden = !noMatch;
       };
 
       const run = async () => {
+        clearTimeout(timer);
         const q = input?.value.trim() ?? "";
         const mine = ++seq;
         if (!(enabled && isPhrase(q))) {
-          show([]);
-          if (enabled) status.textContent = "";
+          report = () => {};
+          show([], "");
           return;
         }
+        report = (m) => {
+          if (mine === seq) status.textContent = m;
+        };
+        if (!searchPromise) report("Loading meaning search…");
         try {
-          const s = await getSearch((m) => mine === seq && (status.textContent = m));
+          const s = await getSearch();
           const [qv] = await s.embed(q);
-          if (mine !== seq) return; // a newer keystroke owns the results
+          if (mine !== seq) return; // a newer query owns the results
           const hits = rank(qv, s.vectors).map((i) => s.entries[i]);
-          show(hits);
-          status.textContent = hits.length
-            ? `${hits.length} close ${hits.length === 1 ? "paper" : "papers"} in the reading list:`
-            : "No paper in the reading list is close to that question.";
+          const n = hits.length;
+          if (n) show(hits, `${n} ${n === 1 ? "paper matches" : "papers match"} by meaning`);
+          else {
+            suggest.href = `${this.dataset.suggest}&gap=${encodeURIComponent(`Searched for: ${q}`)}`;
+            show([], "No paper in the reading list is close to that question.", true);
+          }
         } catch (err) {
           // biome-ignore lint/suspicious/noConsole: the status line cannot show the cause; the console keeps it for debugging
           console.error(err);
           if (mine !== seq) return;
-          status.textContent =
+          show(
+            [],
             err instanceof StalledError
               ? "The model download stopped making progress. Check your connection, then type again to retry."
-              : "Could not load the meaning search. Check your connection, then type again to retry.";
+              : "Could not load meaning search. Check your connection, then type again to retry.",
+          );
         }
       };
 
-      const enable = () => {
-        enabled = true;
-        this.querySelector<HTMLElement>("[data-off]")!.hidden = true;
-        this.querySelector<HTMLElement>("[data-on]")!.hidden = false;
+      const setEnabled = (on: boolean) => {
+        enabled = on;
+        save(on);
+        $("[data-off]").hidden = on;
+        $("[data-on]").hidden = !on;
         void run();
       };
 
-      this.querySelector(".ss-enable")!.addEventListener("click", (e) => {
-        e.stopPropagation(); // Starlight closes the dialog on clicks it does not recognise
-        remember(true);
-        enable();
-        input?.focus();
+      // Starlight closes the dialog on clicks it does not recognise, so each button stops the event.
+      const onClick = (sel: string, fn: () => void) =>
+        $(sel).addEventListener("click", (e) => {
+          e.stopPropagation();
+          fn();
+          input?.focus();
+        });
+      onClick(".ss-on", () => setEnabled(true));
+      onClick(".ss-off", () => setEnabled(false));
+      onClick(".ss-example", () => {
+        if (!input) return;
+        input.value = EXAMPLE;
+        input.dispatchEvent(new Event("input", { bubbles: true })); // Pagefind searches it too
       });
 
       // Pagefind renders its input after the page is idle; move in below it once it exists.
@@ -153,13 +196,18 @@ import Default from "@astrojs/starlight/components/Search.astro";
         input = container.querySelector<HTMLInputElement>(".pagefind-ui__search-input");
         if (!input) return false;
         input.placeholder = "Search, or ask a question";
-        input.form?.querySelector(".pagefind-ui__search-clear")?.after(this);
+        const clear = input.form?.querySelector(".pagefind-ui__search-clear");
+        clear?.after(this);
         input.addEventListener("input", () => {
           clearTimeout(timer);
           timer = setTimeout(run, 300);
         });
+        // Clear and Escape empty the box in code, which fires no input event.
+        const afterPagefind = () => setTimeout(run);
+        clear?.addEventListener("click", afterPagefind);
+        input.addEventListener("keydown", (e) => e.key === "Escape" && afterPagefind());
         this.hidden = false;
-        if (remember(false)) enable();
+        if (saved()) setEnabled(true);
         return true;
       };
       if (!attach()) {
@@ -177,24 +225,33 @@ import Default from "@astrojs/starlight/components/Search.astro";
     margin-block: 0.75rem;
     font-size: var(--sl-text-sm);
   }
+  semantic-search[hidden],
+  semantic-search [hidden] {
+    display: none;
+  }
   .ss-hint {
+    margin: 0;
     color: var(--sl-color-gray-2);
   }
-  .ss-enable {
+  .ss-hint p {
+    margin: 0;
+  }
+  .ss-hint button {
     margin-inline-start: 0.25rem;
-    padding: 0.15rem 0.5rem;
+    padding: 0.2rem 0.6rem;
     border: 1px solid var(--sl-color-gray-4);
-    border-radius: 0.25rem;
+    border-radius: 0;
     background: var(--sl-color-black);
     color: var(--sl-color-white);
     font: inherit;
+    font-stretch: 85%;
     cursor: pointer;
   }
-  .ss-enable:hover {
+  .ss-hint button:hover,
+  .ss-hint .ss-on {
     border-color: var(--sl-color-accent);
   }
   .ss-note {
-    display: block;
     margin-top: 0.25rem;
     font-size: var(--sl-text-xs);
   }
@@ -203,28 +260,40 @@ import Default from "@astrojs/starlight/components/Search.astro";
     display: none;
   }
   .ss-status {
-    margin-top: 0.5rem;
+    margin: 0.5rem 0 0;
     color: var(--sl-color-gray-2);
   }
   .ss-results {
     margin: 0.5rem 0 0;
     padding: 0;
     list-style: none;
+    border-top: 2px solid var(--sl-color-accent);
   }
   .ss-results li {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--sl-color-gray-5);
-    border-radius: 0.25rem;
-  }
-  .ss-results li + li {
-    margin-top: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--sl-color-gray-5);
   }
   .ss-results a {
     color: var(--sl-color-white);
     font-weight: 600;
+    font-stretch: 85%;
+  }
+  .ss-year {
+    color: var(--sl-color-gray-3);
+    font-variant-numeric: tabular-nums;
   }
   .ss-results p {
     margin: 0.25rem 0 0;
+    max-width: 68ch;
     color: var(--sl-color-gray-2);
+    font-family: var(--font-read);
+  }
+  .ss-gap {
+    margin: 0.25rem 0 0;
+    color: var(--sl-color-gray-2);
+  }
+  .ss-gap a {
+    color: var(--sl-color-text-accent);
+    text-decoration: underline;
   }
 </style>
