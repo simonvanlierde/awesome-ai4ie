@@ -635,21 +635,43 @@ starlight-menu-button button {
   width: 1.62em;
   height: 1.62em;
 }
-/* With Fig. 1's pour, the lockup's strokes ink in once on the still tile: the 4, the stem,
-   then the faded leg and arms. */
+/* With Fig. 1's pour, the lockup's strokes ink in once on the still tile, in the order the
+   name reads: the A (apex down the diagonal, on into the leg), the I (the stem), the 4 (its
+   crossbar, which is also the E's middle arm), then the E's arms. The 4's path runs apex,
+   corner, crossbar, so it pauses at the corner (0.531 of its length) while the A and I draw. */
 @media (prefers-reduced-motion: no-preference) {
   .cover-lockup .glyph path {
     stroke-dasharray: 1 3;
-    animation: flow-pour 0.32s cubic-bezier(0.65, 0, 0.35, 1) backwards;
+    animation: flow-pour 0.14s cubic-bezier(0.33, 1, 0.68, 1) backwards;
   }
-  .cover-lockup .glyph-stem {
-    animation-delay: 0.22s;
+  .cover-lockup .glyph path.glyph-four {
+    animation: glyph-four 0.7s linear backwards;
   }
-  .cover-lockup .glyph-fade:nth-child(1) {
-    animation-delay: 0.4s;
+  .cover-lockup .glyph path.glyph-fade:nth-child(1) {
+    animation-delay: 0.2s;
+    animation-duration: 0.13s;
   }
-  .cover-lockup .glyph-fade:nth-child(n + 2) {
-    animation-delay: 0.52s;
+  .cover-lockup .glyph path.glyph-stem {
+    animation-delay: 0.36s;
+    animation-duration: 0.2s;
+    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .cover-lockup .glyph path.glyph-fade:nth-child(n + 2) {
+    animation-delay: 0.7s;
+  }
+}
+@keyframes glyph-four {
+  0% {
+    stroke-dashoffset: 1.01;
+    animation-timing-function: cubic-bezier(0.55, 0, 1, 1);
+  }
+  28.6%,
+  80% {
+    stroke-dashoffset: 0.469;
+    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  100% {
+    stroke-dashoffset: 0;
   }
 }
 .cover-tagline {
