@@ -23,7 +23,7 @@ before you add it.
      capitals, and the year, such as `donatiFutureArtificialIntelligence2022`. Zotero with
      Better BibTeX makes the same key.
    - `blurb` comes from the "Why read it?" answer, in your own words.
-   - Map the dropdown labels back to tag keys in [`src/data/tags.ts`](src/data/tags.ts). An
+   - Map the dropdown labels back to tag ids in [`src/data/vocabulary.yaml`](src/data/vocabulary.yaml). An
      answer under "Does it fill a gap on the map?" may ask for a new tag. Add it with this first
      entry, as CONTRIBUTING.md describes.
    - Set `type`, and set `added` to this month (`YYYY-MM`).

@@ -27,11 +27,26 @@ describe("matchesFilter", () => {
 });
 
 describe("parseView", () => {
+  it("drops a retired tag that has no replacement", () => {
+    const { filter } = parseView("?ie=urban-mining&ml=cv");
+    expect(filter.ie).toEqual([]);
+    expect(filter.ml).toEqual(["cv"]);
+  });
   it("parses comma-separated params and ignores unknown keys", () => {
     expect(parseView("?ie=circular,lca&ml=cv&foo=x")).toEqual({
       filter: { ...none, ie: ["circular", "lca"], ml: ["cv"] },
       sort: "year",
     });
+  });
+  it("reads a retired tag as its replacement and moves a tag to its current dimension", () => {
+    expect(parseView("?ie=mfa,sem,eol,urban-mining,uncertainty&topic=io").filter).toEqual({
+      ...none,
+      ie: ["sem", "circular", "eeio"],
+      ml: ["uncertainty"],
+    });
+  });
+  it("keeps a tag the vocabulary does not know", () => {
+    expect(parseView("?ie=nope").filter.ie).toEqual(["nope"]);
   });
   it("handles empty search", () => {
     expect(parseView("")).toEqual({ filter: none, sort: "year" });

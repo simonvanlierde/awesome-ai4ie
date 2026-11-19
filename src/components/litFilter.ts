@@ -1,4 +1,4 @@
-import { TAG_DIMS, type TagDim } from "../data/tags";
+import { currentTag, TAG_DIMS, type TagDim } from "../data/tags";
 import { surname } from "../lib/literature";
 
 export type Filter = Record<TagDim, string[]> & { papers: string[] };
@@ -43,15 +43,22 @@ export function emptyMessage(f: Filter, label: (dim: TagDim, tag: string) => str
   return `No entry is tagged ${tags}. ${remove}`;
 }
 
-/** Read a view from a query string. Unknown keys and unknown sort values are ignored. */
+/** Read a view from a query string. Unknown keys and unknown sort values are
+ * ignored. A retired tag (`?ie=mfa`) reads as its replacement (`?ie=sem`), and
+ * a tag that moved dimension follows it (`?ie=uncertainty` to `ml`). A retired tag
+ * with no replacement (`?ie=urban-mining`) is dropped, so that filter goes away. */
 export function parseView(search: string): View {
   const params = new URLSearchParams(search);
   const get = (k: string) => params.get(k)?.split(",").filter(Boolean) ?? [];
+  const filter = { ...EMPTY_FILTER, papers: get("papers") };
+  for (const dim of TAG_DIMS)
+    for (const t of get(dim)) {
+      const now = currentTag(dim, t);
+      if (now && !filter[now.dim].includes(now.tag))
+        filter[now.dim] = [...filter[now.dim], now.tag];
+    }
   const s = params.get("sort");
-  return {
-    filter: Object.fromEntries(KEYS.map((k) => [k, get(k)])) as unknown as Filter,
-    sort: SORTS.find((o) => o.key === s)?.key ?? DEFAULT_SORT,
-  };
+  return { filter, sort: SORTS.find((o) => o.key === s)?.key ?? DEFAULT_SORT };
 }
 
 /** Query string for a view ("" for the default view). The default sort is left

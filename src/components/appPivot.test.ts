@@ -18,7 +18,7 @@ describe("groupBy", () => {
     expect(g.get("llm")?.map((e) => e.id)).toEqual(["b"]);
   });
   // Groups must not fall back to data order: `circular` is introduced first here but
-  // `lca` comes first in the tags.ts vocabulary, and the views follow the latter.
+  // `lca` comes first in vocabulary.yaml, and the views follow the latter.
   it("emits groups in vocabulary order, not first-appearance order", () => {
     expect([...groupBy(apps, "ie").keys()]).toEqual(["lca", "circular"]);
     expect([...groupBy(apps, "ml").keys()]).toEqual(["llm", "cv"]);

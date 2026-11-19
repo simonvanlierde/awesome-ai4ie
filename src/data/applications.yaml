@@ -1,6 +1,6 @@
 # AI applications in industrial ecology, rendered by the explorer on the
 # applications-map page. One entry per application; tags come from
-# src/data/tags.ts (both dimensions required), papers[] reference ids in
+# src/data/vocabulary.yaml (both dimensions required), papers[] reference ids in
 # literature.yaml. See CONTRIBUTING.md for how to add an entry.
 
 # ── Life cycle assessment ────────────────────────────────────────────────────

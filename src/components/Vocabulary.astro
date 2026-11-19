@@ -1,0 +1,111 @@
+---
+// The /vocabulary/ page body: each scheme with its concepts, one anchor per
+// concept id, then the retired ones with their replacements. It also writes the
+// only JSON-LD on the site: a schema.org DefinedTermSet per scheme.
+import { DIM_OF_SCHEME } from "../data/tags";
+import { type Concept, NAMESPACE, readVocabulary, SCHEMES, type Scheme } from "../data/vocabulary";
+import { litUrl } from "../lib/urls";
+
+const concepts = readVocabulary();
+const label = (id: string) => concepts.find((c) => c.id === id)?.prefLabel ?? id;
+const schemes = Object.entries(SCHEMES) as [Scheme, (typeof SCHEMES)[Scheme]][];
+
+/** "Wikidata Q581950", "OpenAlex T10435", "ISIE sections" or the host name. */
+function linkName(url: string): string {
+  if (url === "https://is4ie.org/sections") return "ISIE sections";
+  const { hostname, pathname } = new URL(url);
+  const last = pathname.split("/").pop();
+  if (hostname.endsWith("wikidata.org")) return `Wikidata ${last}`;
+  if (hostname === "openalex.org") return `OpenAlex ${last}`;
+  return hostname;
+}
+const own = (ids?: string[]) => ids?.map((id) => ({ href: `#${id}`, text: label(id) }));
+const out = (urls?: string[]) => urls?.map((href) => ({ href, text: linkName(href) }));
+
+/** The lines under a definition, each a name and its links; empty ones dropped. */
+const meta = (c: Concept) =>
+  (
+    [
+      ["Replaced by", own(c.replacedBy ? [c.replacedBy] : undefined)],
+      ["Part of", own(c.broader)],
+      ["Related", own(c.related)],
+      ["Source", out(c.source ? [c.source] : undefined)],
+      ["Same as", out(c.exactMatch)],
+      ["Close to", out(c.closeMatch)],
+    ] as const
+  ).filter(([, links]) => links?.length);
+
+const termSets = schemes.map(([s, scheme]) => ({
+  "@type": "DefinedTermSet",
+  "@id": NAMESPACE + s,
+  name: scheme.label,
+  description: scheme.definition,
+  license: "https://creativecommons.org/licenses/by/4.0/",
+  hasDefinedTerm: concepts
+    .filter((c) => c.scheme === s && !c.deprecated)
+    .map((c) => ({
+      "@type": "DefinedTerm",
+      "@id": NAMESPACE + c.id,
+      termCode: c.id,
+      name: c.prefLabel,
+      description: c.definition,
+      ...(c.exactMatch ? { sameAs: c.exactMatch } : {}),
+    })),
+}));
+const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": termSets });
+---
+
+<script type="application/ld+json" set:html={jsonLd} />
+
+{
+  schemes.map(([s, scheme]) => {
+    const inScheme = concepts.filter((c) => c.scheme === s);
+    const groups = [inScheme.filter((c) => !c.deprecated), inScheme.filter((c) => c.deprecated)];
+    return (
+      <section>
+        <h2 id={s}>{scheme.label}</h2>
+        <p>{scheme.definition}</p>
+        {groups.map(
+          (group, retired) =>
+            group.length > 0 && (
+              <>
+                {retired === 1 && <h3 id={`retired-${s}`}>Retired</h3>}
+                <dl class="vocab">
+                  {group.map((c) => (
+                    <>
+                      <dt id={c.id}>
+                        <a href={`#${c.id}`}>{c.prefLabel}</a> <code>{c.id}</code>
+                      </dt>
+                      <dd>
+                        <p>{c.definition}</p>
+                        <p class="vocab-meta">
+                          {c.short && <span>Short label: {c.short}. </span>}
+                          {meta(c).map(([name, links]) => (
+                            <span>
+                              {name}:{" "}
+                              {links?.map((l, i) => (
+                                <>
+                                  {i > 0 && ", "}
+                                  <a href={l.href}>{l.text}</a>
+                                </>
+                              ))}
+                              .{" "}
+                            </span>
+                          ))}
+                          {!c.deprecated && (
+                            <a href={litUrl({ [DIM_OF_SCHEME[s]]: [c.id] })}>
+                              Papers tagged {c.prefLabel} →
+                            </a>
+                          )}
+                        </p>
+                      </dd>
+                    </>
+                  ))}
+                </dl>
+              </>
+            ),
+        )}
+      </section>
+    );
+  })
+}

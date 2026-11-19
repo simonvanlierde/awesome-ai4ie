@@ -2,7 +2,7 @@ import { TAGS } from "../data/tags";
 
 type App = { id: string; ie: string[]; ml: string[] };
 
-/** Sorts tags in vocabulary order (their order in tags.ts), so grouped lists
+/** Sorts tags in vocabulary order (their order in vocabulary.yaml), so grouped lists
  * and grid axes show a dimension in the same order, whatever order the data
  * uses. */
 const byVocabulary = (dim: "ie" | "ml") => {

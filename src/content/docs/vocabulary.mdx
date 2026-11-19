@@ -1,0 +1,25 @@
+---
+title: Tag vocabulary
+description: Every tag the AI4IE site uses, by IE field, topic, AI technique and entry type, with what each one means and where it comes from.
+tableOfContents: false
+head:
+  - tag: link
+    attrs: { rel: alternate, type: text/turtle, href: /vocabulary.ttl }
+  - tag: link
+    attrs: { rel: alternate, type: application/ld+json, href: /vocabulary.jsonld }
+---
+
+import Vocabulary from '../../components/Vocabulary.astro';
+
+These are the tags on the [literature list](/literature/), the [map](/applications-map/) and
+the issue forms. Each tag has a permanent id, and each id has an anchor on this page, so
+`/vocabulary/#lca` links to life cycle assessment. A retired tag keeps its id, and an old
+literature link that uses it shows the tag that replaced it. A retired tag with no
+replacement is dropped from the link.
+
+The tags live in [`src/data/vocabulary.yaml`](repo:blob/main/src/data/vocabulary.yaml). The
+same list is also published as [SKOS](https://www.w3.org/TR/skos-reference/), the W3C format
+for vocabularies, in [Turtle](/vocabulary.ttl) and [JSON-LD](/vocabulary.jsonld). Where
+Wikidata or OpenAlex has the same concept, or one close to it, the entry links to it.
+
+<Vocabulary />
