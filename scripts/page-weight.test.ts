@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { extractAssets, overBudget } from "./page-weight.mjs";
+import { extractAssets, overBudget, staticImports, toDist } from "./page-weight.mjs";
 
 const pages = (rows: { page: string }[]) => rows.map((r) => r.page);
 
@@ -30,4 +30,31 @@ test("overBudget applies the default and per-page overrides", () => {
   ];
   expect(pages(overBudget(rows, 100, {}))).toEqual(["a.html", "b.html"]);
   expect(pages(overBudget(rows, 100, { "b.html": 150 }))).toEqual(["a.html"]);
+});
+
+test("extractAssets reads island scripts and single-quoted, reordered attributes", () => {
+  const html = `
+    <astro-island uid="x" component-url="/_astro/List.js" renderer-url="/_astro/client.js" before-hydration-url="/_astro/before.js"></astro-island>
+    <LINK HREF='/_astro/b.css' REL='stylesheet'>`;
+  expect(extractAssets(html)).toEqual([
+    "/_astro/List.js",
+    "/_astro/client.js",
+    "/_astro/before.js",
+    "/_astro/b.css",
+  ]);
+});
+
+test("staticImports follows static imports and skips dynamic and cross-origin ones", () => {
+  const js = `import{t as e}from"./react.js";import"./side.js";import x from "/_astro/abs.js";const c=()=>import("./lazy.js");import y from"https://cdn.example/z.js";`;
+  expect(staticImports(js, "/_astro/List.js")).toEqual([
+    "/_astro/react.js",
+    "/_astro/side.js",
+    "/_astro/abs.js",
+  ]);
+});
+
+test("toDist strips the base path and decodes the file name", () => {
+  expect(toDist("/repo/_astro/a%20b.js", "/repo")).toBe("dist/_astro/a b.js");
+  expect(toDist("/_astro/a.js", "")).toBe("dist/_astro/a.js");
+  expect(toDist("/repository/x.js", "/repo")).toBe("dist/repository/x.js");
 });
