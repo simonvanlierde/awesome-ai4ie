@@ -61,7 +61,7 @@ await page.evaluate(
     document.body.replaceChildren(card);
     document
       .querySelectorAll(
-        "#og .flow figcaption, #og .flow-readout, #og .flow-hit, #og .flow-plate--wide",
+        "#og .flow figcaption, #og .flow-readout, #og .flow-hit, #og .flow-plate--wide, #og .cover-endmark",
       )
       .forEach((el) => {
         el.remove();

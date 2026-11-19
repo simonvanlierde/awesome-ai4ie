@@ -1,7 +1,6 @@
 ---
 // Home-page cover: the title beside Fig. 1, then the chapter index. The splash
-// template has no sidebar, so the index is the way into the chapters. On the home
-// page the title stands in for the header mark (`.cover-home` in custom.css).
+// template has no sidebar, so the index is the way into the chapters.
 // Starlight renders the hero on every page with `hero` frontmatter: the home
 // page and its built-in 404 page. The 404 keeps the chapter index and shows
 // the mark as a plate where Fig. 1 would be.
@@ -9,6 +8,7 @@
 // draft notice and inline icon HTML; no page uses them. Action links resolve
 // like Markdown links: `/path/` against the base, `repo:` to GitHub.
 import { Icon, LinkButton } from "@astrojs/starlight/components";
+import favicon from "../../../public/favicon.svg?raw";
 import { CHAPTERS } from "../../lib/chapters";
 import { contentUrl, issueUrl, siteUrl } from "../../lib/urls";
 import BrandMark from "../BrandMark.astro";
@@ -24,12 +24,21 @@ if (is404) {
   title = "Page not found";
   tagline = `Search at the top of the page, start from a chapter below, or <a href="${issueUrl("other")}">report a broken link</a>.`;
 }
+// The home title ends on the favicon tile as its end mark. The no-break space keeps the
+// tile on the last word's line; the tile is hidden from readers, as the title names it.
+const endMark = favicon
+  .replace(/<!--[\s\S]*?-->/g, "")
+  .replace(
+    'role="img" aria-label="AI4IE"',
+    'class="cover-endmark" aria-hidden="true" focusable="false"',
+  );
+const heading = isHome ? `${title}&nbsp;${endMark}` : title;
 ---
 
-<div class:list={["cover", isHome && "cover-home"]}>
+<div class="cover">
   <div class="cover-grid">
     <div class="cover-copy">
-      <h1 id="_top" data-page-title set:html={title} />
+      <h1 id="_top" data-page-title set:html={heading} />
       {tagline && <p class="cover-tagline" set:html={tagline} />}
       <div class="cover-actions">
         {

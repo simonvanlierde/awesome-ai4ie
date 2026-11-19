@@ -431,32 +431,6 @@ h1#_top,
   }
 }
 
-/* Home: the cover title stands in for the header mark, which fades in as the title
-   scrolls up under the header. Without scroll timelines the mark simply stays. */
-@supports (animation-timeline: view()) {
-  :root:has(.cover-home) {
-    timeline-scope: --cover-title;
-  }
-  .cover-home h1#_top {
-    view-timeline: --cover-title block;
-    view-timeline-inset: var(--sl-nav-height) 0;
-  }
-  :root:has(.cover-home) .site-title .brand-mark {
-    animation: mark-dock linear both;
-    animation-timeline: --cover-title;
-    animation-range: exit 0% exit 100%;
-  }
-  /* A keyboard user tabbing to the hidden link still sees it. */
-  :root:has(.cover-home) .site-title:focus-visible .brand-mark {
-    animation: none;
-  }
-}
-@keyframes mark-dock {
-  from {
-    opacity: 0;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .brand-mark :is(.bm-root, .bm-a, .bm-i1, .bm-4, .bm-i2, .bm-e) {
     transition: none;
@@ -648,6 +622,13 @@ starlight-menu-button button {
 .cover h1#_top {
   font-size: clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem);
   margin: 0;
+}
+/* Cap height of the narrow Archivo title, sitting on its baseline. */
+.cover-endmark {
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  vertical-align: baseline;
 }
 .cover-tagline {
   margin: 0;
