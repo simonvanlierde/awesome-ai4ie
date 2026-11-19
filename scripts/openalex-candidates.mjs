@@ -45,7 +45,12 @@ const IE = [
   "urban mining",
   "material stock",
   "circular economy",
-  "input-output",
+  // A bare "input-output" also matches signal, circuit and model input-output pairs.
+  "input-output analysis",
+  "input-output table",
+  "input-output model",
+  "multi-regional input-output",
+  "environmentally extended input-output",
   "carbon footprint",
 ];
 // J. Ind. Ecol., Environ. Sci. Technol., Resour. Conserv. Recycl. (and its Advances),
@@ -99,11 +104,22 @@ export function toLead(work, today) {
   };
 }
 
+/**
+ * The lower-case DOIs of these entries. An arXiv id counts as its DataCite DOI,
+ * which is how OpenAlex names a preprint.
+ */
+export function knownDois(entries) {
+  return new Set(
+    entries
+      .flatMap((e) => [e.doi, e.arxiv && `10.48550/arxiv.${e.arxiv}`])
+      .filter(Boolean)
+      .map((d) => d.toLowerCase()),
+  );
+}
+
 /** Leads whose DOI is in neither list, in the order given. */
 export function newLeads(leads, literature, candidates) {
-  const seen = new Set(
-    [...literature, ...candidates].map((e) => e.doi?.toLowerCase()).filter(Boolean),
-  );
+  const seen = knownDois([...literature, ...candidates]);
   return leads.filter((l) => l && !seen.has(l.doi) && seen.add(l.doi));
 }
 
