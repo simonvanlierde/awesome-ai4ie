@@ -8,7 +8,7 @@
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": "./dist",
-    // The Worker reads literature-index.json from here.
+    // The Worker reads literature-index.json and literature-vectors.bin from here.
     "binding": "ASSETS",
     // Only /api/* and /mcp run the Worker; every other request is a static file, which is not
     // billed or counted against the free plan's daily requests.

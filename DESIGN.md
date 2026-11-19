@@ -90,8 +90,8 @@ strokes at 40% and a light-blue stem, the same in both themes.
   Pointing at a band lifts it and fades the rest. Pointing at, focusing or tapping a node
   lights its bands and names its reach in a live readout line under the plate; on touch the
   first tap lights a node and the second opens its list. On load the bands draw
-  along their curves, field by field, while the title's end mark inks in.
-  Reduced motion skips both.
+  along their curves, field by field.
+  Reduced motion skips both this and the title hand-off.
 - **Numbered tables.** A bold "Table N.N" title above, a source line below. Numbering and
   markup are in [CONTRIBUTING.md](CONTRIBUTING.md#look-and-feel).
 - **Application entries.** On the map page, each field's section has its synthesis paragraph,

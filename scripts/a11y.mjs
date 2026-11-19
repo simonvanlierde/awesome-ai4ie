@@ -122,6 +122,21 @@ for (const [name, viewport] of Object.entries(VIEWPORTS)) {
   await page.getByRole("button", { name: "Remove filter: Computer vision" }).click();
   if (await page.evaluate(() => document.activeElement === document.body))
     fail(`${name}: removing a filter dropped focus to the page`);
+  const paper = "kumarLargeLanguageModelbased2025";
+  await page.goto(new URL(`literature/?papers=${paper}`, root).href);
+  await page.waitForFunction(() => document.querySelectorAll(".lit-entry").length === 1);
+  const downloadEvent = page.waitForEvent("download");
+  await page.locator(".lit-export").getByRole("button", { name: "BibTeX" }).click();
+  const download = await downloadEvent;
+  const bibtex = await readFile(await download.path(), "utf8");
+  if (
+    download.suggestedFilename() !== "ai4ie-literature.bib" ||
+    !bibtex.startsWith("@") ||
+    bibtex.match(/^@\w+\{/gm)?.length !== 1 ||
+    !bibtex.includes(paper)
+  )
+    fail(`${name}: the filtered BibTeX download is missing its citation`);
+
   await page.goto(new URL("applications-map/", root).href, { waitUntil: "networkidle" });
   const extra = await page.$eval(".apx-grid-wrap", (w) => w.scrollWidth - w.offsetWidth);
   const table = await page.$eval(".apx-grid", (t) => t.offsetWidth);
@@ -157,7 +172,8 @@ for (const [name, viewport] of Object.entries(VIEWPORTS)) {
   await page.route("**/api/search", (route) => route.fulfill({ json: { hits: [] } }));
   await page.locator("site-search button[data-open-modal]").click();
   const query = "what papers map buildings";
-  await page.locator(".pagefind-ui__search-input").fill(query);
+  const searchInput = page.locator(".pagefind-ui__search-input");
+  await searchInput.fill(query);
   const suggest = page.locator(".ss-gap a");
   await suggest.waitFor();
   const suggestionUrl = new URL(await suggest.getAttribute("href"), root);
@@ -166,6 +182,26 @@ for (const [name, viewport] of Object.entries(VIEWPORTS)) {
     suggestionUrl.href.includes(encodeURIComponent(query))
   )
     fail(`${name}: the GitHub suggestion link includes the search query`);
+
+  const results = page.locator(".ss-results");
+  await results.evaluate((list) => {
+    new MutationObserver(() => {
+      if (list.childElementCount) list.dataset.unexpectedHit = "true";
+    }).observe(list, { childList: true });
+  });
+  await page.unroute("**/api/search");
+  await page.route("**/api/search", async (route) => {
+    await searchInput.fill("metal");
+    await route.fulfill({
+      json: {
+        hits: [{ href: "/literature/", title: "Test paper", year: 2026, blurb: "Test result" }],
+      },
+    });
+  });
+  await searchInput.fill("what papers sort waste");
+  await suggest.waitFor({ state: "hidden" });
+  if (await results.getAttribute("data-unexpected-hit"))
+    fail(`${name}: a previous search result appeared after the query changed`);
 }
 
 await browser.close();
