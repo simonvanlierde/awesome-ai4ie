@@ -18,9 +18,20 @@ export function queryText(q: string): string {
 export type IndexEntry = {
   id: string;
   title: string;
+  authors: string[];
+  /** The author list stops early; the full list lives at the DOI. */
+  etAl: boolean;
   year: number;
+  doi?: string;
+  arxiv?: string;
   blurb: string;
+  ie: string[];
+  topic: string[];
+  ml: string[];
+  type: string[];
+  status?: "proposal";
   href: string;
+  bibtex?: string;
   /** Base64 float32 vector computed at build time (src/lib/vectors.ts); missing in a
    * build that skipped `pnpm run embed`, and then the entry is not searched. */
   vector?: string;

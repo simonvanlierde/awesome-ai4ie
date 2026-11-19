@@ -1,21 +1,32 @@
-// The reading list as the /api/search Worker (worker/index.ts) ranks it. Entries carry
-// their build-time vector when `pnpm run embed` ran before the build (src/lib/vectors.ts).
+// The reading list as the Worker loads it (worker/search.ts): /api/search and the MCP tools
+// rank and return these entries. Entries carry their build-time vector when `pnpm run embed`
+// ran before the build (src/lib/vectors.ts).
 import { getCollection } from "astro:content";
-import { entryText } from "../lib/semantic";
+import citations from "../data/citations.json";
+import { entryText, type IndexEntry } from "../lib/semantic";
 import { litUrl } from "../lib/urls";
 import { loadVectors, textKey } from "../lib/vectors";
 
 export async function GET() {
   const vectors = loadVectors();
-  const entries = (await getCollection("literature")).map(({ id, data: e }) => {
-    return {
-      id,
-      title: e.title,
-      year: e.year,
-      blurb: e.blurb,
-      href: litUrl({ papers: [id] }),
-      vector: vectors[textKey(entryText(e))],
-    };
-  });
+  const bibtex: Record<string, { bibtex: string } | undefined> = citations;
+  const entries: IndexEntry[] = (await getCollection("literature")).map(({ id, data: e }) => ({
+    id,
+    title: e.title,
+    authors: e.authors,
+    etAl: e.etAl,
+    year: e.year,
+    doi: e.doi,
+    arxiv: e.arxiv,
+    blurb: e.blurb,
+    ie: e.ie,
+    topic: e.topic,
+    ml: e.ml,
+    type: e.type,
+    status: e.status,
+    href: litUrl({ papers: [id] }),
+    bibtex: bibtex[id]?.bibtex,
+    vector: vectors[textKey(entryText(e))],
+  }));
   return Response.json(entries);
 }

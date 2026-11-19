@@ -1,5 +1,6 @@
-// Read-only MCP server at /mcp: stateless Streamable HTTP, no auth. Data comes from
-// the build (/mcp-data.json, src/pages/mcp-data.json.ts), never from the repo at runtime.
+// Read-only MCP server at /mcp: stateless Streamable HTTP, no auth. Data comes from the build,
+// never from the repo at runtime: the reading list from literature-index.json (shared with
+// /api/search, worker/search.ts), the rest from /mcp-data.json (src/pages/mcp-data.json.ts).
 import {
   createMcpHandler,
   localhostAllowedOrigins,
@@ -7,14 +8,14 @@ import {
   originValidationResponse,
 } from "@modelcontextprotocol/server";
 import { z } from "zod";
-import type { LitEntry } from "../src/data/schemas.ts";
-import { IE_TAGS, ML_TAGS } from "../src/data/tags.ts";
-import type { Env } from "./search.ts";
-import { MAX_QUERY, searchPapers } from "./search.ts";
+import type { AppEntry, ResourceEntry } from "../src/data/schemas.ts";
+import { RESOURCE_KINDS } from "../src/data/schemas.ts";
+import { IE_TAGS, ML_TAGS, TOPIC_TAGS } from "../src/data/tags.ts";
+import { type Env, loadIndex, MAX_QUERY, searchPapers, withinLimit } from "./search.ts";
 
 type Data = {
-  papers: (LitEntry & { href: string; bibtex?: string })[];
-  applications: { id: string; ie: string[]; ml: string[] }[];
+  applications: AppEntry[];
+  resources: ResourceEntry[];
   skills: Record<string, string>;
 };
 
@@ -31,6 +32,16 @@ function loadData(env: Env, origin: string): Promise<Data> {
     });
   return data;
 }
+
+const keys = <K extends string>(o: Record<K, string>) => Object.keys(o) as [K, ...K[]];
+const fieldArg = z.enum(keys(IE_TAGS)).optional();
+const topicArg = z.enum(keys(TOPIC_TAGS)).optional();
+const list = (o: Record<string, string>) =>
+  Object.entries(o)
+    .map(([k, v]) => `${k} (${v})`)
+    .join(", ");
+const FIELDS = `IE fields: ${list(IE_TAGS)}.`;
+const TOPICS = `Topics: ${list(TOPIC_TAGS)}.`;
 
 const FROM = "Results come from a curated reading list on AI for industrial ecology.";
 const text = (value: unknown, isError = false) => ({
@@ -52,48 +63,93 @@ function buildServer(request: Request, env: Env) {
       inputSchema: z.object({ question: z.string().trim().min(1).max(MAX_QUERY) }),
     },
     async ({ question }) => {
-      const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
-      if (!(await env.SEARCH_LIMIT.limit({ key: ip })).success)
+      if (!(await withinLimit(env, request)))
         return text("Too many requests, try again in a minute.", true);
-      const hits = (await searchPapers(env, origin, question)).map((e) => ({
-        id: e.id,
-        title: e.title,
-        year: e.year,
-        blurb: e.blurb,
-        url: abs(e.href),
-      }));
-      return text({ papers: hits });
+      const found = await searchPapers(env, origin, question);
+      if (!found) return text("Search is unavailable, try again later.", true);
+      return text({
+        papers: found.map((e) => ({
+          id: e.id,
+          title: e.title,
+          year: e.year,
+          blurb: e.blurb,
+          url: abs(e.href),
+        })),
+      });
     },
   );
 
   server.registerTool(
     "get_paper",
     {
-      description: `Get one paper by id: title, authors, year, DOI, blurb, tags, url and BibTeX when known. ${FROM}`,
+      description: `Get one paper by id: title, authors, year, DOI or arXiv id, blurb, IE fields, topics, ML techniques, url and BibTeX when known. ${FROM}`,
       inputSchema: z.object({ id: z.string().trim().min(1).max(200) }),
     },
     async ({ id }) => {
-      const p = (await loadData(env, origin)).papers.find((e) => e.id === id);
-      return p
-        ? text({ ...p, url: abs(p.href), href: undefined })
-        : text(`No paper with id "${id}".`, true);
+      let all: Awaited<ReturnType<typeof loadIndex>>["all"];
+      try {
+        ({ all } = await loadIndex(env, origin));
+      } catch (err) {
+        // biome-ignore lint/suspicious/noConsole: Workers Logs keep the cause; the client gets a tool error
+        console.error(err);
+        return text("The reading list is unavailable, try again later.", true);
+      }
+      const p = all.find((e) => e.id === id);
+      if (!p) return text(`No paper with id "${id}".`, true);
+      return text({
+        id: p.id,
+        title: p.title,
+        authors: p.authors,
+        etAl: p.etAl,
+        year: p.year,
+        doi: p.doi,
+        arxiv: p.arxiv,
+        blurb: p.blurb,
+        ie: p.ie,
+        topic: p.topic,
+        ml: p.ml,
+        type: p.type,
+        status: p.status,
+        url: abs(p.href),
+        bibtex: p.bibtex,
+      });
     },
   );
 
   server.registerTool(
     "list_applications",
     {
-      description: `List AI applications in industrial ecology (name, summary, maturity, tags, paper ids). Filter by IE field and/or ML technique tag. ${FROM}`,
-      inputSchema: z.object({
-        field: z.enum(Object.keys(IE_TAGS) as [string, ...string[]]).optional(),
-        technique: z.enum(Object.keys(ML_TAGS) as [string, ...string[]]).optional(),
-      }),
+      description: `List AI applications in industrial ecology (name, summary, maturity, IE fields, ML techniques, paper ids). Filter by IE field and/or ML technique. ${FIELDS} ${FROM}`,
+      inputSchema: z.object({ field: fieldArg, technique: z.enum(keys(ML_TAGS)).optional() }),
     },
     async ({ field, technique }) => {
       const all = (await loadData(env, origin)).applications;
       return text({
         applications: all.filter(
           (a) => (!field || a.ie.includes(field)) && (!technique || a.ml.includes(technique)),
+        ),
+      });
+    },
+  );
+
+  server.registerTool(
+    "list_resources",
+    {
+      description: `List tools, datasets, models, courses, videos, posts and communities outside the reading list (title, url, kind, blurb, tags). Filter by kind, IE field and/or topic. ${FIELDS} ${TOPICS} ${FROM}`,
+      inputSchema: z.object({
+        kind: z.enum(keys(RESOURCE_KINDS)).optional(),
+        field: fieldArg,
+        topic: topicArg,
+      }),
+    },
+    async ({ kind, field, topic }) => {
+      const all = (await loadData(env, origin)).resources;
+      return text({
+        resources: all.filter(
+          (r) =>
+            (!kind || r.kind === kind) &&
+            (!field || r.ie.includes(field)) &&
+            (!topic || r.topic.includes(topic)),
         ),
       });
     },

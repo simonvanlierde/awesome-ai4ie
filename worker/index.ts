@@ -3,7 +3,7 @@
 // runs (wrangler.jsonc).
 import type { IndexEntry } from "../src/lib/semantic.ts";
 import { handleMcp } from "./mcp.ts";
-import { type Env, limitKey, MAX_QUERY, searchPapers } from "./search.ts";
+import { type Env, MAX_QUERY, searchPapers, withinLimit } from "./search.ts";
 
 /** What the dialog shows for one paper. */
 export type Hit = Pick<IndexEntry, "title" | "year" | "blurb" | "href">;
@@ -19,8 +19,7 @@ export default {
     if (!request.headers.get("content-type")?.startsWith("application/json"))
       return new Response("Send application/json", { status: 415 });
 
-    const key = limitKey(request.headers.get("cf-connecting-ip") ?? "unknown");
-    if (!(await env.SEARCH_LIMIT.limit({ key })).success)
+    if (!(await withinLimit(env, request)))
       return new Response("Too many requests", { status: 429 });
 
     const body: unknown = await request.json().catch(() => null);
@@ -28,22 +27,13 @@ export default {
     if (typeof q !== "string" || !q.trim() || q.length > MAX_QUERY)
       return new Response(`Send {"q": "..."}, up to ${MAX_QUERY} characters`, { status: 400 });
 
-    let hits: Hit[];
-    try {
-      hits = (await searchPapers(env, url.origin, q)).map(({ title, year, blurb, href }) => ({
-        title,
-        year,
-        blurb,
-        href,
-      }));
-    } catch (err) {
-      // biome-ignore lint/suspicious/noConsole: Workers Logs keep the cause; the reader gets a 503
-      console.error(err);
+    const found = await searchPapers(env, url.origin, q);
+    if (!found)
       return new Response("Search is unavailable, try again later", {
         status: 503,
         headers: { "retry-after": "60" },
       });
-    }
+    const hits: Hit[] = found.map(({ title, year, blurb, href }) => ({ title, year, blurb, href }));
     return Response.json({ hits }, { headers: { "cache-control": "no-store" } });
   },
 };

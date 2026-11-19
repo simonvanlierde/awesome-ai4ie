@@ -1,5 +1,6 @@
-// Meaning search over the reading list, shared by POST /api/search and the MCP tools. Kept out
-// of index.ts because the Workers runtime rejects any export there that is not a handler.
+// The reading list as the Worker loads it, and meaning search over it, shared by POST
+// /api/search and the MCP tools. Kept out of index.ts because the Workers runtime rejects any
+// export there that is not a handler.
 import {
   decodeVector,
   EMBED_MODEL,
@@ -18,10 +19,11 @@ export type Env = {
 // Longer than any question a reader types; caps what one request can spend.
 export const MAX_QUERY = 300;
 
-type Index = { entries: IndexEntry[]; vectors: number[][] };
+type Index = { all: IndexEntry[]; entries: IndexEntry[]; vectors: number[][] };
 // One isolate serves many requests; the index changes only with a deploy.
 let index: Promise<Index> | null = null;
-function loadIndex(env: Env, origin: string): Promise<Index> {
+/** Every entry (`all`), and the searchable ones with their decoded vectors. */
+export function loadIndex(env: Env, origin: string): Promise<Index> {
   index ??= env.ASSETS.fetch(`${origin}/literature-index.json`)
     .then((r) => {
       if (!r.ok) throw new Error(`literature-index.json: HTTP ${r.status}`);
@@ -30,8 +32,7 @@ function loadIndex(env: Env, origin: string): Promise<Index> {
     .then((all) => {
       // An entry without a build-time vector (a build that skipped `pnpm run embed`) is not searched.
       const entries = all.filter((e) => e.vector);
-      if (!entries.length) throw new Error("literature-index.json: no entry has a vector");
-      return { entries, vectors: entries.map((e) => decodeVector(e.vector as string)) };
+      return { all, entries, vectors: entries.map((e) => decodeVector(e.vector as string)) };
     })
     .catch((err) => {
       index = null; // a failed load must not poison every later request
@@ -58,11 +59,29 @@ export function limitKey(ip: string): string {
     .join(":");
 }
 
-/** The reading-list entries closest in meaning to a question, best first. */
-export async function searchPapers(env: Env, origin: string, q: string) {
-  const [{ entries, vectors }, { data }] = await Promise.all([
-    loadIndex(env, origin),
-    env.AI.run(EMBED_MODEL, { text: [queryText(q.trim())] }),
-  ]);
-  return rank(unit(data[0]), vectors).map((i) => entries[i]);
+/** False when this visitor has used up SEARCH_LIMIT. */
+export async function withinLimit(env: Env, request: Request): Promise<boolean> {
+  const key = limitKey(request.headers.get("cf-connecting-ip") ?? "unknown");
+  return (await env.SEARCH_LIMIT.limit({ key })).success;
+}
+
+/** The reading-list entries closest in meaning to a question, best first, or null when the
+ * index or the model fails (the cause goes to Workers Logs). */
+export async function searchPapers(
+  env: Env,
+  origin: string,
+  q: string,
+): Promise<IndexEntry[] | null> {
+  try {
+    const [{ entries, vectors }, { data }] = await Promise.all([
+      loadIndex(env, origin),
+      env.AI.run(EMBED_MODEL, { text: [queryText(q.trim())] }),
+    ]);
+    if (!entries.length) throw new Error("literature-index.json: no entry has a vector");
+    return rank(unit(data[0]), vectors).map((i) => entries[i]);
+  } catch (err) {
+    // biome-ignore lint/suspicious/noConsole: Workers Logs keep the cause; the caller says "unavailable"
+    console.error(err);
+    return null;
+  }
 }
