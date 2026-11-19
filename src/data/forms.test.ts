@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 import { CHAPTERS } from "../lib/chapters";
 import { ISSUE_FORMS } from "../lib/urls";
+import { RESOURCE_KINDS } from "./schemas";
 import { TAGS } from "./tags";
 
 // The issue forms copy the tag labels and page names by hand, because GitHub
@@ -45,9 +46,16 @@ describe.each(ISSUE_FORMS)("%s.yml", (form) => {
 });
 
 describe("issue forms", () => {
-  it.each(["paper", "application"])("%s lists every IE field and AI technique", (form) => {
-    expect(options(form, "ie")).toEqual(Object.values(TAGS.ie));
-    expect(options(form, "ml")).toEqual(Object.values(TAGS.ml));
+  it.each(["paper", "application", "resource"])(
+    "%s lists every IE field and AI technique",
+    (form) => {
+      expect(options(form, "ie")).toEqual(Object.values(TAGS.ie));
+      expect(options(form, "ml")).toEqual(Object.values(TAGS.ml));
+    },
+  );
+
+  it.each(["paper", "resource"])("%s lists every topic", (form) => {
+    expect(options(form, "topic")).toEqual(Object.values(TAGS.topic));
   });
 
   it("paper lists every kind of entry", () => {
@@ -59,12 +67,17 @@ describe("issue forms", () => {
     expect(fields(form).find((f) => f.id === "gap")?.type).toBe("input");
   });
 
+  it("resource offers only kinds from the schema", () => {
+    const kinds: string[] = Object.values(RESOURCE_KINDS);
+    for (const o of options("resource", "kind") as string[]) expect(kinds).toContain(o);
+  });
+
   it("other lists every chapter", () => {
     expect(options("other", "page")?.slice(0, -1)).toEqual(CHAPTERS.map((c) => c.title));
   });
 
   it("tool lists the pages of the tools chapter", () => {
-    const titles = ["index.md", "local-ai.md", "data-and-models.md"].map(
+    const titles = ["index.mdx", "local-ai.mdx", "data-and-models.mdx"].map(
       (f) =>
         readFileSync(join(root, "src", "content", "docs", "tools", f), "utf8").match(
           /^title: (.+)$/m,

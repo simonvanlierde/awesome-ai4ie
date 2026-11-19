@@ -2,12 +2,14 @@ import { describe, expect, it } from "vitest";
 import {
   abstractText,
   floor,
+  lowBatch,
   nearest,
   neighbourTags,
   newLeads,
   QUERY,
   score,
   toLead,
+  VENUE_QUERY,
 } from "./openalex-candidates.mjs";
 
 const work = {
@@ -46,13 +48,26 @@ describe("openalex-candidates", () => {
     expect(QUERY).toMatch(/^\(.*"machine learning".*\) AND \(.*"life cycle assessment".*\)$/);
   });
 
+  it("counts a bare AI mention only in the core venues", () => {
+    expect(QUERY).not.toContain("artificial intelligence");
+    expect(VENUE_QUERY).toContain('"artificial intelligence"');
+    expect(VENUE_QUERY).not.toContain("AND");
+  });
+
+  it("warns when new leads score below the open queue's median", () => {
+    const leads = (...s: number[]) => s.map((v) => ({ score: v }));
+    expect(lowBatch(leads(0.02, 0.03), leads(0.05, 0.06, 0.07))).toContain("Low batch");
+    expect(lowBatch(leads(0.06, 0.08), leads(0.05, 0.06, 0.07))).toBeNull();
+    expect(lowBatch([], leads(0.05))).toBeNull();
+  });
+
   // unit vectors in 2-D: listed papers near the x axis, rejected ones near the y axis
   const at = (deg: number) => [Math.cos((deg * Math.PI) / 180), Math.sin((deg * Math.PI) / 180)];
   const listed = [0, 5, 10, 15].map((d, i) => ({
     key: `l${i}`,
     id: `lit-${i}`,
     vec: at(d),
-    tags: { ie: i < 2 ? ["mfa"] : ["lca"], ml: ["cv"] },
+    tags: { ie: i < 2 ? ["sem"] : ["lca"], ml: ["cv"] },
   }));
   const rejected = [80, 85, 90].map((d, i) => ({ key: `r${i}`, vec: at(d) }));
 
@@ -68,7 +83,7 @@ describe("openalex-candidates", () => {
   });
 
   it("hints only the tags that two of the nearest papers share", () => {
-    expect(neighbourTags(nearest(at(0), listed, 3))).toEqual({ ie: ["mfa"], ml: ["cv"] });
+    expect(neighbourTags(nearest(at(0), listed, 3))).toEqual({ ie: ["sem"], ml: ["cv"] });
   });
 
   it("sets the floor so a typical listed paper clears it and an off-topic one does not", () => {

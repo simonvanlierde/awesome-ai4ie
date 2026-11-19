@@ -31,7 +31,7 @@ const SAMPLE_APPS: AppEntry[] = [
     id: "eol-cv",
     name: "Waste sorting with vision",
     summary: "Classifies material fractions on a belt.",
-    ie: ["eol"],
+    ie: ["circular"],
     ml: ["cv"],
     maturity: "established",
     papers: [],
@@ -47,6 +47,7 @@ const SAMPLE_LIT: LitEntry[] = [
     year: 2024,
     doi: "10.1000/example",
     ie: ["lca"],
+    topic: [],
     ml: ["llm"],
     type: ["method"],
     blurb: "Tests extraction accuracy on industrial reports.",
@@ -59,7 +60,8 @@ const SAMPLE_LIT: LitEntry[] = [
     etAl: true,
     year: 2025,
     arxiv: "2501.00001",
-    ie: ["eol"],
+    ie: ["circular"],
+    topic: [],
     ml: ["cv"],
     type: ["review"],
     blurb: "Surveys benchmark datasets for scrap sorting.",
@@ -74,7 +76,7 @@ describe("TagChips", () => {
       <TagChips ie={["lca"]} ml={["llm", "unknown-ml"]} type={["review"]} />,
     );
     expect(html).toContain('class="lit-tag lit-tag-ie field-lca"');
-    expect(html).toContain("LCA &amp; footprinting");
+    expect(html).toContain("Life cycle assessment");
     expect(html).toContain("LLMs &amp; agents");
     expect(html).toContain("unknown-ml");
     expect(html).toContain("Review");

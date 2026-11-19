@@ -41,12 +41,11 @@ body:
       label: IE field
       multiple: true
       options:
-        - LCA & footprinting
-        - MFA & stocks and flows
-        - Waste, EoL & circularity
-        - Urban mining & secondary resources
-        - Symbiosis & by-product exchange
-        - Uncertainty & Bayesian methods
+        - Life cycle assessment
+        - Socio-economic metabolism
+        - Input-output
+        - Circular economy
+        - Industrial symbiosis
   - type: dropdown
     id: ml
     attributes:
@@ -63,6 +62,7 @@ body:
         - Generative models
         - Foundation models & transformers
         - Anomaly & condition detection
+        - Uncertainty & probabilistic ML
   - type: input
     id: gap
     attributes:

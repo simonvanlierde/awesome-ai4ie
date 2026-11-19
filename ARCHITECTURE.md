@@ -21,9 +21,9 @@ flowchart TD
 
 ## Code layout
 
-- `src/data/`: curated YAML data (`literature.yaml`, `applications.yaml`), citation cache (`citations.json`), tag vocabulary (`tags.ts`) and Zod schemas (`schemas.ts`).
-- `src/lib/`: pure helpers for citations, RSS feed, URLs, Sankey geometry, chapter checks and stall detection.
-- `src/components/`: static components (`AppList.tsx`, `TagChips.tsx`), three React islands (`LiteratureBrowser.tsx`, `ApplicationsExplorer.tsx`, `ZeroShotDemo.tsx`) and their filter and pivot helpers.
+- `src/data/`: curated YAML data (`literature.yaml`, `applications.yaml`, `resources.yaml`), citation cache (`citations.json`), tag vocabulary (`tags.ts`) and Zod schemas (`schemas.ts`).
+- `src/lib/`: pure helpers for citations, RSS feed, URLs, resource lists, Sankey geometry, chapter checks and stall detection.
+- `src/components/`: static components (`AppList.tsx`, `TagChips.tsx`, `Resources.astro`), three React islands (`LiteratureBrowser.tsx`, `ApplicationsExplorer.tsx`, `ZeroShotDemo.tsx`) and their filter and pivot helpers.
 - `src/plugins/`: Markdown and HTML build plugins, plus `csp-inline-scripts.mjs`.
 - `src/content/docs/`: guide pages in Markdown and MDX.
 - `scripts/`: build-time and CI checks (accessibility, licences, citations, page weight and social card).

@@ -52,6 +52,22 @@ flowchart LR
 - [`src/components/overrides/`](src/components/overrides/) replaces Starlight's head, hero, page title and footer.
 - [`scripts/a11y.mjs`](scripts/a11y.mjs) runs axe over every built page. CI deploys to GitHub Pages only after the checks, the build and that scan pass.
 
+## MCP server
+
+A read-only [MCP](https://modelcontextprotocol.io) server runs on the site's Worker at `/mcp` (Streamable HTTP, no authentication, no sessions): `https://awesome-ai4ie.simonvanlierde.workers.dev/mcp` now, and `https://ai4ie.org/mcp` once ai4ie.org moves to the Worker. It serves the curated reading list; it returns sources and never writes answers.
+
+| Tool | Returns |
+| --- | --- |
+| `search_papers(question)` | Up to 5 papers close in meaning to a question (at most 300 characters) |
+| `get_paper(id)` | One paper's authors, DOI or arXiv id, tags, link and BibTeX |
+| `list_applications(field?, technique?)` | Applications, filtered by IE field (`lca`, `sem`, `eeio`, `circular`, `symbiosis`) and ML technique |
+| `list_resources(kind?, field?, topic?)` | Tools, datasets, courses and other resources, filtered by kind, IE field and topic |
+| `get_skill(name)` | The `SKILL.md` text of one Agent Skill |
+
+`search_papers` is the search dialog's meaning search: the same code, the same limit of 30 questions a minute per IP address (per /64 for IPv6), and the same path for the question, which goes to Cloudflare Workers AI and is not stored ([privacy](src/content/docs/privacy.md)). When search is down it returns a tool error, not an empty list.
+
+Add it to a client, for example Claude Code: `claude mcp add --transport http ai4ie https://awesome-ai4ie.simonvanlierde.workers.dev/mcp`. Other clients take the same URL as a remote server. The code is in [`worker/mcp.ts`](worker/mcp.ts); it reads the papers from `literature-index.json`, as `/api/search` does, and the rest from `mcp-data.json`.
+
 ## License
 
 The code is under the [MIT License](LICENSE). The content is under

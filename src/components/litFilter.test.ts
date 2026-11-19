@@ -1,21 +1,22 @@
 import { describe, expect, it } from "vitest";
 import { emptyMessage, matchesFilter, parseView, sortEntries, toQuery } from "./litFilter";
 
-const entry = { ie: ["eol"], ml: ["cv", "segmentation"], type: ["method"] };
+const entry = { ie: ["circular"], ml: ["cv", "segmentation"], type: ["method"] };
 
-const none = { ie: [], ml: [], type: [], papers: [] };
+const none = { ie: [], topic: [], ml: [], type: [], papers: [] };
 
 describe("matchesFilter", () => {
   it("matches everything when no filters are active", () => {
     expect(matchesFilter(entry, none)).toBe(true);
   });
   it("requires a hit in every active dimension (AND across, OR within)", () => {
-    expect(matchesFilter(entry, { ...none, ie: ["eol"], ml: ["cv"] })).toBe(true);
+    expect(matchesFilter(entry, { ...none, ie: ["circular"], ml: ["cv"] })).toBe(true);
     expect(matchesFilter(entry, { ...none, ie: ["lca"], ml: ["cv"] })).toBe(false);
     expect(matchesFilter(entry, { ...none, ml: ["depth", "cv"] })).toBe(true);
   });
   it("treats missing tag arrays as empty", () => {
     expect(matchesFilter({ type: ["landmark-ml"] }, { ...none, ie: ["lca"] })).toBe(false);
+    expect(matchesFilter({ topic: ["energy"] }, { ...none, topic: ["energy"] })).toBe(true);
     expect(matchesFilter({ type: ["landmark-ml"] }, { ...none, type: ["landmark-ml"] })).toBe(true);
   });
   it("narrows to specific entry ids via papers", () => {
@@ -27,8 +28,8 @@ describe("matchesFilter", () => {
 
 describe("parseView", () => {
   it("parses comma-separated params and ignores unknown keys", () => {
-    expect(parseView("?ie=eol,lca&ml=cv&foo=x")).toEqual({
-      filter: { ...none, ie: ["eol", "lca"], ml: ["cv"] },
+    expect(parseView("?ie=circular,lca&ml=cv&foo=x")).toEqual({
+      filter: { ...none, ie: ["circular", "lca"], ml: ["cv"] },
       sort: "year",
     });
   });
@@ -41,7 +42,8 @@ describe("parseView", () => {
   });
   it("round-trips through toQuery, sort included", () => {
     const filter = {
-      ie: ["eol"],
+      ie: ["circular"],
+      topic: ["electronics"],
       ml: ["cv", "depth"],
       type: [],
       papers: ["kirillovSegmentAnything2023"],
@@ -61,8 +63,8 @@ describe("parseView", () => {
   it("omits empty filters and the default sort", () => {
     expect(toQuery({ filter: none, sort: "year" })).toBe("");
     expect(toQuery({ filter: none, sort: "title" })).toBe("?sort=title");
-    expect(toQuery({ filter: { ...none, ie: ["eol"] }, sort: "authors" })).toBe(
-      "?ie=eol&sort=authors",
+    expect(toQuery({ filter: { ...none, ie: ["circular"] }, sort: "authors" })).toBe(
+      "?ie=circular&sort=authors",
     );
   });
 });
@@ -92,8 +94,8 @@ describe("sortEntries", () => {
 describe("emptyMessage", () => {
   const label = (_dim: string, tag: string) => tag.toUpperCase();
   it("states the filter in the list's own logic", () => {
-    expect(emptyMessage({ ...none, ie: ["lca", "mfa"], ml: ["cv"] }, label)).toBe(
-      "No entry is tagged LCA or MFA and CV. Remove one of the filters above.",
+    expect(emptyMessage({ ...none, ie: ["lca", "sem"], ml: ["cv"] }, label)).toBe(
+      "No entry is tagged LCA or SEM and CV. Remove one of the filters above.",
     );
   });
   it("puts a ?papers= selection first, so it does not blame a tag", () => {

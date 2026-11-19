@@ -8,14 +8,14 @@ import { missingTechniques, sankeyLayout } from "../lib/sankey";
 import { litUrl } from "../lib/urls";
 
 // viewBox geometry, in user units: label column, flow, label column. The label
-// columns fit the widest short labels ("Urban mining 4", "Foundation models 2") at the
+// columns fit the widest short labels ("Industrial symbiosis 6", "Foundation models 2") at the
 // phone font size in custom.css, the largest; wider columns only shrink the plate.
 // Two plates: a compact one up to 64rem, and from there a wide, short one that spans
 // the cover, with long bands (custom.css shows one of them). Each is a labelled group
 // with tabindex -1: Chromium otherwise gives the svg a Tab stop and maps it to img,
 // whose children (the links) are presentational.
 const GAP = 18;
-const X0 = 175;
+const X0 = 215;
 const NODE = 8;
 const PLATES = [
   { name: "compact", H: 420, X1: 455 },

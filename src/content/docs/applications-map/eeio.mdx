@@ -1,0 +1,35 @@
+---
+title: AI in input-output analysis
+description: How AI is used in environmentally extended input-output analysis, a thin corner so far, with the papers on IO tables and emission factors and what is still wanted.
+tableOfContents: false
+---
+
+import Cite from '../../../components/Cite.astro';
+import FieldPage from '../../../components/FieldPage.astro';
+import SuggestPaper from '../../../components/SuggestPaper.astro';
+import TopicGaps from '../../../components/TopicGaps.astro';
+
+Environmentally extended input-output (EEIO) analysis links the trade between the sectors
+of an economy to the emissions and resources behind it, which gives economy-wide
+footprints. Multiregional tables (MRIO), such as EXIOBASE, do the same across countries.
+The AI work here is thin so far: the entries fill gaps in input-output tables and turn them
+into ML-ready emission factors. The [map](/applications-map/#input-output) has no summary
+of this field yet.
+
+<FieldPage ie="eeio" />
+
+## Not mapped yet
+
+This field has papers but no mapped application yet, so most of it is a gap. From the
+[gap list on the map](/applications-map/#not-mapped-yet):
+
+- <span class="wanted">Wanted</span> **An application, and a summary of what works.** For
+  example, ML for MRIO balancing, nowcasting and scenario tables. The two entries so far
+  predict next year's tables <Cite id="zhaoUsingDeepLearning2022" /> and build emission
+  factors from EXIOBASE <Cite id="guoGlobalEmissionFactor2026" />.
+  <SuggestPaper gap="Input-output" />
+- <span class="wanted">Wanted</span> **Graph neural networks & network analysis.** An
+  input-output table is a network, and nothing here treats it as one yet.
+  <SuggestPaper gap="Graph neural networks & network analysis" />
+
+<TopicGaps ie="eeio" />

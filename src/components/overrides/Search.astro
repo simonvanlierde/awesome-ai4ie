@@ -1,0 +1,234 @@
+---
+// Starlight's search dialog (Pagefind, keyword matches across every page), plus a
+// meaning search over the reading list: a reader who types a question gets the
+// closest literature entries above the keyword results, from the site's /api/search
+// Worker (worker/index.ts).
+import Default from "@astrojs/starlight/components/Search.astro";
+import { issueUrl, siteUrl } from "../../lib/urls";
+---
+
+<Default />
+
+<semantic-search hidden data-suggest={issueUrl("paper")}>
+  <p class="ss-hint">
+    You can also ask in plain words, to match the reading list by meaning.
+    <button type="button" class="ss-example">Try an example</button>
+  </p>
+  <p class="ss-hint">
+    Questions of three or more words go to this site's server to be matched by meaning
+    (<a href={siteUrl("privacy/")}>privacy</a>).
+  </p>
+  <p class="ss-status" role="status"></p>
+  <ol class="ss-results" aria-label="Papers that match by meaning"></ol>
+  <p class="ss-gap" hidden>
+    Know a paper on this? <a class="ss-suggest">Suggest it for the reading list, with your question filled in</a>
+  </p>
+</semantic-search>
+
+<script>
+  import type { Hit } from "../../../worker/index";
+  import { isPhrase } from "../../lib/semantic";
+  import { siteUrl } from "../../lib/urls";
+
+  const EXAMPLE = "which papers map building stocks from satellites?";
+
+  // A host without the search Worker, such as GitHub Pages, answers 404 or 405.
+  const NOT_SERVED = [404, 405];
+
+  async function search(q: string): Promise<{ status: number; hits: Hit[] }> {
+    const r = await fetch(siteUrl("api/search"), {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ q }),
+      signal: AbortSignal.timeout(8000),
+    });
+    return { status: r.status, hits: r.ok ? (await r.json()).hits : [] };
+  }
+
+  class SemanticSearch extends HTMLElement {
+    #ready = false;
+
+    connectedCallback() {
+      // Moving into the Pagefind form below reconnects the element; set up once.
+      if (this.#ready) return;
+      this.#ready = true;
+
+      const $ = <T extends HTMLElement>(sel: string) => this.querySelector<T>(sel)!;
+      const status = $(".ss-status");
+      const list = $<HTMLOListElement>(".ss-results");
+      const gap = $(".ss-gap");
+      const suggest = $<HTMLAnchorElement>(".ss-suggest");
+      let input: HTMLInputElement | null = null;
+      let keywordPlaceholder = "";
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      let seq = 0;
+      let served = true;
+
+      const show = (hits: Hit[], msg: string, noMatch = false) => {
+        list.replaceChildren(
+          ...hits.map((e) => {
+            const li = document.createElement("li");
+            const a = document.createElement("a");
+            a.href = e.href;
+            a.textContent = e.title;
+            const year = document.createElement("span");
+            year.className = "ss-year";
+            year.textContent = ` ${e.year}`;
+            const p = document.createElement("p");
+            p.textContent = e.blurb;
+            li.append(a, year, p);
+            return li;
+          }),
+        );
+        status.textContent = msg;
+        gap.hidden = !noMatch;
+      };
+
+      const run = async () => {
+        clearTimeout(timer);
+        const q = input?.value.trim() ?? "";
+        const mine = ++seq;
+        if (!served) return;
+        if (!isPhrase(q)) {
+          show([], "");
+          return;
+        }
+        try {
+          const { status, hits } = await search(q);
+          if (mine !== seq) return; // a newer query owns the results
+          const n = hits.length;
+          if (NOT_SERVED.includes(status)) {
+            served = false;
+            this.hidden = true;
+            if (input) input.placeholder = keywordPlaceholder;
+          } else if (status === 429)
+            show([], "Too many searches. Wait a minute, then type again.");
+          else if (status !== 200)
+            show([], "Meaning search is unavailable right now. The keyword results below still work.");
+          else if (n) show(hits, `${n} ${n === 1 ? "paper matches" : "papers match"} by meaning`);
+          else {
+            suggest.href = `${this.dataset.suggest}&gap=${encodeURIComponent(`Searched for: ${q}`)}`;
+            show([], "No paper in the reading list is close to that question.", true);
+          }
+        } catch (err) {
+          // biome-ignore lint/suspicious/noConsole: the status line cannot show the cause; the console keeps it for debugging
+          console.error(err);
+          if (mine !== seq) return;
+          show([], "Meaning search did not answer. Check your connection, then type again to retry.");
+        }
+      };
+
+      // Starlight closes the dialog on clicks it does not recognise, so each button stops the event.
+      const onClick = (sel: string, fn: () => void) =>
+        $(sel).addEventListener("click", (e) => {
+          e.stopPropagation();
+          fn();
+          input?.focus();
+        });
+      onClick(".ss-example", () => {
+        if (!input) return;
+        input.value = EXAMPLE;
+        input.dispatchEvent(new Event("input", { bubbles: true })); // Pagefind searches it too
+      });
+
+      // Pagefind renders its input after the page is idle; move in below it once it exists.
+      const container = document.querySelector("site-search .search-container");
+      if (!container) return;
+      const attach = () => {
+        input = container.querySelector<HTMLInputElement>(".pagefind-ui__search-input");
+        if (!input) return false;
+        keywordPlaceholder = input.placeholder;
+        input.placeholder = "Search, or ask a question";
+        const clear = input.form?.querySelector(".pagefind-ui__search-clear");
+        clear?.after(this);
+        input.addEventListener("input", () => {
+          clearTimeout(timer);
+          timer = setTimeout(run, 300);
+        });
+        // Clear and Escape empty the box in code, which fires no input event.
+        const afterPagefind = () => setTimeout(run);
+        clear?.addEventListener("click", afterPagefind);
+        input.addEventListener("keydown", (e) => e.key === "Escape" && afterPagefind());
+        this.hidden = false;
+        return true;
+      };
+      if (!attach()) {
+        const mo = new MutationObserver(() => attach() && mo.disconnect());
+        mo.observe(container, { childList: true, subtree: true });
+      }
+    }
+  }
+  customElements.define("semantic-search", SemanticSearch);
+</script>
+
+<style is:global>
+  semantic-search {
+    display: block;
+    margin-block: 0.75rem;
+    font-size: var(--sl-text-sm);
+  }
+  semantic-search[hidden],
+  semantic-search [hidden] {
+    display: none;
+  }
+  .ss-hint {
+    margin: 0 0 0.25rem;
+    color: var(--sl-color-gray-2);
+  }
+  .ss-hint button {
+    margin-inline-start: 0.25rem;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--sl-color-gray-4);
+    border-radius: 0;
+    background: var(--sl-color-black);
+    color: var(--sl-color-white);
+    font: inherit;
+    font-stretch: 85%;
+    cursor: pointer;
+  }
+  .ss-hint button:hover {
+    border-color: var(--sl-color-accent);
+  }
+  .ss-status:empty,
+  .ss-results:empty {
+    display: none;
+  }
+  .ss-status {
+    margin: 0.5rem 0 0;
+    color: var(--sl-color-gray-2);
+  }
+  .ss-results {
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 2px solid var(--sl-color-accent);
+  }
+  .ss-results li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+  }
+  .ss-results a {
+    color: var(--sl-color-white);
+    font-weight: 600;
+    font-stretch: 85%;
+  }
+  .ss-year {
+    color: var(--sl-color-gray-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .ss-results p {
+    margin: 0.25rem 0 0;
+    max-width: 68ch;
+    color: var(--sl-color-gray-2);
+    font-family: var(--font-read);
+  }
+  .ss-gap {
+    margin: 0.25rem 0 0;
+    color: var(--sl-color-gray-2);
+  }
+  .ss-hint a,
+  .ss-gap a {
+    color: var(--sl-color-text-accent);
+    text-decoration: underline;
+  }
+</style>

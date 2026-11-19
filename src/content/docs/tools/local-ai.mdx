@@ -3,16 +3,15 @@ title: Local AI & hardware
 description: Run models on hardware you control; local inference servers, memory-to-model-size guidance, and a data-governance decision shortcut.
 ---
 
+import Resources from '../../../components/Resources.astro';
+
 Run open-weight models (Llama, Qwen, Gemma, Mistral, DeepSeek families) on hardware
 you control. It's the option that keeps NDA'd inventories and proprietary process data in
 the building. This page covers the software first, then what to run it on.
 
 ## Local / self-hosted inference
 
-- **[Ollama](https://ollama.com)**: one-command local model server with a curated library. *Use when:* you want a local model running in five minutes. Free. **Local.** *(checked 2026-07)*
-- **[LM Studio](https://lmstudio.ai)**: desktop GUI for discovering, downloading, and chatting with local models (incl. Apple-silicon MLX builds). *Use when:* you prefer a GUI, or you're on a Mac. Free for personal/academic use. **Local.** *(checked 2026-07)*
-- **[llama.cpp](https://github.com/ggml-org/llama.cpp)**: the inference engine underneath much of the ecosystem. *Use when:* you need maximum control or minimal footprint (it's what the two tools above build on). Free, open source. **Local.** *(checked 2026-07)*
-- **[vLLM](https://github.com/vllm-project/vllm)**: high-throughput GPU serving with an OpenAI-compatible API. *Use when:* you serve one model to a whole group from a shared GPU box. *Not for:* laptops. Free, open source. **Local.** *(checked 2026-07)*
+<Resources group="local" />
 
 Models to run with these live on the [datasets & models page](/tools/data-and-models/#pretrained-models).
 

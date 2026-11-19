@@ -60,6 +60,20 @@ describe("chapters", () => {
       );
   });
 
+  it("give every IE field its own page", () => {
+    for (const tag of Object.keys(IE_TAGS)) {
+      const page = readFileSync(`src/content/docs/applications-map/${tag}.mdx`, "utf8");
+      expect(page, `no <FieldPage ie="${tag}" /> on its page`).toContain(
+        `<FieldPage ie="${tag}" />`,
+      );
+    }
+  });
+
+  it("keep the generated topic gaps on the map page", () => {
+    const map = readFileSync("src/content/docs/applications-map/index.mdx", "utf8");
+    expect(map).toContain("<TopicGaps />");
+  });
+
   it("keep the anchor Fig. 2 links to", () => {
     // Component links escape the build's link validator, which checks Markdown only.
     const map = readFileSync("src/content/docs/applications-map/index.mdx", "utf8");

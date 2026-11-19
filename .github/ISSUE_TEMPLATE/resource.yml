@@ -1,0 +1,90 @@
+name: Suggest a resource
+description: A course, video, post or community. No YAML or pull request needed.
+title: "[Resource] "
+labels: [entry, resource]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A maintainer turns this into an entry in the resources list. For software, a dataset or a model, use the tool form instead.
+  - type: input
+    id: link
+    attributes:
+      label: Name and link
+      description: For a video, link the video itself or the channel.
+      placeholder: Climate Change AI tutorials, https://www.climatechange.ai/tutorials
+    validations:
+      required: true
+  # The labels in RESOURCE_KINDS in src/data/schemas.ts; forms.test.ts checks them.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Course
+        - Video
+        - Post
+        - Community
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is it worth the time?
+      description: One or two sentences for the list. Who is it for, and what will they learn or find? Honest limits help more than praise.
+    validations:
+      required: true
+  # The three tag dropdowns list the labels in src/data/tags.ts; forms.test.ts keeps them in step.
+  - type: dropdown
+    id: ie
+    attributes:
+      label: IE field
+      description: Pick all that apply. Leave it empty for something that isn't about IE.
+      multiple: true
+      options:
+        - Life cycle assessment
+        - Socio-economic metabolism
+        - Input-output
+        - Circular economy
+        - Industrial symbiosis
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      description: The system or problem it is about. Pick all that apply, or none.
+      multiple: true
+      options:
+        - Buildings & construction
+        - Chemicals & toxicity
+        - Electronics & e-waste
+        - Metals & critical materials
+        - Agriculture & food
+        - Water
+        - Product lifetime, reuse & repair
+        - Energy & industrial decarbonisation
+        - Supply chains & resource security
+  - type: dropdown
+    id: ml
+    attributes:
+      label: AI technique
+      description: Pick all that apply.
+      multiple: true
+      options:
+        - LLMs & agents
+        - NLP & information extraction
+        - Computer vision
+        - Detection & segmentation
+        - Depth & 3D geometry
+        - Remote sensing
+        - Tabular ML & regression
+        - Generative models
+        - Foundation models & transformers
+        - Anomaly & condition detection
+        - Uncertainty & probabilistic ML
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you send
+      options:
+        - label: I've opened the link, and it says or shows what I wrote above.
+          required: true

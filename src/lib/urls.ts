@@ -23,7 +23,7 @@ export function litUrl(f: Partial<Filter> = {}): string {
 }
 
 /** The issue forms in .github/ISSUE_TEMPLATE/; forms.test.ts checks each file exists. */
-export const ISSUE_FORMS = ["paper", "application", "tool", "other"] as const;
+export const ISSUE_FORMS = ["paper", "application", "tool", "resource", "other"] as const;
 export type IssueForm = (typeof ISSUE_FORMS)[number];
 
 /** A new issue on the given form, with text fields prefilled by their form id.

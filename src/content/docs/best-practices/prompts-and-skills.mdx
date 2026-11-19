@@ -95,7 +95,17 @@ button. Save the content as `SKILL.md` in your skills folder, or get the file fr
 Enforces the [Rankin et al.](https://doi.org/10.21203/rs.3.rs-9270723/v1)
 recommendations whenever a model is trained or reviewed: test-set isolation before
 preprocessing, a linear baseline first, plain-language pipeline reporting, and the
-three disqualifying reviewer checks.
+three disqualifying reviewer checks. It reports each rule it checked and what it found,
+not a general "looks reproducible".
+
+Example uses:
+
+- You trained a random forest to gap-fill an inventory and ask the agent to look over
+  the pipeline. It checks that the split happens before scaling and gap-filling, asks for
+  a linear baseline, and names each check with its result.
+- You review a manuscript that predicts building material stocks from yearly data.
+  Reviewer mode checks the three disqualifying errors first, among them a random split
+  on time-structured data.
 
 <details>
 <summary>Show the skill file</summary>
@@ -105,7 +115,17 @@ three disqualifying reviewer checks.
 ### lca-data-sanity-check
 
 A structured pass over AI-written pipeline code: units, defaults, thresholds,
-mappings, a known-answer test, and a mass/energy balance check.
+mappings, a known-answer test, and a mass/energy balance check. A pass counts only
+when it names the known-answer case it ran.
+
+Example uses:
+
+- An agent edited a Brightway script and the impact scores moved. The pass compares the
+  database and method names with the originals character for character, then reruns
+  a case with a published answer.
+- An AI-written pandas step converts a flow table from tonnes to kilograms and adds a
+  `dropna`. The pass states the unit at each step, counts the rows the filter drops, and
+  checks that inputs still equal outputs plus stock change.
 
 <details>
 <summary>Show the skill file</summary>

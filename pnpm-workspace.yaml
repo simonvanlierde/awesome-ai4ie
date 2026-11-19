@@ -4,7 +4,9 @@ minimumReleaseAge: 10080
 
 # The only dependencies whose install scripts run.
 allowBuilds:
+  esbuild: false
   fsevents: true
+  workerd: false
   # onnxruntime-node ships its CPU binaries; its script only fetches GPU ones.
   onnxruntime-node: false
   protobufjs: false

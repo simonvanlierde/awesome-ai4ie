@@ -1,0 +1,84 @@
+# Questions for tuning meaning search (scripts/search-eval.mjs). `expect` lists the
+# literature.yaml ids that count as a right answer: the eval scores a question as
+# found when any of them shows above the cut-off. An empty `expect` marks a question
+# the list has nothing on, which must show no paper at all.
+# Write questions the way a reader would type them, not in the entries' own words.
+
+- q: which papers use computer vision for waste sorting?
+  expect: [luComputerVisionSolid2022, wuApplicationsConvolutionalNeural2023, funkEvaluationVisionLanguage2026, majchrowskaDeepLearningbasedWaste2022]
+- q: which papers sort waste with cameras?
+  expect: [luComputerVisionSolid2022, wuApplicationsConvolutionalNeural2023, funkEvaluationVisionLanguage2026, vogelgesangAutomatedMaterialFlow2025]
+- q: how can machine learning fill data gaps in life cycle inventories?
+  expect: [zhaoDatacentricInvestigationChallenges2025, zargarReviewInventoryModeling2022, gkousisMachineLearningLarge2026]
+- q: can large language models be trusted to do LCA?
+  expect: [preussLargeLanguageModels2024, donaldsonExpertGroundedBenchmark2025, kumarArtificialIntelligenceMeets2026]
+- q: how do I map building material stocks from satellite images?
+  expect: [haberlHighResolutionMaps2021, haberlGlobalBuiltEnvironment2024, baoDeepLearningFusion2023]
+- q: which papers automate product carbon footprints?
+  expect: [dengAutoPCFEfficientProduct2023, balajiFlamingoEnvironmentalImpact2023, raoPCFBenchDiagnosticBenchmark2026, ulissiEvaluationCriteriaAIassisted2026]
+- q: is there a dataset for recognising materials in photos?
+  expect: [bellMaterialRecognitionWild2015]
+- q: what should I read first on AI in industrial ecology?
+  expect: [donatiFutureArtificialIntelligence2022, gongEvolutionResearchIntersection2025]
+- q: which models can segment objects from a text prompt?
+  expect: [renGroundedSAMAssembling2024, carionSAM3Segment2025, liuGroundingDINOMarrying2024]
+- q: how accurate are LLMs at extracting data from sustainability reports?
+  expect: [forsterExtractingSustainabilityIndicators2026]
+- q: how often do chatbots make up references?
+  expect: [aljamaanReferenceHallucinationScore2024, waltersFabricationErrorsBibliographic2023, cabezasclavijoAssessingPerformance2025]
+- q: how do LLMs hallucinate citations
+  expect: [aljamaanReferenceHallucinationScore2024, waltersFabricationErrorsBibliographic2023, cabezasclavijoAssessingPerformance2025]
+- q: estimating ecotoxicity of chemicals with machine learning
+  expect: [houEstimateEcotoxicityCharacterization2020, liUsingMachineLearning2026, zhaoMachineLearningModels2025, songRapidLifeCycleImpact2017]
+- q: what is the carbon footprint of training AI models?
+  expect: [lacosteQuantifyingCarbonEmissions2019, verdecchiaSystematicReviewGreen2023]
+- q: how to make my machine learning study reproducible
+  expect: [rankinCallEnsureReproducibility2026, kapoorREFORMSConsensus2024, kapoorLeakageReproducibilityCrisis2023, semmelrockReproducibilityMachineLearningDriven2023]
+- q: data leakage in machine learning research
+  expect: [kapoorLeakageReproducibilityCrisis2023]
+- q: finding industrial symbiosis partners with AI
+  expect: [zhaoConstructionWastetoresourceKnowledge2025, davisMachineLearningassistedIndustrial2022, grimmelUrbanIndustrialSymbiosis2025, zhaoNovelMachineLearningbased2025, vancapelleveenBuildingRecommenderSystems2021]
+- q: Bayesian methods for material flow analysis
+  expect: [dongExpertElicitationData2023, wangBayesianMaterialFlow2024, masonBayesianMaterialFlow2025]
+- q: estimating depth or size of an object from one photo
+  expect: [yangDepthAnythingV22024, huMetric3DV22024, bochkovskiiDepthProSharp2024]
+- q: robots that take apart electronics
+  expect: [ameurFutureRoboticDisassembly2025, liuRAISERobotAssistedSelective2025]
+- q: identifying a product model from its label
+  expect: [sterkensProductLabelIdentification2023, koyanakaIndividualModelIdentification2024]
+- q: detecting scratches and defects on used phones
+  expect: [wuEnhancingElectronicsGrading2025, jeongWinCLIPZeroFewShot2023, zhouAnomalyCLIPObjectAgnostic2023]
+- q: predicting which buildings will be demolished
+  expect: [gaoSpatiotemporalMachineLearning2026]
+- q: material stocks of roads and infrastructure
+  expect: [ebrahimiMachineLearningbasedStocks2022, haberlHighResolutionMaps2021]
+- q: using street view images to learn about buildings
+  expect: [huangImageBasedPrediction2024, arbabiScalableDataCollection2021, daiModelingInteriorComponent2025]
+- q: AI agents that run a life cycle assessment
+  expect: [preussAutomatingLifeCycle2026, zhangSustainabilityAssessmentUsing2026, kallitsisAutomatingLifeCycle2026, lazarYouSpeakLCA2026, schweidtmannChemEasCodeOpenSourcePlatform2026]
+- q: emission factors for scope 3 accounting
+  expect: [guoGlobalEmissionFactor2026, balajiFlamingoEnvironmentalImpact2023]
+- q: the paper that introduced transformers
+  expect: [vaswaniAttentionAllYou2017]
+- q: reducing food waste with demand forecasting
+  expect: [hubnerMachinelearningbasedDemandForecasting2024]
+- q: household consumption footprints
+  expect: [froemeltMachineLearningBased2020]
+
+# Nothing on these in the list.
+- q: which papers use reinforcement learning to optimise supply chain logistics?
+  expect: []
+- q: best pizza in amsterdam tonight
+  expect: []
+- q: how to train a dog to sit
+  expect: []
+- q: stock market price prediction with deep learning
+  expect: []
+- q: speech recognition for call centres
+  expect: []
+- q: wind turbine blade recycling policy in Denmark
+  expect: []
+- q: blockchain for supply chain traceability
+  expect: []
+- q: how to write a grant proposal
+  expect: []

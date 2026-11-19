@@ -29,8 +29,10 @@ before you add it.
    - Set `type`, and set `added` to this month (`YYYY-MM`).
 
    An application goes in [`src/data/applications.yaml`](src/data/applications.yaml), with the
-   same tags. A tool goes on its page under `src/content/docs/tools/`, in the format of the
-   entries next to it. If the issue gives no checked date, use the month it was opened.
+   same tags. A tool, dataset, model or other resource goes in
+   [`src/data/resources.yaml`](src/data/resources.yaml): set `kind`, and for a tool its `group`
+   (the list it sits in on the tools pages), `cost` and `data`. Set `checked` to the month you
+   opened the link, or the month the issue was opened if it gives no date.
 4. For a paper, run `pnpm run citations`. It fetches the entry's BibTeX and RIS from Crossref or
    arXiv into [`src/data/citations.json`](src/data/citations.json). Commit that file with the
    entry. A `FAIL` line means Crossref or arXiv has no record yet, so rerun it later. Until then
@@ -51,17 +53,20 @@ If a suggestion doesn't hold up, say why in the issue and close it.
   doesn't check README.md or this file. Publishers that block crawlers answer 403 or 429, and
   the check counts those as fine.
 - **Weekly candidates.** Every Monday [`candidates.yml`](.github/workflows/candidates.yml) asks
-  OpenAlex for new papers that pair an AI term with an industrial-ecology term. It adds up to
-  25 to `src/data/candidates.yaml` on the `openalex-candidates` branch, with one open pull request.
+  OpenAlex for new papers that pair an AI term with an industrial-ecology term. In the core
+  industrial-ecology journals, a method term alone is enough. It adds up to 25 leads to
+  `src/data/candidates.yaml` on the `openalex-candidates` branch, with one open pull request.
+  Each run comments its counts there, and warns when its leads score low.
   Each lead carries a `score` (closeness to listed papers minus closeness to rejected leads,
   from a small local embedding model), the ids of its `near`est listed papers, and the tags
   those share as `hints`. Open leads come first, best score first, and every run re-scores
   them. Leads below the score of the least typical 6% of listed papers are left out. For
-  each lead, read the paper against the scope in [CONTRIBUTING.md](CONTRIBUTING.md#adding-a-paper-or-an-application):
+  each lead, read the paper against the scope in [CONTRIBUTING.md](CONTRIBUTING.md#adding-a-paper-an-application-or-a-resource):
   add it to `literature.yaml` and set `status: listed`, or set `status: rejected` with a
   one-line `why`. Keep rejected leads, so the job never proposes them
   again. A pull request opened by the workflow token starts no checks: close and reopen it to
-  run CI, then merge. It needs no secret, but the repository setting *Allow GitHub Actions to
+  run CI, then merge. The `OPENALEX_API_KEY` secret is optional (a free key from
+  openalex.org/settings/api raises the daily budget). The repository setting *Allow GitHub Actions to
   create and approve pull requests* (Settings, Actions, General) must be on. To catch up on a
   longer gap, run `node scripts/openalex-candidates.mjs --since <date> --limit <n>` locally.
 - **Citation records.** After a publisher corrects a record at Crossref, run

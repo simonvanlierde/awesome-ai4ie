@@ -4,9 +4,10 @@ description: A tag-filterable reading list on AI in industrial ecology, research
 ---
 
 import LiteratureSection from '../../components/LiteratureSection.astro';
+import Resources from '../../components/Resources.astro';
 
 A curated reading list with three kinds of entries: **AI applied in IE** (tagged by
-IE field and AI technique), **research practice** (reproducibility, verification,
+IE field, topic and AI technique), **research practice** (reproducibility, verification,
 disclosure), and the **ML landmarks** behind today's tools. Every entry says in one
 line why it's worth your time.
 
@@ -14,15 +15,39 @@ line why it's worth your time.
 Every entry here is a first proposal: the AI4IE group has not reviewed it yet. If an entry looks wrong or something is missing, [tell us](repo:issues/new?template=other.yml) or [suggest a paper](repo:issues/new?template=paper.yml).
 :::
 
-Filter by any combination of tags. Each filtered view has its own URL, so you can share it.
+Filter by any combination of tags. Each filtered view has its own URL, so you can share it. Or open **Search** (Ctrl K, or ⌘ K on a Mac) and ask in plain words, like "which papers map building stocks from satellites?". It matches papers by meaning, not only by keyword.
 
 <LiteratureSection />
 
 Follow new entries with the [RSS feed](/literature/feed.xml). Entries live in [`src/data/literature.yaml`](repo:blob/main/src/data/literature.yaml). To add one, [suggest a paper](repo:issues/new?template=paper.yml) in a short form, or open a pull request as the [contributing guide](repo:blob/main/CONTRIBUTING.md) describes.
 
+## Courses, videos and posts
+
+Not papers, but often the faster way in. Tools, datasets and models are on the
+[tools pages](/tools/); the rest is listed here. All of it lives in
+[`src/data/resources.yaml`](repo:blob/main/src/data/resources.yaml). To add one,
+[suggest a resource](repo:issues/new?template=resource.yml).
+
+**Courses:**
+
+<Resources kind="course" />
+
+**Videos:**
+
+<Resources kind="video" />
+
+**Posts:**
+
+<Resources kind="post" />
+
 ## Community and governance
 
-Not papers, but worth knowing when you place AI-in-IE work in the wider AI-for-climate effort:
+Where to meet the people doing this work, and where AI-in-IE sits in the wider
+AI-for-climate effort:
+
+<Resources kind="community" />
+
+Three pages and reports from that wider effort:
 
 - [Climate Change AI wiki: Industry](https://wiki.climatechange.ai/wiki/Industry): the community wiki's page on ML for industrial processes, supply chains and materials. There is no industrial ecology page yet.
 - [Climate change and AI: recommendations for government action](https://oecd.ai/en/wonk/documents/climate-change-and-ai-recommendations-for-government-action) (GPAI, 2021): what governments can do to support AI for climate action, and to limit the climate risks of AI itself.

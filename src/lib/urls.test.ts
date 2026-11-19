@@ -5,7 +5,7 @@ import { BASE, contentUrl, issueUrl, litUrl, siteUrl } from "./urls";
 describe("litUrl", () => {
   it("uses the literature page with optional filters", () => {
     expect(litUrl()).toBe(`${BASE}literature/`);
-    expect(litUrl({ ie: ["eol"] })).toBe(`${BASE}literature/?ie=eol`);
+    expect(litUrl({ ie: ["circular"] })).toBe(`${BASE}literature/?ie=circular`);
   });
 });
 

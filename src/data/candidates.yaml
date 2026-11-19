@@ -251,7 +251,7 @@
     - davisMachineLearningassistedIndustrial2022
   hints:
     ie:
-      - mfa
+      - sem
 - doi: 10.1016/j.procir.2026.03.261
   title: Implementation challenges of artificial intelligence in the circular economy
   year: 2026
@@ -259,7 +259,7 @@
   oa: https://www.sciencedirect.com/science/article/pii/S2212827126012011/pdf
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -295,7 +295,7 @@
   oa: https://doi.org/10.1016/j.sftr.2025.100784
   hints:
     ie:
-      - eol
+      - circular
   found: 2026-11-19
   status: new
   score: 0.071
@@ -346,7 +346,7 @@
   oa: https://global-jws.com/ojs/index.php/global-jws/article/download/783/637
   hints:
     ie:
-      - eol
+      - circular
       - lca
     ml:
       - tabular-ml
@@ -391,7 +391,7 @@
     - zhaoDataScienceApplications2024
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - cv
       - tabular-ml
@@ -403,7 +403,7 @@
   oa: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/csr.2827
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -428,8 +428,8 @@
     - vogelgesangAutomatedMaterialFlow2025
   hints:
     ie:
-      - eol
-      - mfa
+      - circular
+      - sem
     ml:
       - cv
 - doi: 10.1108/ijlm-03-2023-0102
@@ -440,7 +440,7 @@
   oa: null
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -458,7 +458,7 @@
   oa: https://link.springer.com/content/pdf/10.1007/s43546-026-01140-6.pdf
   hints:
     ie:
-      - eol
+      - circular
   found: 2026-11-19
   status: new
   score: 0.064
@@ -475,7 +475,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -494,7 +494,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
   found: 2026-11-19
   status: new
   score: 0.063
@@ -510,7 +510,7 @@
   oa: https://doi.org/10.1080/13662716.2026.2713753
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -555,7 +555,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
     ml:
       - tabular-ml
 - doi: 10.1016/j.jclepro.2025.145613
@@ -622,7 +622,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
   found: 2026-11-19
   status: new
   score: 0.06
@@ -658,8 +658,8 @@
   hints:
     ie:
       - lca
-      - mfa
-      - eol
+      - sem
+      - circular
   found: 2026-11-19
   status: new
   score: 0.058
@@ -676,7 +676,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -694,7 +694,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
   found: 2026-11-19
   status: new
   score: 0.057
@@ -780,7 +780,7 @@
   oa: https://textile-journal.com/index.php/textile/article/download/22/16
   hints:
     ie:
-      - eol
+      - circular
   found: 2026-11-19
   status: new
   score: 0.055
@@ -803,7 +803,7 @@
     - haberlGlobalBuiltEnvironment2024
   hints:
     ie:
-      - mfa
+      - sem
 - doi: 10.1007/s41660-026-00924-5
   title: "A Proposed AI-Based Integrated Circular Economy Framework for Municipal
     Solid Waste Management in Chhattisgarh State, India: A Modeling Study"
@@ -819,7 +819,7 @@
     - zhaoConstructionWastetoresourceKnowledge2025
   hints:
     ie:
-      - eol
+      - circular
 - doi: 10.1016/j.spc.2026.11.001
   title: "Calibrated screening-level life cycle assessment of food products from
     ingredient data: Distribution-free uncertainty quantification across sixteen
@@ -891,7 +891,7 @@
     - gongEvolutionResearchIntersection2025
   hints:
     ie:
-      - mfa
+      - sem
 - doi: 10.21203/rs.3.rs-11633484/v1
   title: "Industrial Waste Valorization and Sustainable Material Design: A
     Data-Driven Statistical Approach"
@@ -968,7 +968,7 @@
   oa: null
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -1014,7 +1014,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
     ml:
       - tabular-ml
 - doi: 10.1007/s11356-026-38353-z
@@ -1044,7 +1044,7 @@
   oa: https://osf.io/6qmhf/download
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -1063,7 +1063,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -1106,8 +1106,7 @@
     - daiModelingInteriorComponent2025
   hints:
     ie:
-      - mfa
-      - urban-mining
+      - sem
     ml:
       - cv
 - doi: 10.33002/nr2581.6853.0703ukr08
@@ -1119,7 +1118,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
   found: 2026-11-19
   status: new
   score: 0.044
@@ -1198,7 +1197,7 @@
     - gaoSpatiotemporalMachineLearning2026
   hints:
     ie:
-      - mfa
+      - sem
     ml:
       - tabular-ml
 - doi: 10.1016/j.conbuildmat.2024.136280
@@ -1228,7 +1227,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -1253,7 +1252,7 @@
     - arbabiScalableDataCollection2021
   hints:
     ie:
-      - mfa
+      - sem
 - doi: 10.1016/j.jenvman.2025.125471
   title: "Leveraging industry 4.0 technologies and industrial symbiosis: Advancing
     circular economy practices in BRICS economies"
@@ -1576,7 +1575,7 @@
     - zhaoDataScienceApplications2024
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - tabular-ml
   why: "rule 1: review of circular design tools, no AI or ML method"
@@ -1615,7 +1614,7 @@
     - grimmelUrbanIndustrialSymbiosis2025
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - tabular-ml
   why: "rule 4: review of digital-twin adoption and manufacturing performance"
@@ -1707,7 +1706,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
   why: "rule 4: generic overview of pollution technologies, no venue or abstract"
 - doi: 10.1080/25740881.2026.2762489
   title: New Progress in Green Degradation and Resource Utilization of PET Waste

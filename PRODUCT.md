@@ -33,7 +33,7 @@ evidence, try it.
 - It is a proposal from one maintainer to the working group, still in a demo phase, and
   meant to be argued with and handed over. The working group has not adopted it yet; the
   org move and a second maintainer are open.
-- Contributions arrive as pull requests against two YAML data files and Markdown pages.
+- Contributions arrive as pull requests against three YAML data files and Markdown pages.
 
 ## Capabilities and Constraints
 
@@ -42,10 +42,13 @@ evidence, try it.
 - Three React islands: the literature browser, the applications explorer, and an in-browser
   CLIP zero-shot demo that loads transformers.js from cdn.jsdelivr.net and a model from
   huggingface.co only on demand.
-- Data in `src/data/literature.yaml` and `applications.yaml`, Zod-validated at build and in
+- Data in `src/data/literature.yaml`, `applications.yaml` and `resources.yaml` (tools,
+  datasets, courses, videos, posts and communities), Zod-validated at build and in
   tests; tags must come from `src/data/tags.ts`.
 - Terminology: "IE field" and "AI technique" are the two map axes; "Wanted" marks an open
-  gap or placeholder.
+  gap or placeholder. The five IE fields follow the [ISIE sections](https://is4ie.org/sections):
+  life cycle assessment, socio-economic metabolism, input-output, circular economy and
+  industrial symbiosis.
 
 ## Brand Commitments
 
@@ -54,7 +57,7 @@ Name: "Awesome AI for Industrial Ecology", short form AI4IE. Beyond the name, th
 
 ## Evidence on Hand
 
-- 75 literature entries and 17 application entries in `src/data/`.
+- 124 literature entries and 19 application entries in `src/data/`.
 - Two worked skills in `skills/`, the CLIP demo, and two embedded Hugging Face Spaces.
 - The mark SVG in `src/assets/`, the favicon and the social card in `public/`.
 - No testimonials, adoption figures or user counts exist; do not invent any.
@@ -69,6 +72,6 @@ Name: "Awesome AI for Industrial Ecology", short form AI4IE. Beyond the name, th
 
 ## Accessibility & Inclusion
 
-WCAG 2.2 AA. Axe runs in CI on the built site (12 pages including the 404, light and dark,
+WCAG 2.2 AA. Axe runs in CI on every page of the built site (the 404 included, light and dark,
 desktop and phone), and the repo's own code must stay at zero violations. How to run it is
 in [CONTRIBUTING.md](CONTRIBUTING.md#checking-accessibility).

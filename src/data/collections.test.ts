@@ -1,14 +1,19 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { z } from "astro/zod";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
-import { applicationSchema, literatureSchema } from "./schemas";
+import { applicationSchema, literatureSchema, resourceSchema } from "./schemas";
+import { TAG_DIMS, TOPIC_TAGS } from "./tags";
 
 // Field-level rules live in the schemas (same ones the site build enforces);
 // these tests only add what zod can't express: uniqueness and cross-references.
 type Raw = { id?: string; doi?: string; arxiv?: string; papers?: string[] };
 const lit = parse(readFileSync("src/data/literature.yaml", "utf8")) as Raw[];
 const apps = parse(readFileSync("src/data/applications.yaml", "utf8")) as Raw[];
+const resources = parse(readFileSync("src/data/resources.yaml", "utf8")) as Record<
+  string,
+  string
+>[];
 
 describe("literature.yaml", () => {
   it("matches the site schema", () => {
@@ -25,10 +30,14 @@ describe("literature.yaml", () => {
   });
   it("lists each tag at most once per entry", () => {
     for (const e of [...lit, ...apps] as Record<string, unknown>[])
-      for (const dim of ["ie", "ml", "type"]) {
+      for (const dim of TAG_DIMS) {
         const tags = (e[dim] as string[] | undefined) ?? [];
         expect(new Set(tags).size, `${e.id}: duplicate ${dim} tag`).toBe(tags.length);
       }
+  });
+  it("gives every topic at least one entry, since a tag arrives with its first", () => {
+    const used = new Set(lit.flatMap((e) => (e as { topic?: string[] }).topic ?? []));
+    for (const t of Object.keys(TOPIC_TAGS)) expect(used.has(t), t).toBe(true);
   });
   it("requires a doi or an arxiv id", () => {
     const { doi: _d, arxiv: _a, ...bare } = lit[0] as Record<string, unknown>;
@@ -55,6 +64,47 @@ describe("applications.yaml", () => {
 });
 
 const WHY = /^rule [1-4]: /;
+const SENTENCE_END = /\.\)?$/;
+const SITE_LINK = /\]\((\/[^)#]*)/g;
+const TRAILING_SLASH = /\/$/;
+
+describe("resources.yaml", () => {
+  it("matches the site schema", () => {
+    z.array(resourceSchema).parse(resources);
+  });
+  it("has unique ids and URLs", () => {
+    for (const e of resources) expect(e.id, "entry missing id").toBeTruthy();
+    expect(new Set(resources.map((e) => e.id)).size).toBe(resources.length);
+    expect(new Set(resources.map((e) => e.url)).size).toBe(resources.length);
+  });
+  // Resources.astro writes "Good for:" and the cost after these, so each must end a sentence.
+  it("ends every text field with a full stop", () => {
+    for (const e of resources)
+      for (const k of ["blurb", "good", "notFor"])
+        if (e[k]) expect(e[k], `${e.id}.${k}`).toMatch(SENTENCE_END);
+  });
+  // Component output skips the build's link check, so check internal links here.
+  it("links only to pages that exist", () => {
+    for (const e of resources)
+      for (const k of ["blurb", "good", "notFor"])
+        for (const [, path] of (e[k] ?? "").matchAll(SITE_LINK)) {
+          const page = `src/content/docs${path.replace(TRAILING_SLASH, "") || "/index"}`;
+          const found = [".md", ".mdx", "/index.md", "/index.mdx"].some((x) =>
+            existsSync(page + x),
+          );
+          expect(found, `${e.id}: ${path}`).toBe(true);
+        }
+  });
+});
+
+describe("skills/", () => {
+  it("has a section on the prompts-and-skills page for each skill", () => {
+    const page = readFileSync("src/content/docs/best-practices/prompts-and-skills.mdx", "utf8");
+    const skills = readdirSync("skills", { withFileTypes: true }).filter((d) => d.isDirectory());
+    expect(skills.length).toBeGreaterThan(0);
+    for (const d of skills) expect(page, d.name).toContain(`### ${d.name}`);
+  });
+});
 
 describe("candidates.yaml", () => {
   const cands = parse(readFileSync("src/data/candidates.yaml", "utf8")) as (Raw & {

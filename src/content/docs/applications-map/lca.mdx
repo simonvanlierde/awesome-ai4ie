@@ -1,0 +1,32 @@
+---
+title: AI in life cycle assessment (LCA)
+description: How AI is used in life cycle assessment and footprinting, from impact screening to inventory extraction, how mature each use is, and the papers behind it.
+tableOfContents: false
+---
+
+import FieldPage from '../../../components/FieldPage.astro';
+import SuggestPaper from '../../../components/SuggestPaper.astro';
+import TopicGaps from '../../../components/TopicGaps.astro';
+
+Life cycle assessment (LCA) adds up the environmental impacts of a product or service over
+its whole life, from raw materials to waste. A footprint is the same count for one
+indicator, such as greenhouse gases, and life cycle sustainability assessment (LCSA) adds
+social and economic impacts. AI helps most with the data: it screens impacts
+quickly, fills gaps in inventories, and pulls inventory values out of papers and reports.
+The [map](/applications-map/#life-cycle-assessment) sums up what works today.
+
+<FieldPage ie="lca" />
+
+## Not mapped yet
+
+From the [gap list on the map](/applications-map/#not-mapped-yet), the gaps that touch LCA:
+
+- <span class="wanted">Wanted</span> **Knowledge graphs & ontologies.** For inventory (LCI)
+  interoperability and semantic flow matching, distinct from NLP extraction. The vocabulary
+  has no tag for them yet.
+  <SuggestPaper gap="Knowledge graphs & ontologies" />
+- <span class="wanted">Wanted</span> **Recommender & matching systems.** The method behind
+  matching products to emission factors, with no tag yet.
+  <SuggestPaper gap="Recommender & matching systems" />
+
+<TopicGaps ie="lca" />

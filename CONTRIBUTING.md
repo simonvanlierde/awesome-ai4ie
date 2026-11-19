@@ -6,17 +6,20 @@ Anyone can contribute. If you've found hardware that works, a tool worth the tim
 
 **No pull request needed.** [Suggest a paper](../../issues/new?template=paper.yml),
 [map an application](../../issues/new?template=application.yml),
-[suggest a tool](../../issues/new?template=tool.yml) or
+[suggest a tool](../../issues/new?template=tool.yml),
+[suggest a course, video or post](../../issues/new?template=resource.yml) or
 [suggest anything else](../../issues/new?template=other.yml). Each is a short form, and a
 maintainer turns it into an entry. The forms need a free GitHub account. Without one, post in
 the [AI4IE Discord](https://discord.gg/zhHAZakXHX).
 
 To make the change yourself:
 
-1. **Papers and applications live in data files**, not in page text:
-   [`src/data/literature.yaml`](src/data/literature.yaml) and
-   [`src/data/applications.yaml`](src/data/applications.yaml). Copy a neighbouring
-   entry and edit the fields. The pages are built from the data.
+1. **Papers, applications and resources live in data files**, not in page text:
+   [`src/data/literature.yaml`](src/data/literature.yaml),
+   [`src/data/applications.yaml`](src/data/applications.yaml) and
+   [`src/data/resources.yaml`](src/data/resources.yaml) (tools, datasets, models,
+   courses, videos, posts and communities). Copy a neighbouring entry and edit the
+   fields. The pages are built from the data.
 2. **Everything else** is a Markdown page under `src/content/docs/`:
    `best-practices/`, `tools/`, `demos.mdx`, `applications-map/index.mdx`.
    Copy the format of the entries next to yours.
@@ -25,25 +28,40 @@ To make the change yourself:
 
 To edit text, you need no local setup: edit the Markdown on GitHub, or click the **edit pencil** on any page of the live site. To preview locally, see the [development section](README.md#development).
 
-### Adding a paper or an application
+### Adding a paper, an application or a resource
 
 An AI-in-IE paper belongs in the reading list when all four hold:
 
 1. **An AI or ML method is central:** it is built, trained, compared or evaluated. Bayesian and probabilistic inference count, and so do knowledge graphs, NLP, remote sensing or image analysis that maps stocks, and datasets made to train or test such models. Descriptive statistics, fixed thresholds, deterministic balancing (RAS, Leontief projections) and a passing mention of "AI" don't.
-2. **The question is industrial ecology,** framed as such by the paper itself: LCA, material flows and stocks, end of life, urban mining, symbiosis, input-output analysis, or the materials, chemicals, food, water, energy and supply risk questions those methods answer.
+2. **The question is industrial ecology,** framed as such by the paper itself: LCA, socio-economic metabolism (material flows and stocks), input-output analysis, the circular economy (waste, end of life, secondary resources), industrial symbiosis, or the materials, chemicals, food, water, energy and supply risk questions those methods answer.
 3. **It is not about the footprint of AI itself.**
 4. **It is worth an IE researcher's time:** a research article, review, dataset, framework, or a perspective written for IE researchers. Surveys of firms adopting "AI for the circular economy", and reviews of neighbouring fields that never use an IE method, don't qualify.
 
 When you reject a weekly lead, give the rule it fails as its `why`.
 
-- Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR, with a short label in `SHORT_LABELS` (the start of the full label, for Fig. 1 on the home page). Add its full label to the matching dropdown in the paper and application forms in [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) too. `pnpm test` checks that they match.
+- Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · topic · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR, with a short label in `SHORT_LABELS` (the start of the full label, for Fig. 1 on the home page); a new topic gets a line in `TOPIC_WANTED` instead, saying what work it still wants. Add its full label to the matching dropdown in the paper and application forms in [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) too. `pnpm test` checks that they match.
 - Literature entries need an `id` (the citation key), `title`, `authors`, `year`, a one-line `blurb` saying why it's worth reading, tags, and `added: YYYY-MM`.
 - Write `authors` as a list with one `"Surname, I."` per author. Add `etAl: true` when you stop before the last author.
 - Give a `doi` (the bare `10.…` id), an `arxiv` id (the bare id, such as `2401.01234`), or both.
 - An entry is marked "new" in the list for about two months from the start of its `added` month.
+- Resource entries need an `id`, `title`, `url`, a `kind`, a one-line `blurb` saying why it's worth the time, and `checked: YYYY-MM`, the month you last opened the link. A tool also takes `good` and `notFor` (the "Good for" and "Not for" verdict), `cost`, `data` (whether data leaves your machine) and `group` (its list on the tools pages).
 - Application entries need both tag dimensions (`ie:` and `ml:`), an honest one-line `maturity:`, and `papers:` referencing literature ids.
 - `pnpm test` checks every field, tag, and cross-reference. CI runs it on your PR.
 - A maintainer fetches the full BibTeX and RIS record for a new paper after merging. If you work locally, you can run `pnpm run citations` yourself.
+
+### Listing resources on a page
+
+To show resources in a page's prose, such as a video beside an explanation, drop in the
+`Resources` component. It lists the entries of one kind, tool group or tag:
+
+```mdx
+import Resources from '../../components/Resources.astro';
+
+<Resources kind="video" ml="llm" />
+```
+
+`ie="any"` lists entries with an IE tag and `ie="none"` those without one. A filter that
+matches no entry fails the build.
 
 ### Citing a source in prose
 
@@ -97,7 +115,7 @@ Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUC
 - Tables are numbered by chapter: "Table 4.1" is the first table in chapter 4. Figures continue from Fig. 1 and Fig. 2 on the home page.
 - In Markdown, set the title as `<p class="table-title"><b>Table 4.1</b> …</p>` and the source as `<p class="table-src">Source: …</p>`.
 - For a figure built from the data, start from [`src/components/PathFigure.astro`](src/components/PathFigure.astro). It counts entries at build time, so its numbers stay true as entries are added.
-- A new IE field needs three things beside its tag: a short label, a `.field-<tag>` ink rule, and a `<FieldApplications ie="<tag>" />` section on the map page. The type check and `pnpm test` flag a missing one. All six inks are taken, so a seventh field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md).
+- A new IE field needs four things beside its tag: a short label, a `.field-<tag>` ink rule, a `<FieldApplications ie="<tag>" />` section on the map page, and its own page at `src/content/docs/applications-map/<tag>.mdx`. That page holds a short definition of the field, `<FieldPage ie="<tag>" />`, and the field's gaps; copy an existing one. The type check and `pnpm test` flag a missing one. Ink 6 is the one left, so a new field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md). A domain such as water or chemicals is a topic, not a field: topics take no ink.
 
 ### Checking accessibility
 

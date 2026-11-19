@@ -1,0 +1,44 @@
+---
+title: Software tools
+description: Assistants, coding assistants, research tools, and libraries for AI-assisted IE work.
+---
+
+import Resources from '../../../components/Resources.astro';
+
+Software worth knowing for AI-assisted IE work. Two sibling pages cover
+[running models locally and hardware](/tools/local-ai/) and
+[where to find datasets and pretrained models](/tools/data-and-models/).
+
+Tools change fast, so every entry carries the date it was last checked. The entries
+live in [`src/data/resources.yaml`](repo:blob/main/src/data/resources.yaml). If you spot
+a stale line, fixing it there is a one-line pull request.
+
+**Entry format:** name + link, one line on what it does, *good for / not for*,
+free/paid, and whether data leaves your machine (this matters for confidential
+industry data and for anything under an NDA or a data-management plan).
+
+## Assistants and chat interfaces
+
+<Resources group="assistant" />
+
+The assistant landscape shifts monthly. For a current view, [LMArena](https://lmarena.ai)
+ranks models by blind community votes, and [Artificial Analysis](https://artificialanalysis.ai)
+tracks quality, price, and speed across providers. *(checked 2026-07)*
+
+Local chat front-ends (Open WebUI, LM Studio's chat, Ollama's app) put the same chat
+window over models running on your own hardware, so **data stays on your machine**. See
+[Local AI & hardware](/tools/local-ai/). *(checked 2026-07)*
+
+## Coding assistants
+
+<Resources group="coding" />
+
+## Research and literature
+
+<Resources group="research" />
+
+## Data and modeling libraries
+
+Python packages relevant to AI + IE work:
+
+<Resources group="library" />

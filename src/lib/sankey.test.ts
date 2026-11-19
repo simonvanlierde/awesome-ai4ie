@@ -4,7 +4,7 @@ import { missingTechniques, sankeyLayout } from "./sankey";
 const entries = [
   { ie: ["lca"], ml: ["llm", "tabular-ml"] },
   { ie: ["lca"], ml: ["llm"] },
-  { ie: ["eol"], ml: ["cv"] },
+  { ie: ["circular"], ml: ["cv"] },
   { ml: ["llm"] }, // no IE field: a landmark paper, not part of the flow
 ];
 
@@ -16,12 +16,12 @@ describe("sankeyLayout", () => {
     expect(bands.map((b) => [b.ie, b.ml, b.count])).toEqual([
       ["lca", "llm", 2],
       ["lca", "tabular-ml", 1],
-      ["eol", "cv", 1],
+      ["circular", "cv", 1],
     ]);
   });
 
   it("stacks nodes in vocabulary order on one shared scale", () => {
-    expect(ieNodes.map((n) => n.tag)).toEqual(["lca", "eol"]);
+    expect(ieNodes.map((n) => n.tag)).toEqual(["lca", "circular"]);
     expect(mlNodes.map((n) => n.tag)).toEqual(["llm", "cv", "tabular-ml"]);
     // The ML column has more nodes, so its gaps set the scale: (100 - 2*10) / 4.
     expect(mlNodes[0].h).toBe(40);
@@ -45,7 +45,7 @@ describe("sankeyLayout", () => {
     // lca carries 3 pairings (height) from 2 papers; llm 2 pairings from 2 papers.
     expect(ieNodes.map((n) => [n.tag, n.count, n.papers])).toEqual([
       ["lca", 3, 2],
-      ["eol", 1, 1],
+      ["circular", 1, 1],
     ]);
     expect(mlNodes.find((n) => n.tag === "llm")?.papers).toBe(2);
     expect(sankeyLayout(entries, 100, 10).papers).toBe(3);
