@@ -42,11 +42,11 @@ body:
       description: Pick all that apply. Leave it empty for something that isn't about IE.
       multiple: true
       options:
-        - LCA & footprinting
-        - MFA & stocks and flows
-        - Waste, EoL & circularity
-        - Urban mining & secondary resources
-        - Symbiosis & by-product exchange
+        - Life cycle assessment
+        - Socio-economic metabolism
+        - Input-output
+        - Circular economy
+        - Industrial symbiosis
   - type: dropdown
     id: topic
     attributes:
@@ -63,7 +63,6 @@ body:
         - Product lifetime, reuse & repair
         - Energy & industrial decarbonisation
         - Supply chains & resource security
-        - Input–output & economy-wide footprints
   - type: dropdown
     id: ml
     attributes:

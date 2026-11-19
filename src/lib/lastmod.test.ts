@@ -25,6 +25,6 @@ describe("sourcesFor", () => {
   });
 
   it("finds a section's index page and leaves plain pages without data", () => {
-    expect(sourcesFor("tools")).toEqual(["src/content/docs/tools/index.md"]);
+    expect(sourcesFor("tools")).toEqual(["src/content/docs/tools/index.mdx"]);
   });
 });
