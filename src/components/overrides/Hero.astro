@@ -22,7 +22,9 @@ if (is404) {
 // The home title spells out AI4IE: "AI", "for" and the initials of "Industrial Ecology"
 // are the keys the header wordmark's letters fly onto on load (script below), and the
 // rest of each word fades in around them. Each word stays one nowrap box, because the
-// keys are inline blocks, which a line may otherwise break beside.
+// keys are inline blocks, which a line may otherwise break beside. The split copy is
+// hidden from assistive tech, which would read the inline blocks as separate words
+// ("A I for I ndustrial"), and a visually hidden copy of the title names the heading.
 const acronym = /^(.*) AI for Industrial Ecology$/.exec(title);
 const key = (k: string, text: string) => `<span class="ac" data-ac="${k}">${text}</span>`;
 const rest = (text: string) => `<span class="ac-rest">${text}</span>`;
@@ -36,24 +38,33 @@ const heading =
         word(key("i2", "I") + rest("ndustrial")),
         word(key("e", "E") + rest("cology")),
       ].join(" ")
-    : title;
+    : null;
 ---
 
 <div class="cover">
   <div class="cover-grid">
     <div class="cover-copy">
-      <h1 id="_top" data-page-title set:html={heading} />
+      {
+        heading ? (
+          <h1 id="_top" data-page-title>
+            <span class="sr-only">{title}</span>
+            <span aria-hidden="true" set:html={heading} />
+          </h1>
+        ) : (
+          <h1 id="_top" data-page-title set:html={title} />
+        )
+      }
       {
         isHome && acronym && (
           // Runs before the page paints: the title's parts stay hidden until the hand-off
-          // script places them. Reduced motion, a seen session or blocked storage skips it,
-          // and the timeout shows the title if that script never runs.
+          // script places them. Reduced motion, a seen session or blocked storage skips it.
+          // If that script has not started within a second, the timeout shows the title,
+          // and the session stays unseen, since the hand-off never played.
           <script is:inline>
             try {
               if (!matchMedia("(prefers-reduced-motion: reduce)").matches && !sessionStorage.getItem("ai4ie-handoff")) {
-                sessionStorage.setItem("ai4ie-handoff", "1");
                 document.documentElement.classList.add("ac-run");
-                setTimeout(() => document.documentElement.classList.remove("ac-run"), 2000);
+                setTimeout(() => document.documentElement.classList.remove("ac-run"), 1000);
               }
             } catch {}
           </script>
@@ -97,6 +108,9 @@ const heading =
   const mark = document.querySelector<SVGSVGElement>(".site-title .brand-mark");
   const h1 = document.querySelector<HTMLElement>(".cover h1");
   if (root.classList.contains("ac-run") && mark && h1) {
+    try {
+      sessionStorage.setItem("ai4ie-handoff", "1");
+    } catch {}
     const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
     const box = mark.getBoundingClientRect();
     // The strokes' cap runs from 4.9 to 27.1 of the mark's 32 units; Archivo's cap is 0.7em.
