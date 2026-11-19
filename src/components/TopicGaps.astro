@@ -1,0 +1,37 @@
+---
+// The topic half of "Not mapped yet" on the map page, built from the reading
+// list so it never goes stale: each topic with fewer than THIN_TOPIC entries,
+// with its count, what it still lacks, and the paper form. A field page passes
+// `ie` to list only the thin topics that already have an entry in that field.
+import { getCollection } from "astro:content";
+import { type IeTag, TOPIC_WANTED, tagLabel } from "../data/tags";
+import { thinTopics } from "../lib/topics";
+import { litUrl } from "../lib/urls";
+import SuggestPaper from "./SuggestPaper.astro";
+
+interface Props {
+  ie?: IeTag;
+}
+const entries = (await getCollection("literature")).map((e) => e.data);
+const thin = thinTopics(entries, Astro.props.ie);
+---
+
+{
+  thin.length > 0 && (
+    <ul>
+      {thin.map(({ topic, count }) => (
+        <li>
+          <span class="wanted">Wanted</span> <b>{tagLabel("topic", topic)}.</b> {TOPIC_WANTED[topic]}{" "}
+          {count === 0 ? (
+            "No entry yet."
+          ) : (
+            <a href={litUrl({ topic: [topic] })}>
+              {count} {count === 1 ? "entry" : "entries"} so far
+            </a>
+          )}{" "}
+          <SuggestPaper gap={tagLabel("topic", topic)} />
+        </li>
+      ))}
+    </ul>
+  )
+}

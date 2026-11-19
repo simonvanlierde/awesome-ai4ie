@@ -4,9 +4,9 @@ description: How AI is used in life cycle assessment and footprinting, from impa
 tableOfContents: false
 ---
 
-import Cite from '../../../components/Cite.astro';
 import FieldPage from '../../../components/FieldPage.astro';
 import SuggestPaper from '../../../components/SuggestPaper.astro';
+import TopicGaps from '../../../components/TopicGaps.astro';
 
 Life cycle assessment (LCA) adds up the environmental impacts of a product or service over
 its whole life, from raw materials to waste. A footprint is the same count for one
@@ -18,16 +18,14 @@ The [map](/applications-map/#lca--footprinting) sums up what works today.
 
 ## Not mapped yet
 
-The [gap list on the map](/applications-map/#not-mapped-yet) names these for LCA. Each one
-is open for its first paper.
+From the [gap list on the map](/applications-map/#not-mapped-yet), the gaps that touch LCA:
 
-- <span class="wanted">Wanted</span> **Knowledge graphs & ontologies.** For inventory
-  interoperability and semantic flow matching. The vocabulary has no tag for them yet.
+- <span class="wanted">Wanted</span> **Knowledge graphs & ontologies.** For inventory (LCI)
+  interoperability and semantic flow matching, distinct from NLP extraction. The vocabulary
+  has no tag for them yet.
   <SuggestPaper gap="Knowledge graphs & ontologies" />
 - <span class="wanted">Wanted</span> **Recommender & matching systems.** The method behind
   matching products to emission factors, with no tag yet.
   <SuggestPaper gap="Recommender & matching systems" />
-- Several fields with no section of their own have entries filed under LCA for now:
-  chemicals and toxicity <Cite id="zhaoMachineLearningModels2025" />, agriculture and food <Cite id="hubnerMachinelearningbasedDemandForecasting2024" />,
-  water <Cite id="engbergForecastingFutureStates2026" />, and input–output analysis <Cite id="guoGlobalEmissionFactor2026" />.
-  See [IE fields with no section](/applications-map/#ie-fields-with-no-section).
+
+<TopicGaps ie="lca" />

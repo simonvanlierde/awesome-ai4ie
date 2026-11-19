@@ -88,9 +88,6 @@
 .field-symbiosis {
   --field: var(--ink-5);
 }
-.field-uncertainty {
-  --field: var(--ink-6);
-}
 
 /* ── Browser surfaces ────────────────────────────────────────────────────── */
 ::file-selector-button {

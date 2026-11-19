@@ -2,9 +2,19 @@
 // tests and the islands (via z.infer) all use these, so the validation rules
 // and entry types live in one place.
 import { z } from "astro/zod";
-import { IE_TAGS, type IeTag, ML_TAGS, type MlTag, TYPE_TAGS, type TypeTag } from "./tags";
+import {
+  IE_TAGS,
+  type IeTag,
+  ML_TAGS,
+  type MlTag,
+  TOPIC_TAGS,
+  type TopicTag,
+  TYPE_TAGS,
+  type TypeTag,
+} from "./tags";
 
 const ieTag = z.enum(Object.keys(IE_TAGS) as [IeTag, ...IeTag[]]);
+const topicTag = z.enum(Object.keys(TOPIC_TAGS) as [TopicTag, ...TopicTag[]]);
 const mlTag = z.enum(Object.keys(ML_TAGS) as [MlTag, ...MlTag[]]);
 const typeTag = z.enum(Object.keys(TYPE_TAGS) as [TypeTag, ...TypeTag[]]);
 
@@ -29,6 +39,7 @@ export const literatureSchema = z
       .optional(), // bare id, no URL or version
     blurb: z.string().min(10).max(300), // one line: why read this
     ie: z.array(ieTag).default([]), // empty = not IE-specific (e.g. ML landmarks)
+    topic: z.array(topicTag).default([]), // may stand alone: a topic with no IE field yet
     ml: z.array(mlTag).default([]),
     type: z.array(typeTag).min(1),
     added: z.string().regex(/^\d{4}-\d{2}$/), // YYYY-MM; drives the "new" marker

@@ -140,11 +140,11 @@
   maturity: "Research prototypes, each tested on its own parks or firms. One recovers 24 of 45 known exchanges in one district; word vectors fail at some parks, Kalundborg among them."
   papers: [zhaoConstructionWastetoresourceKnowledge2025, davisMachineLearningassistedIndustrial2022, vancapelleveenBuildingRecommenderSystems2021, grimmelUrbanIndustrialSymbiosis2025, zhaoNovelMachineLearningbased2025]
 
-# ── Uncertainty & Bayesian methods ───────────────────────────────────────────
+# ── Uncertainty & Bayesian MFA ───────────────────────────────────────────
 - id: bayesian-mfa
   name: "Bayesian material flow analysis"
-  ie: [mfa, uncertainty]
-  ml: [tabular-ml]
+  ie: [mfa]
+  ml: [tabular-ml, uncertainty]
   summary: "Treat MFA flows as uncertain variables, combine expert priors with noisy data by Bayesian inference, and use the posterior to choose which data to collect next."
   maturity: "Methods papers, tested on US steel and global aluminium cycles, plus one national case on England's construction aggregates; each releases code or data."
   papers: [dongExpertElicitationData2023, wangBayesianMaterialFlow2024, liaoIntelligentDataCollection2025, masonBayesianMaterialFlow2025]

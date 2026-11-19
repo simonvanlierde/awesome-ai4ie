@@ -27,7 +27,16 @@ To edit text, you need no local setup: edit the Markdown on GitHub, or click the
 
 ### Adding a paper or an application
 
-- Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR, with a short label in `SHORT_LABELS` (the start of the full label, for Fig. 1 on the home page). Add its full label to the matching dropdown in the paper and application forms in [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) too. `pnpm test` checks that they match.
+An AI-in-IE paper belongs in the reading list when all four hold:
+
+1. **An AI or ML method is central:** it is built, trained, compared or evaluated. Bayesian and probabilistic inference count, and so do knowledge graphs, NLP, remote sensing or image analysis that maps stocks, and datasets made to train or test such models. Descriptive statistics, fixed thresholds, deterministic balancing (RAS, Leontief projections) and a passing mention of "AI" don't.
+2. **The question is industrial ecology,** framed as such by the paper itself: LCA, material flows and stocks, end of life, urban mining, symbiosis, input-output analysis, or the materials, chemicals, food, water, energy and supply risk questions those methods answer.
+3. **It is not about the footprint of AI itself.**
+4. **It is worth an IE researcher's time:** a research article, review, dataset, framework, or a perspective written for IE researchers. Surveys of firms adopting "AI for the circular economy", and reviews of neighbouring fields that never use an IE method, don't qualify.
+
+When you reject a weekly lead, give the rule it fails as its `why`.
+
+- Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · topic · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR, with a short label in `SHORT_LABELS` (the start of the full label, for Fig. 1 on the home page); a new topic gets a line in `TOPIC_WANTED` instead, saying what work it still wants. Add its full label to the matching dropdown in the paper and application forms in [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) too. `pnpm test` checks that they match.
 - Literature entries need an `id` (the citation key), `title`, `authors`, `year`, a one-line `blurb` saying why it's worth reading, tags, and `added: YYYY-MM`.
 - Write `authors` as a list with one `"Surname, I."` per author. Add `etAl: true` when you stop before the last author.
 - Give a `doi` (the bare `10.…` id), an `arxiv` id (the bare id, such as `2401.01234`), or both.
@@ -88,7 +97,7 @@ Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUC
 - Tables are numbered by chapter: "Table 4.1" is the first table in chapter 4. Figures continue from Fig. 1 and Fig. 2 on the home page.
 - In Markdown, set the title as `<p class="table-title"><b>Table 4.1</b> …</p>` and the source as `<p class="table-src">Source: …</p>`.
 - For a figure built from the data, start from [`src/components/PathFigure.astro`](src/components/PathFigure.astro). It counts entries at build time, so its numbers stay true as entries are added.
-- A new IE field needs four things beside its tag: a short label, a `.field-<tag>` ink rule, a `<FieldApplications ie="<tag>" />` section on the map page, and its own page at `src/content/docs/applications-map/<tag>.mdx`. That page holds a short definition of the field, `<FieldPage ie="<tag>" />`, and the field's gaps from "Not mapped yet"; copy an existing one. The type check and `pnpm test` flag a missing one. All six inks are taken, so a seventh field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md).
+- A new IE field needs four things beside its tag: a short label, a `.field-<tag>` ink rule, a `<FieldApplications ie="<tag>" />` section on the map page, and its own page at `src/content/docs/applications-map/<tag>.mdx`. That page holds a short definition of the field, `<FieldPage ie="<tag>" />`, and the field's gaps; copy an existing one. The type check and `pnpm test` flag a missing one. Ink 6 is the one left, so a new field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md). A domain such as water or chemicals is a topic, not a field: topics take no ink.
 
 ### Checking accessibility
 
