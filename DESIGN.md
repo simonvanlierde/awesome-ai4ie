@@ -69,7 +69,9 @@ sits outside the six inks: on the page it is neutral ink, with the 4 at full str
 the A's leg and the E's arms faded to grey. The stem is the I of AI4IE, so it takes a lighter
 tint; the large mark (the 404 plate, the card) also cuts a hairline gap beside it. Cobalt is ink 1, so the mark is cobalt only off
 the page (the favicon and the README), with one exception: the home title ends on the
-favicon tile as its end mark, at cap height, hidden from screen readers.
+favicon tile as its end mark, at cap height, hidden from screen readers. On load its strokes
+ink in as the mark is drawn: the 4, its stem, then the faded A leg and E arms. Pointing at
+or tapping the tile inks them in again.
 
 - **Header, home cover, colophon, and 404.** The top bar shows the unfolded `AI4IE` drafting
   wordmark, which collapses to the Æ-4 mark on hover/focus and on narrow screens. The home
@@ -94,8 +96,8 @@ favicon tile as its end mark, at cap height, hidden from screen readers.
   Pointing at a band lifts it and fades the rest. Pointing at, focusing or tapping a node
   lights its bands and names its reach in a live readout line under the plate; on touch the
   first tap lights a node and the second opens its list. On load the bands run in once from
-  the fields: the site's one entrance, under a second. Reduced motion
-  skips it.
+  the fields while the title's end mark inks in: together the site's one entrance, under a
+  second. Reduced motion skips both.
 - **Fig. 2.** The see, read, try path for one map cell, each step topped by the ink of the
   chapter it links to.
 - **Numbered tables.** A bold "Table N.N" title above, a source line below. Numbering and

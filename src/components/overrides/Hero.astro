@@ -26,8 +26,16 @@ if (is404) {
 }
 // The home title ends on the favicon tile as its end mark. The no-break space keeps the
 // tile on the last word's line; the tile is hidden from readers, as the title names it.
+// pathLength="1" lets custom.css ink each stroke in with a unit dash; the strokes are
+// drawn twice, as a ghost the hover replay redraws over and as the ink itself.
 const endMark = favicon
   .replace(/<!--[\s\S]*?-->/g, "")
+  .replaceAll("<path ", '<path pathLength="1" ')
+  .replace(
+    /<g [\s\S]*<\/g>/,
+    (g) =>
+      g.replace("<g ", '<g class="endmark-ghost" ') + g.replace("<g ", '<g class="endmark-ink" '),
+  )
   .replace(
     'role="img" aria-label="AI4IE"',
     'class="cover-endmark" aria-hidden="true" focusable="false"',
@@ -84,3 +92,19 @@ const heading = isHome ? `${title}&nbsp;${endMark}` : title;
     </ol>
   </nav>
 </div>
+
+<script>
+  // Pointing at or tapping the end mark inks its strokes in again over a faint ghost.
+  // Each replay swaps between two same-shaped keyframe sets, which restarts the CSS
+  // animations; a hover during a run is ignored, so the strokes never jump mid-draw.
+  const tile = document.querySelector(".cover-endmark");
+  let started = 0;
+  let round = false;
+  tile?.addEventListener("pointerenter", () => {
+    if (performance.now() - started < 500) return;
+    started = performance.now();
+    round = !round;
+    tile.classList.remove("reink-a", "reink-b");
+    tile.classList.add(round ? "reink-a" : "reink-b");
+  });
+</script>
