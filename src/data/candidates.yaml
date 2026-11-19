@@ -3,24 +3,6 @@
 # and hints the tags they share. status: new, then rejected (add a one-line why)
 # or listed (it is in literature.yaml). The script never re-adds a DOI that is
 # here, so keep rejected leads.
-- doi: 10.1016/j.jclepro.2025.146776
-  title: Intelligent application of large language model to life cycle assessment
-    methodology
-  year: 2025
-  venue: Journal of Cleaner Production
-  oa: null
-  hints:
-    ie:
-      - lca
-    ml:
-      - llm
-  found: 2026-11-19
-  status: new
-  score: 0.111
-  near:
-    - preussLargeLanguageModels2024
-    - abubakarNaturallanguageInterfaceParameterlevel2026
-    - gkousisMachineLearningLarge2026
 - doi: 10.1016/j.jenvman.2025.126225
   title: Addressing uncertainty in machine learning-integrated life cycle
     assessment (ML+LCA)
@@ -34,11 +16,65 @@
       - tabular-ml
   found: 2026-11-19
   status: new
-  score: 0.106
+  score: 0.142
   near:
+    - akramiAddressingUncertaintyMachine2025
     - romeikoReviewMachineLearning2024
     - ghoroghiAdvancesApplicationMachine2022
-    - zhaoDatacentricInvestigationChallenges2025
+- doi: 10.1016/j.jclepro.2025.146776
+  title: Intelligent application of large language model to life cycle assessment
+    methodology
+  year: 2025
+  venue: Journal of Cleaner Production
+  oa: null
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+  score: 0.107
+  near:
+    - preussLargeLanguageModels2024
+    - abubakarNaturallanguageInterfaceParameterlevel2026
+    - gkousisMachineLearningLarge2026
+- doi: 10.55041/isjem02353
+  title: Opportunity for scaling Product Carbon Footprinting using Large Language
+    Models
+  year: 2025
+  venue: International Scientific Journal of Engineering and Management
+  oa: null
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+  score: 0.098
+  near:
+    - dengAutoPCFEfficientProduct2023
+    - ulissiEvaluationCriteriaAIassisted2026
+    - balajiCaMLCarbonFootprinting2023
+- doi: 10.1016/j.autcon.2024.105412
+  title: Predictive models in machine learning for strength and life cycle
+    assessment of concrete structures
+  year: 2024
+  venue: Automation in Construction
+  oa: null
+  hints:
+    ie:
+      - lca
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+  score: 0.092
+  near:
+    - romeikoReviewMachineLearning2024
+    - akramiAddressingUncertaintyMachine2025
+    - ghoroghiAdvancesApplicationMachine2022
 - doi: 10.1016/j.cogsc.2024.100979
   title: Machine learning to support prospective life cycle assessment of emerging
     chemical technologies
@@ -48,11 +84,13 @@
   hints:
     ie:
       - lca
+    topic:
+      - chemicals
     ml:
       - tabular-ml
   found: 2026-11-19
   status: new
-  score: 0.098
+  score: 0.09
   near:
     - aboagyeLeveragingMachineLearning2025
     - ghoroghiAdvancesApplicationMachine2022
@@ -70,29 +108,11 @@
       - tabular-ml
   found: 2026-11-19
   status: new
-  score: 0.097
+  score: 0.09
   near:
     - aboagyeLeveragingMachineLearning2025
     - ghoroghiAdvancesApplicationMachine2022
     - zhaoDatacentricInvestigationChallenges2025
-- doi: 10.55041/isjem02353
-  title: Opportunity for scaling Product Carbon Footprinting using Large Language
-    Models
-  year: 2025
-  venue: International Scientific Journal of Engineering and Management
-  oa: null
-  hints:
-    ie:
-      - lca
-    ml:
-      - llm
-  found: 2026-11-19
-  status: new
-  score: 0.096
-  near:
-    - dengAutoPCFEfficientProduct2023
-    - ulissiEvaluationCriteriaAIassisted2026
-    - balajiFlamingoEnvironmentalImpact2023
 - doi: 10.48550/arxiv.2602.22500
   title: Mapping the Landscape of Artificial Intelligence in Life Cycle Assessment
     Using Large Language Models
@@ -106,46 +126,10 @@
       - llm
   found: 2026-11-19
   status: new
-  score: 0.091
+  score: 0.087
   near:
     - preussAutomatingLifeCycle2026
     - gkousisMachineLearningLarge2026
-    - donaldsonExpertGroundedBenchmark2025
-- doi: 10.1371/journal.pclm.0000732
-  title: "Integrating machine learning into life cycle assessment: Review and
-    future outlook"
-  year: 2025
-  venue: PLOS Climate
-  oa: https://doi.org/10.1371/journal.pclm.0000732
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.088
-  near:
-    - ghoroghiAdvancesApplicationMachine2022
-    - gkousisMachineLearningLarge2026
-    - aboagyeLeveragingMachineLearning2025
-- doi: 10.1016/j.eiar.2026.108816
-  title: "Artificial intelligence in life cycle assessment: methods, applications
-    and challenges"
-  year: 2026
-  venue: Environmental Impact Assessment Review
-  oa: https://doi.org/10.1016/j.eiar.2026.108816
-  hints:
-    ie:
-      - lca
-    ml:
-      - llm
-  found: 2026-11-19
-  status: new
-  score: 0.083
-  near:
-    - kumarArtificialIntelligenceMeets2026
-    - preussAutomatingLifeCycle2026
     - donaldsonExpertGroundedBenchmark2025
 - doi: 10.1007/s40831-025-01305-x
   title: "Integrating Artificial Intelligence into Life Cycle Assessment: A
@@ -161,29 +145,64 @@
       - tabular-ml
   found: 2026-11-19
   status: new
-  score: 0.083
+  score: 0.086
   near:
     - gkousisMachineLearningLarge2026
     - ghoroghiAdvancesApplicationMachine2022
     - preussAutomatingLifeCycle2026
-- doi: 10.1002/csr.71157
-  title: Artificial Intelligence‐Enabled Life Cycle Sustainability Assessment as a
-    Tool for Sustainability Coordination
+- doi: 10.1016/j.eiar.2026.108816
+  title: "Artificial intelligence in life cycle assessment: methods, applications
+    and challenges"
   year: 2026
-  venue: Corporate Social Responsibility and Environmental Management
-  oa: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/csr.71157
-  found: 2026-11-19
-  status: new
-  score: 0.081
-  near:
-    - preussAutomatingLifeCycle2026
-    - kumarArtificialIntelligenceMeets2026
-    - zhangSustainabilityAssessmentUsing2026
+  venue: Environmental Impact Assessment Review
+  oa: https://doi.org/10.1016/j.eiar.2026.108816
   hints:
     ie:
       - lca
     ml:
       - llm
+  found: 2026-11-19
+  status: new
+  score: 0.082
+  near:
+    - preussAutomatingLifeCycle2026
+    - kumarArtificialIntelligenceMeets2026
+    - donaldsonExpertGroundedBenchmark2025
+- doi: 10.1038/s41928-026-01652-x
+  title: Artificial intelligence agents automate life-cycle assessment
+  year: 2026
+  venue: Nature Electronics
+  oa: null
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+  score: 0.08
+  near:
+    - preussAutomatingLifeCycle2026
+    - zhangSustainabilityAssessmentUsing2026
+    - romeikoReviewMachineLearning2024
+- doi: 10.1371/journal.pclm.0000732
+  title: "Integrating machine learning into life cycle assessment: Review and
+    future outlook"
+  year: 2025
+  venue: PLOS Climate
+  oa: https://doi.org/10.1371/journal.pclm.0000732
+  hints:
+    ie:
+      - lca
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+  score: 0.078
+  near:
+    - ghoroghiAdvancesApplicationMachine2022
+    - gkousisMachineLearningLarge2026
+    - aboagyeLeveragingMachineLearning2025
 - doi: 10.1021/acs.est.6c09027
   title: Origins, Current Practice, and Future Directions of Life Cycle Assessment
   year: 2026
@@ -191,11 +210,11 @@
   oa: null
   found: 2026-11-19
   status: new
-  score: 0.079
+  score: 0.077
   near:
-    - kallitsisAutomatingLifeCycle2026
     - kumarLargeLanguageModelbased2025
     - aboagyeLeveragingMachineLearning2025
+    - kallitsisAutomatingLifeCycle2026
   hints:
     ie:
       - lca
@@ -214,111 +233,9 @@
       - tabular-ml
   found: 2026-11-19
   status: new
-  score: 0.077
+  score: 0.074
   near:
     - preussAutomatingLifeCycle2026
-    - ghoroghiAdvancesApplicationMachine2022
-    - gkousisMachineLearningLarge2026
-- doi: 10.1038/s41928-026-01652-x
-  title: Artificial intelligence agents automate life-cycle assessment
-  year: 2026
-  venue: Nature Electronics
-  oa: null
-  hints:
-    ie:
-      - lca
-    ml:
-      - llm
-  found: 2026-11-19
-  status: new
-  score: 0.076
-  near:
-    - preussAutomatingLifeCycle2026
-    - zhangSustainabilityAssessmentUsing2026
-    - kallitsisAutomatingLifeCycle2026
-- doi: 10.1007/s40996-026-02303-z
-  title: "Bacterial Geopolymer Concrete: A Critical Review of Microstructural
-    Mechanisms, Durability, and Field Readiness"
-  year: 2026
-  venue: Iranian Journal of Science and Technology Transactions of Civil Engineering
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.075
-  near:
-    - haberlGlobalBuiltEnvironment2024
-    - masonBayesianMaterialFlow2025
-    - davisMachineLearningassistedIndustrial2022
-  hints:
-    ie:
-      - sem
-- doi: 10.1016/j.procir.2026.03.261
-  title: Implementation challenges of artificial intelligence in the circular economy
-  year: 2026
-  venue: Procedia CIRP
-  oa: https://www.sciencedirect.com/science/article/pii/S2212827126012011/pdf
-  hints:
-    ie:
-      - circular
-    ml:
-      - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.073
-  near:
-    - gongEvolutionResearchIntersection2025
-    - kimUnlockingPotentialRemanufacturing2024
-    - zhaoDataScienceApplications2024
-- doi: 10.1016/j.spc.2025.03.015
-  title: "Machine learning algorithms for supporting life cycle assessment
-    studies: An analytical review"
-  year: 2025
-  venue: Sustainable Production and Consumption
-  oa: https://doi.org/10.1016/j.spc.2025.03.015
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.071
-  near:
-    - ghoroghiAdvancesApplicationMachine2022
-    - gkousisMachineLearningLarge2026
-    - romeikoReviewMachineLearning2024
-- doi: 10.1016/j.sftr.2025.100784
-  title: "Application of artificial intelligence in circular economy: A critical
-    analysis of the current research"
-  year: 2025
-  venue: Sustainable Futures
-  oa: https://doi.org/10.1016/j.sftr.2025.100784
-  hints:
-    ie:
-      - circular
-  found: 2026-11-19
-  status: new
-  score: 0.071
-  near:
-    - gongEvolutionResearchIntersection2025
-    - zhaoDataScienceApplications2024
-    - zhaoConstructionWastetoresourceKnowledge2025
-- doi: 10.1016/j.autcon.2024.105412
-  title: Predictive models in machine learning for strength and life cycle
-    assessment of concrete structures
-  year: 2024
-  venue: Automation in Construction
-  oa: null
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.07
-  near:
-    - romeikoReviewMachineLearning2024
     - ghoroghiAdvancesApplicationMachine2022
     - gkousisMachineLearningLarge2026
 - doi: 10.3390/su17031321
@@ -333,20 +250,19 @@
       - llm
   found: 2026-11-19
   status: new
-  score: 0.069
+  score: 0.073
   near:
     - dengAutoPCFEfficientProduct2023
     - ulissiEvaluationCriteriaAIassisted2026
     - zhangSustainabilityAssessmentUsing2026
-- doi: 10.33152/jmphss-10.4.10
-  title: "Artificial Intelligence and Circular Economy: A Systematic Literature
-    Review"
-  year: 2026
-  venue: Journal of Management Practices Humanities and Social Sciences
-  oa: https://global-jws.com/ojs/index.php/global-jws/article/download/783/637
+- doi: 10.1016/j.spc.2025.03.015
+  title: "Machine learning algorithms for supporting life cycle assessment
+    studies: An analytical review"
+  year: 2025
+  venue: Sustainable Production and Consumption
+  oa: https://doi.org/10.1016/j.spc.2025.03.015
   hints:
     ie:
-      - circular
       - lca
     ml:
       - tabular-ml
@@ -354,210 +270,29 @@
   status: new
   score: 0.069
   near:
-    - kimUnlockingPotentialRemanufacturing2024
-    - gongEvolutionResearchIntersection2025
-    - hubnerMachinelearningbasedDemandForecasting2024
-- doi: 10.47772/ijriss.2026.101000617
-  title: Enhancing End-of-Life Vehicle Component Management through an AI-Based
-    Software Engineering Decision Support System
+    - ghoroghiAdvancesApplicationMachine2022
+    - gkousisMachineLearningLarge2026
+    - romeikoReviewMachineLearning2024
+- doi: 10.1016/j.wasman.2026.115978
+  title: Rapid identification of hazardous waste from the steel industry based on
+    machine learning-driven infrared spectroscopy
   year: 2026
-  venue: International Journal of Research and Innovation in Social Science
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.068
-  near:
-    - kallitsisAutomatingLifeCycle2026
-    - kimUnlockingPotentialRemanufacturing2024
-    - preussAutomatingLifeCycle2026
-  hints:
-    ie:
-      - lca
-    ml:
-      - llm
-- doi: 10.1007/s10668-026-08244-x
-  title: "Designing a circular economy-driven reverse logistics based on
-    sustainability and resilience dimensions for the automotive industry: a
-    machine learning-based model"
-  year: 2026
-  venue: Environment Development and Sustainability
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.066
-  near:
-    - kimUnlockingPotentialRemanufacturing2024
-    - schluterAIenhancedIdentificationInspection2021
-    - zhaoDataScienceApplications2024
-  hints:
-    ie:
-      - circular
-    ml:
-      - cv
-      - tabular-ml
-- doi: 10.1002/csr.2827
-  title: A conceptual model of artificial intelligence effects on circular economy
-    actions
-  year: 2024
-  venue: Corporate Social Responsibility and Environmental Management
-  oa: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/csr.2827
-  hints:
-    ie:
-      - circular
-    ml:
-      - tabular-ml
+  venue: Waste Management
+  oa: https://doi.org/10.2139/ssrn.7460835
   found: 2026-11-19
   status: new
   score: 0.065
   near:
-    - gongEvolutionResearchIntersection2025
-    - zhaoDataScienceApplications2024
-    - grimmelUrbanIndustrialSymbiosis2025
-- doi: 10.1016/j.clet.2026.101352
-  title: "Advances in technologies across the marine plastic value chain in
-    Europe: A critical review"
-  year: 2026
-  venue: Cleaner Engineering and Technology
-  oa: https://www.sciencedirect.com/science/article/pii/S2666790826002119/pdf
-  found: 2026-11-19
-  status: new
-  score: 0.065
-  near:
-    - zhaoDataScienceApplications2024
-    - jiangBottomUpApproachIntegrating2025
+    - wuApplicationsConvolutionalNeural2023
+    - koyanakaIndividualModelIdentification2024
     - vogelgesangAutomatedMaterialFlow2025
   hints:
     ie:
       - circular
-      - sem
+    topic:
+      - electronics
     ml:
       - cv
-- doi: 10.1108/ijlm-03-2023-0102
-  title: "Artificial intelligence-based reverse logistics for improving circular
-    economy performance: a developing country perspective"
-  year: 2024
-  venue: The International Journal of Logistics Management
-  oa: null
-  hints:
-    ie:
-      - circular
-    ml:
-      - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.065
-  near:
-    - gongEvolutionResearchIntersection2025
-    - grimmelUrbanIndustrialSymbiosis2025
-    - kimUnlockingPotentialRemanufacturing2024
-- doi: 10.1007/s43546-026-01140-6
-  title: "The intersection of circular economy and artificial intelligence: a
-    bibliometric review"
-  year: 2026
-  venue: SN Business & Economics
-  oa: https://link.springer.com/content/pdf/10.1007/s43546-026-01140-6.pdf
-  hints:
-    ie:
-      - circular
-  found: 2026-11-19
-  status: new
-  score: 0.064
-  near:
-    - gongEvolutionResearchIntersection2025
-    - zhaoDataScienceApplications2024
-    - zhaoConstructionWastetoresourceKnowledge2025
-- doi: 10.1002/bse.4291
-  title: "Utilising Artificial Intelligence to Enhance Firm Circular Economy
-    Maturity: A Thematic Review via Machine Learning"
-  year: 2025
-  venue: Business Strategy and the Environment
-  oa: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/bse.4291
-  hints:
-    ie:
-      - lca
-      - circular
-    ml:
-      - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.064
-  near:
-    - gongEvolutionResearchIntersection2025
-    - hubnerMachinelearningbasedDemandForecasting2024
-    - zhaoDataScienceApplications2024
-- doi: 10.63371/ic.v5.n1.a686
-  title: "Inteligencia Artificial y Economía Circular: Problemas Éticos y Futuras
-    Perspectivas con Enfoque Sostenible"
-  year: 2026
-  venue: Ibero Ciencias - Revista Científica y Académica
-  oa: https://doi.org/10.63371/ic.v5.n1.a686
-  hints:
-    ie:
-      - lca
-      - circular
-  found: 2026-11-19
-  status: new
-  score: 0.063
-  near:
-    - gongEvolutionResearchIntersection2025
-    - zhaoDataScienceApplications2024
-    - preussAutomatingLifeCycle2026
-- doi: 10.1080/13662716.2026.2713753
-  title: "Adoption of circular economy innovations: the role of Artificial
-    Intelligence"
-  year: 2026
-  venue: Industry and Innovation
-  oa: https://doi.org/10.1080/13662716.2026.2713753
-  hints:
-    ie:
-      - circular
-    ml:
-      - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.063
-  near:
-    - gongEvolutionResearchIntersection2025
-    - zhaoDataScienceApplications2024
-    - grimmelUrbanIndustrialSymbiosis2025
-- doi: 10.1016/j.biombioe.2026.110313
-  title: Integrating life cycle assessment, Emergy Accounting, and neural network
-    prediction for comprehensive sustainability evaluation of a
-    biomass-to-biofuel system
-  year: 2026
-  venue: Biomass and Bioenergy
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.062
-  near:
-    - romeikoReviewMachineLearning2024
-    - aboagyeLeveragingMachineLearning2025
-    - gkousisMachineLearningLarge2026
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
-- doi: 10.1002/cfch.70048
-  title: "Integrating Biotechnology and Artificial Intelligence for Circular Food
-    Systems: A Critical Review of Evidence, Trade‐offs, and Research Priorities"
-  year: 2026
-  venue: ChemFoodChem
-  oa: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/cfch.70048
-  found: 2026-11-19
-  status: new
-  score: 0.062
-  near:
-    - hubnerMachinelearningbasedDemandForecasting2024
-    - gongEvolutionResearchIntersection2025
-    - nikkhahMachineLearningbasedLife2024
-  hints:
-    ie:
-      - lca
-      - circular
-    ml:
-      - tabular-ml
 - doi: 10.1016/j.jclepro.2025.145613
   title: "Automated machine learning-assisted enhanced product carbon footprint
     tracking and analysis in refinery industry: A graph-based life cycle
@@ -577,113 +312,27 @@
     - dengAutoPCFEfficientProduct2023
     - ulissiEvaluationCriteriaAIassisted2026
     - romeikoReviewMachineLearning2024
-- doi: 10.1016/j.seta.2025.104436
-  title: "Life Cycle Assessment and Circular Economy in Emerging Green and
-    Sustainable Energy Sectors: A Critical Review"
-  year: 2025
-  venue: Sustainable Energy Technologies and Assessments
-  oa: null
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
+- doi: 10.1021/acs.est.6c02808
+  title: Mapping Aluminum Flows in the United States Using Advanced Bayesian
+    Material Flow Analysis
+  year: 2026
+  venue: Environmental Science & Technology
+  oa: https://pubs.acs.org/esthag/article-pdf/doi/10.1021/acs.est.6c02808/69193149/acs.est.6c02808.pdf
   found: 2026-11-19
   status: new
   score: 0.06
   near:
-    - zhaoDataScienceApplications2024
-    - romeikoReviewMachineLearning2024
-    - preussLargeLanguageModels2024
-- doi: 10.1016/j.eti.2024.103685
-  title: New evidence about artificial intelligence and eco-investment as boosters
-    of the circular economy
-  year: 2024
-  venue: Environmental Technology & Innovation
-  oa: https://doi.org/10.1016/j.eti.2024.103685
+    - wangBayesianMaterialFlow2024
+    - masonBayesianMaterialFlow2025
+    - liaoIntelligentDataCollection2025
   hints:
     ie:
-      - lca
-      - circular
-  found: 2026-11-19
-  status: new
-  score: 0.06
-  near:
-    - gongEvolutionResearchIntersection2025
-    - zhaoDataScienceApplications2024
-    - zhangSustainabilityAssessmentUsing2026
-- doi: 10.1177/0734242x261497041
-  title: "Circular economy-enabled smart waste management systems: A systematic
-    review of digital technologies, environmental monitoring and future research
-    directions"
-  year: 2026
-  venue: Waste Management & Research The Journal for a Sustainable Circular Economy
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.059
-  near:
-    - zhaoDataScienceApplications2024
-    - zhaoConstructionWastetoresourceKnowledge2025
-    - grimmelUrbanIndustrialSymbiosis2025
-  hints:
-    ie:
-      - symbiosis
-    ml:
-      - tabular-ml
-- doi: 10.65102/is2026792
-  title: Graph neural network modeling digital economy industrial ecology and
-    artificial intelligence collaborative development mechanism
-  year: 2026
-  venue: Ingegneria Sismica
-  oa: https://ingegneriasismica.com/articles/2026/IS-BJ096.pdf
-  hints:
-    ie:
-      - lca
       - sem
-      - circular
-  found: 2026-11-19
-  status: new
-  score: 0.058
-  near:
-    - gongEvolutionResearchIntersection2025
-    - donatiFutureArtificialIntelligence2022
-    - zhangSustainabilityAssessmentUsing2026
-- doi: 10.55845/joce-2025-3277
-  title: Harnessing Artificial Intelligence for the Integration and Advancement of
-    Circular Economy Practices
-  year: 2026
-  venue: Circular Economy
-  oa: https://circulareconomyjournal.org/ojs/JoCE/article/download/77/160
-  hints:
-    ie:
-      - lca
-      - circular
+    topic:
+      - metals
     ml:
       - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.057
-  near:
-    - gongEvolutionResearchIntersection2025
-    - zhaoDataScienceApplications2024
-    - hubnerMachinelearningbasedDemandForecasting2024
-- doi: 10.17268/sciendo.2024.091
-  title: "Sustainable convergence: artificial intelligence and circular economy"
-  year: 2024
-  venue: SCIÉNDO
-  oa: https://revistas.unitru.edu.pe/index.php/SCIENDO/article/download/6202/6310
-  hints:
-    ie:
-      - lca
-      - circular
-  found: 2026-11-19
-  status: new
-  score: 0.057
-  near:
-    - gongEvolutionResearchIntersection2025
-    - preussAutomatingLifeCycle2026
-    - zhaoDataScienceApplications2024
+      - uncertainty
 - doi: 10.3808/jei.202600562
   title: Carbon Footprint Accounting Driven by Large Language Models and
     Retrieval-Augmented Generation
@@ -697,11 +346,48 @@
       - llm
   found: 2026-11-19
   status: new
-  score: 0.056
+  score: 0.057
   near:
     - dengAutoPCFEfficientProduct2023
-    - ulissiEvaluationCriteriaAIassisted2026
     - gkousisMachineLearningLarge2026
+    - ulissiEvaluationCriteriaAIassisted2026
+- doi: 10.1007/s42452-026-09480-6
+  title: Deep learning and computer vision-based intelligent optimization system
+    for environmental art design spatial layout
+  year: 2026
+  venue: Discover Applied Sciences
+  oa: https://doi.org/10.1007/s42452-026-09480-6
+  found: 2026-11-19
+  status: new
+  score: 0.054
+  near:
+    - huangImageBasedPrediction2024
+    - baoDeepLearningFusion2023
+    - gongEvolutionResearchIntersection2025
+  hints:
+    ie:
+      - sem
+    topic:
+      - buildings
+- doi: 10.1007/s41872-026-00472-4
+  title: "Climate change impact on bridge deterioration, failure risk, and
+    life-cycle performance: integrated machine learning and probabilistic
+    degradation approach"
+  year: 2026
+  venue: Life Cycle Reliability and Safety Engineering
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.051
+  near:
+    - akramiAddressingUncertaintyMachine2025
+    - romeikoReviewMachineLearning2024
+    - engbergForecastingFutureStates2026
+  hints:
+    ie:
+      - lca
+    ml:
+      - tabular-ml
 - doi: 10.1002/ijfe.70330
   title: "Beyond Reported Emissions: Uncovering Hidden Corporate Carbon Footprints"
   year: 2026
@@ -709,16 +395,53 @@
   oa: https://doi.org/10.1002/ijfe.70330
   found: 2026-11-19
   status: new
-  score: 0.056
+  score: 0.05
   near:
     - forsterExtractingSustainabilityIndicators2026
+    - balajiCaMLCarbonFootprinting2023
     - ulissiEvaluationCriteriaAIassisted2026
-    - baehrPredictingProductLife2024
   hints:
     ie:
       - lca
     ml:
+      - nlp-extraction
       - llm
+- doi: 10.1016/j.wasman.2026.115988
+  title: Deep learning-based hyperspectral imaging for the identification and
+    quantification of multi-component polypropylene blends
+  year: 2026
+  venue: Waste Management
+  oa: https://www.sciencedirect.com/science/article/pii/S0956053X26006586/pdf
+  found: 2026-11-19
+  status: new
+  score: 0.05
+  near:
+    - vogelgesangAutomatedMaterialFlow2025
+    - funkEvaluationVisionLanguage2026
+    - davisMachineLearningassistedIndustrial2022
+  hints:
+    ie:
+      - circular
+    ml:
+      - cv
+- doi: 10.65102/is2026792
+  title: Graph neural network modeling digital economy industrial ecology and
+    artificial intelligence collaborative development mechanism
+  year: 2026
+  venue: Ingegneria Sismica
+  oa: https://ingegneriasismica.com/articles/2026/IS-BJ096.pdf
+  hints:
+    ie:
+      - lca
+      - sem
+      - circular
+  found: 2026-11-19
+  status: new
+  score: 0.049
+  near:
+    - gongEvolutionResearchIntersection2025
+    - donatiFutureArtificialIntelligence2022
+    - zhangSustainabilityAssessmentUsing2026
 - doi: 10.1021/acssuschemeng.3c07038
   title: Enhanced Deep-Learning Model for Carbon Footprints of Chemicals
   year: 2024
@@ -727,49 +450,17 @@
   hints:
     ie:
       - lca
+    topic:
+      - chemicals
     ml:
       - tabular-ml
   found: 2026-11-19
   status: new
-  score: 0.055
+  score: 0.046
   near:
     - zhaoMachineLearningModels2025
     - dengAutoPCFEfficientProduct2023
     - aboagyeLeveragingMachineLearning2025
-- doi: 10.1016/j.scitotenv.2024.174349
-  title: "Bioplastic derived from corn stover: Life cycle assessment and
-    artificial intelligence-based analysis of uncertainty and variability"
-  year: 2024
-  venue: The Science of The Total Environment
-  oa: null
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.055
-  near:
-    - kumarLargeLanguageModelbased2025
-    - aboagyeLeveragingMachineLearning2025
-    - romeikoReviewMachineLearning2024
-- doi: 10.63456/tsrj-1-1-22
-  title: "Artificial Intelligence for Sustainable Textiles: A Review of Circular
-    Economy Applications"
-  year: 2025
-  venue: Textile Science & Research Journal
-  oa: https://textile-journal.com/index.php/textile/article/download/22/16
-  hints:
-    ie:
-      - circular
-  found: 2026-11-19
-  status: new
-  score: 0.055
-  near:
-    - gongEvolutionResearchIntersection2025
-    - kimUnlockingPotentialRemanufacturing2024
-    - davisMachineLearningassistedIndustrial2022
 - doi: 10.1007/s44290-026-00675-9
   title: A bibliometric analysis of innovation collaboration and sustainability in
     concrete and cementitious materials
@@ -778,30 +469,14 @@
   oa: https://link.springer.com/content/pdf/10.1007/s44290-026-00675-9.pdf
   found: 2026-11-19
   status: new
-  score: 0.055
+  score: 0.046
   near:
+    - tautoratDirectionsInnovationDecarbonization2023
     - kumarLargeLanguageModelbased2025
     - masonBayesianMaterialFlow2025
-    - haberlGlobalBuiltEnvironment2024
   hints:
-    ie:
-      - sem
-- doi: 10.1007/s41660-026-00924-5
-  title: "A Proposed AI-Based Integrated Circular Economy Framework for Municipal
-    Solid Waste Management in Chhattisgarh State, India: A Modeling Study"
-  year: 2026
-  venue: Process Integration and Optimization for Sustainability
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.055
-  near:
-    - gongEvolutionResearchIntersection2025
-    - zhaoDataScienceApplications2024
-    - zhaoConstructionWastetoresourceKnowledge2025
-  hints:
-    ie:
-      - circular
+    ml:
+      - nlp-extraction
 - doi: 10.1016/j.spc.2026.11.001
   title: "Calibrated screening-level life cycle assessment of food products from
     ingredient data: Distribution-free uncertainty quantification across sixteen
@@ -811,211 +486,16 @@
   oa: null
   found: 2026-11-19
   status: new
-  score: 0.054
+  score: 0.045
   near:
     - kumarLargeLanguageModelbased2025
-    - aboagyeLeveragingMachineLearning2025
-    - balajiFlamingoEnvironmentalImpact2023
-  hints:
-    ie:
-      - lca
-    ml:
-      - llm
-      - nlp-extraction
-- doi: 10.31181/sor202795
-  title: "Evolution of Multicriteria Decision Making Methods: A Thirty-Year Review
-    of Theory, Applications, and Future Trends"
-  year: 2026
-  venue: Spectrum of Operational Research.
-  oa: https://sor-journal.org/index.php/sor/article/download/95/66
-  found: 2026-11-19
-  status: new
-  score: 0.054
-  near:
-    - gongEvolutionResearchIntersection2025
-    - donaldsonExpertGroundedBenchmark2025
-    - gkousisMachineLearningLarge2026
-  hints:
-    ie:
-      - lca
-    ml:
-      - llm
-- doi: 10.14445/22315381/ijett-v74i10p105
-  title: "Chloride Resilient Recycled Aggregate Concrete: Optimising Marine
-    Durability through Age Enhanced SCM Integration"
-  year: 2026
-  venue: International Journal of Engineering Trends and Technology
-  oa: https://ijettjournal.org/Volume-74/Issue-10/IJETT-V74I10P105.pdf
-  found: 2026-11-19
-  status: new
-  score: 0.053
-  near:
-    - masonBayesianMaterialFlow2025
-    - aboagyeLeveragingMachineLearning2025
-    - kumarLargeLanguageModelbased2025
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
-- doi: 10.1007/s42452-026-09480-6
-  title: Deep learning and computer vision-based intelligent optimization system
-    for environmental art design spatial layout
-  year: 2026
-  venue: Discover Applied Sciences
-  oa: https://doi.org/10.1007/s42452-026-09480-6
-  found: 2026-11-19
-  status: new
-  score: 0.052
-  near:
-    - huangImageBasedPrediction2024
-    - baoDeepLearningFusion2023
-    - gongEvolutionResearchIntersection2025
-  hints:
-    ie:
-      - sem
-- doi: 10.21203/rs.3.rs-11633484/v1
-  title: "Industrial Waste Valorization and Sustainable Material Design: A
-    Data-Driven Statistical Approach"
-  year: 2026
-  venue: Research Square
-  oa: https://www.researchsquare.com/article/rs-11633484/latest.pdf
-  found: 2026-11-19
-  status: new
-  score: 0.051
-  near:
-    - davisMachineLearningassistedIndustrial2022
-    - kumarLargeLanguageModelbased2025
-    - zhaoDataScienceApplications2024
-  hints:
-    ml:
-      - nlp-extraction
-- doi: 10.3390/buildings16224525
-  title: "AI-Based Generative Structural Design for Reuse: Integrating Material
-    Banks and LCA"
-  year: 2026
-  venue: Buildings
-  oa: https://doi.org/10.3390/buildings16224525
-  found: 2026-11-19
-  status: new
-  score: 0.051
-  near:
-    - kimUnlockingPotentialRemanufacturing2024
-    - kallitsisAutomatingLifeCycle2026
+    - daiGaussianProcessRegression2022
     - aboagyeLeveragingMachineLearning2025
   hints:
     ie:
       - lca
     ml:
       - tabular-ml
-- doi: 10.1016/j.carres.2026.110164
-  title: Unlocking sustainable deinking of waste papers by endoxylanases utilising
-    nano-biotech innovations and optimization through artificial intelligence
-  year: 2026
-  venue: Carbohydrate Research
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.051
-  near:
-    - davisMachineLearningassistedIndustrial2022
-    - gongEvolutionResearchIntersection2025
-    - liUsingMachineLearning2026
-  hints:
-    ie:
-      - lca
-- doi: 10.1007/s11831-025-10373-x
-  title: Progress in Computational Modelling for Concrete Durability and Its
-    Integration with Artificial Intelligence and Life-Cycle Assessment
-  year: 2025
-  venue: Archives of Computational Methods in Engineering
-  oa: https://link.springer.com/content/pdf/10.1007/s11831-025-10373-x.pdf
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.05
-  near:
-    - masonBayesianMaterialFlow2025
-    - kallitsisAutomatingLifeCycle2026
-    - aboagyeLeveragingMachineLearning2025
-- doi: 10.1108/bpmj-10-2024-0944
-  title: "Harnessing artificial intelligence for operational excellence: pathways
-    to a circular economy"
-  year: 2025
-  venue: Business Process Management Journal
-  oa: null
-  hints:
-    ie:
-      - circular
-    ml:
-      - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.049
-  near:
-    - gongEvolutionResearchIntersection2025
-    - grimmelUrbanIndustrialSymbiosis2025
-    - kimUnlockingPotentialRemanufacturing2024
-- doi: 10.1007/s11356-026-38353-z
-  title: "Advancements in bio-asphalt binders: production, physico-chemical
-    characterization, optimization, performance, and sustainability
-    perspectives"
-  year: 2026
-  venue: Environmental Science and Pollution Research
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.046
-  near:
-    - kumarLargeLanguageModelbased2025
-    - aboagyeLeveragingMachineLearning2025
-    - zhaoMachineLearningModels2025
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
-- doi: 10.31235/osf.io/6qmhf
-  title: Challenges and Opportunities of Artificial Intelligence and Machine
-    Learning in Circular Economy
-  year: 2024
-  venue: SocArXiv (OSF Preprints)
-  oa: https://osf.io/6qmhf/download
-  hints:
-    ie:
-      - circular
-    ml:
-      - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.046
-  near:
-    - gongEvolutionResearchIntersection2025
-    - zhaoDataScienceApplications2024
-    - kimUnlockingPotentialRemanufacturing2024
-- doi: 10.70593/deepsci.0202012
-  title: Artificial intelligence, machine learning, deep learning, and big data
-    for circular economy, resilience, and sustainable development
-  year: 2026
-  venue: International Journal of Applied Resilience and Sustainability
-  oa: https://deepscipub.com/ijars/article/download/40/65
-  hints:
-    ie:
-      - lca
-      - circular
-    ml:
-      - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.046
-  near:
-    - gongEvolutionResearchIntersection2025
-    - zhaoDataScienceApplications2024
-    - hubnerMachinelearningbasedDemandForecasting2024
 - doi: 10.5281/zenodo.24115644
   title: "Recomputable Carbon Evidence: A Protocol for Grading, Abstention, and
     Red Teaming"
@@ -1028,172 +508,30 @@
   near:
     - ulissiEvaluationCriteriaAIassisted2026
     - zhangSustainabilityAssessmentUsing2026
-    - kallitsisAutomatingLifeCycle2026
+    - balajiCaMLCarbonFootprinting2023
   hints:
     ie:
       - lca
     ml:
       - llm
-- doi: 10.67620/sai.510a0012
-  title: VECTOR APPROACHES TO THE AUTOMATIC GENERATION OF GRAPHIC DESIGN ELEMENTS
-    USING ARTIFICIAL INTELLIGENCE
+- doi: 10.1002/csr.71157
+  title: Artificial Intelligence‐Enabled Life Cycle Sustainability Assessment as a
+    Tool for Sustainability Coordination
   year: 2026
-  venue: Zenodo (CERN European Organization for Nuclear Research)
-  oa: https://zenodo.org/records/23973910/files/A-12.pdf
+  venue: Corporate Social Responsibility and Environmental Management
+  oa: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/csr.71157
   found: 2026-11-19
   status: new
   score: 0.044
   near:
-    - huangImageBasedPrediction2024
-    - arbabiScalableDataCollection2021
-    - daiModelingInteriorComponent2025
-  hints:
-    ie:
-      - sem
-    ml:
-      - cv
-- doi: 10.33002/nr2581.6853.0703ukr08
-  title: Artificial Intelligence in Waste Management in the Context of
-    Implementing Circular Economy
-  year: 2024
-  venue: Grassroots Journal of Natural Resources
-  oa: https://doi.org/10.33002/nr2581.6853.0703ukr08
-  hints:
-    ie:
-      - lca
-      - circular
-  found: 2026-11-19
-  status: new
-  score: 0.044
-  near:
-    - gongEvolutionResearchIntersection2025
-    - zhaoNovelMachineLearningbased2025
-    - hubnerMachinelearningbasedDemandForecasting2024
-- doi: 10.1007/s41872-026-00472-4
-  title: "Climate change impact on bridge deterioration, failure risk, and
-    life-cycle performance: integrated machine learning and probabilistic
-    degradation approach"
-  year: 2026
-  venue: Life Cycle Reliability and Safety Engineering
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.043
-  near:
-    - engbergForecastingFutureStates2026
-    - romeikoReviewMachineLearning2024
-    - gkousisMachineLearningLarge2026
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
-- doi: 10.1109/access.2024.3407839
-  title: "Carbon Footprint Management in Global Supply Chains: A Data-Driven
-    Approach Utilizing Artificial Intelligence Algorithms"
-  year: 2024
-  venue: IEEE Access
-  oa: https://doi.org/10.1109/access.2024.3407839
+    - preussAutomatingLifeCycle2026
+    - kumarArtificialIntelligenceMeets2026
+    - zhangSustainabilityAssessmentUsing2026
   hints:
     ie:
       - lca
     ml:
       - llm
-  found: 2026-11-19
-  status: new
-  score: 0.043
-  near:
-    - ulissiEvaluationCriteriaAIassisted2026
-    - dengAutoPCFEfficientProduct2023
-    - gongEvolutionResearchIntersection2025
-- doi: 10.3390/eng7110612
-  title: Physically Based Strength Simulation and Multi-Objective Design of
-    Permeable Concrete Pavement Composition for Urban Stormwater Management
-    System
-  year: 2026
-  venue: Eng—Advances in Engineering
-  oa: https://doi.org/10.3390/eng7110612
-  found: 2026-11-19
-  status: new
-  score: 0.042
-  near:
-    - masonBayesianMaterialFlow2025
-    - ebrahimiMachineLearningbasedStocks2022
-    - gaoSpatiotemporalMachineLearning2026
-  hints:
-    ie:
-      - sem
-    ml:
-      - tabular-ml
-- doi: 10.1016/j.conbuildmat.2024.136280
-  title: "Life cycle assessment of urban road networks: Quantifying carbon
-    footprints and forecasting future material stocks"
-  year: 2024
-  venue: Construction and Building Materials
-  oa: null
-  hints:
-    ie:
-      - lca
-    ml:
-      - llm
-  found: 2026-11-19
-  status: new
-  score: 0.042
-  near:
-    - ulissiEvaluationCriteriaAIassisted2026
-    - kumarLargeLanguageModelbased2025
-    - kallitsisAutomatingLifeCycle2026
-- doi: 10.3390/su162310601
-  title: Evaluating Artificial Intelligence Models for Resource Allocation in
-    Circular Economy Digital Marketplace
-  year: 2024
-  venue: Sustainability
-  oa: https://www.mdpi.com/2071-1050/16/23/10601/pdf?version=1733234484
-  hints:
-    ie:
-      - lca
-      - circular
-    ml:
-      - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.041
-  near:
-    - gongEvolutionResearchIntersection2025
-    - hubnerMachinelearningbasedDemandForecasting2024
-    - gkousisMachineLearningLarge2026
-- doi: 10.1016/j.jenvman.2025.125471
-  title: "Leveraging industry 4.0 technologies and industrial symbiosis: Advancing
-    circular economy practices in BRICS economies"
-  year: 2025
-  venue: Journal of Environmental Management
-  oa: null
-  hints:
-    ie:
-      - symbiosis
-    ml:
-      - tabular-ml
-  found: 2026-11-19
-  status: new
-  score: 0.04
-  near:
-    - grimmelUrbanIndustrialSymbiosis2025
-    - zhaoDataScienceApplications2024
-    - zhaoConstructionWastetoresourceKnowledge2025
-- doi: 10.1007/s42114-026-02174-y
-  title: "Semiconductor composites based on biomass-derived chars: From pyrochar
-    and hydrochar to emerging applications"
-  year: 2026
-  venue: Advanced Composites and Hybrid Materials
-  oa: https://doi.org/10.1007/s42114-026-02174-y
-  found: 2026-11-19
-  status: new
-  score: 0.04
-  near:
-    - babbittDisassemblybasedBillMaterials2020
-    - davisMachineLearningassistedIndustrial2022
-    - haberlGlobalBuiltEnvironment2024
-  hints: {}
 - doi: 10.3390/en17122997
   title: "Artificial Intelligence and Digital Tools for Assisting Low-Carbon
     Architectural Design: Merging the Use of Machine Learning, Large Language
@@ -1209,11 +547,595 @@
       - llm
   found: 2026-11-19
   status: new
-  score: 0.038
+  score: 0.043
   near:
     - gkousisMachineLearningLarge2026
     - zhangSustainabilityAssessmentUsing2026
     - ulissiEvaluationCriteriaAIassisted2026
+- doi: 10.31235/osf.io/6qmhf
+  title: Challenges and Opportunities of Artificial Intelligence and Machine
+    Learning in Circular Economy
+  year: 2024
+  venue: SocArXiv (OSF Preprints)
+  oa: https://osf.io/6qmhf/download
+  hints:
+    ie:
+      - circular
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+  score: 0.041
+  near:
+    - gongEvolutionResearchIntersection2025
+    - zhaoDataScienceApplications2024
+    - kimUnlockingPotentialRemanufacturing2024
+- doi: 10.1007/s11831-025-10373-x
+  title: Progress in Computational Modelling for Concrete Durability and Its
+    Integration with Artificial Intelligence and Life-Cycle Assessment
+  year: 2025
+  venue: Archives of Computational Methods in Engineering
+  oa: https://link.springer.com/content/pdf/10.1007/s11831-025-10373-x.pdf
+  hints:
+    ie:
+      - lca
+  found: 2026-11-19
+  status: new
+  score: 0.04
+  near:
+    - tautoratDirectionsInnovationDecarbonization2023
+    - kallitsisAutomatingLifeCycle2026
+    - aboagyeLeveragingMachineLearning2025
+- doi: 10.1021/acs.est.6c09376
+  title: Near-Real-Time Mapping of Seamless All-Hour Aerosol Optical Depth in China
+  year: 2026
+  venue: Environmental Science & Technology
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.04
+  near:
+    - haberlHighResolutionMaps2021
+    - baoDeepLearningFusion2023
+    - haberlGlobalBuiltEnvironment2024
+  hints:
+    ie:
+      - sem
+    topic:
+      - buildings
+    ml:
+      - remote-sensing
+- doi: 10.31181/sor202795
+  title: "Evolution of Multicriteria Decision Making Methods: A Thirty-Year Review
+    of Theory, Applications, and Future Trends"
+  year: 2026
+  venue: Spectrum of Operational Research.
+  oa: https://sor-journal.org/index.php/sor/article/download/95/66
+  found: 2026-11-19
+  status: new
+  score: 0.038
+  near:
+    - gongEvolutionResearchIntersection2025
+    - donaldsonExpertGroundedBenchmark2025
+    - gkousisMachineLearningLarge2026
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+- doi: 10.1021/acs.est.6c09725
+  title: "TP-Agent: An Auditable LLM Agent for Predicting Pollutant Transformation
+    Products in Oxidative Water Treatment"
+  year: 2026
+  venue: Environmental Science & Technology
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.038
+  near:
+    - zhaoMachineLearningModels2025
+    - houEstimateEcotoxicityCharacterization2020
+    - kumarLargeLanguageModelbased2025
+  hints:
+    ie:
+      - lca
+    topic:
+      - chemicals
+    ml:
+      - tabular-ml
+- doi: 10.3390/eng7110612
+  title: Physically Based Strength Simulation and Multi-Objective Design of
+    Permeable Concrete Pavement Composition for Urban Stormwater Management
+    System
+  year: 2026
+  venue: Eng—Advances in Engineering
+  oa: https://doi.org/10.3390/eng7110612
+  found: 2026-11-19
+  status: new
+  score: 0.036
+  near:
+    - masonBayesianMaterialFlow2025
+    - ebrahimiMachineLearningbasedStocks2022
+    - gaoSpatiotemporalMachineLearning2026
+  hints:
+    ie:
+      - sem
+    topic:
+      - buildings
+      - lifetime
+    ml:
+      - tabular-ml
+- doi: 10.47772/ijriss.2026.101000617
+  title: Enhancing End-of-Life Vehicle Component Management through an AI-Based
+    Software Engineering Decision Support System
+  year: 2026
+  venue: International Journal of Research and Innovation in Social Science
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.035
+  near:
+    - kallitsisAutomatingLifeCycle2026
+    - kimUnlockingPotentialRemanufacturing2024
+    - preussAutomatingLifeCycle2026
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+- doi: 10.1016/j.buildenv.2026.114904
+  title: Construction supply-chain carbon footprint with graph neural
+    network-based input-output framework
+  year: 2026
+  venue: Building and Environment
+  oa: null
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+  score: 0.035
+  near:
+    - ulissiEvaluationCriteriaAIassisted2026
+    - dengAutoPCFEfficientProduct2023
+    - balajiCaMLCarbonFootprinting2023
+- doi: 10.1016/j.procir.2025.01.079
+  title: "Life Cycle Assessment of Artificial Intelligence Applications: Research
+    Gaps and Opportunities"
+  year: 2025
+  venue: Procedia CIRP
+  oa: https://doi.org/10.1016/j.procir.2025.01.079
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+  score: 0.035
+  near:
+    - zhangSustainabilityAssessmentUsing2026
+    - preussAutomatingLifeCycle2026
+    - kumarArtificialIntelligenceMeets2026
+- doi: 10.3390/s26227106
+  title: A Data-Driven Inverse ARX Framework for Force Reconstruction in Dynamic
+    Systems from Vibration Measurements
+  year: 2026
+  venue: Sensors
+  oa: https://doi.org/10.3390/s26227106
+  found: 2026-11-19
+  status: new
+  score: 0.035
+  near:
+    - dongExpertElicitationData2023
+    - wangBayesianMaterialFlow2024
+    - liaoIntelligentDataCollection2025
+  hints:
+    ie:
+      - sem
+    topic:
+      - metals
+    ml:
+      - tabular-ml
+      - uncertainty
+- doi: 10.1021/acs.est.6c11406
+  title: Rapid Emission–Economy Decoupling alongside the Urbanization of Chinese
+    Counties
+  year: 2026
+  venue: Environmental Science & Technology
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.034
+  near:
+    - longBuildingStockTurnoverReshapes2026
+    - froemeltMachineLearningBased2020
+    - haoPatternsDriversProjections2025
+  hints:
+    ie:
+      - lca
+    ml:
+      - tabular-ml
+- doi: 10.1016/j.biombioe.2026.110313
+  title: Integrating life cycle assessment, Emergy Accounting, and neural network
+    prediction for comprehensive sustainability evaluation of a
+    biomass-to-biofuel system
+  year: 2026
+  venue: Biomass and Bioenergy
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.032
+  near:
+    - yuPredictingEnvironmentalImpacts2024
+    - romeikoReviewMachineLearning2024
+    - akramiAddressingUncertaintyMachine2025
+  hints:
+    ie:
+      - lca
+    ml:
+      - tabular-ml
+- doi: 10.1021/acs.est.6c07619
+  title: Global Analysis and Prediction of Bicarbonate in Groundwater under
+    Climate Change
+  year: 2026
+  venue: Environmental Science & Technology
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.032
+  near:
+    - lawleyGeospatialDataDeep2024
+    - engbergForecastingFutureStates2026
+    - songRapidLifeCycleImpact2017
+  hints:
+    ie:
+      - lca
+    ml:
+      - tabular-ml
+- doi: 10.1016/j.wasman.2026.115990
+  title: UAV-assisted downscaling of Sentinel-2 for spontaneous combustion
+    detection in reclaimed coal waste dumps
+  year: 2026
+  venue: Waste Management
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.032
+  near:
+    - majchrowskaDeepLearningbasedWaste2022
+    - jiangBottomUpApproachIntegrating2025
+    - luComputerVisionSolid2022
+  hints:
+    ie:
+      - circular
+    ml:
+      - cv
+- doi: 10.63456/tsrj-1-1-22
+  title: "Artificial Intelligence for Sustainable Textiles: A Review of Circular
+    Economy Applications"
+  year: 2025
+  venue: Textile Science & Research Journal
+  oa: https://textile-journal.com/index.php/textile/article/download/22/16
+  hints:
+    ie:
+      - circular
+  found: 2026-11-19
+  status: new
+  score: 0.031
+  near:
+    - gongEvolutionResearchIntersection2025
+    - kimUnlockingPotentialRemanufacturing2024
+    - davisMachineLearningassistedIndustrial2022
+- doi: 10.1109/access.2024.3407839
+  title: "Carbon Footprint Management in Global Supply Chains: A Data-Driven
+    Approach Utilizing Artificial Intelligence Algorithms"
+  year: 2024
+  venue: IEEE Access
+  oa: https://doi.org/10.1109/access.2024.3407839
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+  score: 0.031
+  near:
+    - ulissiEvaluationCriteriaAIassisted2026
+    - dengAutoPCFEfficientProduct2023
+    - gongEvolutionResearchIntersection2025
+- doi: 10.1016/j.conbuildmat.2024.136280
+  title: "Life cycle assessment of urban road networks: Quantifying carbon
+    footprints and forecasting future material stocks"
+  year: 2024
+  venue: Construction and Building Materials
+  oa: null
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+  found: 2026-11-19
+  status: new
+  score: 0.031
+  near:
+    - ulissiEvaluationCriteriaAIassisted2026
+    - haoPatternsDriversProjections2025
+    - kallitsisAutomatingLifeCycle2026
+- doi: 10.17268/sciendo.2024.091
+  title: "Sustainable convergence: artificial intelligence and circular economy"
+  year: 2024
+  venue: SCIÉNDO
+  oa: https://revistas.unitru.edu.pe/index.php/SCIENDO/article/download/6202/6310
+  hints:
+    ie:
+      - lca
+      - circular
+  found: 2026-11-19
+  status: new
+  score: 0.03
+  near:
+    - gongEvolutionResearchIntersection2025
+    - preussAutomatingLifeCycle2026
+    - zhaoDataScienceApplications2024
+- doi: 10.1021/acs.est.6c08722
+  title: "Maternal 6PPD-Quinone Exposure is Associated with Infant
+    Neurodevelopmental Delay: Epidemiological Evidence and Mechanistic Insights
+    from a Birth Cohort Study"
+  year: 2026
+  venue: Environmental Science & Technology
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.03
+  near:
+    - songRapidLifeCycleImpact2017
+    - houEstimateEcotoxicityCharacterization2020
+    - zhaoMachineLearningModels2025
+  hints:
+    ie:
+      - lca
+    topic:
+      - chemicals
+    ml:
+      - tabular-ml
+- doi: 10.1177/0734242x261497041
+  title: "Circular economy-enabled smart waste management systems: A systematic
+    review of digital technologies, environmental monitoring and future research
+    directions"
+  year: 2026
+  venue: Waste Management & Research The Journal for a Sustainable Circular Economy
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.029
+  near:
+    - zhaoDataScienceApplications2024
+    - zhaoConstructionWastetoresourceKnowledge2025
+    - grimmelUrbanIndustrialSymbiosis2025
+  hints:
+    ie:
+      - symbiosis
+    ml:
+      - tabular-ml
+- doi: 10.3390/buildings16224525
+  title: "AI-Based Generative Structural Design for Reuse: Integrating Material
+    Banks and LCA"
+  year: 2026
+  venue: Buildings
+  oa: https://doi.org/10.3390/buildings16224525
+  found: 2026-11-19
+  status: new
+  score: 0.029
+  near:
+    - kimUnlockingPotentialRemanufacturing2024
+    - testiniExAnteProductCarbon2026
+    - kallitsisAutomatingLifeCycle2026
+  hints:
+    ie:
+      - lca
+    ml:
+      - tabular-ml
+- doi: 10.1016/j.sftr.2025.100784
+  title: "Application of artificial intelligence in circular economy: A critical
+    analysis of the current research"
+  year: 2025
+  venue: Sustainable Futures
+  oa: https://doi.org/10.1016/j.sftr.2025.100784
+  hints:
+    ie:
+      - circular
+  found: 2026-11-19
+  status: new
+  score: 0.028
+  near:
+    - gongEvolutionResearchIntersection2025
+    - zhaoDataScienceApplications2024
+    - fangStudyRecyclingMaterials2025
+- doi: 10.33152/jmphss-10.4.10
+  title: "Artificial Intelligence and Circular Economy: A Systematic Literature
+    Review"
+  year: 2026
+  venue: Journal of Management Practices Humanities and Social Sciences
+  oa: https://global-jws.com/ojs/index.php/global-jws/article/download/783/637
+  hints:
+    ie:
+      - circular
+  found: 2026-11-19
+  status: new
+  score: 0.028
+  near:
+    - kimUnlockingPotentialRemanufacturing2024
+    - gongEvolutionResearchIntersection2025
+    - fangStudyRecyclingMaterials2025
+- doi: 10.3390/su162310601
+  title: Evaluating Artificial Intelligence Models for Resource Allocation in
+    Circular Economy Digital Marketplace
+  year: 2024
+  venue: Sustainability
+  oa: https://www.mdpi.com/2071-1050/16/23/10601/pdf?version=1733234484
+  hints:
+    ie:
+      - lca
+      - circular
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+  score: 0.028
+  near:
+    - gongEvolutionResearchIntersection2025
+    - hubnerMachinelearningbasedDemandForecasting2024
+    - gkousisMachineLearningLarge2026
+- doi: 10.5281/zenodo.24275846
+  title: "Decoupling Attribution from Inference: Strengthening Legal-Geometric
+    Auditing (RFC-006) via Deterministic Gates, Cryptographic Seams, and
+    Anti-Conflation Provenance (RFC-007)"
+  year: 2026
+  venue: Zenodo (CERN European Organization for Nuclear Research)
+  oa: https://doi.org/10.5281/zenodo.24275846
+  found: 2026-11-19
+  status: new
+  score: 0.027
+  near:
+    - donaldsonExpertGroundedBenchmark2025
+    - rankinCallEnsureReproducibility2026
+    - kumarArtificialIntelligenceMeets2026
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+- doi: 10.1016/j.procir.2026.03.261
+  title: Implementation challenges of artificial intelligence in the circular economy
+  year: 2026
+  venue: Procedia CIRP
+  oa: https://www.sciencedirect.com/science/article/pii/S2212827126012011/pdf
+  hints:
+    ie:
+      - circular
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+  score: 0.026
+  near:
+    - gongEvolutionResearchIntersection2025
+    - kimUnlockingPotentialRemanufacturing2024
+    - zhaoDataScienceApplications2024
+- doi: 10.1021/acs.est.6c07329
+  title: Nonlinear Ozone-Phytoplankton-Sea-Ice Coupling Regulates Fine-Scale
+    Gaseous Elemental Mercury Enhancement in the Arctic Marginal Ice Zone
+  year: 2026
+  venue: Environmental Science & Technology
+  oa: https://pubs.acs.org/esthag/article-pdf/doi/10.1021/acs.est.6c07329/69113064/acs.est.6c07329.pdf
+  found: 2026-11-19
+  status: new
+  score: 0.026
+  near:
+    - lawleyGeospatialDataDeep2024
+    - guoGlobalEmissionFactor2026
+    - daiGaussianProcessRegression2022
+  hints:
+    ie:
+      - lca
+    ml:
+      - tabular-ml
+- doi: 10.67620/sai.510a0012
+  title: VECTOR APPROACHES TO THE AUTOMATIC GENERATION OF GRAPHIC DESIGN ELEMENTS
+    USING ARTIFICIAL INTELLIGENCE
+  year: 2026
+  venue: Zenodo (CERN European Organization for Nuclear Research)
+  oa: https://zenodo.org/records/23973910/files/A-12.pdf
+  found: 2026-11-19
+  status: new
+  score: 0.024
+  near:
+    - huangImageBasedPrediction2024
+    - arbabiScalableDataCollection2021
+    - daiModelingInteriorComponent2025
+  hints:
+    ie:
+      - sem
+    topic:
+      - buildings
+    ml:
+      - cv
+- doi: 10.1016/j.engappai.2026.116731
+  title: A bidirectional transformer framework for bearing capacity prediction and
+    embedment length determination of prebored and precast piles
+  year: 2026
+  venue: Engineering Applications of Artificial Intelligence
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.024
+  near:
+    - ebrahimiMachineLearningbasedStocks2022
+    - koyanakaIndividualModelIdentification2024
+    - huangImageBasedPrediction2024
+  hints:
+    ie:
+      - sem
+    ml:
+      - cv
+- doi: 10.14445/22315381/ijett-v74i10p105
+  title: "Chloride Resilient Recycled Aggregate Concrete: Optimising Marine
+    Durability through Age Enhanced SCM Integration"
+  year: 2026
+  venue: International Journal of Engineering Trends and Technology
+  oa: https://ijettjournal.org/Volume-74/Issue-10/IJETT-V74I10P105.pdf
+  found: 2026-11-19
+  status: new
+  score: 0.021
+  near:
+    - masonBayesianMaterialFlow2025
+    - tautoratDirectionsInnovationDecarbonization2023
+    - aboagyeLeveragingMachineLearning2025
+  hints:
+    ml:
+      - tabular-ml
+- doi: 10.1016/j.coche.2025.101200
+  title: "Artificial intelligence and machine learning for process and policy
+    design in the transition towards circular economy systems: advancements and
+    opportunities"
+  year: 2025
+  venue: Current Opinion in Chemical Engineering
+  oa: https://doi.org/10.1016/j.coche.2025.101200
+  hints:
+    ie:
+      - lca
+      - circular
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+  score: 0.021
+  near:
+    - gongEvolutionResearchIntersection2025
+    - aboagyeLeveragingMachineLearning2025
+    - zhaoDataScienceApplications2024
+- doi: 10.3390/batteries12110477
+  title: Accounting-Guided Data Augmentation for LightGBM Prediction of
+    Cradle-to-Gate Carbon Footprints of LFP and NMC811 Battery Cells
+  year: 2026
+  venue: Batteries
+  oa: https://doi.org/10.3390/batteries12110477
+  found: 2026-11-19
+  status: new
+  score: 0.021
+  near:
+    - testiniExAnteProductCarbon2026
+    - dengAutoPCFEfficientProduct2023
+    - ulissiEvaluationCriteriaAIassisted2026
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
 - doi: 10.1016/j.jclepro.2026.149235
   title: A cradle-to-grave life cycle assessment of United States’ grain and pulse
     carbon footprint using Bayesian machine learning and global uncertainty
@@ -1228,47 +1150,224 @@
       - tabular-ml
   found: 2026-11-19
   status: new
-  score: 0.037
+  score: 0.02
   near:
+    - yuPredictingEnvironmentalImpacts2024
+    - akramiAddressingUncertaintyMachine2025
     - gkousisMachineLearningLarge2026
-    - romeikoReviewMachineLearning2024
-    - aboagyeLeveragingMachineLearning2025
-- doi: 10.1016/j.tifs.2025.104996
-  title: "Sustainable kombucha production: A conceptual framework integrating life
-    cycle assessment and circular economy principles"
-  year: 2025
-  venue: Trends in Food Science & Technology
-  oa: null
-  hints:
-    ie:
-      - symbiosis
-    ml:
-      - llm
-      - nlp-extraction
+- doi: 10.1021/jasms.6c00239
+  title: "“Vibe-Coding” Process with AI in Analytical Chemistry: A Rapid
+    Development Method for Prototyping Instrumentation and Data Workflows"
+  year: 2026
+  venue: Journal of the American Society for Mass Spectrometry
+  oa: https://doi.org/10.1021/jasms.6c00239
   found: 2026-11-19
   status: new
-  score: 0.037
+  score: 0.019
   near:
-    - kumarLargeLanguageModelbased2025
-    - grimmelUrbanIndustrialSymbiosis2025
-    - zhaoConstructionWastetoresourceKnowledge2025
-- doi: 10.1016/j.coche.2025.101200
-  title: "Artificial intelligence and machine learning for process and policy
-    design in the transition towards circular economy systems: advancements and
-    opportunities"
-  year: 2025
-  venue: Current Opinion in Chemical Engineering
-  oa: https://doi.org/10.1016/j.coche.2025.101200
+    - kallitsisAutomatingLifeCycle2026
+    - donaldsonExpertGroundedBenchmark2025
+    - zhangSustainabilityAssessmentUsing2026
   hints:
     ie:
       - lca
+    ml:
+      - llm
+- doi: 10.1016/j.eti.2024.103685
+  title: New evidence about artificial intelligence and eco-investment as boosters
+    of the circular economy
+  year: 2024
+  venue: Environmental Technology & Innovation
+  oa: https://doi.org/10.1016/j.eti.2024.103685
+  hints:
+    ie:
+      - lca
+      - circular
   found: 2026-11-19
   status: new
-  score: 0.035
+  score: 0.018
   near:
     - gongEvolutionResearchIntersection2025
+    - zhaoDataScienceApplications2024
     - zhangSustainabilityAssessmentUsing2026
-    - aboagyeLeveragingMachineLearning2025
+- doi: 10.21203/rs.3.rs-11633484/v1
+  title: "Industrial Waste Valorization and Sustainable Material Design: A
+    Data-Driven Statistical Approach"
+  year: 2026
+  venue: Research Square
+  oa: https://www.researchsquare.com/article/rs-11633484/latest.pdf
+  found: 2026-11-19
+  status: new
+  score: 0.018
+  near:
+    - davisMachineLearningassistedIndustrial2022
+    - zhaoDataScienceApplications2024
+    - kumarLargeLanguageModelbased2025
+  hints:
+    ml:
+      - nlp-extraction
+- doi: 10.1016/j.clet.2026.101352
+  title: "Advances in technologies across the marine plastic value chain in
+    Europe: A critical review"
+  year: 2026
+  venue: Cleaner Engineering and Technology
+  oa: https://www.sciencedirect.com/science/article/pii/S2666790826002119/pdf
+  found: 2026-11-19
+  status: new
+  score: 0.017
+  near:
+    - vogelgesangAutomatedMaterialFlow2025
+    - jiangBottomUpApproachIntegrating2025
+    - zhaoDataScienceApplications2024
+  hints:
+    ie:
+      - sem
+      - circular
+    ml:
+      - cv
+- doi: 10.1007/s43546-026-01140-6
+  title: "The intersection of circular economy and artificial intelligence: a
+    bibliometric review"
+  year: 2026
+  venue: SN Business & Economics
+  oa: https://link.springer.com/content/pdf/10.1007/s43546-026-01140-6.pdf
+  hints:
+    ie:
+      - circular
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+  score: 0.017
+  near:
+    - gongEvolutionResearchIntersection2025
+    - zhaoDataScienceApplications2024
+    - grimmelUrbanIndustrialSymbiosis2025
+- doi: 10.1002/bse.4291
+  title: "Utilising Artificial Intelligence to Enhance Firm Circular Economy
+    Maturity: A Thematic Review via Machine Learning"
+  year: 2025
+  venue: Business Strategy and the Environment
+  oa: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/bse.4291
+  hints:
+    ie:
+      - lca
+      - circular
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+  score: 0.017
+  near:
+    - gongEvolutionResearchIntersection2025
+    - zhaoDataScienceApplications2024
+    - hubnerMachinelearningbasedDemandForecasting2024
+- doi: 10.31713/mcit.2026.037
+  title: ARCHITECTURE OF AN INFORMATION SYSTEM FOR GEOSPATIAL DATA INTEGRATION IN
+    CIRCULAR ORGANIC WASTE MANAGEMENT
+  year: 2026
+  venue: Modeling Control and Information Technologies
+  oa: https://mcitjournal.org.ua/index.php/MCIT/article/download/800/557
+  found: 2026-11-19
+  status: new
+  score: 0.016
+  near:
+    - zhaoConstructionWastetoresourceKnowledge2025
+    - daiGaussianProcessRegression2022
+    - zhaoDataScienceApplications2024
+  hints:
+    ml:
+      - tabular-ml
+- doi: 10.5281/zenodo.24056130
+  title: "SŌRĪLŪN: Exact Inverse Updates, Sharp Coefficient-Dependency Bounds, and
+    Certified Recursive Self-Improvement - Theory, Compiler Optimization, and
+    Reproducible Experiments"
+  year: 2026
+  venue: Zenodo (CERN European Organization for Nuclear Research)
+  oa: https://doi.org/10.5281/zenodo.24056130
+  found: 2026-11-19
+  status: new
+  score: 0.016
+  near:
+    - donaldsonExpertGroundedBenchmark2025
+    - rankinCallEnsureReproducibility2026
+    - gkousisMachineLearningLarge2026
+  hints:
+    ie:
+      - lca
+    ml:
+      - llm
+      - tabular-ml
+- doi: 10.33002/nr2581.6853.0703ukr08
+  title: Artificial Intelligence in Waste Management in the Context of
+    Implementing Circular Economy
+  year: 2024
+  venue: Grassroots Journal of Natural Resources
+  oa: https://doi.org/10.33002/nr2581.6853.0703ukr08
+  hints:
+    ie:
+      - lca
+      - circular
+  found: 2026-11-19
+  status: new
+  score: 0.015
+  near:
+    - gongEvolutionResearchIntersection2025
+    - hubnerMachinelearningbasedDemandForecasting2024
+    - zhaoNovelMachineLearningbased2025
+- doi: 10.1002/csr.2827
+  title: A conceptual model of artificial intelligence effects on circular economy
+    actions
+  year: 2024
+  venue: Corporate Social Responsibility and Environmental Management
+  oa: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/csr.2827
+  hints:
+    ie:
+      - circular
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+  score: 0.014
+  near:
+    - gongEvolutionResearchIntersection2025
+    - zhaoDataScienceApplications2024
+    - grimmelUrbanIndustrialSymbiosis2025
+- doi: 10.1080/13662716.2026.2713753
+  title: "Adoption of circular economy innovations: the role of Artificial
+    Intelligence"
+  year: 2026
+  venue: Industry and Innovation
+  oa: https://doi.org/10.1080/13662716.2026.2713753
+  hints:
+    ie:
+      - circular
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+  score: 0.014
+  near:
+    - gongEvolutionResearchIntersection2025
+    - zhaoDataScienceApplications2024
+    - grimmelUrbanIndustrialSymbiosis2025
+- doi: 10.63371/ic.v5.n1.a686
+  title: "Inteligencia Artificial y Economía Circular: Problemas Éticos y Futuras
+    Perspectivas con Enfoque Sostenible"
+  year: 2026
+  venue: Ibero Ciencias - Revista Científica y Académica
+  oa: https://doi.org/10.63371/ic.v5.n1.a686
+  hints:
+    ie:
+      - lca
+      - circular
+  found: 2026-11-19
+  status: new
+  score: 0.013
+  near:
+    - gongEvolutionResearchIntersection2025
+    - zhaoDataScienceApplications2024
+    - preussAutomatingLifeCycle2026
 - doi: 10.1016/j.energy.2025.135064
   title: "Integrating circular economy and life cycle assessment strategies in
     climate-resilient buildings: An artificial intelligence approach to enhance
@@ -1283,68 +1382,186 @@
       - llm
   found: 2026-11-19
   status: new
-  score: 0.033
+  score: 0.013
   near:
     - preussAutomatingLifeCycle2026
-    - zhangSustainabilityAssessmentUsing2026
     - gongEvolutionResearchIntersection2025
-- doi: 10.1016/j.buildenv.2026.114904
-  title: Construction supply-chain carbon footprint with graph neural
-    network-based input-output framework
+    - zhangSustainabilityAssessmentUsing2026
+- doi: 10.48550/arxiv.2611.10798
+  title: "RTLREX: LLM-Guided Framework for Exact High-Level RTL Recovery"
   year: 2026
-  venue: Building and Environment
-  oa: null
+  venue: arXiv (Cornell University)
+  oa: https://arxiv.org/pdf/2611.10798
+  found: 2026-11-19
+  status: new
+  score: 0.013
+  near:
+    - wuEnhancingElectronicsGrading2025
+    - donaldsonExpertGroundedBenchmark2025
+    - kuCapabilitiesLimitationsAI2024
   hints:
-    ie:
-      - lca
     ml:
       - llm
+- doi: 10.1038/s41598-026-79334-z
+  title: Deep-learning surrogate modeling for rapid design of high-sensitivity
+    terahertz metasurface sensors
+  year: 2026
+  venue: Scientific Reports
+  oa: https://www.nature.com/articles/s41598-026-79334-z_reference.pdf
   found: 2026-11-19
   status: new
-  score: 0.032
+  score: 0.012
   near:
-    - ulissiEvaluationCriteriaAIassisted2026
-    - dengAutoPCFEfficientProduct2023
-    - zhangSustainabilityAssessmentUsing2026
-- doi: 10.1016/j.bpj.2025.09.006
-  title: Molecular simulation and artificial intelligence for the circular economy
-    of bioenergy and bioproducts
-  year: 2025
-  venue: Biophysical Journal
-  oa: https://pmc.ncbi.nlm.nih.gov/articles/PMC12709439/
-  hints:
-    ie:
-      - lca
-  found: 2026-11-19
-  status: new
-  score: 0.03
-  near:
-    - zhangSustainabilityAssessmentUsing2026
+    - testiniExAnteProductCarbon2026
     - zhaoMachineLearningModels2025
-    - gongEvolutionResearchIntersection2025
-- doi: 10.1016/j.procir.2025.01.079
-  title: "Life Cycle Assessment of Artificial Intelligence Applications: Research
-    Gaps and Opportunities"
-  year: 2025
-  venue: Procedia CIRP
-  oa: https://doi.org/10.1016/j.procir.2025.01.079
+    - dongExpertElicitationData2023
   hints:
     ie:
       - lca
+    topic:
+      - metals
     ml:
-      - llm
+      - tabular-ml
+      - uncertainty
+- doi: 10.48550/arxiv.2611.07947
+  title: "ChemE-as-Code: An Open-Source Platform for Agentic AI in Chemical
+    Engineering"
+  year: 2026
+  venue: arXiv (Cornell University)
+  oa: https://arxiv.org/pdf/2611.07947
   found: 2026-11-19
   status: new
-  score: 0.029
+  score: 0.012
   near:
-    - preussAutomatingLifeCycle2026
+    - davisMachineLearningassistedIndustrial2022
+    - kallitsisAutomatingLifeCycle2026
+    - zhaoConstructionWastetoresourceKnowledge2025
+  hints:
+    ie:
+      - symbiosis
+    ml:
+      - nlp-extraction
+      - llm
+- doi: 10.1007/s40996-026-02303-z
+  title: "Bacterial Geopolymer Concrete: A Critical Review of Microstructural
+    Mechanisms, Durability, and Field Readiness"
+  year: 2026
+  venue: Iranian Journal of Science and Technology Transactions of Civil Engineering
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.011
+  near:
+    - haberlGlobalBuiltEnvironment2024
+    - masonBayesianMaterialFlow2025
+    - kumarLargeLanguageModelbased2025
+  hints:
+    ie:
+      - sem
+    topic:
+      - buildings
+- doi: 10.70593/deepsci.0202012
+  title: Artificial intelligence, machine learning, deep learning, and big data
+    for circular economy, resilience, and sustainable development
+  year: 2026
+  venue: International Journal of Applied Resilience and Sustainability
+  oa: https://deepscipub.com/ijars/article/download/40/65
+  hints:
+    ie:
+      - lca
+      - circular
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+  score: 0.011
+  near:
+    - gongEvolutionResearchIntersection2025
+    - zhaoDataScienceApplications2024
+    - hubnerMachinelearningbasedDemandForecasting2024
+- doi: 10.48550/arxiv.2611.08437
+  title: Deep-learning surrogate model for rapid quantum-noise computation in
+    dual-pump fiber-optic phase-sensitive amplifiers
+  year: 2026
+  venue: arXiv (Cornell University)
+  oa: https://arxiv.org/pdf/2611.08437
+  found: 2026-11-19
+  status: new
+  score: 0.011
+  near:
+    - testiniExAnteProductCarbon2026
+    - dongExpertElicitationData2023
+    - liaoIntelligentDataCollection2025
+  hints:
+    ie:
+      - sem
+    topic:
+      - metals
+    ml:
+      - tabular-ml
+      - uncertainty
+- doi: 10.1021/acs.est.6c06286
+  title: Patterns and Mitigation of Large Language Models’ Hallucinations on
+    Environmental Regulatory Facts
+  year: 2026
+  venue: Environmental Science & Technology
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.011
+  near:
+    - donaldsonExpertGroundedBenchmark2025
+    - rankinCallEnsureReproducibility2026
+    - gongEvolutionResearchIntersection2025
+  hints:
+    ie:
+      - lca
+      - sem
+      - circular
+- doi: 10.1007/s10668-026-08244-x
+  title: "Designing a circular economy-driven reverse logistics based on
+    sustainability and resilience dimensions for the automotive industry: a
+    machine learning-based model"
+  year: 2026
+  venue: Environment Development and Sustainability
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.01
+  near:
+    - kimUnlockingPotentialRemanufacturing2024
+    - fangStudyRecyclingMaterials2025
+    - schluterAIenhancedIdentificationInspection2021
+  hints:
+    ie:
+      - circular
+    topic:
+      - lifetime
+    ml:
+      - cv
+- doi: 10.26437/wagbny69
+  title: "Engineering of the Future: Combining Big Data, Analytics and Artificial
+    Intelligence to Develop Sustainable Technological Solutions"
+  year: 2026
+  venue: African Journal Of Applied Research
+  oa: https://www.ajaronline.com/index.php/AJAR/article/download/2320/984
+  found: 2026-11-19
+  status: new
+  score: 0.01
+  near:
+    - xuBigDataIndustrial2015
     - zhangSustainabilityAssessmentUsing2026
-    - kumarArtificialIntelligenceMeets2026
-- doi: 10.1016/j.jclepro.2025.145109
-  title: Machine learning-assisted life cycle assessment of biochar soil application
+    - gongEvolutionResearchIntersection2025
+  hints:
+    ie:
+      - lca
+      - sem
+- doi: 10.1016/j.seta.2025.104436
+  title: "Life Cycle Assessment and Circular Economy in Emerging Green and
+    Sustainable Energy Sectors: A Critical Review"
   year: 2025
-  venue: Journal of Cleaner Production
-  oa: https://doi.org/10.1016/j.jclepro.2025.145109
+  venue: Sustainable Energy Technologies and Assessments
+  oa: null
   hints:
     ie:
       - lca
@@ -1352,11 +1569,49 @@
       - tabular-ml
   found: 2026-11-19
   status: new
-  score: 0.024
+  score: 0.008
   near:
-    - nikkhahMachineLearningbasedLife2024
-    - sunImprovedMachineLearningModels2022
-    - baehrPredictingProductLife2024
+    - zhaoDataScienceApplications2024
+    - romeikoReviewMachineLearning2024
+    - akramiAddressingUncertaintyMachine2025
+- doi: 10.48550/arxiv.2611.17331
+  title: "TTB: Test-time Baking for Efficient Rendering of Decoder-only View
+    Synthesis Models"
+  year: 2026
+  venue: arXiv (Cornell University)
+  oa: https://arxiv.org/pdf/2611.17331
+  found: 2026-11-19
+  status: new
+  score: 0.008
+  near:
+    - huangImageBasedPrediction2024
+    - funkEvaluationVisionLanguage2026
+    - wuEnhancingElectronicsGrading2025
+  hints:
+    ie:
+      - circular
+    ml:
+      - cv
+      - foundation
+- doi: 10.1021/acs.est.6c10708
+  title: Cross-Domain Tracing of Rice Stem Stress under Soil Cadmium Pollution
+  year: 2026
+  venue: Environmental Science & Technology
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: 0.007
+  near:
+    - zhaoMachineLearningModels2025
+    - songRapidLifeCycleImpact2017
+    - dingCharacterizingChemicalToxicity2026
+  hints:
+    ie:
+      - lca
+    topic:
+      - chemicals
+    ml:
+      - tabular-ml
 - doi: 10.18280/ijei.070213
   title: Machine Learning and Deep Learning Analysis of Vehicle Carbon Footprint
   year: 2024
@@ -1369,11 +1624,62 @@
       - tabular-ml
   found: 2026-11-19
   status: new
-  score: 0.002
+  score: 0.006
   near:
+    - zhaoUsingDeepLearning2022
     - froemeltMachineLearningBased2020
     - baehrPredictingProductLife2024
-    - gkousisMachineLearningLarge2026
+- doi: 10.1016/j.jenvman.2025.125471
+  title: "Leveraging industry 4.0 technologies and industrial symbiosis: Advancing
+    circular economy practices in BRICS economies"
+  year: 2025
+  venue: Journal of Environmental Management
+  oa: null
+  hints:
+    ie:
+      - circular
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+  score: 0.003
+  near:
+    - grimmelUrbanIndustrialSymbiosis2025
+    - zhaoDataScienceApplications2024
+    - gongEvolutionResearchIntersection2025
+- doi: 10.1016/j.jclepro.2025.145109
+  title: Machine learning-assisted life cycle assessment of biochar soil application
+  year: 2025
+  venue: Journal of Cleaner Production
+  oa: https://doi.org/10.1016/j.jclepro.2025.145109
+  hints:
+    ie:
+      - lca
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+  score: 0.001
+  near:
+    - nikkhahMachineLearningbasedLife2024
+    - sunImprovedMachineLearningModels2022
+    - baehrPredictingProductLife2024
+- doi: 10.55845/joce-2025-3277
+  title: Harnessing Artificial Intelligence for the Integration and Advancement of
+    Circular Economy Practices
+  year: 2026
+  venue: Circular Economy
+  oa: https://circulareconomyjournal.org/ojs/JoCE/article/download/77/160
+  hints:
+    ie:
+      - circular
+  found: 2026-11-19
+  status: new
+  score: 0
+  near:
+    - gongEvolutionResearchIntersection2025
+    - fangStudyRecyclingMaterials2025
+    - zhaoDataScienceApplications2024
 - doi: 10.1007/978-3-031-51601-6_14
   title: "Role of Artificial Intelligence in Minimizing Carbon Footprint: A
     Systematic Review of Recent Insights"
@@ -1387,11 +1693,184 @@
       - llm
   found: 2026-11-19
   status: new
-  score: -0.014
+  score: -0.005
   near:
     - zhangSustainabilityAssessmentUsing2026
     - ulissiEvaluationCriteriaAIassisted2026
     - gongEvolutionResearchIntersection2025
+- doi: 10.1002/cfch.70048
+  title: "Integrating Biotechnology and Artificial Intelligence for Circular Food
+    Systems: A Critical Review of Evidence, Trade‐offs, and Research Priorities"
+  year: 2026
+  venue: ChemFoodChem
+  oa: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/cfch.70048
+  found: 2026-11-19
+  status: new
+  score: -0.009
+  near:
+    - hubnerMachinelearningbasedDemandForecasting2024
+    - gongEvolutionResearchIntersection2025
+    - nikkhahMachineLearningbasedLife2024
+  hints:
+    ie:
+      - lca
+      - circular
+    topic:
+      - food
+    ml:
+      - tabular-ml
+- doi: 10.1007/s11356-026-38353-z
+  title: "Advancements in bio-asphalt binders: production, physico-chemical
+    characterization, optimization, performance, and sustainability
+    perspectives"
+  year: 2026
+  venue: Environmental Science and Pollution Research
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: -0.009
+  near:
+    - kumarLargeLanguageModelbased2025
+    - aboagyeLeveragingMachineLearning2025
+    - zhaoMachineLearningModels2025
+  hints:
+    ie:
+      - lca
+    topic:
+      - chemicals
+    ml:
+      - tabular-ml
+- doi: 10.1108/ijlm-03-2023-0102
+  title: "Artificial intelligence-based reverse logistics for improving circular
+    economy performance: a developing country perspective"
+  year: 2024
+  venue: The International Journal of Logistics Management
+  oa: null
+  hints:
+    ie:
+      - symbiosis
+  found: 2026-11-19
+  status: new
+  score: -0.01
+  near:
+    - gongEvolutionResearchIntersection2025
+    - fangStudyRecyclingMaterials2025
+    - grimmelUrbanIndustrialSymbiosis2025
+- doi: 10.1016/j.scitotenv.2024.174349
+  title: "Bioplastic derived from corn stover: Life cycle assessment and
+    artificial intelligence-based analysis of uncertainty and variability"
+  year: 2024
+  venue: The Science of The Total Environment
+  oa: null
+  hints:
+    ie:
+      - lca
+  found: 2026-11-19
+  status: new
+  score: -0.011
+  near:
+    - kumarLargeLanguageModelbased2025
+    - aboagyeLeveragingMachineLearning2025
+    - gongEvolutionResearchIntersection2025
+- doi: 10.1108/bpmj-10-2024-0944
+  title: "Harnessing artificial intelligence for operational excellence: pathways
+    to a circular economy"
+  year: 2025
+  venue: Business Process Management Journal
+  oa: null
+  hints:
+    ie:
+      - circular
+    ml:
+      - tabular-ml
+  found: 2026-11-19
+  status: new
+  score: -0.013
+  near:
+    - gongEvolutionResearchIntersection2025
+    - grimmelUrbanIndustrialSymbiosis2025
+    - kimUnlockingPotentialRemanufacturing2024
+- doi: 10.1016/j.carres.2026.110164
+  title: Unlocking sustainable deinking of waste papers by endoxylanases utilising
+    nano-biotech innovations and optimization through artificial intelligence
+  year: 2026
+  venue: Carbohydrate Research
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: -0.018
+  near:
+    - davisMachineLearningassistedIndustrial2022
+    - gongEvolutionResearchIntersection2025
+    - liUsingMachineLearning2026
+  hints:
+    ie:
+      - lca
+- doi: 10.1016/j.tifs.2025.104996
+  title: "Sustainable kombucha production: A conceptual framework integrating life
+    cycle assessment and circular economy principles"
+  year: 2025
+  venue: Trends in Food Science & Technology
+  oa: null
+  hints:
+    ie:
+      - symbiosis
+    ml:
+      - llm
+      - nlp-extraction
+  found: 2026-11-19
+  status: new
+  score: -0.018
+  near:
+    - kumarLargeLanguageModelbased2025
+    - grimmelUrbanIndustrialSymbiosis2025
+    - zhaoConstructionWastetoresourceKnowledge2025
+- doi: 10.1016/j.bpj.2025.09.006
+  title: Molecular simulation and artificial intelligence for the circular economy
+    of bioenergy and bioproducts
+  year: 2025
+  venue: Biophysical Journal
+  oa: https://pmc.ncbi.nlm.nih.gov/articles/PMC12709439/
+  hints:
+    ie:
+      - lca
+  found: 2026-11-19
+  status: new
+  score: -0.026
+  near:
+    - zhangSustainabilityAssessmentUsing2026
+    - zhaoMachineLearningModels2025
+    - gongEvolutionResearchIntersection2025
+- doi: 10.1007/s41660-026-00924-5
+  title: "A Proposed AI-Based Integrated Circular Economy Framework for Municipal
+    Solid Waste Management in Chhattisgarh State, India: A Modeling Study"
+  year: 2026
+  venue: Process Integration and Optimization for Sustainability
+  oa: null
+  found: 2026-11-19
+  status: new
+  score: -0.039
+  near:
+    - gongEvolutionResearchIntersection2025
+    - fangStudyRecyclingMaterials2025
+    - zhaoDataScienceApplications2024
+  hints:
+    ie:
+      - circular
+- doi: 10.1007/s42114-026-02174-y
+  title: "Semiconductor composites based on biomass-derived chars: From pyrochar
+    and hydrochar to emerging applications"
+  year: 2026
+  venue: Advanced Composites and Hybrid Materials
+  oa: https://doi.org/10.1007/s42114-026-02174-y
+  found: 2026-11-19
+  status: new
+  score: -0.051
+  near:
+    - babbittDisassemblybasedBillMaterials2020
+    - davisMachineLearningassistedIndustrial2022
+    - haberlGlobalBuiltEnvironment2024
+  hints: {}
 - doi: 10.1021/acssusresmgt.6c00459
   title: "Ex-Ante Product Carbon Footprint Forecasting in Electric Arc Furnace
     Stainless Steel Production: A Probabilistic Machine Learning Framework for
