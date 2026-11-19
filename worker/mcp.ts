@@ -1,6 +1,11 @@
 // Read-only MCP server at /mcp: stateless Streamable HTTP, no auth. Data comes from
 // the build (/mcp-data.json, src/pages/mcp-data.json.ts), never from the repo at runtime.
-import { createMcpHandler, McpServer } from "@modelcontextprotocol/server";
+import {
+  createMcpHandler,
+  localhostAllowedOrigins,
+  McpServer,
+  originValidationResponse,
+} from "@modelcontextprotocol/server";
 import { z } from "zod";
 import type { LitEntry } from "../src/data/schemas.ts";
 import { IE_TAGS, ML_TAGS } from "../src/data/tags.ts";
@@ -113,5 +118,10 @@ function buildServer(request: Request, env: Env) {
 }
 
 export function handleMcp(request: Request, env: Env): Promise<Response> {
+  // The spec requires an Origin check (against DNS rebinding). A browser page may call
+  // from this site's own host or localhost; clients outside a browser send no Origin.
+  const allowed = [new URL(request.url).hostname, ...localhostAllowedOrigins()];
+  const rejected = originValidationResponse(request, allowed);
+  if (rejected) return Promise.resolve(rejected);
   return createMcpHandler(() => buildServer(request, env)).fetch(request);
 }

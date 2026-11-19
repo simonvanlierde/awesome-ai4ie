@@ -225,4 +225,24 @@ describe("/mcp", () => {
       for (const m of replies) expect(m.error ?? m.result?.isError).toBeTruthy();
       expect((await call("search_papers", { question: "a b c" }, env({ allowed: false }))).isError).toBe(true);
     });
+
+    it("refuses a browser page on another site, not this host or a client without Origin", async () => {
+      const status = async (origin?: string) => {
+        const headers: Record<string, string> = {
+          "content-type": "application/json",
+          accept: "application/json, text/event-stream",
+        };
+        if (origin) headers.origin = origin;
+        const body = JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list", params: {} });
+        return (
+          await worker.fetch(
+            new Request("https://ai4ie.org/mcp", { method: "POST", headers, body }),
+            env(),
+          )
+        ).status;
+      };
+      expect(await status("https://evil.example")).toBe(403);
+      expect(await status("https://ai4ie.org")).toBe(200);
+      expect(await status()).toBe(200);
+    });
   });
