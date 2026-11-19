@@ -154,6 +154,9 @@ export function normaliseBibtex(bibtex, year) {
     out = out
       .replace(/,\s*month\s*=\s*\w+/, "")
       .replace(/(\byear\s*=\s*)\{?\d{4}\}?/, `$1{${year}}`);
+  } else if (!served) {
+    // Some Crossref proceedings records carry no date at all.
+    out = out.replace(/\s*\}$/, `, year={${year}} }`);
   }
   return out;
 }
@@ -165,6 +168,10 @@ export function normaliseRis(ris, year) {
     const m = line.match(/^([A-Z][A-Z0-9]) {2}-(.*)$/);
     if (m) fields.push([m[1], m[2]]);
     else if (fields.length > 0) fields[fields.length - 1][1] += ` ${line}`;
+  }
+  if (!fields.some(([tag]) => tag === "PY")) {
+    const end = fields.findIndex(([tag]) => tag === "ER");
+    fields.splice(end < 0 ? fields.length : end, 0, ["PY", String(year)]);
   }
   return fields
     .map(([tag, raw]) => {
