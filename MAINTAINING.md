@@ -65,7 +65,8 @@ If a suggestion doesn't hold up, say why in the issue and close it.
   add it to `literature.yaml` and set `status: listed`, or set `status: rejected` with a
   one-line `why`. Keep rejected leads, so the job never proposes them
   again. A pull request opened by the workflow token starts no checks: close and reopen it to
-  run CI, then merge. It needs no secret, but the repository setting *Allow GitHub Actions to
+  run CI, then merge. The `OPENALEX_API_KEY` secret is optional (a free key from
+  openalex.org/settings/api raises the daily budget). The repository setting *Allow GitHub Actions to
   create and approve pull requests* (Settings, Actions, General) must be on. To catch up on a
   longer gap, run `node scripts/openalex-candidates.mjs --since <date> --limit <n>` locally.
 - **Citation records.** After a publisher corrects a record at Crossref, run

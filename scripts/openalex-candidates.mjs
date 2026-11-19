@@ -195,7 +195,13 @@ function splitAt(xs, lengths) {
 
 async function openalex(params, retries = 3) {
   const res = await fetch(`https://api.openalex.org/works?${new URLSearchParams(params)}`, {
-    headers: { "User-Agent": UA },
+    headers: {
+      "User-Agent": UA,
+      // Optional: a free key gives ten times the keyless daily budget.
+      ...(process.env.OPENALEX_API_KEY && {
+        Authorization: `Bearer ${process.env.OPENALEX_API_KEY}`,
+      }),
+    },
   });
   // Without a key, a search with more than a few boolean operators runs once a second.
   if (res.status === 429 && retries > 0) {

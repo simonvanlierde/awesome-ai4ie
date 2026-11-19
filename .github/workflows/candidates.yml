@@ -3,7 +3,8 @@ name: OpenAlex candidates
 # Once a week, looks for new AI-in-IE papers on OpenAlex and adds them to
 # src/data/candidates.yaml as leads, on one branch with one open PR. A later run
 # adds to that branch, so a curator's edits there are kept. Nothing reaches main
-# without a person merging it. No secret: OpenAlex needs no key.
+# without a person merging it. The OPENALEX_API_KEY secret is optional: OpenAlex
+# also answers without a key, on a smaller budget.
 on:
   schedule:
     - cron: "41 5 * * 1" # Mondays 05:41 UTC
@@ -52,6 +53,8 @@ jobs:
           fi
 
       - shell: bash # with pipefail, so a failed run stops the job
+        env:
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
         run: node scripts/openalex-candidates.mjs | tee "$RUNNER_TEMP/summary.txt"
 
       - name: Commit, push and open the PR
