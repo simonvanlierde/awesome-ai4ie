@@ -919,6 +919,16 @@ starlight-menu-button button {
 .colophon a {
   color: inherit;
 }
+/* On touch the licence links are short words in a row: padding gives each a 24px target
+   (WCAG 2.5.8) without moving the text, and the taller lines keep wrapped rows apart. */
+@media (pointer: coarse) {
+  .colophon span {
+    line-height: 1.75rem;
+  }
+  .colophon a {
+    padding-block: 0.3125rem;
+  }
+}
 .colophon + footer .meta {
   margin-top: 1.25rem;
 }
