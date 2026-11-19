@@ -35,6 +35,9 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   sort waste with cameras?", in the search dialog. The papers are embedded when the site is
   built; the site's `/api/search` endpoint embeds the question with Cloudflare Workers AI and
   ranks the papers. Where the host has no `/api/search`, the dialog leaves meaning search out.
+- A read-only MCP server at `/mcp` on the Worker, so AI assistants can search the reading list
+  and read papers, applications, resources and the Agent Skills. Its tools are marked
+  read-only, return absolute links, and answer errors with a stable code.
 - A privacy page at `/privacy/`, linked from the footer: what the site sends where, including
   the questions meaning search sends to Cloudflare.
 - An accessibility statement at `/accessibility/`, linked from the footer.

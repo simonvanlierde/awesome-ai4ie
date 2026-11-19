@@ -19,8 +19,9 @@ export default {
     if (!request.headers.get("content-type")?.startsWith("application/json"))
       return new Response("Send application/json", { status: 415 });
 
-    if (!(await withinLimit(env, request)))
-      return new Response("Too many requests", { status: 429 });
+    const allowed = await withinLimit(env, request);
+    if (allowed === null) return new Response("Search is unavailable", { status: 503 });
+    if (!allowed) return new Response("Too many requests", { status: 429 });
 
     const body: unknown = await request.json().catch(() => null);
     const q = typeof body === "object" && body && "q" in body ? body.q : null;
@@ -28,11 +29,7 @@ export default {
       return new Response(`Send {"q": "..."}, up to ${MAX_QUERY} characters`, { status: 400 });
 
     const found = await searchPapers(env, url.origin, q);
-    if (!found)
-      return new Response("Search is unavailable, try again later", {
-        status: 503,
-        headers: { "retry-after": "60" },
-      });
+    if (!found) return new Response("Search is unavailable", { status: 503 });
     const hits: Hit[] = found.map(({ title, year, blurb, href }) => ({ title, year, blurb, href }));
     return Response.json({ hits }, { headers: { "cache-control": "no-store" } });
   },
