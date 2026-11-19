@@ -210,12 +210,13 @@ jobs:
           # Wrangler prints upload progress before the JSON object on stdout.
           url="$(sed -n '/^{/,$p' preview.json | jq -er '.preview.urls[0]')"
           echo "url=$url" >> "$GITHUB_OUTPUT"
-      # A missing binding passes the deploy and only fails on the first request.
+      # A missing binding passes the deploy and only fails on the first request. The new
+      # version takes some seconds to go live, so curl retries.
       - name: Meaning search answers on the Preview
         if: steps.policy.outputs.deploy == 'true'
         env:
           URL: ${{ steps.preview.outputs.url }}
         shell: bash
         run: >-
-          curl -fsS -X POST "${URL%/}/api/search" -H 'content-type: application/json'
+          curl -fsS --retry 6 --retry-all-errors --retry-delay 10 -X POST "${URL%/}/api/search" -H 'content-type: application/json'
           -d '{"q": "which papers map building stocks from satellites?"}' | jq -e '.hits | length > 0'
