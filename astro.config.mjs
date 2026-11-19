@@ -4,9 +4,12 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { unified } from "@astrojs/markdown-remark";
 import react from "@astrojs/react";
+import sitemap from "@astrojs/sitemap";
 import starlight from "@astrojs/starlight";
 import { defineConfig, fontProviders } from "astro/config";
 import starlightLinksValidator from "starlight-links-validator";
+import { IE_TAGS } from "./src/data/tags.ts";
+import { lastmod } from "./src/lib/lastmod.ts";
 import { cspInlineScripts } from "./src/plugins/csp-inline-scripts.mjs";
 import { rehypeFocusableTables } from "./src/plugins/rehype-focusable-tables.mjs";
 import { rehypeTaskListLabels } from "./src/plugins/rehype-task-list-labels.mjs";
@@ -141,6 +144,15 @@ export default defineConfig({
   integrations: [
     cspInlineScripts(), // after Astro writes the policy: hashes the scripts Starlight inlines
     react(), // islands: the literature list, the map explorer and the demos
+    // Starlight adds a plain sitemap unless one is configured here. This one dates
+    // each URL by its last commit (src/lib/lastmod.ts).
+    sitemap({
+      serialize: (item) => {
+        const path = new URL(item.url).pathname.slice(base.length).replace(/^\/|\/$/g, "");
+        const date = lastmod(path);
+        return date ? { ...item, lastmod: date } : item;
+      },
+    }),
     starlight({
       // Fails the build on a broken internal link, a missing heading anchor or a
       // relative link. Content links must be root-absolute so `base` gets added.
@@ -224,6 +236,10 @@ export default defineConfig({
           label: "Map of AI applications",
           items: [
             { label: "The map", slug: "applications-map" },
+            ...Object.entries(IE_TAGS).map(([tag, label]) => ({
+              label,
+              slug: `applications-map/${tag}`,
+            })),
             { label: "Worked example: CV taxonomy", slug: "applications-map/cv-taxonomy" },
           ],
         },

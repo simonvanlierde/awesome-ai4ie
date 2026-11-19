@@ -1,0 +1,109 @@
+---
+// The data half of a field page (src/content/docs/applications-map/<field>.mdx):
+// one section per AI technique with applications in the field, each with those
+// applications, their maturity calls and demos, then the papers behind them.
+// Groups by technique the way the map's "by technique" view does, so an
+// application tagged with two techniques appears under both: in full under the
+// first, as a link back to it under the second.
+import { getCollection } from "astro:content";
+import { type IeTag, tagLabel } from "../data/tags";
+import { citeAuthors } from "../lib/literature";
+import { issueUrl, litUrl, siteUrl } from "../lib/urls";
+import { groupBy } from "./appPivot";
+
+interface Props {
+  ie: IeTag;
+}
+const { ie } = Astro.props;
+const apps = (await getCollection("applications"))
+  .map((e) => ({ id: e.id, ...e.data }))
+  .filter((a) => a.ie.includes(ie))
+  .sort((a, b) => a.name.localeCompare(b.name, "en"));
+const literature = (await getCollection("literature")).map((e) => ({ id: e.id, ...e.data }));
+
+// A technique's papers: those its applications cite, plus every paper tagged with
+// both the field and the technique. Newest first. Techniques with the most
+// applications come first; ties keep the vocabulary order.
+const sections = [...groupBy(apps, "ml")]
+  .sort(([, a], [, b]) => b.length - a.length)
+  .map(([ml, group]) => {
+    const cited = new Set(group.flatMap((a) => a.papers));
+    const papers = literature
+      .filter((p) => cited.has(p.id) || (p.ie.includes(ie) && (p.ml as string[]).includes(ml)))
+      .sort((a, b) => b.year - a.year || a.title.localeCompare(b.title, "en"));
+    return { ml, label: tagLabel("ml", ml), apps: group, papers };
+  });
+const shown = new Set<string>();
+const parts = sections.map((s) => {
+  const fresh = s.apps.filter((a) => !shown.has(a.id));
+  for (const a of fresh) shown.add(a.id);
+  return { ...s, fresh, repeated: s.apps.filter((a) => !fresh.includes(a)) };
+});
+---
+
+<nav class="field-jump" aria-label="AI techniques on this page">
+  <span>{sections.length === 1 ? "Technique" : "Techniques"}:</span>
+  <ul>
+    {sections.map((s) => <li><a href={`#${s.ml}`}>{s.label}</a></li>)}
+  </ul>
+</nav>
+
+{
+  parts.map((s) => (
+    <section aria-labelledby={s.ml}>
+      <h2 id={s.ml}>{s.label}</h2>
+      {s.fresh.map((a) => (
+        <>
+          <h3 id={a.id}>{a.name}</h3>
+          <p>{a.summary}</p>
+          <p>
+            <strong>How mature:</strong> {a.maturity}
+          </p>
+          {a.demo && (
+            <p>
+              <a href={siteUrl(a.demo)}>Try the demo →</a>
+            </p>
+          )}
+        </>
+      ))}
+      {s.repeated.length > 0 && (
+        <p>
+          Also using {s.label}, described above:{" "}
+          {s.repeated.map((a, i) => (
+            <>
+              {i > 0 && ", "}
+              <a href={`#${a.id}`}>{a.name}</a>
+            </>
+          ))}.
+        </p>
+      )}
+      <h3>
+        Papers on {s.label} in {tagLabel("ie", ie)}
+      </h3>
+      <ol class="lit-list not-content">
+        {s.papers.map((p) => (
+          <li class="lit-entry">
+            <span class="lit-meta">
+              {citeAuthors(p)}, {p.year}
+              {p.status === "proposal" && <span class="lit-proposal">proposal</span>}
+            </span>
+            <a href={litUrl({ papers: [p.id] })} class="lit-title">
+              {p.title}
+            </a>
+            <p class="lit-blurb">{p.blurb}</p>
+          </li>
+        ))}
+      </ol>
+      <p>
+        <a href={litUrl({ papers: s.papers.map((p) => p.id) })}>
+          Open these {s.papers.length} papers in the literature list →
+        </a>
+      </p>
+    </section>
+  ))
+}
+
+<p>
+  Missing an application here? <a href={issueUrl("application")}>Map one</a> in a short form
+  on GitHub.
+</p>

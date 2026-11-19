@@ -1,8 +1,9 @@
 // Shared tag vocabulary for the literature list, the applications map and the
 // data schemas. Add a tag here first: the collections test rejects data that
 // uses a tag not defined here. A new IE field also needs a `.field-<tag>` ink
-// rule in src/styles/custom.css (the inks are in DESIGN.md) and a
-// section on the map page; chapters.test.ts checks both. The issue forms in
+// rule in src/styles/custom.css (the inks are in DESIGN.md), a section on the
+// map page, and its own page at src/content/docs/applications-map/<tag>.mdx
+// (definition, <FieldPage>, gaps); chapters.test.ts checks all three. The issue forms in
 // .github/ISSUE_TEMPLATE/ list the labels too; forms.test.ts checks them.
 // Add a tag together with its first vetted entry, not before. The map page
 // names the known gaps under "Not mapped yet".

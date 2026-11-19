@@ -53,6 +53,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
+          # Full history: the sitemap's <lastmod> and each page's "Last updated" come
+          # from git, and a shallow clone has no dates to give.
+          fetch-depth: 0
       # withastro/action has no node-version-file input, so read .nvmrc here.
       - id: node
         run: echo "version=$(cat .nvmrc)" >> "$GITHUB_OUTPUT"

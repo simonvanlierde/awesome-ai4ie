@@ -88,7 +88,7 @@ Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUC
 - Tables are numbered by chapter: "Table 4.1" is the first table in chapter 4. Figures continue from Fig. 1 and Fig. 2 on the home page.
 - In Markdown, set the title as `<p class="table-title"><b>Table 4.1</b> …</p>` and the source as `<p class="table-src">Source: …</p>`.
 - For a figure built from the data, start from [`src/components/PathFigure.astro`](src/components/PathFigure.astro). It counts entries at build time, so its numbers stay true as entries are added.
-- A new IE field needs three things beside its tag: a short label, a `.field-<tag>` ink rule, and a `<FieldApplications ie="<tag>" />` section on the map page. The type check and `pnpm test` flag a missing one. All six inks are taken, so a seventh field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md).
+- A new IE field needs four things beside its tag: a short label, a `.field-<tag>` ink rule, a `<FieldApplications ie="<tag>" />` section on the map page, and its own page at `src/content/docs/applications-map/<tag>.mdx`. That page holds a short definition of the field, `<FieldPage ie="<tag>" />`, and the field's gaps from "Not mapped yet"; copy an existing one. The type check and `pnpm test` flag a missing one. All six inks are taken, so a seventh field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md).
 
 ### Checking accessibility
 

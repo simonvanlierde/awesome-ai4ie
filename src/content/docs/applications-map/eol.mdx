@@ -1,0 +1,31 @@
+---
+title: AI for waste, end-of-life and circularity
+description: How AI is used for waste, end-of-life and circularity, mostly computer vision to sort, identify and take apart products, how mature each use is, and the papers.
+tableOfContents: false
+---
+
+import Cite from '../../../components/Cite.astro';
+import FieldPage from '../../../components/FieldPage.astro';
+import SuggestPaper from '../../../components/SuggestPaper.astro';
+
+This field studies what happens to products and materials after use: collection, sorting,
+reuse, repair and recycling. It is where most of the published AI work sits. Most of it is
+computer vision, which recognises, counts and measures waste and components so that they
+can be sorted or taken apart. The [map](/applications-map/#waste-eol--circularity) sums up
+what works today, and the [CV taxonomy](/applications-map/cv-taxonomy/) goes into more depth.
+
+<FieldPage ie="eol" />
+
+## Not mapped yet
+
+The [gap list on the map](/applications-map/#not-mapped-yet) names these for end-of-life.
+Each one is open for its first paper.
+
+- <span class="wanted">Wanted</span> **Reinforcement learning.** For disassembly sequence
+  planning and process control. Robotic disassembly is mapped, but with no reinforcement
+  learning tag behind it.
+  <SuggestPaper gap="Reinforcement learning" />
+- <span class="wanted">Wanted</span> **Product lifetime, reuse & repair.** Entries so far grade
+  and sort returned products for reuse <Cite id="wuEnhancingElectronicsGrading2025" />.
+  Nothing yet on repair data.
+  <SuggestPaper gap="Product lifetime, reuse & repair" />

@@ -9,6 +9,11 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- A page per IE field under `/applications-map/<field>/`: what the field is, each AI technique
+  used there with its applications, maturity calls, demos and papers, and the field's gaps.
+  The pages render from the data files, and the map links each field section to its page.
+- Each URL in the sitemap carries a `<lastmod>` date: the last commit to the page, or to the
+  data files it renders, if that is later.
 - An RSS feed of new literature entries at `/literature/feed.xml`, linked from the Literature page.
 - BibTeX and RIS export on the literature page, for one entry or for the filtered view. The
   records come from Crossref and arXiv, cleaned and cached in `src/data/citations.json` by

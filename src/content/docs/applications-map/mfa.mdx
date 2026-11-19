@@ -1,0 +1,31 @@
+---
+title: AI in material flow analysis (MFA)
+description: How AI is used in material flow analysis, from mapping material stocks with satellite and street-level images to Bayesian MFA, how mature each use is, and the papers.
+tableOfContents: false
+---
+
+import Cite from '../../../components/Cite.astro';
+import FieldPage from '../../../components/FieldPage.astro';
+import SuggestPaper from '../../../components/SuggestPaper.astro';
+
+Material flow analysis (MFA) tracks how much of a material enters a system, such as a city
+or a country, how much stays there and how much leaves. What stays is the stock: the
+materials built into buildings and infrastructure. AI helps most with the stocks: it
+estimates them from satellite, night-light and street-level images, and Bayesian methods
+estimate flows that no one measured. The [map](/applications-map/#mfa--stocks-and-flows)
+sums up what works today.
+
+<FieldPage ie="mfa" />
+
+## Not mapped yet
+
+The [gap list on the map](/applications-map/#not-mapped-yet) names these for MFA. Each one
+is open for its first paper.
+
+- <span class="wanted">Wanted</span> **Graph neural networks & network analysis.** A
+  material-flow system is a network, and nothing here treats it as one yet.
+  <SuggestPaper gap="Graph neural networks & network analysis" />
+- <span class="wanted">Wanted</span> **Product lifetime, reuse & repair.** Survival analysis
+  and failure prediction feed MFA stock models. So far one road-stock MFA uses lifetime
+  models <Cite id="ebrahimiMachineLearningbasedStocks2022" />.
+  <SuggestPaper gap="Product lifetime, reuse & repair" />
