@@ -696,7 +696,7 @@ starlight-menu-button button {
 }
 .flow text {
   font-family: var(--sl-font);
-  font-size: 17px; /* user units: about 15px at desktop width */
+  font-size: 19px; /* user units: the script in FlowFigure.astro sets 13-17px on screen */
   font-weight: 650;
   font-stretch: 82%;
   fill: var(--sl-color-white);
@@ -867,31 +867,6 @@ starlight-menu-button button {
 .colophon + footer .meta {
   margin-top: 1.25rem;
 }
-@media (max-width: 40rem) {
-  .flow text {
-    font-size: 26px;
-  }
-}
-.flow svg.flow-plate--wide {
-  display: none;
-}
-/* About life size: filling a 60rem column would set its labels larger than the wide plate's. */
-.flow svg.flow-plate--compact {
-  max-width: 42rem;
-  margin-inline: auto;
-}
-@media (min-width: 64rem) {
-  .flow svg.flow-plate--wide {
-    display: block;
-  }
-  .flow svg.flow-plate--compact {
-    display: none;
-  }
-  .flow text {
-    font-size: 19px; /* the wide plate: about 16px at 1024px, 18px at 1280px */
-  }
-}
-
 /* Chapter index: the thumb-index tabs laid out across the cover. */
 .chapter-index ol {
   list-style: none;

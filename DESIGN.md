@@ -85,8 +85,9 @@ or tapping the tile inks them in again.
 
 - **Sidebar.** Each chapter carries a square number block in its ink; the current page gets a
   light tint of that ink.
-- **Fig. 1.** Built from `literature.yaml`. From 64rem it spans the cover below the
-  chapter index, wide and short with long bands; narrower screens get a compact plate. Node numbers count papers; band width
+- **Fig. 1.** Built from `literature.yaml`, below the chapter index. It fits its width: the
+  labels stay 13 to 17px (10px on a 320px phone), and the bands take the rest, at least 30%
+  of the width. Node numbers count papers; band width
   counts field-technique pairings, as the caption says. Each node opens the literature list
   holding exactly the papers it counts. Labels are the first words of each tag's full name.
   Pointing at a band lifts it and fades the rest. Pointing at, focusing or tapping a node

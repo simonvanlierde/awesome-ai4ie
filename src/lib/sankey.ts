@@ -100,3 +100,17 @@ export function missingTechniques(mlNodes: readonly { tag: string }[]): string[]
   const inFlow = new Set(mlNodes.map((n) => n.tag));
   return Object.keys(TAGS.ml).filter((t) => !inFlow.has(t));
 }
+
+type Ends = { y0: number; y1: number; h: number };
+
+/** A band's outline from x `a` to x `b`: two horizontal-tangent curves, one per edge. */
+export function bandPath(a: number, b: number, { y0, y1, h }: Ends): string {
+  const mid = (a + b) / 2;
+  return `M${a} ${y0}C${mid} ${y0} ${mid} ${y1} ${b} ${y1}V${y1 + h}C${mid} ${y1 + h} ${mid} ${y0 + h} ${a} ${y0 + h}Z`;
+}
+
+/** The curve through a band's middle, which the entrance mask strokes along. */
+export function spinePath(a: number, b: number, { y0, y1, h }: Ends): string {
+  const mid = (a + b) / 2;
+  return `M${a} ${y0 + h / 2}C${mid} ${y0 + h / 2} ${mid} ${y1 + h / 2} ${b} ${y1 + h / 2}`;
+}
