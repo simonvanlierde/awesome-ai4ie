@@ -319,71 +319,57 @@ h1#_top,
 }
 /* Expanded AI4IE state: default in the header, and on hover/focus of the 404 plate. */
 .brand-mark--wordmark .bm-root,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-root,
-.cover-mark.is-open .brand-mark--glyph .bm-root {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-root {
   transform: translateX(0);
 }
 .brand-mark--wordmark .bm-a,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a,
-.cover-mark.is-open .brand-mark--glyph .bm-a {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a {
   transform: translateX(0);
 }
 .brand-mark--wordmark .bm-a-leg,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a-leg,
-.cover-mark.is-open .brand-mark--glyph .bm-a-leg {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a-leg {
   opacity: 0;
 }
 .brand-mark--wordmark .bm-a-full,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a-full,
-.cover-mark.is-open .brand-mark--glyph .bm-a-full {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a-full {
   opacity: 1;
 }
 .brand-mark--wordmark .bm-i1,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-i1,
-.cover-mark.is-open .brand-mark--glyph .bm-i1 {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-i1 {
   transform: translateX(8.5px);
   opacity: 1;
 }
 .brand-mark--wordmark .bm-4,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-4,
-.cover-mark.is-open .brand-mark--glyph .bm-4 {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-4 {
   transform: translateX(28.5px);
   color: var(--ink-1);
 }
 .brand-mark--wordmark .bm-4 > path,
 .brand-mark--wordmark .bm-4-stem,
 .plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-4 > path,
-.cover-mark.is-open .brand-mark--glyph .bm-4 > path,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-4-stem,
-.cover-mark.is-open .brand-mark--glyph .bm-4-stem {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-4-stem {
   stroke: currentColor;
 }
 .brand-mark--wordmark .bm-i2,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-i2,
-.cover-mark.is-open .brand-mark--glyph .bm-i2 {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-i2 {
   transform: translateX(41px);
   opacity: 1;
 }
 .brand-mark--wordmark .bm-e,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e,
-.cover-mark.is-open .brand-mark--glyph .bm-e {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e {
   transform: translateX(51px);
 }
 .brand-mark--wordmark .bm-e-base,
 .brand-mark--wordmark .bm-e .bm-stem,
 .plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e-base,
-.cover-mark.is-open .brand-mark--glyph .bm-e-base,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e .bm-stem,
-.cover-mark.is-open .brand-mark--glyph .bm-e .bm-stem {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e .bm-stem {
   stroke: currentColor;
 }
 .brand-mark--wordmark .bm-e-ext,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e-ext,
-.cover-mark.is-open .brand-mark--glyph .bm-e-ext {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e-ext {
   opacity: 1;
 }
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-gap-cut,
-.cover-mark.is-open .brand-mark--glyph .bm-gap-cut {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-gap-cut {
   opacity: 0;
 }
 
@@ -442,6 +428,32 @@ h1#_top,
   }
   .brand-mark--wordmark .bm-e .bm-stem {
     stroke: color-mix(in srgb, currentColor 72%, var(--sl-color-bg));
+  }
+}
+
+/* Home: the cover title stands in for the header mark, which fades in as the title
+   scrolls up under the header. Without scroll timelines the mark simply stays. */
+@supports (animation-timeline: view()) {
+  :root:has(.cover-home) {
+    timeline-scope: --cover-title;
+  }
+  .cover-home h1#_top {
+    view-timeline: --cover-title block;
+    view-timeline-inset: var(--sl-nav-height) 0;
+  }
+  :root:has(.cover-home) .site-title .brand-mark {
+    animation: mark-dock linear both;
+    animation-timeline: --cover-title;
+    animation-range: exit 0% exit 100%;
+  }
+  /* A keyboard user tabbing to the hidden link still sees it. */
+  :root:has(.cover-home) .site-title:focus-visible .brand-mark {
+    animation: none;
+  }
+}
+@keyframes mark-dock {
+  from {
+    opacity: 0;
   }
 }
 
@@ -611,12 +623,9 @@ starlight-menu-button button {
   }
   .cover-copy {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-areas: "mark mark" "title tagline" "title actions";
+    grid-template-areas: "title tagline" "title actions";
     column-gap: 3rem;
     align-items: start;
-  }
-  .cover-mark {
-    grid-area: mark;
   }
   .cover h1#_top {
     grid-area: title;
@@ -799,32 +808,6 @@ starlight-menu-button button {
 }
 .glyph-stem {
   stroke: color-mix(in srgb, currentColor 72%, var(--sl-color-bg));
-}
-/* The home cover's mark: the Æ-4 glyph unfolds into AI4IE once on load, as the Fig. 1
-   flows run in, and again on hover or tap (script in Hero.astro). */
-.cover-mark {
-  width: clamp(7rem, 5rem + 6vw, 10rem);
-  color: var(--sl-color-white);
-}
-.cover-mark .brand-mark {
-  width: 100%;
-  height: auto;
-}
-/* Unfolding, the E (the longest move) leads and the shorter moves start a beat later,
-   so the 4 never crosses the E; folding back runs all at once. */
-.cover-mark.is-open .brand-mark--glyph .bm-i2 {
-  transition-delay: 30ms;
-}
-.cover-mark.is-open .brand-mark--glyph .bm-4 {
-  transition-delay: 60ms;
-}
-.cover-mark.is-open .brand-mark--glyph .bm-i1 {
-  transition-delay: 90ms;
-}
-/* Folded, the cover's Æ-4 sits flush left with the title, so the A stays put and the
-   word unfolds to the right; the 404 plate keeps it centred. */
-.cover-mark .brand-mark--glyph .bm-root {
-  transform: none;
 }
 /* Fig. 404: the mark as a plate, framed by the dashed gap outline. */
 .plate {

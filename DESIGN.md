@@ -71,9 +71,10 @@ tint; the large mark (the home cover, the 404 plate, the card) also cuts a hairl
 the page: the favicon and the README.
 
 - **Header, home cover, colophon, and 404.** The top bar shows the unfolded `AI4IE` drafting
-  wordmark, which collapses to the Æ-4 mark on hover/focus and on narrow screens. The home
-  cover shows the mark large above the title: Æ-4 unfolds into `AI4IE` once on load, while the
-  Fig. 1 flows run in, and again on hover or tap. The title itself stays still. The 404 plate shows the Æ-4 mark in a dashed
+  wordmark, which collapses to the Æ-4 mark on hover/focus and on narrow screens. On the home
+  page the cover title stands in for the mark: the header mark stays hidden while the title
+  is in view and fades in as the title scrolls up under the header, so the page never shows
+  the name twice. The 404 plate shows the Æ-4 mark in a dashed
   frame and expands it into `AI4IE` on hover/focus. Every inner page
   and the home page also carry the mark in the colophon before the licences.
 - **Never decoration.** No patterns, bullets, loaders or watermarks.
@@ -93,9 +94,8 @@ the page: the favicon and the README.
   Pointing at a band lifts it and fades the rest. Pointing at, focusing or tapping a node
   lights its bands and names its reach in a live readout line under the plate; on touch the
   first tap lights a node and the second opens its list. On load the bands run in once from
-  the fields while the cover mark unfolds: together the site's
-  one entrance, under a second. Reduced motion
-  skips both.
+  the fields: the site's one entrance, under a second. Reduced motion
+  skips it.
 - **Fig. 2.** The see, read, try path for one map cell, each step topped by the ink of the
   chapter it links to.
 - **Numbered tables.** A bold "Table N.N" title above, a source line below. Numbering and

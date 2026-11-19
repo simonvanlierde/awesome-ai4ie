@@ -1,6 +1,7 @@
 ---
 // Home-page cover: the title beside Fig. 1, then the chapter index. The splash
-// template has no sidebar, so the index is the way into the chapters.
+// template has no sidebar, so the index is the way into the chapters. On the home
+// page the title stands in for the header mark (`.cover-home` in custom.css).
 // Starlight renders the hero on every page with `hero` frontmatter: the home
 // page and its built-in 404 page. The 404 keeps the chapter index and shows
 // the mark as a plate where Fig. 1 would be.
@@ -25,10 +26,9 @@ if (is404) {
 }
 ---
 
-<div class="cover">
+<div class:list={["cover", isHome && "cover-home"]}>
   <div class="cover-grid">
     <div class="cover-copy">
-      {isHome && <div class="cover-mark"><BrandMark mode="glyph" large /></div>}
       <h1 id="_top" data-page-title set:html={title} />
       {tagline && <p class="cover-tagline" set:html={tagline} />}
       <div class="cover-actions">
@@ -75,21 +75,3 @@ if (is404) {
     </ol>
   </nav>
 </div>
-
-<script>
-  // The cover mark unfolds from Æ-4 into AI4IE while the Fig. 1 flows run in, and
-  // folds and unfolds again when pointed at or tapped. Reduced motion: open at once.
-  const mark = document.querySelector<HTMLElement>(".cover-mark");
-  if (mark) {
-    const open = () => mark.classList.add("is-open");
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) open();
-    else {
-      let timer = setTimeout(open, 180);
-      mark.addEventListener("pointerenter", () => {
-        clearTimeout(timer);
-        mark.classList.remove("is-open");
-        timer = setTimeout(open, 300);
-      });
-    }
-  }
-</script>
