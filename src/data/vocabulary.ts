@@ -9,7 +9,7 @@ import { parse } from "yaml";
 export const VOCABULARY_FILE = "src/data/vocabulary.yaml";
 export const GENERATED_FILE = "src/data/vocabulary.gen.ts";
 
-/** Each concept's IRI is this plus its id; vocabulary/context.jsonld holds the same base. */
+/** Each concept's IRI is this plus its id. src/lib/skos.ts adds it as the JSON-LD base, since the shared context holds none. */
 export const NAMESPACE = "https://ai4ie.org/vocabulary/#";
 
 /** The schemes in display order, with the label and line the /vocabulary/ page shows. */

@@ -1,8 +1,6 @@
 {
   "@context": {
-    "@base": "https://ai4ie.org/vocabulary/#",
     "@language": "en",
-    "@vocab": "https://ai4ie.org/vocabulary/#",
     "broader": {
       "@id": "skos:broader",
       "@type": "@vocab"

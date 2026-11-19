@@ -146,7 +146,8 @@ the old tag shows its replacement.
 build uses it to publish the vocabulary at `/vocabulary.ttl` and `/vocabulary.jsonld`, and
 CI checks the Turtle against the SHACL shape of SkoHub Vocabs. The same file is in
 [simonvanlierde.github.io](https://github.com/simonvanlierde/simonvanlierde.github.io), byte
-for byte. Do not edit it here alone: change both copies in the same way.
+for byte, so it holds no `@base` or `@vocab`: each site adds its own namespace when it builds
+(`src/lib/skos.ts` here). Do not edit it here alone: change both copies in the same way.
 
 ### Look and feel
 

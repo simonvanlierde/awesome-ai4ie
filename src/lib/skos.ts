@@ -29,7 +29,11 @@ export function skosDocument(concepts: Concept[]) {
     [`${SKOS}hasTopConcept`]: top(s as Scheme),
   }));
   const graph = concepts.map((c) => ({ ...c, id: `#${c.id}`, "@type": `${SKOS}Concept` }));
-  return { "@context": context, "@graph": [...schemes, ...graph] };
+  // The shared context holds no base: each site adds its own namespace here.
+  return {
+    "@context": [context, { "@base": NAMESPACE, "@vocab": NAMESPACE }],
+    "@graph": [...schemes, ...graph],
+  };
 }
 
 /** The expanded JSON-LD, which needs no context to read. */
