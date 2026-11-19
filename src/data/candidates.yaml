@@ -960,45 +960,6 @@
     - gongEvolutionResearchIntersection2025
     - grimmelUrbanIndustrialSymbiosis2025
     - kimUnlockingPotentialRemanufacturing2024
-- doi: 10.1021/acssusresmgt.6c00459
-  title: "Ex-Ante Product Carbon Footprint Forecasting in Electric Arc Furnace
-    Stainless Steel Production: A Probabilistic Machine Learning Framework for
-    Alloy Eco-design"
-  year: 2026
-  venue: ACS Sustainable Resource Management
-  oa: https://pubs.acs.org/asrmcd/article-pdf/doi/10.1021/acssusresmgt.6c00459/69185286/rm-2026-004593.pdf
-  found: 2026-11-19
-  status: new
-  score: 0.048
-  near:
-    - aboagyeLeveragingMachineLearning2025
-    - zhaoDatacentricInvestigationChallenges2025
-    - gkousisMachineLearningLarge2026
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
-- doi: 10.1007/s43546-026-01570-2
-  title: Towards AI-enabled circular waste governance a systematic review bridging
-    technology, the informal sector and policy in urban India’s municipal solid
-    waste management
-  year: 2026
-  venue: SN Business & Economics
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.047
-  near:
-    - gongEvolutionResearchIntersection2025
-    - zhaoDataScienceApplications2024
-    - hubnerMachinelearningbasedDemandForecasting2024
-  hints:
-    ie:
-      - lca
-      - circular
-    ml:
-      - tabular-ml
 - doi: 10.1007/s11356-026-38353-z
   title: "Advancements in bio-asphalt binders: production, physico-chemical
     characterization, optimization, performance, and sustainability
@@ -1145,24 +1106,6 @@
     - ulissiEvaluationCriteriaAIassisted2026
     - dengAutoPCFEfficientProduct2023
     - gongEvolutionResearchIntersection2025
-- doi: 10.3390/recycling11110207
-  title: "Managing Rubber Waste Flows in Closed-Loop Production Systems:
-    Forecasting the Mass of Vulcanized Waste Based on Technological Parameters"
-  year: 2026
-  venue: Recycling
-  oa: https://doi.org/10.3390/recycling11110207
-  found: 2026-11-19
-  status: new
-  score: 0.043
-  near:
-    - kimUnlockingPotentialRemanufacturing2024
-    - zhaoConstructionWastetoresourceKnowledge2025
-    - zhaoNovelMachineLearningbased2025
-  hints:
-    ie:
-      - symbiosis
-    ml:
-      - nlp-extraction
 - doi: 10.3390/eng7110612
   title: Physically Based Strength Simulation and Multi-Objective Design of
     Permeable Concrete Pavement Composition for Urban Stormwater Management
@@ -1219,22 +1162,6 @@
     - gongEvolutionResearchIntersection2025
     - hubnerMachinelearningbasedDemandForecasting2024
     - gkousisMachineLearningLarge2026
-- doi: 10.1021/acs.est.6c06129
-  title: Building-Stock Turnover Reshapes Mitigation Priorities in China’s
-    Building Sector
-  year: 2026
-  venue: Environmental Science & Technology
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.041
-  near:
-    - haberlGlobalBuiltEnvironment2024
-    - masonBayesianMaterialFlow2025
-    - arbabiScalableDataCollection2021
-  hints:
-    ie:
-      - sem
 - doi: 10.1016/j.jenvman.2025.125471
   title: "Leveraging industry 4.0 technologies and industrial symbiosis: Advancing
     circular economy practices in BRICS economies"
@@ -1465,6 +1392,37 @@
     - zhangSustainabilityAssessmentUsing2026
     - ulissiEvaluationCriteriaAIassisted2026
     - gongEvolutionResearchIntersection2025
+- doi: 10.1021/acssusresmgt.6c00459
+  title: "Ex-Ante Product Carbon Footprint Forecasting in Electric Arc Furnace
+    Stainless Steel Production: A Probabilistic Machine Learning Framework for
+    Alloy Eco-design"
+  year: 2026
+  found: 2026-11-19
+  status: listed
+- doi: 10.1007/s43546-026-01570-2
+  title: Towards AI-enabled circular waste governance a systematic review bridging
+    technology, the informal sector and policy in urban India’s municipal solid
+    waste management
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 1: PRISMA review of informal-sector waste governance; AI is one
+    narrative pillar and only one reviewed study trains a model"
+- doi: 10.3390/recycling11110207
+  title: "Managing Rubber Waste Flows in Closed-Loop Production Systems:
+    Forecasting the Mass of Vulcanized Waste Based on Technological Parameters"
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 4: weak evaluation (one plant, random split; the MLP's test R2 0.928
+    is never compared with the regression it is meant to beat, whose 0.994 is
+    in-sample)"
+- doi: 10.1021/acs.est.6c06129
+  title: Building-Stock Turnover Reshapes Mitigation Priorities in China’s
+    Building Sector
+  year: 2026
+  found: 2026-11-19
+  status: listed
 - doi: 10.1002/joe.70057
   title: A Systematic Literature Review and Bibliometric Mapping of AI‐Driven ESG
     in Industry 5.0
