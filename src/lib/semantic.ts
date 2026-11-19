@@ -14,7 +14,15 @@ export type IndexEntry = {
   blurb: string;
   href: string;
   text: string;
+  /** Base64 float32 vector computed at build time (src/lib/vectors.ts), when one matches. */
+  vector?: string;
 };
+
+/** Reverses encodeVector() in src/lib/vectors.ts. */
+export function decodeVector(b64: string): number[] {
+  const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+  return Array.from(new Float32Array(bytes.buffer));
+}
 
 /** The text embedded for an entry: what a reader would match a question against. */
 export function entryText(e: {

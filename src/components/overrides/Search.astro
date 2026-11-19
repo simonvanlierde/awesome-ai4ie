@@ -35,6 +35,7 @@ import { issueUrl } from "../../lib/urls";
 <script>
   import {
     DTYPE,
+    decodeVector,
     type IndexEntry,
     isPhrase,
     MODEL,
@@ -77,12 +78,26 @@ import { issueUrl } from "../../lib/urls";
         const entries: IndexEntry[] = JSON.parse(json);
         const embed: Embed = async (texts) =>
           (await pipe(texts, { pooling: "mean", normalize: true })).tolist();
-        const key = await cacheKey(json);
-        let vectors = readVectors(key, entries.length);
-        if (!vectors) {
-          report(`Reading the ${entries.length} papers…`);
-          vectors = await embed(entries.map((e) => e.text));
-          writeVectors(key, vectors);
+        // Build-time vectors (src/lib/vectors.ts) cover the deployed site; an entry
+        // without one, as in a local build, is embedded here once and cached.
+        let vectors: number[][] = entries.map((e) => (e.vector ? decodeVector(e.vector) : []));
+        const missing = entries.flatMap((e, i) => (e.vector ? [] : [i]));
+        if (missing.length) {
+          const key = await cacheKey(json);
+          const cached = readVectors(key, entries.length);
+          if (cached) vectors = cached;
+          else {
+            report(
+              missing.length === entries.length
+                ? `Reading the ${entries.length} papers…`
+                : `Reading ${missing.length} new ${missing.length === 1 ? "paper" : "papers"}…`,
+            );
+            const fresh = await embed(missing.map((i) => entries[i].text));
+            missing.forEach((i, k) => {
+              vectors[i] = fresh[k];
+            });
+            writeVectors(key, vectors);
+          }
         }
         ready = true;
         return { entries, vectors, entryStems: entries.map((e) => stems(e.text)), embed };
@@ -94,8 +109,8 @@ import { issueUrl } from "../../lib/urls";
     return searchPromise;
   }
 
-  // The entry vectors are kept in localStorage, so a new page embeds only the query.
-  // The key changes with the index and the model revision.
+  // Entry vectors embedded in the browser are kept in localStorage, so a new page
+  // embeds only the query. The key changes with the index and the model revision.
   async function cacheKey(json: string): Promise<string> {
     const bytes = new TextEncoder().encode(`${MODEL_REVISION}\n${json}`);
     return btoa(String.fromCharCode(...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))));

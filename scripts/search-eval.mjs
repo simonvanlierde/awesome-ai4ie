@@ -14,40 +14,17 @@
 
 import { readFile } from "node:fs/promises";
 import process from "node:process";
-// biome-ignore lint/correctness/noUnresolvedImports: playwright re-exports chromium from playwright-core, which Biome does not follow
-import { chromium } from "playwright";
 import { parse } from "yaml";
-import { DTYPE, entryText, MODEL, MODEL_REVISION, rank, stems } from "../src/lib/semantic.ts";
-import { TRANSFORMERS_URL } from "../src/lib/transformers.ts";
+import { entryText, rank, stems } from "../src/lib/semantic.ts";
+import { embedInChromium } from "./lib/embed-in-chromium.mjs";
 
 const entries = parse(await readFile("src/data/literature.yaml", "utf8"));
 const questions = parse(await readFile("src/data/search-eval.yaml", "utf8"));
 const texts = entries.map(entryText);
-
-// A made-up https origin gives the page a secure context, so the model cache works.
-const ORIGIN = "https://search-eval.invalid/";
-const browser = await chromium.launch();
-const page = await browser.newPage();
-await page.route(ORIGIN, (r) => r.fulfill({ contentType: "text/html", body: "<!doctype html>" }));
-await page.goto(ORIGIN);
-const [vectors, queryVectors] = await page.evaluate(
-  async ({ url, model, revision, dtype, docs, qs }) => {
-    const { pipeline } = await import(url);
-    const pipe = await pipeline("feature-extraction", model, { revision, dtype });
-    // biome-ignore lint/correctness/useQwikValidLexicalScope: runs inside the page via Playwright, not Qwik
-    const embed = async (t) => (await pipe(t, { pooling: "mean", normalize: true })).tolist();
-    return [await embed(docs), await embed(qs)];
-  },
-  {
-    url: TRANSFORMERS_URL,
-    model: MODEL,
-    revision: MODEL_REVISION,
-    dtype: DTYPE,
-    docs: texts,
-    qs: questions.map((q) => q.q),
-  },
+const [vectors, queryVectors] = await embedInChromium(
+  texts,
+  questions.map((q) => q.q),
 );
-await browser.close();
 
 const entryStems = texts.map(stems);
 let found = 0;

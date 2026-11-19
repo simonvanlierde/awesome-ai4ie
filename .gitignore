@@ -6,6 +6,8 @@ dist/
 coverage/
 # dependencies
 node_modules/
+# meaning-search vectors, written by `pnpm run embed` before a build
+src/data/literature-vectors.json
 # misc
 .DS_Store
 npm-debug.log*

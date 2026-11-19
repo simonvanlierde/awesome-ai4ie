@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
-import { entryText, isPhrase, MAX_HITS, rank, stems } from "./semantic";
+import { decodeVector, entryText, isPhrase, MAX_HITS, rank, stems } from "./semantic";
 
 const none = [new Set<string>()];
 
@@ -71,5 +71,13 @@ describe("search-eval.yaml", () => {
       readFileSync("src/data/search-eval.yaml", "utf8"),
     );
     expect(evalSet.flatMap((q) => q.expect).filter((id) => !ids.has(id))).toEqual([]);
+  });
+});
+
+describe("decodeVector", () => {
+  it("reverses the build's base64 float32 encoding", async () => {
+    const { encodeVector } = await import("./vectors");
+    const v = [0.5, -0.25, 0.125];
+    expect(decodeVector(encodeVector(v))).toEqual(v);
   });
 });
