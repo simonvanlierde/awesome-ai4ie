@@ -25,9 +25,9 @@ export function encodeVector(v: number[]): string {
 
 /** Vectors by text key, or an empty map when the file is missing or from another model,
  * since a model change makes every stored vector stale. */
-export function loadVectors(): Record<string, string> {
-  if (!existsSync(VECTORS_FILE)) return {};
-  const data: VectorsFile = JSON.parse(readFileSync(VECTORS_FILE, "utf8"));
+export function loadVectors(file = VECTORS_FILE): Record<string, string> {
+  if (!existsSync(file)) return {};
+  const data: VectorsFile = JSON.parse(readFileSync(file, "utf8"));
   return data.model === EMBED_MODEL ? data.vectors : {};
 }
 

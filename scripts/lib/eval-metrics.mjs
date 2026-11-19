@@ -1,7 +1,10 @@
 // Scores for scripts/search-eval.mjs, kept apart so a test can feed them made-up rankings.
+// biome-ignore lint/correctness/noNodejsModules: a Node script, never bundled
+import { createHash } from "node:crypto";
 
-/** Questions with an odd position are held out: the cut-off is tuned on the even ones only. */
-export const isHeldOut = (i) => i % 2 === 1;
+/** Whether question text `q` is in the held-out half; the cut-off is tuned on the other half.
+ * It hangs on the text, not the position, so adding or moving a question moves no other. */
+export const isHeldOut = (q) => createHash("sha256").update(q).digest()[0] % 2 === 1;
 
 /** Held-out floors; the eval fails below them. Raise them when the model or cut-off improves. */
 export const HIT1_MIN = 0.9;

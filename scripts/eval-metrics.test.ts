@@ -12,6 +12,9 @@ test("summarize scores hit@1 and MRR over in-list questions only", () => {
   expect(summarize([])).toEqual({ n: 0, hit1: 0, mrr: 0 });
 });
 
-test("odd-numbered questions are held out", () => {
-  expect([0, 1, 2, 3].map(isHeldOut)).toEqual([false, true, false, true]);
+test("the held-out half follows each question's text, not its position", () => {
+  const qs = Array.from({ length: 20 }, (_, i) => `question ${i}`);
+  const sides = qs.map(isHeldOut);
+  expect(new Set(sides)).toEqual(new Set([true, false]));
+  expect(["a new first question", ...qs].map(isHeldOut).slice(1)).toEqual(sides);
 });

@@ -1,5 +1,12 @@
+// biome-ignore lint/correctness/noNodejsModules: the vectors file is read with node:fs
+import { mkdtempSync, writeFileSync } from "node:fs";
+// biome-ignore lint/correctness/noNodejsModules: a temp dir for the vectors file
+import { tmpdir } from "node:os";
+// biome-ignore lint/correctness/noNodejsModules: joins the temp path
+import { join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { embedMissing, encodeVector, textKey, vectorRows } from "./vectors";
+import { EMBED_MODEL } from "./semantic";
+import { embedMissing, encodeVector, loadVectors, textKey, vectorRows } from "./vectors";
 
 describe("vectorRows", () => {
   it("numbers the embedded entries in id order, whatever order they come in", () => {
@@ -47,5 +54,16 @@ describe("embedMissing", () => {
       [textKey("bb")]: encodeVector([2, 0]),
       [textKey("ccc")]: encodeVector([3, 0]),
     });
+  });
+  it("reuses a file from the same model and embeds everything again after a model change", async () => {
+    const file = join(mkdtempSync(join(tmpdir(), "vectors-")), "v.json");
+    const vectors = { [textKey("a")]: encodeVector([9, 9]) };
+    writeFileSync(file, JSON.stringify({ model: EMBED_MODEL, vectors }));
+    embed.mockClear();
+    await embedMissing(["a"], embed, loadVectors(file));
+    expect(embed).not.toHaveBeenCalled();
+    writeFileSync(file, JSON.stringify({ model: "another-model", vectors }));
+    await embedMissing(["a"], embed, loadVectors(file));
+    expect(embed).toHaveBeenCalledWith(["a"]);
   });
 });

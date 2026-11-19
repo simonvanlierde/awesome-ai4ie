@@ -3,10 +3,10 @@
  * Scores the search dialog's meaning search on src/data/search-eval.yaml. It runs the
  * site's Workers AI model through the REST API and ranks with the site's own rank(). It prints the misses, each question's best score and
  * its first right answer, so the cut-off in src/lib/semantic.ts can be tuned on the
- * even-numbered questions. Entry vectors come from the shipped vectors file (run
+ * tuning half of the questions. Entry vectors come from the shipped vectors file (run
  * `pnpm run embed` first); only the questions are embedded. Exits 1 when an off-list
  * question shows a paper, an in-list one shows only wrong ones, or the held-out
- * (odd-numbered) questions fall below the hit@1 or MRR floor in scripts/lib/eval-metrics.mjs.
+ * half (isHeldOut in scripts/lib/eval-metrics.mjs) falls below the hit@1 or MRR floor in scripts/lib/eval-metrics.mjs.
  *
  *   pnpm run search-eval
  *
@@ -49,7 +49,7 @@ questions.forEach((q, i) => {
     } else console.log(`ok    ${best}  ${q.q}  (off-list)`);
     return;
   }
-  rows.push({ expect: q.expect, shown, heldOut: isHeldOut(i) });
+  rows.push({ expect: q.expect, shown, heldOut: isHeldOut(q.q) });
   const hit = shown.some((id) => q.expect.includes(id));
   if (hit) found++;
   else if (shown.length) failed++;
