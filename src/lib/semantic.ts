@@ -3,6 +3,8 @@
 // (worker/index.ts), both with this Workers AI model; the Worker ranks by cosine similarity.
 
 export const EMBED_MODEL = "@cf/qwen/qwen3-embedding-0.6b";
+/** Length of the vectors EMBED_MODEL gives. */
+export const EMBED_DIM = 1024;
 
 // Qwen3 embeds a query after a one-line task instruction and a document as is. On
 // search-eval.yaml the instruction put the right paper first for all 30 in-list
