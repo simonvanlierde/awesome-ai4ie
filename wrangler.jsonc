@@ -26,7 +26,13 @@
       "simple": { "limit": 30, "period": 60 }
     }
   ],
-  // Required for `wrangler preview`; Previews need no settings of their own yet.
-  "previews": {},
+  // Settings for `wrangler preview`. Previews inherit no bindings, so they repeat them; their
+  // own limiter namespace keeps Preview traffic off production's counter.
+  "previews": {
+    "ai": { "binding": "AI", "remote": true },
+    "ratelimits": [
+      { "name": "SEARCH_LIMIT", "namespace_id": "1002", "simple": { "limit": 30, "period": 60 } }
+    ]
+  },
   "observability": { "enabled": true }
 }
