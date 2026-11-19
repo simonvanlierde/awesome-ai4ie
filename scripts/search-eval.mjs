@@ -14,7 +14,7 @@
 import { readFile } from "node:fs/promises";
 import process from "node:process";
 import { parse } from "yaml";
-import { entryText, queryText, rank } from "../src/lib/semantic.ts";
+import { entryText, queryText, rank, scores } from "../src/lib/semantic.ts";
 import { embed } from "./lib/workers-ai.mjs";
 
 const entries = parse(await readFile("src/data/literature.yaml", "utf8"));
@@ -28,8 +28,8 @@ let failed = 0;
 const inList = questions.filter((q) => q.expect.length).length;
 questions.forEach((q, i) => {
   const shown = rank(queryVectors[i], vectors).map((k) => entries[k].id);
-  const scored = vectors
-    .map((v, k) => ({ id: entries[k].id, s: v.reduce((a, x, j) => a + x * queryVectors[i][j], 0) }))
+  const scored = scores(queryVectors[i], vectors)
+    .map((s, k) => ({ id: entries[k].id, s }))
     .sort((a, b) => b.s - a.s);
   const right = scored.findIndex((h) => q.expect.includes(h.id));
   const best = scored[0].s.toFixed(3);

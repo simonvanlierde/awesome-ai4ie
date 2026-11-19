@@ -12,14 +12,14 @@
 
 import { readFile, writeFile } from "node:fs/promises";
 import { parse } from "yaml";
-import { entryText } from "../src/lib/semantic.ts";
-import { encodeVector, MODEL_KEY, textKey, VECTORS_FILE } from "../src/lib/vectors.ts";
+import { EMBED_MODEL, entryText } from "../src/lib/semantic.ts";
+import { encodeVector, textKey, VECTORS_FILE } from "../src/lib/vectors.ts";
 import { embed } from "./lib/workers-ai.mjs";
 
 const texts = parse(await readFile("src/data/literature.yaml", "utf8")).map(entryText);
 const vectors = await embed(texts);
 const out = {
-  model: MODEL_KEY,
+  model: EMBED_MODEL,
   vectors: Object.fromEntries(texts.map((t, i) => [textKey(t), encodeVector(vectors[i])])),
 };
 await writeFile(VECTORS_FILE, `${JSON.stringify(out)}\n`);

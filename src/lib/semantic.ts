@@ -5,8 +5,8 @@
 export const EMBED_MODEL = "@cf/qwen/qwen3-embedding-0.6b";
 
 // Qwen3 embeds a query after a one-line task instruction and a document as is. On
-// search-eval.yaml the instruction put the right paper first for 30 of 30 questions,
-// against 27 without it.
+// search-eval.yaml the instruction put the right paper first for all 30 in-list
+// questions (the other 8 of the 38 are off-list), against 27 without it.
 const QUERY_INSTRUCTION = "Given a question, retrieve research papers that answer it";
 
 /** The text embedded for a reader's question. */
@@ -20,7 +20,6 @@ export type IndexEntry = {
   year: number;
   blurb: string;
   href: string;
-  text: string;
   /** Base64 float32 vector computed at build time (src/lib/vectors.ts); missing in a
    * build that skipped `pnpm run embed`, and then the entry is not searched. */
   vector?: string;
@@ -62,15 +61,20 @@ export function isPhrase(query: string): boolean {
   return (query.match(WORD)?.length ?? 0) >= 3;
 }
 
+/** Each vector's dot product with the query: the cosine when both are unit length. */
+export function scores(query: ArrayLike<number>, vectors: ArrayLike<number>[]): number[] {
+  return vectors.map((v) => {
+    let s = 0;
+    for (let j = 0; j < v.length; j++) s += v[j] * query[j];
+    return s;
+  });
+}
+
 /** Indices of the entries at or above MIN_SCORE, best first, at most MAX_HITS.
  * Vectors must be unit length, so the dot product is the cosine. */
 export function rank(query: ArrayLike<number>, vectors: ArrayLike<number>[]): number[] {
-  return vectors
-    .map((v, i) => {
-      let s = 0;
-      for (let j = 0; j < v.length; j++) s += v[j] * query[j];
-      return { i, s };
-    })
+  return scores(query, vectors)
+    .map((s, i) => ({ i, s }))
     .filter((h) => h.s >= MIN_SCORE)
     .sort((a, b) => b.s - a.s)
     .slice(0, MAX_HITS)

@@ -8,14 +8,12 @@ import { loadVectors, textKey } from "../lib/vectors";
 export async function GET() {
   const vectors = loadVectors();
   const entries = (await getCollection("literature")).map(({ id, data: e }) => {
-    const text = entryText(e);
     return {
       title: e.title,
       year: e.year,
       blurb: e.blurb,
       href: litUrl({ papers: [id] }),
-      text,
-      vector: vectors[textKey(text)],
+      vector: vectors[textKey(entryText(e))],
     };
   });
   return Response.json(entries);
