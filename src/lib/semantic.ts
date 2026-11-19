@@ -32,9 +32,9 @@ export type IndexEntry = {
   status?: "proposal";
   href: string;
   bibtex?: string;
-  /** Base64 float32 vector computed at build time (src/lib/vectors.ts); missing in a
-   * build that skipped `pnpm run embed`, and then the entry is not searched. */
-  vector?: string;
+  /** The entry's row in literature-vectors.bin (src/lib/vectors.ts); missing in a build
+   * that skipped `pnpm run embed`, and then the entry is not searched. */
+  vectorRow?: number;
 };
 
 /** The vector scaled to length 1, so a dot product of two is their cosine. */
@@ -45,8 +45,7 @@ export function unit(v: number[]): number[] {
 
 /** Reverses encodeVector() in src/lib/vectors.ts. */
 export function decodeVector(b64: string): Float32Array {
-  // A plain loop: Uint8Array.from with a mapper plus Array.from took about 20 times longer,
-  // and a cold Worker decodes every vector inside its CPU budget.
+  // A plain loop: Uint8Array.from with a mapper plus Array.from took about 20 times longer.
   const s = atob(b64);
   const bytes = new Uint8Array(s.length);
   for (let i = 0; i < s.length; i++) bytes[i] = s.charCodeAt(i);

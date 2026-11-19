@@ -1,14 +1,7 @@
 // The reading list as the Worker loads it, and meaning search over it, shared by POST
 // /api/search and the MCP tools. Kept out of index.ts because the Workers runtime rejects any
 // export there that is not a handler.
-import {
-  decodeVector,
-  EMBED_MODEL,
-  type IndexEntry,
-  queryText,
-  rank,
-  unit,
-} from "../src/lib/semantic.ts";
+import { EMBED_MODEL, type IndexEntry, queryText, rank, unit } from "../src/lib/semantic.ts";
 
 export type Env = {
   AI: { run(model: string, input: object): Promise<{ data: number[][] }> };
@@ -21,34 +14,48 @@ export const MAX_QUERY = 300;
 
 // One isolate serves many requests; the assets change only with a deploy.
 const assets = new Map<string, Promise<unknown>>();
-/** A built JSON asset, fetched and passed through `prepare` once per isolate. */
-export function cachedJson<T>(
-  env: Env,
-  origin: string,
-  path: string,
-  prepare: (json: never) => T = (json) => json,
-): Promise<T> {
-  let p = assets.get(path) as Promise<T> | undefined;
+/** What `load` gives, worked out once per isolate under `key`. */
+function cached<T>(key: string, load: () => Promise<T>): Promise<T> {
+  let p = assets.get(key) as Promise<T> | undefined;
   if (!p) {
-    p = env.ASSETS.fetch(`${origin}${path}`)
-      .then((r) => {
-        if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`);
-        return r.json();
-      })
-      .then((json) => prepare(json as never));
-    assets.set(path, p);
-    p.catch(() => assets.delete(path)); // a failed load must not poison every later request
+    p = load();
+    assets.set(key, p);
+    p.catch(() => assets.delete(key)); // a failed load must not poison every later request
   }
   return p;
 }
 
+async function fetchAsset(env: Env, origin: string, path: string): Promise<Response> {
+  const r = await env.ASSETS.fetch(`${origin}${path}`);
+  if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`);
+  return r;
+}
+
+/** A built JSON asset, fetched and parsed once per isolate. */
+export function cachedJson<T>(env: Env, origin: string, path: string): Promise<T> {
+  return cached(path, async () => (await fetchAsset(env, origin, path)).json() as Promise<T>);
+}
+
 type Index = { all: IndexEntry[]; entries: IndexEntry[]; vectors: Float32Array[] };
-/** Every entry (`all`), and the searchable ones with their decoded vectors. */
+/** Every entry (`all`), and the searchable ones with their vectors: views into
+ * literature-vectors.bin, so nothing is parsed or copied. */
 export function loadIndex(env: Env, origin: string): Promise<Index> {
-  return cachedJson(env, origin, "/literature-index.json", (all: IndexEntry[]) => {
-    // An entry without a build-time vector (a build that skipped `pnpm run embed`) is not searched.
-    const entries = all.filter((e) => e.vector);
-    return { all, entries, vectors: entries.map((e) => decodeVector(e.vector as string)) };
+  return cached("index", async () => {
+    const [all, bin] = await Promise.all([
+      fetchAsset(env, origin, "/literature-index.json").then(
+        (r) => r.json() as Promise<IndexEntry[]>,
+      ),
+      fetchAsset(env, origin, "/literature-vectors.bin").then((r) => r.arrayBuffer()),
+    ]);
+    // An entry without a row (a build that skipped `pnpm run embed`) is not searched.
+    const entries = all.filter((e) => e.vectorRow !== undefined);
+    const dim = entries.length ? bin.byteLength / 4 / entries.length : 0;
+    if (!Number.isInteger(dim))
+      throw new Error(`literature-vectors.bin: ${bin.byteLength} bytes for ${entries.length} rows`);
+    const vectors = entries.map(
+      (e) => new Float32Array(bin, (e.vectorRow as number) * dim * 4, dim),
+    );
+    return { all, entries, vectors };
   });
 }
 
@@ -96,7 +103,7 @@ export async function searchPapers(
   try {
     // The index first: no AI call is spent when there is nothing to search.
     const { entries, vectors } = await loadIndex(env, origin);
-    if (!entries.length) throw new Error("literature-index.json: no entry has a vector");
+    if (!entries.length) throw new Error("literature-index.json: no entry has a vector row");
     let timer: ReturnType<typeof setTimeout> | undefined;
     const { data } = await Promise.race([
       env.AI.run(EMBED_MODEL, { text: [queryText(q.trim())] }),

@@ -77,9 +77,13 @@ jobs:
         with:
           node-version: ${{ steps.node.outputs.version }}
           build-cmd: ${{ env.EMBED == 'true' && 'pnpm run embed && pnpm run build' || 'pnpm run build' }}
+      # 4096 bytes a row: the embedding model gives 1024 float32 values.
       - name: Every entry has a vector
         if: env.EMBED == 'true'
-        run: jq -e 'length > 0 and all(.[]; .vector)' dist/literature-index.json
+        run: >-
+          jq -e --argjson bytes "$(stat -c %s dist/literature-vectors.bin)"
+          'length > 0 and all(.[]; .vectorRow != null) and $bytes == length * 4096'
+          dist/literature-index.json
       # The Worker's tests use hand-written fixtures; this checks the build gives what they mimic.
       - name: Worker data has the fields the tools read
         run: |

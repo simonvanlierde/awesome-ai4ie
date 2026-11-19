@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
 import { EMBED_MODEL, queryText } from "../src/lib/semantic";
-import { encodeVector } from "../src/lib/vectors";
 import worker from "./index";
 import { AI_TIMEOUT_MS, limitKey } from "./search";
 
@@ -18,8 +17,17 @@ const paper = (title: string, v?: number[]) => ({
   type: ["method"],
   href: `/literature/#${title}`,
   bibtex: `@article{${title}}`,
-  vector: v && encodeVector(v),
+  vector: v,
 });
+// The two files the build ships for these papers: the index with a row per vector, and
+// literature-vectors.bin holding those rows.
+const shipped = (papers: object[]) => {
+  const rows: number[][] = [];
+  const index = papers.map(({ vector, ...e }: { vector?: number[] }) =>
+    vector ? { ...e, vectorRow: rows.push(vector) - 1 } : e,
+  );
+  return { index, bin: new Float32Array(rows.flat()).buffer };
+};
 const hit = (title: string) => ({
   title,
   year: 2024,
@@ -83,7 +91,11 @@ const env = ({ allowed = true, index = INDEX, ai, assets }: Opts = {}) => {
     ASSETS: {
       fetch: async (url: Request | string) =>
         assets?.(String(url)) ??
-        (String(url).endsWith("/mcp-data.json") ? Response.json(MCP_DATA) : Response.json(index)),
+        (String(url).endsWith("/mcp-data.json")
+          ? Response.json(MCP_DATA)
+          : String(url).endsWith("/literature-vectors.bin")
+            ? new Response(shipped(index).bin)
+            : Response.json(shipped(index).index)),
     },
   };
 };
@@ -165,6 +177,14 @@ describe("worker", () => {
 
   it("answers 503 when no entry has a vector, without calling the model", async () => {
     const e = env({ index: [paper("unembedded")] });
+    expect((await (await fresh()).fetch(post('{"q": "a b c"}'), e)).status).toBe(503);
+    expect(e.runs).toEqual([]);
+  });
+
+  it("answers 503 when the vectors file does not fit the index's rows", async () => {
+    const e = env({
+      assets: (url) => (url.endsWith(".bin") ? new Response(new Uint8Array(10)) : undefined),
+    });
     expect((await (await fresh()).fetch(post('{"q": "a b c"}'), e)).status).toBe(503);
     expect(e.runs).toEqual([]);
   });

@@ -1,16 +1,17 @@
 // The reading list as the Worker loads it (worker/search.ts): /api/search and the MCP tools
-// rank and return these entries. Entries carry their build-time vector when `pnpm run embed`
-// ran before the build (src/lib/vectors.ts).
+// rank and return these entries. An entry names its row in literature-vectors.bin when
+// `pnpm run embed` ran before the build (src/lib/vectors.ts).
 import { getCollection } from "astro:content";
 import citations from "../data/citations.json";
 import { entryText, type IndexEntry } from "../lib/semantic";
 import { paperUrl } from "../lib/urls";
-import { loadVectors, textKey } from "../lib/vectors";
+import { vectorRows } from "../lib/vectors";
 
 export async function GET() {
-  const vectors = loadVectors();
+  const literature = await getCollection("literature");
+  const { rows } = vectorRows(literature.map(({ data }) => entryText(data)));
   const bibtex: Record<string, { bibtex: string } | undefined> = citations;
-  const entries: IndexEntry[] = (await getCollection("literature")).map(({ id, data: e }) => ({
+  const entries: IndexEntry[] = literature.map(({ id, data: e }, i) => ({
     id,
     title: e.title,
     authors: e.authors,
@@ -26,7 +27,7 @@ export async function GET() {
     status: e.status,
     href: paperUrl(id),
     bibtex: bibtex[id]?.bibtex,
-    vector: vectors[textKey(entryText(e))],
+    vectorRow: rows[i],
   }));
   return Response.json(entries);
 }
