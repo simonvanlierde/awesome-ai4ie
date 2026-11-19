@@ -24,6 +24,12 @@
       "namespace_id": "1001",
       // Per visitor IP: a reader types far slower; a script hitting the endpoint does not.
       "simple": { "limit": 30, "period": 60 }
+    },
+    {
+      "name": "SEARCH_LIMIT_GLOBAL",
+      "namespace_id": "1003",
+      // All visitors together, keyed on a constant: caps the AI spend when many IPs search at once.
+      "simple": { "limit": 300, "period": 60 }
     }
   ],
   // Settings for `wrangler preview`. Previews inherit no bindings, so they repeat them; their
@@ -31,7 +37,12 @@
   "previews": {
     "ai": { "binding": "AI", "remote": true },
     "ratelimits": [
-      { "name": "SEARCH_LIMIT", "namespace_id": "1002", "simple": { "limit": 30, "period": 60 } }
+      { "name": "SEARCH_LIMIT", "namespace_id": "1002", "simple": { "limit": 30, "period": 60 } },
+      {
+        "name": "SEARCH_LIMIT_GLOBAL",
+        "namespace_id": "1004",
+        "simple": { "limit": 300, "period": 60 }
+      }
     ]
   },
   "observability": { "enabled": true }
