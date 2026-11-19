@@ -1,4 +1,6 @@
-// The site on Cloudflare Workers: the static Astro build, plus worker/index.ts for /api/*.
+// The site on Cloudflare Workers: the static Astro build in dist/, with headers from
+// public/_headers, plus worker/index.ts for /api/*. CI deploys main with `wrangler deploy`
+// and each pull request with `wrangler preview --name pr-<number>` (.github/workflows/ci.yml).
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "awesome-ai4ie",
@@ -24,5 +26,7 @@
       "simple": { "limit": 30, "period": 60 }
     }
   ],
+  // Required for `wrangler preview`; Previews need no settings of their own yet.
+  "previews": {},
   "observability": { "enabled": true }
 }
