@@ -443,6 +443,26 @@ describe("/mcp", () => {
     }
   });
 
+  it("maps a retired tag to its replacement", async () => {
+    const ids = async (name: string, list: string, args: object) =>
+      payload(await call(name, args))[list].map((x: { id: string }) => x.id);
+    expect(await ids("list_applications", "applications", { field: "mfa" })).toEqual(["a2"]);
+    // io was a topic and is now an IE field.
+    expect(await ids("list_resources", "resources", { topic: "io" })).toEqual(["r1"]);
+    const gone = await call("list_resources", { field: "urban-mining" });
+    expect([gone.isError, payload(gone).error]).toEqual([true, "not_found"]);
+  });
+
+  it("filters resources by kind, field and topic", async () => {
+    const ids = async (args: object) =>
+      payload(await call("list_resources", args)).resources.map((r: { id: string }) => r.id);
+    expect(await ids({})).toEqual(["r1", "r2", "r3"]);
+    expect(await ids({ kind: "tool" })).toEqual(["r1"]);
+    expect(await ids({ field: "sem" })).toEqual(["r3"]);
+    expect(await ids({ topic: "buildings" })).toEqual(["r2"]);
+    expect(await ids({ field: "lca", topic: "buildings" })).toEqual(["r2"]);
+  });
+
   it("returns a skill, and lists the names for an unknown one", async () => {
     expect((await call("get_skill", { name: "ml-reproducibility" })).content[0].text).toBe(
       "# Skill text",
@@ -460,7 +480,7 @@ describe("/mcp", () => {
       ["search_papers", { question: "x".repeat(301) }],
       ["search_papers", { question: "   " }],
       ["search_papers", { question: 5 }],
-      ["list_applications", { field: "mfa" }],
+      ["list_applications", { field: "bogus" }],
       ["list_resources", { topic: "bogus" }],
       ["get_paper", {}],
       ["no_such_tool", {}],

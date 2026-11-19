@@ -10,7 +10,8 @@ import {
 import { z } from "zod";
 import type { AppEntry, ResourceEntry } from "../src/data/schemas.ts";
 import { RESOURCE_KINDS } from "../src/data/schemas.ts";
-import { IE_TAGS, ML_TAGS, TOPIC_TAGS } from "../src/data/tags.ts";
+import { currentTag, IE_TAGS, ML_TAGS, type TagDim, TOPIC_TAGS } from "../src/data/tags.ts";
+import { CONCEPTS } from "../src/data/vocabulary.gen.ts";
 import { cachedJson, type Env, loadIndex, MAX_QUERY, searchPapers, withinLimit } from "./search.ts";
 
 type Data = {
@@ -20,8 +21,30 @@ type Data = {
 };
 
 const keys = <K extends string>(o: Record<K, string>) => Object.keys(o) as [K, ...K[]];
-const fieldArg = z.enum(keys(IE_TAGS)).optional();
+// A retired id stays accepted: the handler maps it to its replacement (vocabulary.yaml `replacedBy`).
+const tagArg = (live: Record<string, string>, scheme: string) => {
+  const old = CONCEPTS.filter((c) => c.scheme === scheme && "deprecated" in c);
+  const arg = z.enum([...keys(live), ...old.map((c) => c.id)]).optional();
+  const to = old.map((c) => `${c.id} -> ${"replacedBy" in c ? c.replacedBy : "none"}`);
+  return old.length
+    ? arg.describe(`Retired ids map to their replacements: ${to.join(", ")}.`)
+    : arg;
+};
+const fieldArg = tagArg(IE_TAGS, "field");
 const idArg = z.string().trim().min(1).max(200).optional();
+/** The tag filters as current tags, or the first retired tag that has no replacement. */
+function currentFilters(filters: [TagDim, string | undefined][]) {
+  const now: { dim: TagDim; tag: string }[] = [];
+  for (const [dim, tag] of filters) {
+    if (!tag) continue;
+    const c = currentTag(dim, tag);
+    if (!c) return tag;
+    now.push(c);
+  }
+  return now;
+}
+const tagged = (e: object, filters: { dim: TagDim; tag: string }[]) =>
+  filters.every(({ dim, tag }) => (e as Partial<Record<TagDim, string[]>>)[dim]?.includes(tag));
 const list = (o: Record<string, string>) =>
   Object.entries(o)
     .map(([k, v]) => `${k} (${v})`)
@@ -43,6 +66,8 @@ type Code = "not_found" | "rate_limited" | "unavailable";
 /** A tool error: JSON with a stable `error` code a client can branch on. */
 const fail = (error: Code, message: string, more: object = {}) =>
   text({ error, message, ...more }, true);
+const noReplacement = (tag: string) =>
+  fail("not_found", `Tag "${tag}" is retired with no replacement.`);
 // Every tool that reads a build asset answers "unavailable" when the asset fails to load.
 const READ_ONLY = { readOnlyHint: true, idempotentHint: true, openWorldHint: false };
 const guarded =
@@ -177,22 +202,22 @@ function buildServer(request: Request, env: Env) {
       inputSchema: z.object({
         id: idArg,
         field: fieldArg,
-        technique: z.enum(keys(ML_TAGS)).optional(),
+        technique: tagArg(ML_TAGS, "technique"),
       }),
       outputSchema: z.object({ applications: z.array(APPLICATION) }),
       annotations: READ_ONLY,
     },
     guarded(async ({ id, field, technique }) => {
+      const filters = currentFilters([
+        ["ie", field],
+        ["ml", technique],
+      ]);
+      if (typeof filters === "string") return noReplacement(filters);
       const all = (await loadData()).applications;
       return json(
         absLinks({
           applications: all
-            .filter(
-              (a) =>
-                (!id || a.id === id) &&
-                (!field || a.ie.includes(field)) &&
-                (!technique || a.ml.includes(technique)),
-            )
+            .filter((a) => (!id || a.id === id) && tagged(a, filters))
             .map(({ href, ...a }) => ({
               ...a,
               url: abs(href),
@@ -212,21 +237,22 @@ function buildServer(request: Request, env: Env) {
         id: idArg,
         kind: z.enum(keys(RESOURCE_KINDS)).optional(),
         field: fieldArg,
-        topic: z.enum(keys(TOPIC_TAGS)).optional(),
+        topic: tagArg(TOPIC_TAGS, "topic"),
       }),
       outputSchema: z.object({ resources: z.array(RESOURCE) }),
       annotations: READ_ONLY,
     },
     guarded(async ({ id, kind, field, topic }) => {
+      const filters = currentFilters([
+        ["ie", field],
+        ["topic", topic],
+      ]);
+      if (typeof filters === "string") return noReplacement(filters);
       const all = (await loadData()).resources;
       return json(
         absLinks({
           resources: all.filter(
-            (r) =>
-              (!id || r.id === id) &&
-              (!kind || r.kind === kind) &&
-              (!field || r.ie.includes(field)) &&
-              (!topic || r.topic.includes(topic)),
+            (r) => (!id || r.id === id) && (!kind || r.kind === kind) && tagged(r, filters),
           ),
         }),
       );
