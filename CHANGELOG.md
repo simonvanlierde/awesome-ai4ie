@@ -16,7 +16,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   YAML fields.
 - Search can also match the reading list by meaning: ask in plain words, like "which papers
   sort waste with cameras?", in the search dialog. The papers are embedded when the site is
-  built; the site's `/api/embed` endpoint on Cloudflare Workers AI embeds the question.
+  built; the site's `/api/search` endpoint embeds the question with Cloudflare Workers AI and
+  ranks the papers.
 - An accessibility statement at `/accessibility/`, linked from the footer.
 - A Content-Security-Policy `<meta>` tag on every page, and `/.well-known/security.txt`.
 - Weekly OpenSSF Scorecard and advisory audits, a cold-install check of the README's

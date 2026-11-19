@@ -1,8 +1,8 @@
 ---
 // Starlight's search dialog (Pagefind, keyword matches across every page), plus a
 // meaning search over the reading list: a reader who types a question gets the
-// closest literature entries above the keyword results. The site's /api/embed
-// Worker embeds the question; the entries come embedded from the build.
+// closest literature entries above the keyword results, from the site's /api/search
+// Worker (worker/index.ts).
 import Default from "@astrojs/starlight/components/Search.astro";
 import { issueUrl } from "../../lib/urls";
 ---
@@ -22,44 +22,20 @@ import { issueUrl } from "../../lib/urls";
 </semantic-search>
 
 <script>
-  import { decodeVector, type IndexEntry, isPhrase, rank, stems } from "../../lib/semantic";
+  import type { Hit } from "../../../worker/index";
+  import { isPhrase } from "../../lib/semantic";
   import { siteUrl } from "../../lib/urls";
 
   const EXAMPLE = "which papers map building stocks from satellites?";
 
-  type Search = { entries: IndexEntry[]; vectors: number[][]; entryStems: Set<string>[] };
-
-  // Entries without a build-time vector (a build that skipped `pnpm run embed`) are left out.
-  let searchPromise: Promise<Search> | null = null;
-  function getSearch(): Promise<Search> {
-    searchPromise ??= fetch(siteUrl("literature-index.json"))
-      .then((r) => {
-        if (!r.ok) throw new Error(`literature-index.json: HTTP ${r.status}`);
-        return r.json() as Promise<IndexEntry[]>;
-      })
-      .then((all) => {
-        const entries = all.filter((e) => e.vector);
-        return {
-          entries,
-          vectors: entries.map((e) => decodeVector(e.vector as string)),
-          entryStems: entries.map((e) => stems(e.text)),
-        };
-      })
-      .catch((err) => {
-        searchPromise = null; // a failed load must not poison every retry
-        throw err;
-      });
-    return searchPromise;
-  }
-
-  async function embedQuery(q: string): Promise<number[]> {
-    const r = await fetch(siteUrl("api/embed"), {
+  async function search(q: string): Promise<Hit[]> {
+    const r = await fetch(siteUrl("api/search"), {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ q }),
     });
-    if (!r.ok) throw new Error(`api/embed: HTTP ${r.status}`);
-    return (await r.json()).vector;
+    if (!r.ok) throw new Error(`api/search: HTTP ${r.status}`);
+    return (await r.json()).hits;
   }
 
   class SemanticSearch extends HTMLElement {
@@ -79,7 +55,7 @@ import { issueUrl } from "../../lib/urls";
       let timer: ReturnType<typeof setTimeout> | undefined;
       let seq = 0;
 
-      const show = (hits: IndexEntry[], msg: string, noMatch = false) => {
+      const show = (hits: Hit[], msg: string, noMatch = false) => {
         list.replaceChildren(
           ...hits.map((e) => {
             const li = document.createElement("li");
@@ -108,9 +84,8 @@ import { issueUrl } from "../../lib/urls";
           return;
         }
         try {
-          const [s, qv] = await Promise.all([getSearch(), embedQuery(q)]);
+          const hits = await search(q);
           if (mine !== seq) return; // a newer query owns the results
-          const hits = rank(qv, s.vectors, stems(q), s.entryStems).map((i) => s.entries[i]);
           const n = hits.length;
           if (n) show(hits, `${n} ${n === 1 ? "paper matches" : "papers match"} by meaning`);
           else {
@@ -156,12 +131,6 @@ import { issueUrl } from "../../lib/urls";
         clear?.addEventListener("click", afterPagefind);
         input.addEventListener("keydown", (e) => e.key === "Escape" && afterPagefind());
         this.hidden = false;
-        // Fetch the index as the dialog opens, so a first question waits only for its own vector.
-        const dialog = this.closest("dialog");
-        if (dialog)
-          new MutationObserver(() => {
-            if (dialog.open) getSearch().catch(() => {}); // a query shows any error
-          }).observe(dialog, { attributes: true, attributeFilter: ["open"] });
         return true;
       };
       if (!attach()) {

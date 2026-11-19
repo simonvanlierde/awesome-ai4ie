@@ -6,6 +6,8 @@
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": "./dist",
+    // The Worker reads literature-index.json from here.
+    "binding": "ASSETS",
     // Only /api/* runs the Worker; every other request is a static file, which is not
     // billed or counted against the free plan's daily requests.
     "run_worker_first": ["/api/*"],
@@ -15,7 +17,7 @@
   "ai": { "binding": "AI", "remote": true },
   "ratelimits": [
     {
-      "name": "EMBED_LIMIT",
+      "name": "SEARCH_LIMIT",
       // Any account-unique number; names this limit's counter.
       "namespace_id": "1001",
       // Per visitor IP: a reader types far slower; a script hitting the endpoint does not.

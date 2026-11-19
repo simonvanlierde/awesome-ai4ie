@@ -6,51 +6,36 @@ import {
   entryText,
   isPhrase,
   MAX_HITS,
+  MIN_SCORE,
+  queryText,
   rank,
-  SOFT_SCORE,
-  STRONG_SCORE,
-  stems,
   unit,
 } from "./semantic";
 
-const none = [new Set<string>()];
 // A unit vector whose cosine with [1, 0] is `s`.
 const at = (s: number) => [s, Math.sqrt(1 - s * s)];
 
 describe("rank", () => {
-  it("shows strong matches on meaning alone, best first", () => {
-    const q = [1, 0];
-    const vs = [at(SOFT_SCORE - 0.1), at(STRONG_SCORE + 0.01), [1, 0]];
-    expect(rank(q, vs, new Set(), [new Set(), new Set(), new Set()])).toEqual([2, 1]);
-  });
-
-  it("shows a weaker match only when it shares a content word with the query", () => {
-    const weak = [at((SOFT_SCORE + STRONG_SCORE) / 2)];
-    expect(rank([1, 0], weak, stems("hallucinated citations"), none)).toEqual([]);
-    expect(
-      rank([1, 0], weak, stems("hallucinated citations"), [stems("citation hallucination")]),
-    ).toEqual([0]);
+  it("keeps entries at or above MIN_SCORE, best first", () => {
+    const vs = [at(MIN_SCORE - 0.01), at(MIN_SCORE + 0.01), [1, 0]];
+    expect(rank([1, 0], vs)).toEqual([2, 1]);
   });
 
   it("returns at most MAX_HITS", () => {
-    const vs = Array.from({ length: 9 }, () => [1, 0]);
     expect(
       rank(
         [1, 0],
-        vs,
-        new Set(),
-        Array.from({ length: 9 }, () => new Set()),
+        Array.from({ length: 9 }, () => [1, 0]),
       ),
     ).toHaveLength(MAX_HITS);
   });
 });
 
-describe("stems", () => {
-  it("keeps content words, cut to five letters, and drops question words", () => {
-    expect([...stems("Which papers use reinforcement learning for logistics?")]).toEqual([
-      "reinf",
-      "logis",
-    ]);
+describe("queryText", () => {
+  it("puts the task instruction before the question", () => {
+    const t = queryText("waste sorting");
+    expect(t.startsWith("Instruct: ")).toBe(true);
+    expect(t.endsWith("\nQuery: waste sorting")).toBe(true);
   });
 });
 

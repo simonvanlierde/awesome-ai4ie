@@ -1,6 +1,5 @@
-// The reading list as the search dialog's meaning search reads it, fetched when the
-// dialog opens. Entries carry their build-time vector when `pnpm run embed` ran
-// before the build (src/lib/vectors.ts).
+// The reading list as the /api/search Worker (worker/index.ts) ranks it. Entries carry
+// their build-time vector when `pnpm run embed` ran before the build (src/lib/vectors.ts).
 import { getCollection } from "astro:content";
 import { entryText } from "../lib/semantic";
 import { litUrl } from "../lib/urls";

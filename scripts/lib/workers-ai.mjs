@@ -1,12 +1,12 @@
 // Embeds texts with the meaning-search model through the Workers AI REST API, so
-// scripts get the same vectors the site's /api/embed Worker returns. Needs
+// scripts get the same vectors the site's /api/search Worker computes. Needs
 // CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN (a token with Workers AI read).
 
 import process from "node:process";
-import { EMBED_MODEL, EMBED_POOLING, unit } from "../../src/lib/semantic.ts";
+import { EMBED_MODEL, unit } from "../../src/lib/semantic.ts";
 
-// Workers AI takes at most 100 texts per embedding call.
-const BATCH = 100;
+// Texts per call; Workers AI caps a call at 100.
+const BATCH = 50;
 
 /** One unit-length vector per text, in order. */
 export async function embed(texts) {
@@ -19,7 +19,7 @@ export async function embed(texts) {
     const r = await fetch(url, {
       method: "POST",
       headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
-      body: JSON.stringify({ text: texts.slice(i, i + BATCH), pooling: EMBED_POOLING }),
+      body: JSON.stringify({ text: texts.slice(i, i + BATCH) }),
     });
     if (!r.ok) throw new Error(`Workers AI: HTTP ${r.status} ${await r.text()}`);
     out.push(...(await r.json()).result.data.map(unit));

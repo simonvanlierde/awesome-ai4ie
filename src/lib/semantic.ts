@@ -1,10 +1,18 @@
 // Meaning-based search over the reading list: entries are embedded at build time
-// (scripts/embed-literature.mjs), the query by the site's /api/embed Worker
-// (worker/index.ts), both with this Workers AI model, then ranked by cosine similarity.
+// (scripts/embed-literature.mjs) and the question by the site's /api/search Worker
+// (worker/index.ts), both with this Workers AI model; the Worker ranks by cosine similarity.
 
-export const EMBED_MODEL = "@cf/baai/bge-small-en-v1.5";
-// cls is the model card's recommended pooling; vectors from mean and cls do not mix.
-export const EMBED_POOLING = "cls";
+export const EMBED_MODEL = "@cf/qwen/qwen3-embedding-0.6b";
+
+// Qwen3 embeds a query after a one-line task instruction and a document as is. On
+// search-eval.yaml the instruction put the right paper first for 30 of 30 questions,
+// against 27 without it.
+const QUERY_INSTRUCTION = "Given a question, retrieve research papers that answer it";
+
+/** The text embedded for a reader's question. */
+export function queryText(q: string): string {
+  return `Instruct: ${QUERY_INSTRUCTION}\nQuery: ${q}`;
+}
 
 /** One literature entry as the search index ships it (src/pages/literature-index.json.ts). */
 export type IndexEntry = {
@@ -41,33 +49,11 @@ export function entryText(e: {
   return `${e.title}. ${e.blurb} Tags: ${[...(e.ie ?? []), ...(e.ml ?? []), ...(e.type ?? [])].join(", ")}`;
 }
 
-// Cut-offs for EMBED_MODEL with EMBED_POOLING, tuned on src/data/search-eval.yaml
-// with scripts/search-eval.mjs; a model or pooling change needs a new tuning. At or
-// above STRONG an entry shows on meaning alone; between SOFT and STRONG it shows
-// only when it also shares a content word with the query. On that set, STRONG holds
-// from 0.74 to 0.80, and SOFT sits between an off-list question's 0.702 and the
-// weakest right answer's 0.728.
-export const STRONG_SCORE = 0.77;
-export const SOFT_SCORE = 0.715;
+// Cut-off for EMBED_MODEL and queryText(), tuned on src/data/search-eval.yaml with
+// scripts/search-eval.mjs; a model or instruction change needs a new tuning. On that
+// set the off-list questions score at most 0.495 and the weakest right answer 0.608.
+export const MIN_SCORE = 0.55;
 export const MAX_HITS = 5;
-
-// Words too common in questions and entries to say what they are about.
-const STOP = new Set(
-  (
-    "about also approach based best could data does first find from have help into know " +
-    "learning like machine made make method methods model models more most only other " +
-    "paper papers read review should some studies study tags than that their them then " +
-    "there these they this those used using very what when where which with would your"
-  ).split(" "),
-);
-const LETTERS = /[a-z]+/g;
-
-/** Content words of a text, cut to five letters so "citations" meets "citation" and
- * "hallucinate" meets "hallucination". */
-export function stems(text: string): Set<string> {
-  const words = text.toLowerCase().match(LETTERS) ?? [];
-  return new Set(words.filter((w) => w.length >= 4 && !STOP.has(w)).map((w) => w.slice(0, 5)));
-}
 
 const WORD = /\S+/g;
 
@@ -76,22 +62,16 @@ export function isPhrase(query: string): boolean {
   return (query.match(WORD)?.length ?? 0) >= 3;
 }
 
-/** Indices of the best entries for a query, best first (see STRONG_SCORE).
- * Vectors must be normalized, so the dot product is the cosine. */
-export function rank(
-  query: ArrayLike<number>,
-  vectors: ArrayLike<number>[],
-  queryStems: Set<string>,
-  entryStems: Set<string>[],
-): number[] {
-  const shares = (i: number) => [...queryStems].some((w) => entryStems[i].has(w));
+/** Indices of the entries at or above MIN_SCORE, best first, at most MAX_HITS.
+ * Vectors must be unit length, so the dot product is the cosine. */
+export function rank(query: ArrayLike<number>, vectors: ArrayLike<number>[]): number[] {
   return vectors
     .map((v, i) => {
       let s = 0;
       for (let j = 0; j < v.length; j++) s += v[j] * query[j];
       return { i, s };
     })
-    .filter((h) => h.s >= STRONG_SCORE || (h.s >= SOFT_SCORE && shares(h.i)))
+    .filter((h) => h.s >= MIN_SCORE)
     .sort((a, b) => b.s - a.s)
     .slice(0, MAX_HITS)
     .map((h) => h.i);

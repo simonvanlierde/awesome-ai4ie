@@ -5,15 +5,15 @@
 import { createHash } from "node:crypto";
 // biome-ignore lint/correctness/noNodejsModules: build-time only, never bundled for the browser
 import { existsSync, readFileSync } from "node:fs";
-import { EMBED_MODEL, EMBED_POOLING } from "./semantic.ts";
+import { EMBED_MODEL } from "./semantic.ts";
 
 /** Generated, not committed (see .gitignore). */
 export const VECTORS_FILE = "src/data/literature-vectors.json";
 
 type VectorsFile = { model: string; vectors: Record<string, string> };
 
-/** Which model and pooling made the vectors; a change makes every stored vector stale. */
-export const MODEL_KEY = `${EMBED_MODEL}:${EMBED_POOLING}`;
+/** Which model made the vectors; a change makes every stored vector stale. */
+export const MODEL_KEY = EMBED_MODEL;
 
 /** Key of an entry's embedded text, so an edited entry drops its stale vector. */
 export function textKey(text: string): string {
