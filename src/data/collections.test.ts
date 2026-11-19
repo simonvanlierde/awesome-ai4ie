@@ -58,3 +58,26 @@ describe("applications.yaml", () => {
     }
   });
 });
+
+describe("candidates.yaml", () => {
+  const cands = parse(readFileSync("src/data/candidates.yaml", "utf8")) as (Raw & {
+    status?: string;
+    why?: string;
+  })[];
+  const listed = new Set(lit.map((e) => e.doi?.toLowerCase()));
+
+  it("holds each DOI once, with a known status and a why for rejects", () => {
+    const dois = cands.map((c) => c.doi);
+    expect(new Set(dois).size).toBe(dois.length);
+    for (const c of cands) {
+      expect(["new", "rejected", "listed"], c.doi).toContain(c.status);
+      if (c.status === "rejected") expect(c.why, `${c.doi} needs a why`).toBeTruthy();
+    }
+  });
+
+  it("marks a lead listed only once it is in literature.yaml", () => {
+    for (const c of cands.filter((x) => x.status === "listed")) {
+      expect(listed.has(c.doi), c.doi).toBe(true);
+    }
+  });
+});

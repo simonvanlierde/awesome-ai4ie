@@ -6,6 +6,42 @@ type Classifier = (img: string, labels: string[]) => Promise<Result[]>;
 
 const DEFAULT_LABELS = "intact appliance, corroded metal part, circuit board, plastic housing";
 
+/** Split comma-separated candidate labels into unique non-empty strings. */
+export function parseLabels(raw: string): string[] {
+  return [
+    ...new Set(
+      raw
+        .split(",")
+        .map((l) => l.trim())
+        .filter(Boolean),
+    ),
+  ];
+}
+
+/** Status line for an ONNX weight download progress event, or null for other events. */
+export function formatDownloadProgress(p: {
+  status: string;
+  file?: string;
+  progress?: number;
+}): string | null {
+  if (p.status === "progress" && p.file?.endsWith(".onnx")) {
+    return `Downloading the model… ${Math.round(p.progress ?? 0)}%`;
+  }
+  return null;
+}
+
+/** Status line announcing the highest-scoring label. */
+export function classifySummary(scored: readonly Result[]): string {
+  return `Done: ${scored[0].label} scores highest, ${(scored[0].score * 100).toFixed(1)}%.`;
+}
+
+/** User-facing status line for a failed or stalled model run. */
+export function classifyErrorMessage(err: unknown): string {
+  return err instanceof StalledError
+    ? "The model download stopped making progress. Check your connection, then press Classify to try again."
+    : "Could not load or run the model. Check your connection, then press Classify to try again.";
+}
+
 // transformers.js loads from the CDN on first classify (the `jsdelivr` entry is
 // the bundled browser build). Keeping it out of package.json keeps ~340 MB of
 // ONNX runtimes out of node_modules and a 23 MB wasm out of every deploy; the
@@ -23,28 +59,43 @@ const MODEL_REVISION = "d15189d7028b43f1d3e65039190477f6af591c2a";
 // A load that sends no progress for this long counts as stalled (see withStall).
 const STALL_MS = 60_000;
 
-let classifierPromise: Promise<Classifier> | null = null;
-function getClassifier(onProgress: (msg: string) => void): Promise<Classifier> {
-  classifierPromise ??= withStall(async (alive) => {
-    const { pipeline } = await import(/* @vite-ignore */ TRANSFORMERS_URL);
-    alive();
-    const pipe = await pipeline("zero-shot-image-classification", MODEL, {
-      revision: MODEL_REVISION,
-      progress_callback: (p: { status: string; file?: string; progress?: number }) => {
-        // After a stall the download keeps going; its progress must not
-        // overwrite the message that told the reader it stopped.
-        if (!alive()) return;
-        if (p.status === "progress" && p.file?.endsWith(".onnx"))
-          onProgress(`Downloading the model… ${Math.round(p.progress ?? 0)}%`);
-      },
+type ProgressEvent = { status: string; file?: string; progress?: number };
+type PipelineFn = (
+  task: string,
+  model: string,
+  opts: { revision: string; progress_callback: (p: ProgressEvent) => void },
+) => Promise<(img: string, labels: string[]) => Promise<unknown>>;
+
+/** Build a cached CLIP classifier loader that clears its cache after a failed load. */
+export function createClassifierLoader(
+  loadPipeline: () => Promise<PipelineFn> = async () =>
+    (await import(/* @vite-ignore */ TRANSFORMERS_URL)).pipeline,
+) {
+  let promise: Promise<Classifier> | null = null;
+  return (onProgress: (msg: string) => void): Promise<Classifier> => {
+    promise ??= withStall(async (alive) => {
+      const pipeline = await loadPipeline();
+      alive();
+      const pipe = await pipeline("zero-shot-image-classification", MODEL, {
+        revision: MODEL_REVISION,
+        progress_callback: (p) => {
+          // After a stall the download keeps going; its progress must not
+          // overwrite the message that told the reader it stopped.
+          if (!alive()) return;
+          const msg = formatDownloadProgress(p);
+          if (msg) onProgress(msg);
+        },
+      });
+      return (img: string, labels: string[]) => pipe(img, labels) as Promise<Result[]>;
+    }, STALL_MS).catch((err) => {
+      promise = null; // a failed load must not poison every retry
+      throw err;
     });
-    return (img: string, labels: string[]) => pipe(img, labels) as Promise<Result[]>;
-  }, STALL_MS).catch((err) => {
-    classifierPromise = null; // a failed load must not poison every retry
-    throw err;
-  });
-  return classifierPromise;
+    return promise;
+  };
 }
+
+const getClassifier = createClassifierLoader();
 
 /**
  * Zero-shot image classification (CLIP), running entirely in the browser via
@@ -73,14 +124,7 @@ export default function ZeroShotDemo() {
       return;
     }
     if (busy) return;
-    const candidates = [
-      ...new Set(
-        labels
-          .split(",")
-          .map((l) => l.trim())
-          .filter(Boolean),
-      ),
-    ];
+    const candidates = parseLabels(labels);
     if (candidates.length === 0) {
       setStatus("Add at least one label, separated by commas.");
       return;
@@ -92,15 +136,11 @@ export default function ZeroShotDemo() {
       setStatus("Classifying…");
       const scored = await classifier(imageUrl, candidates);
       setResults(scored);
-      setStatus(`Done: ${scored[0].label} scores highest, ${(scored[0].score * 100).toFixed(1)}%.`);
+      setStatus(classifySummary(scored));
     } catch (err) {
       // biome-ignore lint/suspicious/noConsole: the status line cannot show the cause; the console keeps it for debugging
       console.error(err);
-      setStatus(
-        err instanceof StalledError
-          ? "The model download stopped making progress. Check your connection, then press Classify to try again."
-          : "Could not load or run the model. Check your connection, then press Classify to try again.",
-      );
+      setStatus(classifyErrorMessage(err));
     } finally {
       setBusy(false);
     }

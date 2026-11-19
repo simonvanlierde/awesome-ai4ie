@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { LitEntry } from "../data/schemas";
 import { DIM_LABELS, TAG_DIMS, TAGS, type TagDim, tagLabel } from "../data/tags";
-import { citationFile, FORMATS } from "../lib/citations";
+import { type Citations, citationFile, FORMATS } from "../lib/citations";
 import { formatAuthors, isNew, paperLink } from "../lib/literature";
 import {
   DEFAULT_SORT,
@@ -13,6 +13,7 @@ import {
   SORTS,
   type SortKey,
   sortEntries,
+  toggleTag,
   toQuery,
 } from "./litFilter";
 import TagChips from "./TagChips";
@@ -71,22 +72,7 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
   // The records are a separate chunk, fetched on the first export click.
   async function download(picked: LitEntry[], format: (typeof FORMATS)[number], name: string) {
     setExportStatus(""); // so the same message twice is announced twice
-    try {
-      const { default: cache } = await import("../data/citations.json");
-      const blob = new Blob([citationFile(picked, cache, format.key)], {
-        type: `${format.mime};charset=utf-8`,
-      });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `${name}.${format.ext}`;
-      a.click();
-      // Revoking in the same task can cancel the download in Firefox and Safari.
-      setTimeout(() => URL.revokeObjectURL(a.href), 0);
-      const n = picked.length;
-      setExportStatus(`Exported ${n} ${n === 1 ? "entry" : "entries"} as ${format.label}`);
-    } catch {
-      setExportStatus("Export failed, try again");
-    }
+    setExportStatus(await exportCitations(picked, format, name));
   }
 
   function closePanel(dim: TagDim) {
@@ -95,11 +81,7 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
   }
 
   function toggle(dim: TagDim, tag: string) {
-    const active = filter[dim].includes(tag);
-    setFilter({
-      ...filter,
-      [dim]: active ? filter[dim].filter((t) => t !== tag) : [...filter[dim], tag],
-    });
+    setFilter((current) => toggleTag(current, dim, tag));
   }
 
   const shown = sortEntries(
@@ -271,4 +253,30 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
       {shown.length === 0 && <p className="lit-empty">{emptyMessage(filter, tagLabel)}</p>}
     </div>
   );
+}
+
+/** Build a citation download in the browser and return the screen-reader status line. */
+export async function exportCitations(
+  picked: LitEntry[],
+  format: (typeof FORMATS)[number],
+  name: string,
+  loadCache: () => Promise<Citations> = async () =>
+    (await import("../data/citations.json")).default,
+): Promise<string> {
+  try {
+    const cache = await loadCache();
+    const blob = new Blob([citationFile(picked, cache, format.key)], {
+      type: `${format.mime};charset=utf-8`,
+    });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${name}.${format.ext}`;
+    a.click();
+    // Revoking in the same task can cancel the download in Firefox and Safari.
+    setTimeout(() => URL.revokeObjectURL(a.href), 0);
+    const n = picked.length;
+    return `Exported ${n} ${n === 1 ? "entry" : "entries"} as ${format.label}`;
+  } catch {
+    return "Export failed, try again";
+  }
 }

@@ -5,6 +5,9 @@ minimumReleaseAge: 10080
 # The only dependencies whose install scripts run.
 allowBuilds:
   fsevents: true
+  # onnxruntime-node ships its CPU binaries; its script only fetches GPU ones.
+  onnxruntime-node: false
+  protobufjs: false
 
 # postcss-selector-parser fixes GHSA-rj75-hqrm-r3gf. Remove once @expressive-code/core depends on
 # postcss-nested 7 or later.

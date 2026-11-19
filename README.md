@@ -1,12 +1,13 @@
 <h1><img src="public/favicon.svg" width="36" height="36" alt=""> Awesome AI for Industrial Ecology</h1>
 
-A community-curated guide to using AI in industrial ecology (IE) research. Industrial ecology studies how materials and energy move through the economy: what products are made of, where they end up, and what that costs the environment. The guide has an applications map, a literature list, tool and hardware guidance, working Claude skills, and in-browser demos. It started in the AI4IE working group, and [anyone can contribute](CONTRIBUTING.md). To suggest a paper, a [short form](../../issues/new?template=paper.yml) is enough.
+A community-curated guide to using AI in industrial ecology (IE) research. Industrial ecology studies how materials and energy move through the economy: what products are made of, where they end up, and what that costs the environment. The guide has an applications map, a literature list, tool and hardware guidance, working Agent Skills, and in-browser demos. It started in the AI4IE working group, and [anyone can contribute](CONTRIBUTING.md). To suggest a paper, a [short form](../../issues/new?template=paper.yml) is enough.
 
 [![Live site](https://img.shields.io/badge/live_site-ai4ie-0353a4)](https://ai4ie.org/)
 [![Contributing](https://img.shields.io/badge/contributing-guide-55661a)](CONTRIBUTING.md)
 [![Discord](https://img.shields.io/badge/chat-Discord-5865F2?logo=discord&logoColor=white)](https://discord.gg/zhHAZakXHX)
 [![CI](https://img.shields.io/github/actions/workflow/status/simonvanlierde/awesome-ai4ie/ci.yml?label=CI)](https://github.com/simonvanlierde/awesome-ai4ie/actions)
 [![Coverage](https://img.shields.io/codecov/c/github/simonvanlierde/awesome-ai4ie)](https://codecov.io/gh/simonvanlierde/awesome-ai4ie)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/16926/badge)](https://www.bestpractices.dev/projects/16926)
 [![Built with Astro](https://img.shields.io/badge/built%20with-Astro-BC52EE?logo=astro&logoColor=white)](https://astro.build)
 [![Code: MIT](https://img.shields.io/badge/code-MIT-green)](LICENSE)
 [![Content: CC BY 4.0](https://img.shields.io/badge/content-CC--BY--4.0-lightgrey)](LICENSE-CONTENT)

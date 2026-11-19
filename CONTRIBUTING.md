@@ -27,6 +27,15 @@ To edit text, you need no local setup: edit the Markdown on GitHub, or click the
 
 ### Adding a paper or an application
 
+An AI-in-IE paper belongs in the reading list when all four hold:
+
+1. **An AI or ML method is central:** it is built, trained, compared or evaluated. Bayesian and probabilistic inference count, and so do knowledge graphs, NLP, remote sensing or image analysis that maps stocks, and datasets made to train or test such models. Descriptive statistics, fixed thresholds, deterministic balancing (RAS, Leontief projections) and a passing mention of "AI" don't.
+2. **The question is industrial ecology,** framed as such by the paper itself: LCA, material flows and stocks, end of life, urban mining, symbiosis, input-output analysis, or the materials, chemicals, food, water, energy and supply risk questions those methods answer.
+3. **It is not about the footprint of AI itself.**
+4. **It is worth an IE researcher's time:** a research article, review, dataset, framework, or a perspective written for IE researchers. Surveys of firms adopting "AI for the circular economy", and reviews of neighbouring fields that never use an IE method, don't qualify.
+
+When you reject a weekly lead, give the rule it fails as its `why`.
+
 - Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · topic · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR, with a short label in `SHORT_LABELS` (the start of the full label, for Fig. 1 on the home page); a new topic gets a line in `TOPIC_WANTED` instead, saying what work it still wants. Add its full label to the matching dropdown in the paper and application forms in [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) too. `pnpm test` checks that they match.
 - Literature entries need an `id` (the citation key), `title`, `authors`, `year`, a one-line `blurb` saying why it's worth reading, tags, and `added: YYYY-MM`.
 - Write `authors` as a list with one `"Surname, I."` per author. Add `etAl: true` when you stop before the last author.
