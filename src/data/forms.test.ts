@@ -54,6 +54,10 @@ describe("issue forms", () => {
     },
   );
 
+  it.each(["paper", "resource"])("%s lists every topic", (form) => {
+    expect(options(form, "topic")).toEqual(Object.values(TAGS.topic));
+  });
+
   it("paper lists every kind of entry", () => {
     expect(options("paper", "type")).toEqual(Object.values(TAGS.type));
   });

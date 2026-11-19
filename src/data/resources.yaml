@@ -5,8 +5,8 @@
 #
 # Required: id, title, url, kind, blurb (one line, why it's worth your time),
 # checked (YYYY-MM, when you last opened the link and checked the text).
-# Optional: good and notFor (the "Good for" / "Not for" verdict), ie and ml tags
-# from src/data/tags.ts (empty = not IE-specific), and for tools cost, data
+# Optional: good and notFor (the "Good for" / "Not for" verdict), ie, topic and
+# ml tags from src/data/tags.ts (empty ie = not IE-specific), and for tools cost, data
 # (leaves | can-stay-local | local) and group (assistant | coding | research |
 # library | local: which list on the tools pages). status: proposal marks an
 # entry the group has not vetted yet. Text fields may hold Markdown links.
@@ -183,6 +183,7 @@
   group: library
   blurb: "Environmentally-extended multi-regional input–output analysis."
   ie: [lca]
+  topic: [io]
   checked: 2026-07
 - id: scikit-learn
   title: scikit-learn
@@ -261,6 +262,7 @@
   kind: dataset
   blurb: "Global environmentally-extended MRIO database; free with registration."
   ie: [lca]
+  topic: [io]
   checked: 2026-07
 - id: unep-irp-material-flows
   title: UNEP IRP Global Material Flows Database
@@ -352,6 +354,7 @@
   url: https://www.climatechange.ai/tutorials
   kind: course
   blurb: "Worked notebooks that open in Colab, many with a walkthrough video. Most cover buildings, power systems and satellite imagery; none is on LCA or waste yet."
+  topic: [buildings, energy]
   ml: [remote-sensing]
   checked: 2026-11
   status: proposal

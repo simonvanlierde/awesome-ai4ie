@@ -1,13 +1,14 @@
 // How resources.yaml entries are picked and shown by <Resources />. Pure
 // functions, so the tests cover them without an Astro render.
 import type { ResourceEntry, ResourceKind, TOOL_GROUPS } from "../data/schemas";
-import type { IeTag, MlTag } from "../data/tags";
+import type { IeTag, MlTag, TopicTag } from "../data/tags";
 
 export interface ResourceFilter {
   kind?: ResourceKind;
   group?: (typeof TOOL_GROUPS)[number];
   /** An IE tag, "any" for entries with at least one, "none" for entries with none. */
   ie?: IeTag | "any" | "none";
+  topic?: TopicTag;
   ml?: MlTag;
 }
 
@@ -19,6 +20,7 @@ export function pickResources(entries: ResourceEntry[], f: ResourceFilter): Reso
       (e) =>
         (!f.kind || e.kind === f.kind) &&
         (!f.group || e.group === f.group) &&
+        (!f.topic || e.topic.includes(f.topic)) &&
         (!f.ml || e.ml.includes(f.ml)) &&
         (!f.ie ||
           (f.ie === "any"

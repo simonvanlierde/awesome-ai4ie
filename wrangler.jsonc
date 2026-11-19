@@ -1,0 +1,15 @@
+// The site on Cloudflare Workers: the static Astro build in dist/, with headers from
+// public/_headers. CI deploys main with `wrangler deploy` and each pull request with
+// `wrangler preview --name pr-<number>` (.github/workflows/ci.yml).
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "awesome-ai4ie",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  },
+  // Required for `wrangler preview`; Previews need no settings of their own yet.
+  "previews": {},
+  "observability": { "enabled": true }
+}

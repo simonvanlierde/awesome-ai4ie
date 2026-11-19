@@ -6,6 +6,8 @@ dist/
 coverage/
 # dependencies
 node_modules/
+# `wrangler dev` local state
+.wrangler/
 # misc
 .DS_Store
 npm-debug.log*

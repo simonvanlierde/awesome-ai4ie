@@ -102,6 +102,7 @@
   doi: "10.1021/acs.est.7b02862"
   blurb: "Early proof that ANNs can screen chemical impacts orders of magnitude faster than full characterization."
   ie: [lca]
+  topic: [chemicals]
   ml: [tabular-ml]
   type: [method]
   added: 2026-07
@@ -233,6 +234,7 @@
   doi: "10.1038/s41928-026-01653-w"
   blurb: "AI agents build electronics inventories from PCB photos and datasheets; estimates land within 5-19% of company-reported footprints, not of independent LCAs."
   ie: [lca]
+  topic: [electronics]
   ml: [cv, llm]
   type: [method]
   added: 2026-11
@@ -254,6 +256,7 @@
   arxiv: "2611.07947"
   blurb: "LLM agents design a chemical process on Git-versioned files; read it for the pattern: every value records its origin and calculations run outside the model."
   ie: [lca]
+  topic: [chemicals]
   ml: [llm]
   type: [method]
   added: 2026-11
@@ -297,6 +300,7 @@
   arxiv: "2606.26857"
   blurb: "A retrieval-augmented GPT-5 nano pipeline turns LCA hotspots into a 2030 hydrogen roadmap for Italian apples; a proof-of-concept, with benchmarking left to future work."
   ie: [lca]
+  topic: [food]
   ml: [llm]
   type: [method]
   added: 2026-11
@@ -318,6 +322,7 @@
   doi: "10.1038/s41597-026-06699-1"
   blurb: "Open ML-ready emission-factor tables from Exiobase 3.8.2 (49 regions, 1995-2022) with a GHG regression baseline where gradient boosting nearly matches deep models."
   ie: [lca]
+  topic: [io]
   ml: [tabular-ml]
   type: [dataset]
   added: 2026-11
@@ -329,6 +334,7 @@
   doi: "10.1007/s44498-026-00010-6"
   blurb: "N-BEATS forecasts of the AWARE water-scarcity factor for 1,463 large basins to 2032: it picks up seasonality but not long-term trends. Code and forecasts on Zenodo."
   ie: [lca]
+  topic: [water]
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
@@ -340,6 +346,7 @@
   doi: "10.1016/j.greenca.2025.05.004"
   blurb: "Review of ML models that predict chemicals' life-cycle impacts from molecular structure: the largest training set has 547 data points and much industry data is unpublished."
   ie: [lca]
+  topic: [chemicals]
   ml: [tabular-ml]
   type: [review]
   added: 2026-11
@@ -351,6 +358,7 @@
   doi: "10.1111/jiec.13528"
   blurb: "LCA of a bakery demand-forecasting service: ML cut returns about 30%, and avoided-return benefits outweigh the service's own impacts by one to three orders of magnitude."
   ie: [lca, eol]
+  topic: [food]
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
@@ -363,6 +371,7 @@
   doi: "10.1016/j.envint.2019.105393"
   blurb: "Random forest on physical-chemical properties estimates missing USEtox ecotoxicity HC50 (test R2 0.63, beating ECOSAR) and fills characterization factors for 552 chemicals."
   ie: [lca]
+  topic: [chemicals]
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
@@ -374,6 +383,7 @@
   doi: "10.1021/acs.est.2c04945"
   blurb: "ANNs predict six life-cycle impacts of 187 Ecoinvent organic chemicals; feature and source-data selection give R2 0.73-0.86, but the small sample risks overfitting."
   ie: [lca]
+  topic: [chemicals]
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
@@ -385,6 +395,7 @@
   doi: "10.1016/j.compchemeng.2025.109217"
   blurb: "ANN and XGBoost predict cradle-to-gate impacts of 350 chemicals from 10 properties; ANN test R2 is 0.957 for human health but only 0.599 for global warming."
   ie: [lca]
+  topic: [chemicals]
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
@@ -396,6 +407,7 @@
   doi: "10.1016/j.jhazmat.2026.143071"
   blurb: "Eight ML models predict freshwater ecotoxicity of nanomaterials from 837 samples; AdaBoost is best (test R2 0.681) and Monte Carlo gives graphene effect factors."
   ie: [lca]
+  topic: [chemicals]
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
@@ -407,6 +419,7 @@
   doi: "10.1016/j.jhydrol.2023.130171"
   blurb: "Random forest and LightGBM emulate AquaCrop water footprints of four Chinese grain crops (site R2 0.70-0.82); the models learn simulator output, not measurements."
   ie: [lca]
+  topic: [food, water]
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
@@ -418,6 +431,7 @@
   doi: "10.1029/2024ef005061"
   blurb: "Gradient-boosted trees and SHAP on 18,067 Chinese diet records rank what drives individual dietary water footprint; AUC-PR is 0.73 against 0.71 for logistic regression."
   ie: [lca]
+  topic: [food, water]
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
@@ -429,7 +443,79 @@
   doi: "10.1002/ieam.4954"
   blurb: "An ANN, Delphi-set input bounds and a genetic algorithm on LCA data for rain-fed pomegranate in Iran cut modelled global warming by 46%; the result is not validated."
   ie: [lca]
+  topic: [food]
   ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+
+- id: dingCharacterizingChemicalToxicity2026
+  title: "Characterizing chemical toxicity for life cycle assessment using machine learning and deep learning models based on environmental footprint-methodological comparison & textile case study"
+  authors: ["Ding, T."]
+  etAl: true
+  year: 2026
+  doi: "10.1039/d6su00023a"
+  blurb: "Five ML/DL models predict EF 3.1 toxicity characterization factors from SMILES (R2 0.44-0.67); omitting uncharacterised chemicals understated a textile case by up to about 60%."
+  ie: [lca]
+  topic: [chemicals]
+  ml: [tabular-ml, foundation]
+  type: [method]
+  added: 2026-11
+- id: zhaoUsingDeepLearning2022
+  title: "Using deep learning to fill data gaps in environmental footprint accounting"
+  authors: ["Zhao, B."]
+  etAl: true
+  year: 2022
+  doi: "10.1021/acs.est.2c01640"
+  blurb: "A GRAS+DNN hybrid predicts next-year US 71-sector IO tables; on the cells GRAS handles worst, median error falls from 37% to 11%, but it needs the target year's marginal totals."
+  ie: [lca]
+  topic: [io]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: yuPredictingEnvironmentalImpacts2024
+  title: "Predicting environmental impacts of smallholder wheat production by coupling life cycle assessment and machine learning"
+  authors: ["Yu, C."]
+  etAl: true
+  year: 2024
+  doi: "10.1016/j.scitotenv.2024.171097"
+  blurb: "Random forests trained on LCA results of 274 smallholder wheat farms project eight impacts to 2100 under three SSPs; test R2 spans 0.69 to 0.94, 10-fold CV 0.61 to 0.86."
+  ie: [lca]
+  topic: [food]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: daiGaussianProcessRegression2022
+  title: "Gaussian process regression as a replicable, streamlined approach to inventory and uncertainty analysis in life cycle assessment"
+  authors: ["Dai, T."]
+  etAl: true
+  year: 2022
+  doi: "10.1021/acs.est.1c04252"
+  blurb: "Gaussian process regression fills missing US crop nitrogen-fertiliser inventory data with prediction intervals, more accurate than the usual national or annual averages."
+  ie: [lca]
+  topic: [food]
+  ml: [uncertainty, tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: akramiAddressingUncertaintyMachine2025
+  title: "Addressing uncertainty in machine learning-integrated life cycle assessment (ML+LCA)"
+  authors: ["Akrami, M."]
+  etAl: true
+  year: 2025
+  doi: "10.1016/j.jenvman.2025.126225"
+  blurb: "Adds ML and LCA uncertainty to an open hydrothermal-biomass ML+LCA model: with both, GWP spans -257 to 344 kg CO2-eq/Mt DW. Only 6 of 45 ML+LCA studies it surveys consider uncertainty."
+  ie: [lca]
+  ml: [uncertainty, tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: nouriConversationalAIRealtime2026
+  title: "Conversational AI for real-time life cycle assessment"
+  authors: ["Nouri, A.", "Hu, M."]
+  year: 2026
+  doi: "10.1016/j.jclepro.2026.148820"
+  blurb: "A GPT-4 chat layer over an EN 15804 LCA engine recalculates in under a second, within 2% of openLCA in sensitivity runs; usability SUS 65.18 from 14 pilot users."
+  ie: [lca]
+  topic: [buildings]
+  ml: [llm]
   type: [method]
   added: 2026-11
 
@@ -442,6 +528,7 @@
   doi: "10.1021/acs.est.0c05642"
   blurb: "National material stock maps at 10 m from free satellite data and OSM, no cadastre needed; ~5 Gt Austria, ~38 Gt Germany."
   ie: [mfa]
+  topic: [buildings]
   ml: [remote-sensing, tabular-ml]
   type: [method]
   added: 2026-07
@@ -453,6 +540,7 @@
   doi: "10.1111/jiec.13585"
   blurb: "Global building material stocks (547 Gt) at 90 m from Earth observation, with an honest 53–200% validation spread."
   ie: [mfa]
+  topic: [buildings]
   ml: [remote-sensing]
   type: [method]
   added: 2026-07
@@ -463,6 +551,7 @@
   doi: "10.1016/j.resconrec.2021.105509"
   blurb: "Night-lights radiance as a continent-scale proxy for built-up volume: MFA without a single site visit."
   ie: [mfa]
+  topic: [buildings]
   ml: [remote-sensing]
   type: [method]
   added: 2026-07
@@ -474,6 +563,7 @@
   doi: "10.1111/jiec.13356"
   blurb: "Feature-fusion deep model beats single-source baselines for Beijing's building stock (<14% total error), but still needs ground data."
   ie: [mfa]
+  topic: [buildings]
   ml: [remote-sensing]
   type: [method]
   added: 2026-07
@@ -485,6 +575,7 @@
   doi: "10.1111/jiec.13591"
   blurb: "Street-view CV predicts floor area (~19% MAPE) and age (~70%) in Toronto, and degrades sharply in other cities; feasibility, not production."
   ie: [mfa]
+  topic: [buildings]
   ml: [cv]
   type: [method]
   added: 2026-07
@@ -496,6 +587,7 @@
   doi: "10.1111/jiec.13198"
   blurb: "Mobile sensing and CV count doors and windows across a whole neighborhood at accuracy comparable to manual surveys."
   ie: [mfa, "urban-mining"]
+  topic: [buildings]
   ml: [cv, segmentation]
   type: [method]
   added: 2026-07
@@ -507,6 +599,7 @@
   doi: "10.1111/jiec.70048"
   blurb: "Predicts interior walls and rooms from what's visible outside, facade images included: ML as a shortcut around impossible surveys."
   ie: [mfa, "urban-mining"]
+  topic: [buildings]
   ml: [tabular-ml, cv]
   type: [method]
   added: 2026-07
@@ -519,6 +612,7 @@
   doi: "10.1111/jiec.13232"
   blurb: "Regression trees fill in missing road-layer data and Cox/Weibull lifetime models drive a dynamic MFA of Norway's roads to 2050; the authors say results illustrate the method only."
   ie: [mfa]
+  topic: [lifetime]
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
@@ -532,6 +626,7 @@
   doi: "10.1111/jiec.13279"
   blurb: "Deployed label-OCR pipeline for e-waste identification; reads 95.7% of labels in repair shops but 39.7% at the recycler."
   ie: [eol]
+  topic: [electronics]
   ml: [cv, nlp-extraction]
   type: [method]
   added: 2026-07
@@ -575,6 +670,7 @@
   doi: "10.1007/s10163-024-01961-3"
   blurb: "A CNN and a weight sensor identify individual device models on a sorting line: identity recovery under real EoL conditions."
   ie: [eol]
+  topic: [electronics]
   ml: [cv]
   type: [method]
   added: 2026-07
@@ -586,6 +682,7 @@
   doi: "10.1016/j.wasman.2025.114904"
   blurb: "Camera-based deep learning estimates the composition of shredded WEEE on a pilot-scale industrial sorter: CV feeding MFA directly."
   ie: [eol, mfa]
+  topic: [electronics]
   ml: [cv, segmentation]
   type: [method]
   added: 2026-07
@@ -630,6 +727,7 @@
   doi: "10.48550/ARXIV.2603.27441"
   blurb: "Head-to-head of foundation vs. lightweight segmenters on opened e-waste: what 'SAM needs a class layer' looks like in practice."
   ie: [eol]
+  topic: [electronics]
   ml: [cv, segmentation, foundation]
   type: [method]
   added: 2026-07
@@ -641,6 +739,7 @@
   doi: "10.48550/ARXIV.2509.23048"
   blurb: "A full working cell, from perception to manipulation, for selective phone disassembly; where the integration problems live."
   ie: [eol]
+  topic: [electronics]
   ml: [cv, segmentation]
   type: [method]
   added: 2026-07
@@ -683,6 +782,7 @@
   doi: "10.3390/a17120562"
   blurb: "Survey of ML and data-driven methods in remanufacturing: an LDA topic map of about 6000 Web of Science papers, then applications by task; names data curation and explainability as open problems."
   ie: [eol]
+  topic: [lifetime]
   ml: [cv, tabular-ml]
   type: [review]
   added: 2026-11
@@ -694,6 +794,7 @@
   doi: "10.1016/j.procir.2021.01.107"
   blurb: "Concept for ML-assisted identification, inspection and sorting of returned cores, from 10 remanufacturer interviews; a vision test on 1,440 automotive parts reaches 96.36% on same-part images."
   ie: [eol]
+  topic: [lifetime]
   ml: [cv]
   type: [method]
   added: 2026-11
@@ -705,6 +806,7 @@
   doi: "10.1016/j.procir.2024.12.143"
   blurb: "Detector-prompted SAM segments laptop scratches and K3M thinning measures their length for reuse grading: 83.7% mAP, 1.60 mm mean error; over 90% of the scratches were made by hand."
   ie: [eol]
+  topic: [electronics, lifetime]
   ml: [segmentation, foundation]
   type: [method]
   added: 2026-11
@@ -715,6 +817,7 @@
   doi: "10.1016/j.compenvurbsys.2026.102481"
   blurb: "Gradient-boosted trees rank Swiss buildings by demolition risk 1 to 4 years ahead; the top 0.1% of the 4-year ranking is 85% precise, but data are on request only."
   ie: [urban-mining]
+  topic: [buildings, lifetime]
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
@@ -775,7 +878,19 @@
   type: [method]
   added: 2026-11
 
-# ── Uncertainty & Bayesian methods ───────────────────────────────────────────
+- id: wangExploringMultidimensionalFactors2022
+  title: "Exploring the multidimensional factors and emergence mechanisms of industrial symbiotic relationships based on machine learning"
+  authors: ["Wang, S."]
+  etAl: true
+  year: 2022
+  doi: "10.1016/j.jclepro.2022.135169"
+  blurb: "XGBoost and SHAP on a survey of 201 firms in one Chinese county rank 37 factors behind industrial symbiosis; sociopolitical factors weigh most, and the data are not shareable."
+  ie: [symbiosis]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+
+# ── Uncertainty & Bayesian MFA ───────────────────────────────────────────
 - id: dongExpertElicitationData2023
   title: "Expert elicitation and data noise learning for material flow analysis using Bayesian inference"
   authors: ["Dong, J."]
@@ -783,8 +898,9 @@
   year: 2023
   doi: "10.1111/jiec.13399"
   blurb: "Expert-elicited priors and learned data noise for Bayesian MFA, tested on 2012 US steel flows with eight experts; multi-year data cut noise uncertainty further."
-  ie: [mfa, uncertainty]
-  ml: [tabular-ml]
+  ie: [mfa]
+  topic: [metals]
+  ml: [tabular-ml, uncertainty]
   type: [method]
   added: 2026-11
 - id: wangBayesianMaterialFlow2024
@@ -794,8 +910,9 @@
   year: 2024
   doi: "10.1111/jiec.13550"
   blurb: "Bayesian MFA that relaxes mass balance and handles disaggregated processes; on a global aluminum cycle with about 180 variables, weak priors still captured the reported flows."
-  ie: [mfa, uncertainty]
-  ml: [tabular-ml]
+  ie: [mfa]
+  topic: [metals]
+  ml: [tabular-ml, uncertainty]
   type: [method]
   added: 2026-11
 - id: liaoIntelligentDataCollection2025
@@ -805,8 +922,9 @@
   year: 2025
   doi: "10.1111/jiec.70111"
   blurb: "Bayesian optimal experimental design picks which MFA data to collect to cut network-structure uncertainty; on US steel the best pair is not the two best single flows."
-  ie: [mfa, uncertainty]
-  ml: [tabular-ml]
+  ie: [mfa]
+  topic: [metals]
+  ml: [tabular-ml, uncertainty]
   type: [method]
   added: 2026-11
 - id: baehrPredictingProductLife2024
@@ -816,8 +934,9 @@
   year: 2024
   doi: "10.1016/j.spc.2024.11.005"
   blurb: "ANN on construction EPDs predicts life cycle GWP (R2 0.97 with a residual-GPR uncertainty layer); uncertainty is high below 3 kg CO2e, and EPD reporting gaps limit use."
-  ie: [lca, uncertainty]
-  ml: [tabular-ml]
+  ie: [lca]
+  topic: [buildings]
+  ml: [tabular-ml, uncertainty]
   type: [method]
   added: 2026-11
 
@@ -828,8 +947,55 @@
   year: 2025
   doi: "10.1016/j.resconrec.2025.108135"
   blurb: "Applies Bayesian MFA to England's 2019 construction aggregates: reported data cover 20% of the system, expert priors fill the rest, giving 146 stocks and flows with credible intervals."
-  ie: [mfa, uncertainty]
+  ie: [mfa]
+  topic: [buildings]
+  ml: [tabular-ml, uncertainty]
+  type: [method]
+  added: 2026-11
+
+# ── Topics with no IE field yet ───────────────────────────────────────────────
+- id: kuCapabilitiesLimitationsAI2024
+  title: "Capabilities and limitations of AI large language models (LLMs) for materials criticality research"
+  authors: ["Ku, A. Y.", "Hool, A."]
+  year: 2024
+  doi: "10.1007/s13563-024-00478-3"
+  blurb: "Five chatbots scored 53-77% (mean 66%) on a 46-question critical-raw-materials risk-manager exam; follow-ups show prompt sensitivity and training-cutoff limits."
+  topic: [metals, supply-risk]
+  ml: [llm]
+  type: [meta]
+  added: 2026-11
+- id: tautoratDirectionsInnovationDecarbonization2023
+  title: "Directions of innovation for the decarbonization of cement and steel production: a topic modeling-based analysis"
+  authors: ["Tautorat, P."]
+  etAl: true
+  year: 2023
+  doi: "10.1016/j.jclepro.2023.137055"
+  blurb: "LDA topic model of 9,513 Scopus articles on cement and steel decarbonisation (17 topics each): research moved from efficiency toward CCS/CCU and alternative raw materials."
+  topic: [energy]
+  ml: [nlp-extraction]
+  type: [meta]
+  added: 2026-11
+- id: lawleyGeospatialDataDeep2024
+  title: "Geospatial data and deep learning expose ESG risks to critical raw materials supply: the case of lithium"
+  authors: ["Lawley, C. J. M."]
+  etAl: true
+  year: 2024
+  doi: "10.3389/esss.2024.10109"
+  blurb: "Fuzzy logic, naive Bayes and deep learning on public geospatial ESG data predict resource-conflict events (test AUC 0.91 deep learning) and rate lithium deposits by risk."
+  topic: [metals, supply-risk]
   ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+
+- id: zhangLargeLanguageModeldriven2026
+  title: "Large language model-driven analysis of supply risk dynamics in global electric vehicle supply chain"
+  authors: ["Zhang, L."]
+  etAl: true
+  year: 2026
+  doi: "10.1016/j.eiar.2026.108378"
+  blurb: "GPT-4o with few-shot prompts extracts 2,843 disruption events from 3,125 news articles on the EV supply chain (2006-2025); geopolitical risk is the most frequent type by 2024."
+  topic: [metals, supply-risk]
+  ml: [llm, nlp-extraction]
   type: [method]
   added: 2026-11
 

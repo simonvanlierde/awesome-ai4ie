@@ -4,9 +4,9 @@ import { pickResources, textParts } from "./resources";
 
 const base = { url: "https://example.org", blurb: "Something worth reading.", checked: "2026-11" };
 const ENTRIES: ResourceEntry[] = [
-  { ...base, id: "a", title: "a", kind: "tool", group: "local", ie: [], ml: ["llm"] },
-  { ...base, id: "b", title: "B", kind: "dataset", ie: ["lca"], ml: [] },
-  { ...base, id: "c", title: "C", kind: "dataset", ie: [], ml: ["tabular-ml"] },
+  { ...base, id: "a", title: "a", kind: "tool", group: "local", ie: [], topic: [], ml: ["llm"] },
+  { ...base, id: "b", title: "B", kind: "dataset", ie: ["lca"], topic: ["io"], ml: [] },
+  { ...base, id: "c", title: "C", kind: "dataset", ie: [], topic: [], ml: ["tabular-ml"] },
 ];
 const ids = (f: Parameters<typeof pickResources>[1]) =>
   pickResources([...ENTRIES].reverse(), f).map((e) => e.id);
@@ -17,6 +17,7 @@ describe("pickResources", () => {
     expect(ids({ kind: "dataset" })).toEqual(["b", "c"]);
     expect(ids({ group: "local" })).toEqual(["a"]);
     expect(ids({ ml: "llm" })).toEqual(["a"]);
+    expect(ids({ topic: "io" })).toEqual(["b"]);
     expect(ids({ kind: "dataset", ie: "lca" })).toEqual(["b"]);
   });
   it("reads ie any and none as with and without an IE tag", () => {

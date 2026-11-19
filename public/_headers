@@ -1,0 +1,9 @@
+# Response headers for every static file the Worker serves (wrangler.jsonc). The
+# Content-Security-Policy itself stays a <meta> tag that Astro writes with script hashes
+# (astro.config.mjs); a meta tag cannot set frame-ancestors, so the header adds it.
+# Previews on workers.dev get X-Robots-Tag: noindex from Cloudflare.
+/*
+  Strict-Transport-Security: max-age=31536000
+  Content-Security-Policy: frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

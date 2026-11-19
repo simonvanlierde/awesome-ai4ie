@@ -34,7 +34,7 @@ body:
       description: One or two sentences for the list. Who is it for, and what will they learn or find? Honest limits help more than praise.
     validations:
       required: true
-  # The two tag dropdowns list the labels in src/data/tags.ts; forms.test.ts keeps them in step.
+  # The three tag dropdowns list the labels in src/data/tags.ts; forms.test.ts keeps them in step.
   - type: dropdown
     id: ie
     attributes:
@@ -47,7 +47,23 @@ body:
         - Waste, EoL & circularity
         - Urban mining & secondary resources
         - Symbiosis & by-product exchange
-        - Uncertainty & Bayesian methods
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      description: The system or problem it is about. Pick all that apply, or none.
+      multiple: true
+      options:
+        - Buildings & construction
+        - Chemicals & toxicity
+        - Electronics & e-waste
+        - Metals & critical materials
+        - Agriculture & food
+        - Water
+        - Product lifetime, reuse & repair
+        - Energy & industrial decarbonisation
+        - Supply chains & resource security
+        - Input–output & economy-wide footprints
   - type: dropdown
     id: ml
     attributes:
@@ -65,6 +81,7 @@ body:
         - Generative models
         - Foundation models & transformers
         - Anomaly & condition detection
+        - Uncertainty & probabilistic ML
   - type: checkboxes
     id: checks
     attributes:
