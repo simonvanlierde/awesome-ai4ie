@@ -9,6 +9,7 @@
 // lead stays rejected. No API key or secret needed.
 import { readFile, writeFile } from "node:fs/promises";
 import process from "node:process";
+import { pathToFileURL } from "node:url";
 import { parse, stringify } from "yaml";
 
 const UA = "awesome-ai4ie-candidates (https://github.com/simonvanlierde/awesome-ai4ie)";
@@ -126,6 +127,8 @@ async function main() {
   // days after it appears is missed; a premium key would allow from_created_date.
   const since = arg("since", new Date(Date.now() - 14 * 864e5).toISOString().slice(0, 10));
   const limit = Number(arg("limit", 25));
+  // shortcut: one page of results; page with cursor=* if a backfill ever needs more.
+  if (!(limit > 0 && limit <= 100)) throw new Error("--limit must be 1 to 100");
   const filter = [
     `title_and_abstract.search:${QUERY}`,
     `from_publication_date:${since}`,
@@ -163,4 +166,4 @@ const HEADER = `# Leads from OpenAlex (scripts/openalex-candidates.mjs), for a c
 # The script never re-adds a DOI that is here, so keep rejected leads.
 `;
 
-if (import.meta.url === `file://${process.argv[1]}`) await main();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) await main();
