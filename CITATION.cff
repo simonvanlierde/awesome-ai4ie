@@ -11,9 +11,9 @@ authors:
     orcid: "https://orcid.org/0009-0006-6953-909X"
 repository-code: "https://github.com/simonvanlierde/awesome-ai4ie"
 url: "https://ai4ie.org/"
-license:
-  - MIT
-  - CC-BY-4.0
+# A citation is to the guide's content, which is CC-BY-4.0 (LICENSE-CONTENT). The site's
+# code is MIT (LICENSE). CFF reads a licence list as either-or, so it can't say both apply.
+license: CC-BY-4.0
 keywords:
   - "ai"
   - "awesome-list"
