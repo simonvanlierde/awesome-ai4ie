@@ -65,8 +65,8 @@ export function entryText(e: {
   return `${e.title}. ${e.blurb} Tags: ${[...(e.ie ?? []), ...(e.ml ?? []), ...(e.type ?? [])].join(", ")}`;
 }
 
-// Cut-off for EMBED_MODEL and queryText(), tuned on src/data/search-eval.yaml with
-// scripts/search-eval.mjs; a model or instruction change needs a new tuning. On that
+// Cut-off for EMBED_MODEL and queryText(), tuned on the even-numbered questions of
+// src/data/search-eval.yaml with scripts/search-eval.mjs (the odd ones are held out); a model or instruction change needs a new tuning. On that
 // set the off-list questions score at most 0.495 and the weakest right answer 0.608.
 export const MIN_SCORE = 0.55;
 export const MAX_HITS = 5;

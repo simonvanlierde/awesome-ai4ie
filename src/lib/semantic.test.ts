@@ -1,8 +1,9 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 import {
   decodeVector,
+  EMBED_DIM,
   entryText,
   isPhrase,
   MAX_HITS,
@@ -38,6 +39,13 @@ describe("queryText", () => {
     const t = queryText("waste sorting");
     expect(t.startsWith("Instruct: ")).toBe(true);
     expect(t.endsWith("\nQuery: waste sorting")).toBe(true);
+  });
+
+  // MIN_SCORE is tuned for this exact wording: changing it needs a new tuning.
+  it("pins the instruction MIN_SCORE was tuned with", () => {
+    expect(queryText("q")).toBe(
+      "Instruct: Given a question, retrieve research papers that answer it\nQuery: q",
+    );
   });
 });
 
@@ -75,6 +83,22 @@ describe("decodeVector", () => {
     const v = [0.5, -0.25, 0.125];
     expect(Array.from(decodeVector(encodeVector(v)))).toEqual(v);
   });
+});
+
+describe("vector dimensions", () => {
+  it("is 1024 float32 values, 4096 bytes a row, as ci.yml checks", async () => {
+    const { encodeVector } = await import("./vectors");
+    expect(EMBED_DIM).toBe(1024);
+    expect(decodeVector(encodeVector(new Array(EMBED_DIM).fill(0)))).toHaveLength(EMBED_DIM);
+  });
+
+  it.skipIf(!existsSync("src/data/literature-vectors.json"))(
+    "holds EMBED_DIM values in every stored vector",
+    async () => {
+      const { loadVectors } = await import("./vectors");
+      for (const v of Object.values(loadVectors())) expect(decodeVector(v)).toHaveLength(EMBED_DIM);
+    },
+  );
 });
 
 describe("unit", () => {

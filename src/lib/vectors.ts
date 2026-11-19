@@ -31,6 +31,22 @@ export function loadVectors(): Record<string, string> {
   return data.model === EMBED_MODEL ? data.vectors : {};
 }
 
+/** Encoded vectors for `texts` by text key. A text already in `stored` keeps its vector and
+ * only the rest go to `embed` (not called at all when none is missing); keys of texts no
+ * longer listed are dropped. */
+export async function embedMissing(
+  texts: string[],
+  embed: (texts: string[]) => Promise<number[][]>,
+  stored: Record<string, string> = loadVectors(),
+): Promise<Record<string, string>> {
+  const missing = [...new Set(texts.filter((t) => !(textKey(t) in stored)))];
+  const fresh = missing.length ? await embed(missing) : [];
+  const byKey = new Map(missing.map((t, i) => [textKey(t), encodeVector(fresh[i])]));
+  return Object.fromEntries(
+    texts.map((t) => [textKey(t), stored[textKey(t)] ?? byKey.get(textKey(t))]),
+  );
+}
+
 /** The vectors for `entries` as the Worker loads them: each embedded entry's row in one
  * float32 file, by id, and that file's bytes. Rows follow the ids' sort order, not the
  * order given, so the index and the file agree however each caller lists the entries. */
