@@ -27,7 +27,7 @@ To edit text, you need no local setup: edit the Markdown on GitHub, or click the
 
 ### Adding a paper or an application
 
-- Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR, with a short label in `SHORT_LABELS` (the start of the full label, for Fig. 1 on the home page). Add its full label to the matching dropdown in the paper and application forms in [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) too. `pnpm test` checks that they match.
+- Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · topic · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR, with a short label in `SHORT_LABELS` (the start of the full label, for Fig. 1 on the home page); a new topic gets a line in `TOPIC_WANTED` instead, saying what work it still wants. Add its full label to the matching dropdown in the paper and application forms in [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) too. `pnpm test` checks that they match.
 - Literature entries need an `id` (the citation key), `title`, `authors`, `year`, a one-line `blurb` saying why it's worth reading, tags, and `added: YYYY-MM`.
 - Write `authors` as a list with one `"Surname, I."` per author. Add `etAl: true` when you stop before the last author.
 - Give a `doi` (the bare `10.…` id), an `arxiv` id (the bare id, such as `2401.01234`), or both.
@@ -88,7 +88,7 @@ Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUC
 - Tables are numbered by chapter: "Table 4.1" is the first table in chapter 4. Figures continue from Fig. 1 and Fig. 2 on the home page.
 - In Markdown, set the title as `<p class="table-title"><b>Table 4.1</b> …</p>` and the source as `<p class="table-src">Source: …</p>`.
 - For a figure built from the data, start from [`src/components/PathFigure.astro`](src/components/PathFigure.astro). It counts entries at build time, so its numbers stay true as entries are added.
-- A new IE field needs three things beside its tag: a short label, a `.field-<tag>` ink rule, and a `<FieldApplications ie="<tag>" />` section on the map page. The type check and `pnpm test` flag a missing one. All six inks are taken, so a seventh field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md).
+- A new IE field needs three things beside its tag: a short label, a `.field-<tag>` ink rule, and a `<FieldApplications ie="<tag>" />` section on the map page. The type check and `pnpm test` flag a missing one. Ink 6 is the one left, so a new field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md). A domain such as water or chemicals is a topic, not a field: topics take no ink.
 
 ### Checking accessibility
 
@@ -104,7 +104,7 @@ The check runs axe on every page (and the 404 page) in light and dark, at deskto
 
 See [two ways to add a demo](https://ai4ie.org/demos/#two-ways-to-add-a-demo) on the demos page. Link new demos from the matching `demo:` field in `src/data/applications.yaml`.
 
-### Adding a Claude skill
+### Adding an Agent Skill
 
 One folder per skill under `skills/`, with a `SKILL.md` and any supporting files. Start from [`skills/SKILL-template.md`](skills/SKILL-template.md), or use [`skills/ml-reproducibility/SKILL.md`](skills/ml-reproducibility/SKILL.md) as an example. Keep it generic enough that someone else can use it without editing.
 
