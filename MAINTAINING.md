@@ -158,10 +158,5 @@ go to the Worker instead, as a Workers custom domain (a zone on the same Cloudfl
    `https://<domain>/mcp` with `Accept: application/json, text/event-stream` returns 200, not 405.
 4. Change the Worker address to the domain in README.md and in the "Ask an AI assistant" section
    of `src/content/docs/literature.mdx`.
-5. Move the Cloudflare account to the Workers Paid plan ($5 a month). On the free plan, Workers AI
-   stops answering for the rest of the day once the free 10,000 neurons are used, about 230,000
-   searches. Only a flood gets there, but after the move every reader's meaning search depends on
-   it. On the paid plan, usage past the free allowance costs $0.011 per 1,000 neurons, and the
-   search caps in `wrangler.jsonc` hold a full day of flooding to about 10 cents a location.
 
 To roll back, delete the Worker's custom domain and redo the Pages steps.
