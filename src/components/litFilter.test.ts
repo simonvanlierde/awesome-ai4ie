@@ -3,7 +3,7 @@ import { emptyMessage, matchesFilter, parseView, sortEntries, toQuery } from "./
 
 const entry = { ie: ["eol"], ml: ["cv", "segmentation"], type: ["method"] };
 
-const none = { ie: [], ml: [], type: [], papers: [] };
+const none = { ie: [], topic: [], ml: [], type: [], papers: [] };
 
 describe("matchesFilter", () => {
   it("matches everything when no filters are active", () => {
@@ -16,6 +16,7 @@ describe("matchesFilter", () => {
   });
   it("treats missing tag arrays as empty", () => {
     expect(matchesFilter({ type: ["landmark-ml"] }, { ...none, ie: ["lca"] })).toBe(false);
+    expect(matchesFilter({ topic: ["energy"] }, { ...none, topic: ["energy"] })).toBe(true);
     expect(matchesFilter({ type: ["landmark-ml"] }, { ...none, type: ["landmark-ml"] })).toBe(true);
   });
   it("narrows to specific entry ids via papers", () => {
@@ -42,6 +43,7 @@ describe("parseView", () => {
   it("round-trips through toQuery, sort included", () => {
     const filter = {
       ie: ["eol"],
+      topic: ["electronics"],
       ml: ["cv", "depth"],
       type: [],
       papers: ["kirillovSegmentAnything2023"],

@@ -210,7 +210,7 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
             </a>
             <p className="lit-blurb">{e.blurb}</p>
             <span className="lit-tags">
-              <TagChips ie={e.ie} ml={e.ml} type={e.type} />
+              <TagChips ie={e.ie} topic={e.topic} ml={e.ml} type={e.type} />
             </span>
           </li>
         ))}

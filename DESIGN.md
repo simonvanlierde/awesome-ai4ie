@@ -21,13 +21,14 @@ colour; everything else is slate grey.
 | 3 verdigris teal | Best practices | MFA |
 | 4 brass | Tools | Urban mining |
 | 5 indigo | Demos | Symbiosis & by-product exchange |
-| 6 moss | none | Uncertainty & Bayesian methods |
+| 6 moss | none | free, for the next field |
 
 Cobalt is also the accent: links, focus rings, the primary button.
 
 - **One meaning per ink.** An ink marks its chapter and its field, nothing else, never
-  decoration. A new chapter or field needs an ink no other meaning uses; all six are taken.
-  Ink 6 marks a field only, so the five chapters keep five tab colours.
+  decoration. A new chapter or field needs an ink no other meaning uses. Ink 6 is the one
+  left, for a field only, so the five chapters keep five tab colours. Topics, techniques
+  and paper types take no ink: that keeps the inks few enough to tell apart.
 - **Swatch, not fill.** Outside Fig. 1, an IE field shows its ink as a small square beside
   its label, never as a filled chip or coloured text.
 - **One hue for counts.** The map grid shades counts in cobalt at three strengths (1, 2,
