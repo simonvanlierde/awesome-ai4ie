@@ -517,6 +517,66 @@
   type: [method]
   added: 2026-11
 
+# ── Input-output ─────────────────────────────────────────────────────────────
+- id: balajiCaMLCarbonFootprinting2023
+  title: "CaML: carbon footprinting of household products with zero-shot semantic text similarity"
+  authors: ["Balaji, B.", "Vunnava, V. S. G.", "Guest, G.", "Kramer, J."]
+  year: 2023
+  doi: "10.1145/3543507.3583882"
+  blurb: "A pretrained sentence transformer ranks EIO-LCA industry sectors for a product's text, zero-shot; on 40K annotated products the kgCO2e/$ error falls from 51% MAPE with category mapping to 22%."
+  ie: [eeio, lca]
+  ml: [nlp-extraction, foundation]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: guoGroupReasoningEmission2025
+  title: "Group reasoning emission estimation networks"
+  authors: ["Guo, Y.", "Qian, X.", "Credit, K.", "Ma, J."]
+  year: 2025
+  arxiv: "2502.06874"
+  blurb: "Fine-tuned Sentence-BERT and grouped LLM classifiers map 20,850 company descriptions to 1,114 NAICS sectors tied to carbon intensity factors (83.68% top-1); company-level MAPE is 45.88%. Preprint."
+  ie: [eeio]
+  ml: [llm, nlp-extraction]
+  type: [method, dataset]
+  added: 2026-11
+  status: proposal
+- id: abdellaSustainabilityAssessmentModeling2020
+  title: "Sustainability assessment and modeling based on supervised machine learning techniques: the case for food consumption"
+  authors: ["Abdella, G. M."]
+  etAl: true
+  year: 2020
+  doi: "10.1016/j.jclepro.2019.119661"
+  blurb: "Scores US food sectors with input-output sustainability assessment, then clusters them with k-means and models the clusters with logistic regression (91.67% accuracy); animal slaughtering dominates most impacts."
+  ie: [eeio]
+  topic: [food]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: haoPatternsDriversProjections2025
+  title: "Patterns, drivers and projections of carbon footprints in urban Chinese households: based on interdisciplinary approaches"
+  authors: ["Hao, H.", "Guo, X.", "Wang, C.", "Yang, J."]
+  year: 2025
+  doi: "10.1016/j.jenvman.2025.127436"
+  blurb: "Environmental input-output footprints for 283,529 household records in 208 Chinese cities (2002-2020); random forests with SHAP rank the drivers, led by GDP per capita, population density and extreme weather."
+  ie: [eeio]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: maBPNNbasedEcologicallyExtended2023
+  title: "A BPNN-based ecologically extended input-output model for virtual water metabolism network management of Kazakhstan"
+  authors: ["Ma, Z.", "Liu, J.", "Li, Y.", "Zhang, H.", "Fang, L."]
+  year: 2023
+  doi: "10.1007/s11356-023-25280-6"
+  blurb: "A back-propagation neural network coupled to an ecologically extended input-output model predicts Kazakhstan's water use to 2025 under GDP, value-added and final-demand scenarios."
+  ie: [eeio]
+  topic: [water]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+  status: proposal
+
 # ── Socio-economic metabolism ────────────────────────────────────────────────
 - id: haberlHighResolutionMaps2021
   title: "High-resolution maps of material stocks in buildings and infrastructures in Austria and Germany"
@@ -887,6 +947,66 @@
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
+
+- id: yeoCollaborationPlatformEnabling2019
+  title: "A collaboration platform for enabling industrial symbiosis: towards creating a self-learning waste-to-resource database for recommending industrial symbiosis transactions using text analytics"
+  authors: ["Yeo, Z."]
+  etAl: true
+  year: 2019
+  doi: "10.1016/j.procir.2019.01.015"
+  blurb: "Text analytics fill the waste-to-resource database behind a symbiosis recommender, replacing a hand-built knowledge base that is costly to maintain."
+  ie: [symbiosis]
+  ml: [nlp-extraction]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: vancapelleveenInfluenceKnowledgeDesign2018
+  title: "The influence of knowledge in the design of a recommender system to facilitate industrial symbiosis markets"
+  authors: ["Van Capelleveen, G."]
+  etAl: true
+  year: 2018
+  doi: "10.1016/j.envsoft.2018.04.004"
+  blurb: "Compares a knowledge-based input-output recommender with an association-rule one for waste-to-industry matches on workshop survey data; explicit knowledge brings many data problems, so implicit-knowledge methods may suit better."
+  ie: [symbiosis]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: chenScaleEffectsSymbiotic2024
+  title: "The scale effects of symbiotic relationships under complex driving factors: an empirical study in China"
+  authors: ["Chen, H."]
+  etAl: true
+  year: 2024
+  doi: "10.1111/jiec.13583"
+  blurb: "A random forest and a Shannon index on a survey of 324 firms in Chun'an, China, show that the factors behind symbiotic relationships differ by geographic scale; symbiosis is likelier when several strong factors act together."
+  ie: [symbiosis]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: fangStudyRecyclingMaterials2025
+  title: "A study of recycling materials recommendation system in Taiwan"
+  authors: ["Fang, I.-W.", "Yang, C.-C.", "Lo, S.-F."]
+  year: 2025
+  doi: "10.1080/02533839.2025.2567945"
+  blurb: "Word2Vec similarity between waste types and raw materials in Taiwan's real-time Industrial Waste Report and Management System recommends where a waste can be reused."
+  ie: [symbiosis]
+  ml: [nlp-extraction]
+  type: [method]
+  added: 2026-11
+  status: proposal
+- id: mastioAdaptiveAgentsSpatial2026
+  title: "Adaptive agents in spatial double-auction markets: modeling the emergence of industrial symbiosis"
+  authors: ["Mastio, M."]
+  etAl: true
+  year: 2026
+  doi: "10.65109/EXII2056"
+  arxiv: "2512.17979"
+  blurb: "Firms trade by-products in a spatial double auction, learning bids by reinforcement learning against transport costs, disposal penalties and scarcity; maps the conditions under which decentralised exchange becomes stable and efficient."
+  ie: [symbiosis]
+  type: [method]
+  added: 2026-11
+  status: proposal
 
 # ── Uncertainty & Bayesian MFA ───────────────────────────────────────────
 - id: dongExpertElicitationData2023

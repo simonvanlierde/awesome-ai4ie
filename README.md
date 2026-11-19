@@ -45,6 +45,7 @@ flowchart LR
   astro --> dist["Static site<br/>dist/"]
   dist -->|axe scan in CI| ci["CI<br/>.github/workflows/ci.yml"]
   ci -->|push to main| pages_host["GitHub Pages<br/>ai4ie.org"]
+  ci -->|push to main| worker["Cloudflare Worker<br/>worker/"]
 ```
 
 - [`src/data/schemas.ts`](src/data/schemas.ts) defines the shape of an entry, and [`src/data/vocabulary.yaml`](src/data/vocabulary.yaml) the tag vocabulary that the entries, the issue forms and the home page's Fig. 1 share. The site lists it at [/vocabulary/](https://ai4ie.org/vocabulary/), also as SKOS.
@@ -64,9 +65,9 @@ A read-only [MCP](https://modelcontextprotocol.io) server runs on the site's Wor
 | `list_resources(kind?, field?, topic?)` | Tools, datasets, courses and other resources, filtered by kind, IE field and topic |
 | `get_skill(name)` | The `SKILL.md` text of one Agent Skill |
 
-`search_papers` is the search dialog's meaning search: the same code, the same limit of 30 questions a minute per IP address (per /64 for IPv6), and the same path for the question, which goes to Cloudflare Workers AI and is not stored ([privacy](src/content/docs/privacy.md)). When search is down it returns a tool error, not an empty list.
+`search_papers` is the search dialog's meaning search: the same code, the same limit of 30 questions a minute per IP address (per /64 for IPv6), and the same path for the question, which goes to Cloudflare Workers AI and is not stored ([privacy](src/content/docs/privacy.md)). Both share that limit, so heavy use from one address slows the dialog too. When search is down it returns a tool error, not an empty list; every tool error is JSON with a stable `error` code: `not_found`, `rate_limited` or `unavailable`. Paper ids for `get_paper` come from `search_papers` and `list_applications`.
 
-Add it to a client, for example Claude Code: `claude mcp add --transport http ai4ie https://awesome-ai4ie.simonvanlierde.workers.dev/mcp`. Other clients take the same URL as a remote server. The code is in [`worker/mcp.ts`](worker/mcp.ts); it reads the papers from `literature-index.json`, as `/api/search` does, and the rest from `mcp-data.json`.
+Add it to a client, for example Claude Code: `claude mcp add --transport http ai4ie https://awesome-ai4ie.simonvanlierde.workers.dev/mcp`. Other clients take the same URL as a remote server; only Claude Code has been tested. A client outside a browser sends no Origin header and is always let in; a browser page may call only from the server's own host or localhost. The code is in [`worker/mcp.ts`](worker/mcp.ts); it reads the papers from `literature-index.json`, as `/api/search` does, and the rest from `mcp-data.json`.
 
 ## License
 

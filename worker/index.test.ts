@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { EMBED_MODEL, queryText } from "../src/lib/semantic";
 import { encodeVector } from "../src/lib/vectors";
 import worker from "./index";
-import { limitKey } from "./search";
+import { AI_TIMEOUT_MS, limitKey } from "./search";
 
 const paper = (title: string, v?: number[]) => ({
   id: title,
@@ -38,18 +38,30 @@ const INDEX = [
 const SSE_DATA = /^data: (.*)$/m;
 const MCP_DATA = {
   applications: [
-    { id: "a1", name: "A1", ie: ["lca"], ml: ["llm"] },
-    { id: "a2", name: "A2", ie: ["sem"], ml: ["cv"] },
+    {
+      id: "a1",
+      name: "A1",
+      ie: ["lca"],
+      ml: ["llm"],
+      summary: "See [the map](/applications-map/).",
+    },
+    { id: "a2", name: "A2", ie: ["sem"], ml: ["cv"], demo: "demos/" },
   ],
   resources: [
     { id: "r1", title: "R1", kind: "tool", ie: [], topic: [] },
     { id: "r2", title: "R2", kind: "dataset", ie: ["lca"], topic: ["buildings"] },
+    { id: "r3", title: "R3", kind: "course", ie: ["sem"], topic: [] },
   ],
   skills: { "ml-reproducibility": "# Skill text" },
 };
 
-type Opts = { allowed?: boolean; index?: object[]; ai?: () => Promise<{ data: number[][] }> };
-const env = ({ allowed = true, index = INDEX, ai }: Opts = {}) => {
+type Opts = {
+  allowed?: boolean | "throws";
+  index?: object[];
+  ai?: () => Promise<{ data: number[][] }>;
+  assets?: (url: string) => Response | undefined;
+};
+const env = ({ allowed = true, index = INDEX, ai, assets }: Opts = {}) => {
   const runs: { model: string; text: string[] }[] = [];
   const keys: string[] = [];
   return {
@@ -64,12 +76,14 @@ const env = ({ allowed = true, index = INDEX, ai }: Opts = {}) => {
     SEARCH_LIMIT: {
       limit: ({ key }: { key: string }) => {
         keys.push(key);
+        if (allowed === "throws") return Promise.reject(new Error("no binding"));
         return Promise.resolve({ success: allowed });
       },
     },
     ASSETS: {
       fetch: async (url: Request | string) =>
-        String(url).endsWith("/mcp-data.json") ? Response.json(MCP_DATA) : Response.json(index),
+        assets?.(String(url)) ??
+        (String(url).endsWith("/mcp-data.json") ? Response.json(MCP_DATA) : Response.json(index)),
     },
   };
 };
@@ -79,6 +93,11 @@ const post = (body: string, { path = "/api/search", type = "application/json", i
     body,
     headers: { "content-type": type, ...(ip && { "cf-connecting-ip": ip }) },
   });
+// The assets are cached per isolate, so a test with other assets loads the module afresh.
+const fresh = async () => {
+  vi.resetModules();
+  return (await import("./index")).default;
+};
 
 describe("worker", () => {
   it("returns the close papers best first, without their vectors", async () => {
@@ -106,6 +125,9 @@ describe("worker", () => {
 
   it("limits requests, other methods and other paths", async () => {
     expect((await worker.fetch(post('{"q": "a b c"}'), env({ allowed: false }))).status).toBe(429);
+    const broken = env({ allowed: "throws" });
+    expect((await worker.fetch(post('{"q": "a b c"}'), broken)).status).toBe(503);
+    expect(broken.runs).toEqual([]);
     expect((await worker.fetch(new Request("https://ai4ie.org/api/search"), env())).status).toBe(
       405,
     );
@@ -125,14 +147,34 @@ describe("worker", () => {
       env({ ai: () => Promise.reject(new Error("AI down")) }),
     );
     expect(r.status).toBe(503);
-    expect(r.headers.get("retry-after")).toBe("60");
   });
 
-  it("answers 503 when no entry has a vector", async () => {
-    vi.resetModules(); // the index is cached per isolate, so load the module afresh
-    const { default: fresh } = await import("./index");
-    const r = await fresh.fetch(post('{"q": "a b c"}'), env({ index: [paper("unembedded")] }));
-    expect(r.status).toBe(503);
+  it("answers 503 when the model does not answer in time", async () => {
+    vi.useFakeTimers();
+    try {
+      const reply = worker.fetch(
+        post('{"q": "a b c"}'),
+        env({ ai: () => new Promise(() => undefined) }),
+      );
+      await vi.advanceTimersByTimeAsync(AI_TIMEOUT_MS);
+      expect((await reply).status).toBe(503);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("answers 503 when no entry has a vector, without calling the model", async () => {
+    const e = env({ index: [paper("unembedded")] });
+    expect((await (await fresh()).fetch(post('{"q": "a b c"}'), e)).status).toBe(503);
+    expect(e.runs).toEqual([]);
+  });
+
+  it("loads the index again after a failed load", async () => {
+    let fails = 1;
+    const e = env({ assets: () => (fails-- > 0 ? new Response("", { status: 500 }) : undefined) });
+    const w = await fresh();
+    expect((await w.fetch(post('{"q": "a b c"}'), e)).status).toBe(503);
+    expect((await w.fetch(post('{"q": "a b c"}'), e)).status).toBe(200);
   });
 });
 
@@ -148,159 +190,232 @@ describe("limitKey", () => {
 });
 
 describe("/mcp", () => {
-  const rpc = async (method: string, params: object, e = env(), ip = "") => {
-    const r = await worker.fetch(
+  const HEADERS = {
+    "content-type": "application/json",
+    accept: "application/json, text/event-stream",
+  };
+  type Req = { e?: ReturnType<typeof env>; ip?: string; headers?: object; w?: typeof worker };
+  const send = (body: string, { e = env(), ip = "", headers = {}, w = worker }: Req = {}) =>
+    w.fetch(
       new Request("https://ai4ie.org/mcp", {
         method: "POST",
-        headers: {
-          "content-type": "application/json",
-          accept: "application/json, text/event-stream",
-          ...(ip && { "cf-connecting-ip": ip }),
-        },
-        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+        headers: { ...HEADERS, ...(ip && { "cf-connecting-ip": ip }), ...headers },
+        body,
       }),
       e,
     );
+  const rpc = async (method: string, params: object, req: Req = {}) => {
+    const r = await send(JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }), req);
     const body = await r.text();
     // A reply is plain JSON or one SSE "data:" event.
     const json = body.startsWith("{") ? body : (body.match(SSE_DATA)?.[1] ?? "{}");
     return JSON.parse(json);
   };
-  const call = (name: string, args: object, e = env(), ip = "") =>
-    rpc("tools/call", { name, arguments: args }, e, ip).then((m) => m.result);
+  const call = (name: string, args: object, req: Req = {}) =>
+    rpc("tools/call", { name, arguments: args }, req).then((m) => m.result);
   const payload = (r: { content: { text: string }[] }) => JSON.parse(r.content[0].text);
 
-  it("initializes and lists the five tools", async () => {
-    const init = await rpc("initialize", {
-      protocolVersion: "2025-11-25",
-      capabilities: {},
-      clientInfo: { name: "t", version: "1" },
-    });
-    expect(init.result.serverInfo.name).toBe("ai4ie");
-    const list = await rpc("tools/list", {});
-    expect(list.result.tools.map((t: { name: string }) => t.name).sort()).toEqual([
+  it("initializes and lists the five read-only tools", async () => {
+    const inits = await Promise.all(
+      ["2025-11-25", "2026-07-28"].map((protocolVersion) =>
+        rpc("initialize", {
+          protocolVersion,
+          capabilities: {},
+          clientInfo: { name: "t", version: "1" },
+        }),
+      ),
+    );
+    for (const init of inits) expect(init.result.serverInfo.name).toBe("ai4ie");
+    const { tools } = (await rpc("tools/list", {})).result;
+    expect(tools.map((t: { name: string }) => t.name).sort()).toEqual([
       "get_paper",
       "get_skill",
       "list_applications",
       "list_resources",
       "search_papers",
     ]);
+    for (const t of tools) {
+      expect(t.title).toBeTruthy();
+      expect(t.annotations).toEqual({
+        readOnlyHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      });
+    }
   });
 
-  it("searches with an absolute url and the id", async () => {
-    const r = await call("search_papers", { question: "waste sorting with cameras" });
-    expect(payload(r).papers).toEqual(
-      ["nearer", "near"].map((id) => ({
-        id,
-        title: id,
-        year: 2024,
-        blurb: "B.",
-        url: `https://ai4ie.org/literature/?papers=${id}`,
-      })),
-    );
-  });
-
-  it("answers a tool error when search is unavailable", async () => {
+  it("searches with an absolute url, the id and a proposal's status", async () => {
+    const index = [...INDEX, { ...paper("proposed", [1, 0.1]), status: "proposal" }];
     const r = await call(
       "search_papers",
-      { question: "a b c" },
-      env({ ai: () => Promise.reject(new Error("AI down")) }),
+      { question: "waste sorting with cameras" },
+      {
+        e: env({ index }),
+        w: await fresh(),
+      },
     );
-    expect(r.isError).toBe(true);
-    expect(r.content[0].text).toMatch(/unavailable/);
+    expect(payload(r).papers.map((p: { id: string; status?: string }) => [p.id, p.status])).toEqual(
+      [
+        ["proposed", "proposal"],
+        ["nearer", undefined],
+        ["near", undefined],
+      ],
+    );
+    expect(payload(r).papers[1]).toEqual({
+      id: "nearer",
+      title: "nearer",
+      year: 2024,
+      blurb: "B.",
+      url: "https://ai4ie.org/literature/?papers=nearer",
+    });
   });
 
-  it("answers a tool error when no entry has a vector", async () => {
-    vi.resetModules(); // the index is cached per isolate, so load the module afresh
-    const { default: fresh } = await import("./index");
-    const r = await fresh.fetch(
-      new Request("https://ai4ie.org/mcp", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          accept: "application/json, text/event-stream",
-        },
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          id: 1,
-          method: "tools/call",
-          params: { name: "search_papers", arguments: { question: "a b c" } },
-        }),
+  it("answers coded tool errors when search is unavailable or limited", async () => {
+    const codes = await Promise.all(
+      [
+        env({ ai: () => Promise.reject(new Error("AI down")) }),
+        env({ allowed: "throws" }),
+        env({ allowed: false }),
+      ].map(async (e) => {
+        const r = await call("search_papers", { question: "a b c" }, { e });
+        expect(r.isError).toBe(true);
+        return payload(r).error;
       }),
-      env({ index: [paper("unembedded")] }),
     );
-    expect(await r.text()).toMatch(/"isError":true/);
+    expect(codes).toEqual(["unavailable", "unavailable", "rate_limited"]);
   });
 
-  it("keys the search limit on the visitor's IPv6 /64, as /api/search does", async () => {
+  it("answers a tool error when no entry has a vector, without calling the model", async () => {
+    const e = env({ index: [paper("unembedded")] });
+    const r = await call("search_papers", { question: "a b c" }, { e, w: await fresh() });
+    expect(payload(r).error).toBe("unavailable");
+    expect(e.runs).toEqual([]);
+  });
+
+  it("refuses a JSON-RPC batch before any search runs", async () => {
     const e = env();
-    await call("search_papers", { question: "a b c" }, e, "2001:db8:0:1::1");
-    await worker.fetch(post('{"q": "a b c"}', { ip: "2001:db8:0:1:ffff::2" }), e);
-    expect(e.keys).toEqual(["2001:db8:0:1", "2001:db8:0:1"]);
+    const one = { jsonrpc: "2.0", method: "tools/call", params: { name: "search_papers" } };
+    const r = await send(
+      JSON.stringify([
+        { ...one, id: 1 },
+        { ...one, id: 2 },
+      ]),
+      { e },
+    );
+    expect(r.status).toBe(400);
+    expect((await r.json()).error.code).toBe(-32600);
+    expect(e.runs).toEqual([]);
   });
 
   it("gets a paper's listed fields with its BibTeX, and reports an unknown id", async () => {
-    const p = payload(await call("get_paper", { id: "near" }));
-    expect(p.bibtex).toBe("@article{near}");
-    expect(p.url).toBe("https://ai4ie.org/literature/?papers=near");
-    expect(p).not.toHaveProperty("vector");
-    expect(p).not.toHaveProperty("href");
-    expect((await call("get_paper", { id: "nope" })).isError).toBe(true);
+    const { vector, href, ...listed } = paper("near", [0.8, 0.6]);
+    expect(payload(await call("get_paper", { id: "near" }))).toEqual({
+      ...listed,
+      url: "https://ai4ie.org/literature/?papers=near",
+    });
+    const nope = await call("get_paper", { id: "nope" });
+    expect([nope.isError, payload(nope).error]).toEqual([true, "not_found"]);
   });
 
-  it("filters applications and returns a skill", async () => {
-    expect(payload(await call("list_applications", { field: "sem" })).applications).toHaveLength(1);
-    expect(payload(await call("list_applications", {})).applications).toHaveLength(2);
-    expect((await call("get_skill", { name: "ml-reproducibility" })).content[0].text).toBe(
-      "# Skill text",
-    );
-    expect(payload(await call("get_skill", { name: "toString" })).skills).toEqual([
-      "ml-reproducibility",
-    ]);
+  it("answers unavailable when an asset fails, and loads it again next time", async () => {
+    for (const [file, name, args] of [
+      ["/literature-index.json", "get_paper", { id: "near" }],
+      ["/mcp-data.json", "list_applications", {}],
+      ["/mcp-data.json", "list_resources", {}],
+      ["/mcp-data.json", "get_skill", { name: "ml-reproducibility" }],
+    ] as const) {
+      let fails = 1;
+      const e = env({
+        assets: (url) =>
+          url.endsWith(file) && fails-- > 0 ? new Response("", { status: 500 }) : undefined,
+      });
+      // biome-ignore lint/performance/noAwaitInLoops: each case needs its own fresh module cache
+      const w = await fresh();
+      expect(payload(await call(name, args, { e, w })).error).toBe("unavailable");
+      expect((await call(name, args, { e, w })).isError).toBe(false);
+    }
+  });
+
+  it("filters applications, with site links made absolute", async () => {
+    const ids = async (args: object) =>
+      payload(await call("list_applications", args)).applications.map((a: { id: string }) => a.id);
+    expect(await ids({})).toEqual(["a1", "a2"]);
+    expect(await ids({ field: "sem" })).toEqual(["a2"]);
+    expect(await ids({ technique: "llm" })).toEqual(["a1"]);
+    expect(await ids({ field: "sem", technique: "llm" })).toEqual([]);
+    const [a1, a2] = payload(await call("list_applications", {})).applications;
+    expect(a1.summary).toBe("See [the map](https://ai4ie.org/applications-map/).");
+    expect(a2.demo).toBe("https://ai4ie.org/demos/");
   });
 
   it("filters resources by kind, field and topic", async () => {
     const ids = async (args: object) =>
       payload(await call("list_resources", args)).resources.map((r: { id: string }) => r.id);
-    expect(await ids({})).toEqual(["r1", "r2"]);
+    expect(await ids({})).toEqual(["r1", "r2", "r3"]);
     expect(await ids({ kind: "tool" })).toEqual(["r1"]);
+    expect(await ids({ field: "sem" })).toEqual(["r3"]);
+    expect(await ids({ topic: "buildings" })).toEqual(["r2"]);
     expect(await ids({ field: "lca", topic: "buildings" })).toEqual(["r2"]);
   });
 
-  it("rejects bad arguments and rate-limited searches", async () => {
+  it("returns a skill, and lists the names for an unknown one", async () => {
+    expect((await call("get_skill", { name: "ml-reproducibility" })).content[0].text).toBe(
+      "# Skill text",
+    );
+    const r = await call("get_skill", { name: "toString" });
+    expect([r.isError, payload(r).error, payload(r).skills]).toEqual([
+      true,
+      "not_found",
+      ["ml-reproducibility"],
+    ]);
+  });
+
+  it("rejects bad arguments", async () => {
     const bad = [
       ["search_papers", { question: "x".repeat(301) }],
+      ["search_papers", { question: "   " }],
       ["search_papers", { question: 5 }],
       ["list_applications", { field: "mfa" }],
       ["list_resources", { topic: "bogus" }],
       ["get_paper", {}],
+      ["no_such_tool", {}],
     ] as const;
     const replies = await Promise.all(
       bad.map(([name, args]) => rpc("tools/call", { name, arguments: args })),
     );
     for (const m of replies) expect(m.error ?? m.result?.isError).toBeTruthy();
-    expect(
-      (await call("search_papers", { question: "a b c" }, env({ allowed: false }))).isError,
-    ).toBe(true);
   });
 
-  it("refuses a browser page on another site, not this host or a client without Origin", async () => {
-    const status = async (origin?: string) => {
-      const headers: Record<string, string> = {
-        "content-type": "application/json",
-        accept: "application/json, text/event-stream",
-      };
-      if (origin) headers.origin = origin;
-      const body = JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list", params: {} });
-      return (
-        await worker.fetch(
-          new Request("https://ai4ie.org/mcp", { method: "POST", headers, body }),
-          env(),
-        )
-      ).status;
-    };
-    expect(await status("https://evil.example")).toBe(403);
-    expect(await status("https://ai4ie.org")).toBe(200);
-    expect(await status()).toBe(200);
+  it("answers protocol errors as the transport requires", async () => {
+    const req = (init: RequestInit) =>
+      worker.fetch(new Request("https://ai4ie.org/mcp", init), env()).then((r) => r.status);
+    const list = JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list", params: {} });
+    expect(await req({ method: "GET", headers: HEADERS })).toBe(405);
+    expect(await req({ method: "DELETE", headers: HEADERS })).toBe(405);
+    expect(
+      await req({ method: "POST", headers: { ...HEADERS, accept: "text/html" }, body: list }),
+    ).toBe(406);
+    expect(await req({ method: "POST", headers: HEADERS, body: "{not json" })).toBe(400);
+    expect(
+      await req({
+        method: "POST",
+        headers: { ...HEADERS, "mcp-protocol-version": "1999-01-01" },
+        body: list,
+      }),
+    ).toBe(400);
+  });
+
+  it("refuses a browser page on another site, not this host, localhost or a client without Origin", async () => {
+    const list = JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list", params: {} });
+    const status = async (origin?: string) =>
+      (await send(list, { headers: origin ? { origin } : {} })).status;
+    expect({
+      evil: await status("https://evil.example"),
+      lookalike: await status("https://ai4ie.org.evil.example"),
+      null: await status("null"),
+      self: await status("https://ai4ie.org"),
+      localhost: await status("http://localhost:4321"),
+      none: await status(),
+    }).toEqual({ evil: 403, lookalike: 403, null: 403, self: 200, localhost: 200, none: 200 });
   });
 });

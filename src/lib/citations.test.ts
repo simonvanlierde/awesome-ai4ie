@@ -66,6 +66,14 @@ describe("normalise", () => {
       "@article{k, year={2020}, pages={1} }",
     );
   });
+  it("adds the YAML year to a record served without one", () => {
+    expect(normaliseBibtex("@inproceedings{k, title={T}, collection={AAMAS} }", 2026)).toBe(
+      "@inproceedings{k, title={T}, collection={AAMAS}, year={2026} }",
+    );
+    expect(normaliseRis("TY  - CPAPER\nTI  - T\nER  - \n", 2026)).toBe(
+      "TY  - CPAPER\nTI  - T\nPY  - 2026\nER  -",
+    );
+  });
   it("folds RIS continuation lines, ends at ER and sets the year", () => {
     const raw =
       "TY  - JOUR\r\nTI  - A &amp; B\r\nAB  - one\r\n  two\r\nPY  - 2019\r\nDA  - 2019/11/24\r\nER  - \r\n";

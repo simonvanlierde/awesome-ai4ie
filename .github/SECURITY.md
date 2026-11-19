@@ -27,12 +27,13 @@ be named.
 
 ## Scope
 
-This is a static site with no server, accounts or stored user data. One page runs a model in the
+This is a static site with no accounts or stored user data. A Cloudflare Worker (`worker/`) adds
+two read-only endpoints, `/api/search` and the MCP server at `/mcp`. One page runs a model in the
 visitor's browser, loaded from jsDelivr and Hugging Face.
 
 In scope:
 
-- The code in this repository and what it builds.
+- The code in this repository and what it builds, including the Worker in `worker/`.
 - The CI workflows in `.github/workflows`.
 - The dependencies in the lockfiles, when the problem affects this project.
 

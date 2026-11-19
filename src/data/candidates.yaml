@@ -432,24 +432,6 @@
       - lca
     ml:
       - llm
-- doi: 10.1016/j.procir.2025.01.095
-  title: Waste-to-Resource Database Construction for Industrial Symbiosis Using
-    Large Language Models
-  year: 2025
-  venue: Procedia CIRP
-  oa: https://doi.org/10.1016/j.procir.2025.01.095
-  hints:
-    ie:
-      - symbiosis
-    ml:
-      - nlp-extraction
-  found: 2026-11-19
-  status: new
-  score: 0.064
-  near:
-    - zhaoConstructionWastetoresourceKnowledge2025
-    - grimmelUrbanIndustrialSymbiosis2025
-    - zhaoNovelMachineLearningbased2025
 - doi: 10.63371/ic.v5.n1.a686
   title: "Inteligencia Artificial y Economía Circular: Problemas Éticos y Futuras
     Perspectivas con Enfoque Sostenible"
@@ -1698,3 +1680,11 @@
   found: 2026-11-19
   status: rejected
   why: the footprint of AI itself, not AI for IE
+- doi: 10.1016/j.procir.2025.01.095
+  title: Waste-to-Resource Database Construction for Industrial Symbiosis Using
+    Large Language Models
+  year: 2025
+  found: 2026-11-19
+  status: rejected
+  why: same group and LLM extraction method as zhaoConstructionWastetoresourceKnowledge2025,
+    already listed, which extends it to a full knowledge graph
