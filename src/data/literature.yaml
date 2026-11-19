@@ -448,6 +448,77 @@
   type: [method]
   added: 2026-11
 
+- id: dingCharacterizingChemicalToxicity2026
+  title: "Characterizing chemical toxicity for life cycle assessment using machine learning and deep learning models based on environmental footprint-methodological comparison & textile case study"
+  authors: ["Ding, T."]
+  etAl: true
+  year: 2026
+  doi: "10.1039/d6su00023a"
+  blurb: "Five ML/DL models predict EF 3.1 toxicity characterization factors from SMILES (R2 0.44-0.67); omitting uncharacterised chemicals understated a textile case by up to about 60%."
+  ie: [lca]
+  topic: [chemicals]
+  ml: [tabular-ml, foundation]
+  type: [method]
+  added: 2026-11
+- id: zhaoUsingDeepLearning2022
+  title: "Using deep learning to fill data gaps in environmental footprint accounting"
+  authors: ["Zhao, B."]
+  etAl: true
+  year: 2022
+  doi: "10.1021/acs.est.2c01640"
+  blurb: "A GRAS+DNN hybrid predicts next-year US 71-sector IO tables; on the cells GRAS handles worst, median error falls from 37% to 11%, but it needs the target year's marginal totals."
+  ie: [lca]
+  topic: [io]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: yuPredictingEnvironmentalImpacts2024
+  title: "Predicting environmental impacts of smallholder wheat production by coupling life cycle assessment and machine learning"
+  authors: ["Yu, C."]
+  etAl: true
+  year: 2024
+  doi: "10.1016/j.scitotenv.2024.171097"
+  blurb: "Random forests trained on LCA results of 274 smallholder wheat farms project eight impacts to 2100 under three SSPs; test R2 spans 0.69 to 0.94, 10-fold CV 0.61 to 0.86."
+  ie: [lca]
+  topic: [food]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: daiGaussianProcessRegression2022
+  title: "Gaussian process regression as a replicable, streamlined approach to inventory and uncertainty analysis in life cycle assessment"
+  authors: ["Dai, T."]
+  etAl: true
+  year: 2022
+  doi: "10.1021/acs.est.1c04252"
+  blurb: "Gaussian process regression fills missing US crop nitrogen-fertiliser inventory data with prediction intervals, more accurate than the usual national or annual averages."
+  ie: [lca]
+  topic: [food]
+  ml: [uncertainty, tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: akramiAddressingUncertaintyMachine2025
+  title: "Addressing uncertainty in machine learning-integrated life cycle assessment (ML+LCA)"
+  authors: ["Akrami, M."]
+  etAl: true
+  year: 2025
+  doi: "10.1016/j.jenvman.2025.126225"
+  blurb: "Adds ML and LCA uncertainty to an open hydrothermal-biomass ML+LCA model: with both, GWP spans -257 to 344 kg CO2-eq/Mt DW. Only 6 of 45 ML+LCA studies it surveys consider uncertainty."
+  ie: [lca]
+  ml: [uncertainty, tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: nouriConversationalAIRealtime2026
+  title: "Conversational AI for real-time life cycle assessment"
+  authors: ["Nouri, A.", "Hu, M."]
+  year: 2026
+  doi: "10.1016/j.jclepro.2026.148820"
+  blurb: "A GPT-4 chat layer over an EN 15804 LCA engine recalculates in under a second, within 2% of openLCA in sensitivity runs; usability SUS 65.18 from 14 pilot users."
+  ie: [lca]
+  topic: [buildings]
+  ml: [llm]
+  type: [method]
+  added: 2026-11
+
 # ── MFA, stocks & flows ──────────────────────────────────────────────────────
 - id: haberlHighResolutionMaps2021
   title: "High-resolution maps of material stocks in buildings and infrastructures in Austria and Germany"
@@ -807,6 +878,18 @@
   type: [method]
   added: 2026-11
 
+- id: wangExploringMultidimensionalFactors2022
+  title: "Exploring the multidimensional factors and emergence mechanisms of industrial symbiotic relationships based on machine learning"
+  authors: ["Wang, S."]
+  etAl: true
+  year: 2022
+  doi: "10.1016/j.jclepro.2022.135169"
+  blurb: "XGBoost and SHAP on a survey of 201 firms in one Chinese county rank 37 factors behind industrial symbiosis; sociopolitical factors weigh most, and the data are not shareable."
+  ie: [symbiosis]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+
 # ── Uncertainty & Bayesian MFA ───────────────────────────────────────────
 - id: dongExpertElicitationData2023
   title: "Expert elicitation and data noise learning for material flow analysis using Bayesian inference"
@@ -901,6 +984,18 @@
   blurb: "Fuzzy logic, naive Bayes and deep learning on public geospatial ESG data predict resource-conflict events (test AUC 0.91 deep learning) and rate lithium deposits by risk."
   topic: [metals, supply-risk]
   ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+
+- id: zhangLargeLanguageModeldriven2026
+  title: "Large language model-driven analysis of supply risk dynamics in global electric vehicle supply chain"
+  authors: ["Zhang, L."]
+  etAl: true
+  year: 2026
+  doi: "10.1016/j.eiar.2026.108378"
+  blurb: "GPT-4o with few-shot prompts extracts 2,843 disruption events from 3,125 news articles on the EV supply chain (2006-2025); geopolitical risk is the most frequent type by 2024."
+  topic: [metals, supply-risk]
+  ml: [llm, nlp-extraction]
   type: [method]
   added: 2026-11
 
