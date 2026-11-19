@@ -20,6 +20,7 @@ describe("rank", () => {
   it("keeps entries at or above MIN_SCORE, best first", () => {
     const vs = [at(MIN_SCORE - 0.01), at(MIN_SCORE + 0.01), [1, 0]];
     expect(rank([1, 0], vs)).toEqual([2, 1]);
+    expect(rank([1, 0], [at(MIN_SCORE)])).toEqual([0]);
   });
 
   it("returns at most MAX_HITS", () => {
@@ -87,7 +88,7 @@ describe("nearest", () => {
   it("gives each vector its closest others above the cut-off, best first, and skips gaps", () => {
     // Not unit length on purpose: nearest() scales them, so [2, 0] and [1, 0] are one direction.
     const v = [[2, 0], [0.8, 0.6], [0, 1], undefined, [1, 0]];
-    expect(nearest(v, 2, 0.5)).toEqual([[4, 1], [0, 4], [1], [], [0, 1]]);
-    expect(nearest(v, 1, 0.5)[0]).toEqual([4]);
+    expect(nearest(v, 2)).toEqual([[4, 1], [0, 4], [1], [], [0, 1]]);
+    expect(nearest(v, 1)[0]).toEqual([4]);
   });
 });

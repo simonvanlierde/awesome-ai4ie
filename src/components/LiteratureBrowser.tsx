@@ -36,9 +36,10 @@ import TagChips from "./TagChips";
  * Each entry's Details button opens a panel in the card, under its Cite row: both
  * links when a paper has a DOI and an arXiv id, where its tags lead, the
  * applications that cite it, similar papers, a copyable link and an edit form.
- * `#<id>` in the URL opens that card and scrolls to it, so a paper has one link
- * to share; opening a card writes its id there. A linked paper the filters hide
- * gets a notice that clears them.
+ * `#<id>` in the URL opens that card, marks it and scrolls to it, so a paper has one
+ * link to share. Opening a card writes its id there, and closing it hands the
+ * fragment to the last card still open. A linked paper the filters hide gets a
+ * notice that clears them; a card only opened on the page gets neither mark nor notice.
  */
 export type PaperExtras = { apps: { name: string; href: string }[]; similar: string[] };
 
@@ -55,8 +56,9 @@ export default function LiteratureBrowser({
   const [open, setOpen] = useState<TagDim | null>(null);
   const [exportStatus, setExportStatus] = useState("");
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
-  // The paper the URL fragment names, marked on its card.
+  // The paper a link led to (page load, a Similar link, back or forward), marked on its card.
   const [target, setTarget] = useState<string | null>(null);
+  const [copied, setCopied] = useState<{ id: string; text: string } | null>(null);
   // A card to scroll to and focus once it is rendered.
   const pendingScroll = useRef<string | null>(null);
   const triggers = useRef<Partial<Record<TagDim, HTMLButtonElement | null>>>({});
@@ -133,24 +135,25 @@ export default function LiteratureBrowser({
       return next;
     });
     // replaceState fires no hashchange, so this only updates the shareable link.
-    const { pathname, search } = window.location;
-    if (opening) {
-      history.replaceState(null, "", `${pathname}${search}#${id}`);
-      setTarget(id);
-    } else if (target === id) {
-      history.replaceState(null, "", pathname + search);
-      setTarget(null);
+    const { pathname, search, hash } = window.location;
+    if (opening) history.replaceState(null, "", `${pathname}${search}#${id}`);
+    else if (hash === `#${id}`) {
+      const last = [...expanded].filter((x) => x !== id).at(-1);
+      history.replaceState(null, "", pathname + search + (last ? `#${last}` : ""));
     }
+    if (!opening && target === id) setTarget(null);
   }
 
   async function copyLink(e: LitEntry) {
     const url = new URL(paperUrl(e.id), window.location.origin).href;
-    setExportStatus("");
+    setCopied(null);
+    // Let the reset render first, so a repeated message is announced again.
+    await Promise.resolve();
     try {
       await navigator.clipboard.writeText(url);
-      setExportStatus(`Link to ${citeAuthors(e)} ${e.year} copied`);
+      setCopied({ id: e.id, text: "Copied" });
     } catch {
-      setExportStatus(`Copying failed. The link is ${url}`);
+      setCopied({ id: e.id, text: `Copying failed. The link is ${url}` });
     }
   }
 
@@ -369,6 +372,7 @@ export default function LiteratureBrowser({
                 extras={extras[e.id]}
                 byId={byId}
                 onCopy={() => copyLink(e)}
+                copyStatus={copied?.id === e.id ? copied.text : ""}
               />
             )}
           </li>
@@ -385,11 +389,13 @@ export function PaperDetails({
   extras,
   byId,
   onCopy,
+  copyStatus = "",
 }: {
   entry: LitEntry;
   extras?: PaperExtras;
   byId: Map<string, LitEntry>;
   onCopy: () => void;
+  copyStatus?: string;
 }) {
   const similar = (extras?.similar ?? []).flatMap((id) => byId.get(id) ?? []);
   const apps = extras?.apps ?? [];
@@ -465,7 +471,10 @@ export function PaperDetails({
       <dd>
         <button type="button" className="lit-clear" onClick={onCopy}>
           Copy link
-        </button>
+        </button>{" "}
+        <span className="lit-details-note" aria-live="polite">
+          {copyStatus}
+        </span>
       </dd>
       <dt>Fix</dt>
       <dd>

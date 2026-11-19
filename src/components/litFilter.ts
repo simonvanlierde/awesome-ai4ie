@@ -11,7 +11,6 @@ export type View = { filter: Filter; sort: SortKey };
 type Tagged = { id?: string } & Partial<Record<TagDim, string[]>>;
 
 const KEYS = [...TAG_DIMS, "papers"] as const;
-const HASH = /^#/;
 
 export const EMPTY_FILTER = Object.fromEntries(KEYS.map((k) => [k, []])) as unknown as Filter;
 export const DEFAULT_SORT: SortKey = "year";
@@ -48,7 +47,7 @@ export function emptyMessage(f: Filter, label: (dim: TagDim, tag: string) => str
 export function hashTarget(hash: string, ids: ReadonlySet<string>): string | null {
   let id: string;
   try {
-    id = decodeURIComponent(hash.replace(HASH, ""));
+    id = decodeURIComponent(hash.slice(1));
   } catch {
     return null; // a malformed escape, like "#%E0"
   }

@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import { decodeVector, entryText, MIN_SCORE, nearest } from "../lib/semantic";
+import { decodeVector, entryText, nearest } from "../lib/semantic";
 import { siteUrl } from "../lib/urls";
 import { loadVectors, textKey } from "../lib/vectors";
 import LiteratureBrowser, { type PaperExtras } from "./LiteratureBrowser";
@@ -19,7 +19,6 @@ const near = nearest(
     return v ? decodeVector(v) : undefined;
   }),
   3,
-  MIN_SCORE,
 );
 const extras: Record<string, PaperExtras> = Object.fromEntries(
   entries.map((e, i) => [
@@ -39,6 +38,6 @@ const extras: Record<string, PaperExtras> = Object.fromEntries(
 ---
 
 <noscript>
-  <p class="lit-noscript">Filtering and sorting need JavaScript. Every entry is listed below.</p>
+  <p class="lit-noscript">Filtering, sorting, citing and paper details need JavaScript. Every entry is listed below.</p>
 </noscript>
 <LiteratureBrowser client:load entries={entries} extras={extras} />

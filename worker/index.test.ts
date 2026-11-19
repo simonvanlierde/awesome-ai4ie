@@ -16,7 +16,7 @@ const paper = (title: string, v?: number[]) => ({
   topic: [],
   ml: ["llm"],
   type: ["method"],
-  href: `/literature/?papers=${title}`,
+  href: `/literature/#${title}`,
   bibtex: `@article{${title}}`,
   vector: v && encodeVector(v),
 });
@@ -24,7 +24,7 @@ const hit = (title: string) => ({
   title,
   year: 2024,
   blurb: "B.",
-  href: `/literature/?papers=${title}`,
+  href: `/literature/#${title}`,
 });
 // The fake model answers [6, 1.5], not unit length. After unit(), "nearer" scores 0.97,
 // "near" 0.92 and "far" 0.24, below MIN_SCORE; the raw dot product would let "far" in at 1.5.
@@ -266,7 +266,7 @@ describe("/mcp", () => {
       title: "nearer",
       year: 2024,
       blurb: "B.",
-      url: "https://ai4ie.org/literature/?papers=nearer",
+      url: "https://ai4ie.org/literature/#nearer",
     });
   });
 
@@ -311,7 +311,7 @@ describe("/mcp", () => {
     const { vector, href, ...listed } = paper("near", [0.8, 0.6]);
     expect(payload(await call("get_paper", { id: "near" }))).toEqual({
       ...listed,
-      url: "https://ai4ie.org/literature/?papers=near",
+      url: "https://ai4ie.org/literature/#near",
     });
     const nope = await call("get_paper", { id: "nope" });
     expect([nope.isError, payload(nope).error]).toEqual([true, "not_found"]);
