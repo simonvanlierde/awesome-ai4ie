@@ -29,7 +29,7 @@ pnpm test
 pnpm run build
 ```
 
-Preview it with `pnpm run dev`, at <http://localhost:4321/>. The pages are in [`src/content/docs/`](src/content/docs/) and their data is in [`src/data/`](src/data/). To ask a question, join the [AI4IE Discord](https://discord.gg/zhHAZakXHX). Maintainers: see [MAINTAINING.md](MAINTAINING.md).
+Preview it with `pnpm run dev`, at <http://localhost:4321/>. The pages are in [`src/content/docs/`](src/content/docs/) and their data is in [`src/data/`](src/data/). To ask a question, join the [AI4IE Discord](https://discord.gg/zhHAZakXHX). Found a bug or a broken link? [Open an issue](../../issues/new/choose). To report a vulnerability privately, see [SECURITY.md](.github/SECURITY.md). Maintainers: see [MAINTAINING.md](MAINTAINING.md).
 
 ## How it works
 

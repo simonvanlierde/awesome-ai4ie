@@ -91,7 +91,7 @@ Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUC
 
 ### Checking accessibility
 
-`pnpm install` sets up the git hooks, which run with [prek](https://prek.j178.dev/). On each commit they check formatting, spelling, links, the workflows and the commit message; before each push they run the type check and the tests. A hook that fixes a file fails the commit: `git add` the file and commit again. The build and the accessibility check run in CI. To run the accessibility check locally:
+`pnpm install` sets up the git hooks, which run with [prek](https://prek.j178.dev/). On each commit they check formatting, spelling, links, the workflows and the commit message; before each push they run the type check and the tests. A hook that fixes a file fails the commit: `git add` the file and commit again. The first commit on a clone downloads the hooks' tools, so it needs a network connection. The build and the accessibility check run in CI. To run the accessibility check locally:
 
 1. Run `pnpm exec playwright install chromium` (once).
 2. Run `pnpm run build`, then `pnpm exec astro preview` in one terminal.
@@ -112,6 +112,15 @@ One folder per skill under `skills/`, with a `SKILL.md` and any supporting files
 A change to code comes with tests. A fix adds a test that fails without it, and a feature adds
 one for what it does. Run `pnpm run check`, `pnpm run lint` and `pnpm test` before you push; CI
 runs them on every pull request.
+
+CI also weighs every built page: the page's gzipped HTML plus the CSS, JS, fonts and images it
+loads on a first visit. A page over its budget fails the build. Check it with `pnpm run build`
+and then `pnpm run page-weight`. If a page has to get heavier, raise its budget in
+[`scripts/page-weight.mjs`](scripts/page-weight.mjs) and say why in the pull request.
+
+The citation files `CITATION.cff`, `codemeta.json` and `.zenodo.json` must agree, and a hook
+checks that they do. Edit `CITATION.cff`, then run
+`pnpm exec prek run citesync-write --stage manual --all-files` to update the other two.
 
 Coding standards: [Biome](https://biomejs.dev) formats and lints everything, so run
 `pnpm run lint:fix` rather than formatting by hand. Comments say why, not what. A new
