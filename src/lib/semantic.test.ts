@@ -71,7 +71,7 @@ describe("decodeVector", () => {
   it("reverses the build's base64 float32 encoding", async () => {
     const { encodeVector } = await import("./vectors");
     const v = [0.5, -0.25, 0.125];
-    expect(decodeVector(encodeVector(v))).toEqual(v);
+    expect(Array.from(decodeVector(encodeVector(v)))).toEqual(v);
   });
 });
 

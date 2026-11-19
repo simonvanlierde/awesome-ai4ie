@@ -30,7 +30,7 @@ on to Workers AI, as from the search dialog, and is not stored either. The other
 read the site's own data.
 
 Cloudflare's Workers Logs record each request to the Worker: its time, your IP address and
-your browser. Cloudflare keeps these logs for at most 7 days
+your browser or AI assistant. Cloudflare keeps these logs for at most 7 days
 ([Workers Logs limits](https://developers.cloudflare.com/workers/observability/logs/workers-logs/)).
 
 ## Demos

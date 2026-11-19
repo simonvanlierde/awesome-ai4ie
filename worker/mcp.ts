@@ -11,7 +11,7 @@ import { z } from "zod";
 import type { AppEntry, ResourceEntry } from "../src/data/schemas.ts";
 import { RESOURCE_KINDS } from "../src/data/schemas.ts";
 import { IE_TAGS, ML_TAGS, TOPIC_TAGS } from "../src/data/tags.ts";
-import { type Env, loadIndex, MAX_QUERY, searchPapers, withinLimit } from "./search.ts";
+import { cachedJson, type Env, loadIndex, MAX_QUERY, searchPapers, withinLimit } from "./search.ts";
 
 type Data = {
   applications: AppEntry[];
@@ -19,23 +19,8 @@ type Data = {
   skills: Record<string, string>;
 };
 
-let data: Promise<Data> | null = null;
-function loadData(env: Env, origin: string): Promise<Data> {
-  data ??= env.ASSETS.fetch(`${origin}/mcp-data.json`)
-    .then((r) => {
-      if (!r.ok) throw new Error(`mcp-data.json: HTTP ${r.status}`);
-      return r.json() as Promise<Data>;
-    })
-    .catch((err) => {
-      data = null; // a failed load must not poison every later request
-      throw err;
-    });
-  return data;
-}
-
 const keys = <K extends string>(o: Record<K, string>) => Object.keys(o) as [K, ...K[]];
 const fieldArg = z.enum(keys(IE_TAGS)).optional();
-const topicArg = z.enum(keys(TOPIC_TAGS)).optional();
 const list = (o: Record<string, string>) =>
   Object.entries(o)
     .map(([k, v]) => `${k} (${v})`)
@@ -44,58 +29,78 @@ const FIELDS = `IE fields: ${list(IE_TAGS)}.`;
 const TOPICS = `Topics: ${list(TOPIC_TAGS)}.`;
 
 const FROM = "Results come from a curated reading list on AI for industrial ecology.";
+const ALL = "Returns every match; the lists are small.";
 const text = (value: unknown, isError = false) => ({
   content: [
     { type: "text" as const, text: typeof value === "string" ? value : JSON.stringify(value) },
   ],
   isError,
 });
+type Code = "not_found" | "rate_limited" | "unavailable";
+/** A tool error: JSON with a stable `error` code a client can branch on. */
+const fail = (error: Code, message: string, more: object = {}) =>
+  text({ error, message, ...more }, true);
+// Every tool that reads a build asset answers "unavailable" when the asset fails to load.
+const READ_ONLY = { readOnlyHint: true, idempotentHint: true, openWorldHint: false };
+const guarded =
+  <A>(fn: (args: A) => Promise<ReturnType<typeof text>>) =>
+  async (args: A) => {
+    try {
+      return await fn(args);
+    } catch (err) {
+      // biome-ignore lint/suspicious/noConsole: Workers Logs keep the cause; the client gets a tool error
+      console.error(err);
+      return fail("unavailable", "The reading list is unavailable, try again later.");
+    }
+  };
 
 function buildServer(request: Request, env: Env) {
   const origin = new URL(request.url).origin;
   const abs = (href: string) => new URL(href, origin).href;
+  // Curated text links to site pages as "](/page/)"; a client has no base to resolve them.
+  const absLinks = (value: unknown) =>
+    JSON.parse(JSON.stringify(value).replaceAll("](/", `](${origin}/`));
+  const loadData = () => cachedJson<Data>(env, origin, "/mcp-data.json");
   const server = new McpServer({ name: "ai4ie", version: "1.0.0" });
 
   server.registerTool(
     "search_papers",
     {
-      description: `Find papers by meaning. Returns up to 5 papers (id, title, year, blurb, url), best first, or none if nothing is close. ${FROM}`,
+      title: "Search papers",
+      description: `Find papers by meaning. Returns {papers: [...]} with up to 5 papers (id, title, year, blurb, url, and status "proposal" for one not yet reviewed), best first; an empty list when nothing is close. Pass an id to get_paper for the details. ${FROM}`,
       inputSchema: z.object({ question: z.string().trim().min(1).max(MAX_QUERY) }),
+      annotations: READ_ONLY,
     },
-    async ({ question }) => {
-      if (!(await withinLimit(env, request)))
-        return text("Too many requests, try again in a minute.", true);
+    guarded(async ({ question }) => {
+      const allowed = await withinLimit(env, request);
+      if (allowed === null) return fail("unavailable", "Search is unavailable, try again later.");
+      if (!allowed) return fail("rate_limited", "Too many searches, try again in a minute.");
       const found = await searchPapers(env, origin, question);
-      if (!found) return text("Search is unavailable, try again later.", true);
+      if (!found) return fail("unavailable", "Search is unavailable, try again later.");
       return text({
         papers: found.map((e) => ({
           id: e.id,
           title: e.title,
           year: e.year,
           blurb: e.blurb,
+          status: e.status,
           url: abs(e.href),
         })),
       });
-    },
+    }),
   );
 
   server.registerTool(
     "get_paper",
     {
-      description: `Get one paper by id: title, authors, year, DOI or arXiv id, blurb, IE fields, topics, ML techniques, url and BibTeX when known. ${FROM}`,
+      title: "Get a paper",
+      description: `Get one paper by the id search_papers or list_applications returns: title, authors, year, DOI or arXiv id, blurb, IE fields, topics, ML techniques, url and BibTeX when known. ${FROM}`,
       inputSchema: z.object({ id: z.string().trim().min(1).max(200) }),
+      annotations: READ_ONLY,
     },
-    async ({ id }) => {
-      let all: Awaited<ReturnType<typeof loadIndex>>["all"];
-      try {
-        ({ all } = await loadIndex(env, origin));
-      } catch (err) {
-        // biome-ignore lint/suspicious/noConsole: Workers Logs keep the cause; the client gets a tool error
-        console.error(err);
-        return text("The reading list is unavailable, try again later.", true);
-      }
-      const p = all.find((e) => e.id === id);
-      if (!p) return text(`No paper with id "${id}".`, true);
+    guarded(async ({ id }) => {
+      const p = (await loadIndex(env, origin)).all.find((e) => e.id === id);
+      if (!p) return fail("not_found", `No paper with id "${id}".`);
       return text({
         id: p.id,
         title: p.title,
@@ -113,71 +118,94 @@ function buildServer(request: Request, env: Env) {
         url: abs(p.href),
         bibtex: p.bibtex,
       });
-    },
+    }),
   );
 
   server.registerTool(
     "list_applications",
     {
-      description: `List AI applications in industrial ecology (name, summary, maturity, IE fields, ML techniques, paper ids). Filter by IE field and/or ML technique. ${FIELDS} ${FROM}`,
+      title: "List applications",
+      description: `List AI applications in industrial ecology (name, summary, maturity, IE fields, ML techniques, paper ids for get_paper). Filter by IE field and/or ML technique. ${ALL} ${FIELDS} ${FROM}`,
       inputSchema: z.object({ field: fieldArg, technique: z.enum(keys(ML_TAGS)).optional() }),
+      annotations: READ_ONLY,
     },
-    async ({ field, technique }) => {
-      const all = (await loadData(env, origin)).applications;
-      return text({
-        applications: all.filter(
-          (a) => (!field || a.ie.includes(field)) && (!technique || a.ml.includes(technique)),
-        ),
-      });
-    },
+    guarded(async ({ field, technique }) => {
+      const all = (await loadData()).applications;
+      return text(
+        absLinks({
+          applications: all
+            .filter(
+              (a) => (!field || a.ie.includes(field)) && (!technique || a.ml.includes(technique)),
+            )
+            .map((a) => (a.demo ? { ...a, demo: abs(a.demo) } : a)),
+        }),
+      );
+    }),
   );
 
   server.registerTool(
     "list_resources",
     {
-      description: `List tools, datasets, models, courses, videos, posts and communities outside the reading list (title, url, kind, blurb, tags). Filter by kind, IE field and/or topic. ${FIELDS} ${TOPICS} ${FROM}`,
+      title: "List resources",
+      description: `List tools, datasets, models, courses, videos, posts and communities outside the reading list (title, url, kind, blurb, tags). Filter by kind, IE field and/or topic. ${ALL} ${FIELDS} ${TOPICS} ${FROM}`,
       inputSchema: z.object({
         kind: z.enum(keys(RESOURCE_KINDS)).optional(),
         field: fieldArg,
-        topic: topicArg,
+        topic: z.enum(keys(TOPIC_TAGS)).optional(),
       }),
+      annotations: READ_ONLY,
     },
-    async ({ kind, field, topic }) => {
-      const all = (await loadData(env, origin)).resources;
-      return text({
-        resources: all.filter(
-          (r) =>
-            (!kind || r.kind === kind) &&
-            (!field || r.ie.includes(field)) &&
-            (!topic || r.topic.includes(topic)),
-        ),
-      });
-    },
+    guarded(async ({ kind, field, topic }) => {
+      const all = (await loadData()).resources;
+      return text(
+        absLinks({
+          resources: all.filter(
+            (r) =>
+              (!kind || r.kind === kind) &&
+              (!field || r.ie.includes(field)) &&
+              (!topic || r.topic.includes(topic)),
+          ),
+        }),
+      );
+    }),
   );
 
   server.registerTool(
     "get_skill",
     {
+      title: "Get a skill",
       description:
-        "Get the SKILL.md text of one Agent Skill for research with AI, by name. An unknown name returns the list of skill names.",
+        "Get the SKILL.md text of one Agent Skill for research with AI, by name. An unknown name returns a not_found error with the list of skill names.",
       inputSchema: z.object({ name: z.string().trim().min(1).max(100) }),
+      annotations: READ_ONLY,
     },
-    async ({ name }) => {
-      const { skills } = await loadData(env, origin);
+    guarded(async ({ name }) => {
+      const { skills } = await loadData();
       return Object.hasOwn(skills, name)
         ? text(skills[name])
-        : text({ error: `No skill named "${name}".`, skills: Object.keys(skills) }, true);
-    },
+        : fail("not_found", `No skill named "${name}".`, { skills: Object.keys(skills) });
+    }),
   );
 
   return server;
 }
 
-export function handleMcp(request: Request, env: Env): Promise<Response> {
+export async function handleMcp(request: Request, env: Env): Promise<Response> {
   // The spec requires an Origin check (against DNS rebinding). A browser page may call
   // from this site's own host or localhost; clients outside a browser send no Origin.
   const allowed = [new URL(request.url).hostname, ...localhostAllowedOrigins()];
   const rejected = originValidationResponse(request, allowed);
-  if (rejected) return Promise.resolve(rejected);
+  if (rejected) return rejected;
+  // MCP dropped JSON-RPC batches in 2025-06-18, but the SDK still takes up to 100 per POST,
+  // which would let one request fan out into many searches.
+  if (request.method === "POST" && (await request.clone().text()).trimStart().startsWith("["))
+    return Response.json(
+      {
+        jsonrpc: "2.0",
+        id: null,
+        error: { code: -32600, message: "Send one message per request" },
+      },
+      { status: 400 },
+    );
   return createMcpHandler(() => buildServer(request, env)).fetch(request);
 }

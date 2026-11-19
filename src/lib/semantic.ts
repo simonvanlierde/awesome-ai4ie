@@ -44,9 +44,13 @@ export function unit(v: number[]): number[] {
 }
 
 /** Reverses encodeVector() in src/lib/vectors.ts. */
-export function decodeVector(b64: string): number[] {
-  const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
-  return Array.from(new Float32Array(bytes.buffer));
+export function decodeVector(b64: string): Float32Array {
+  // A plain loop: Uint8Array.from with a mapper plus Array.from took about 20 times longer,
+  // and a cold Worker decodes every vector inside its CPU budget.
+  const s = atob(b64);
+  const bytes = new Uint8Array(s.length);
+  for (let i = 0; i < s.length; i++) bytes[i] = s.charCodeAt(i);
+  return new Float32Array(bytes.buffer);
 }
 
 /** The text embedded for an entry: what a reader would match a question against. */
