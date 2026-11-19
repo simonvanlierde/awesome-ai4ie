@@ -1884,97 +1884,99 @@
   year: 2025
   found: 2026-11-19
   status: rejected
-  why: software-summary preprint of the same tool; superseded by the peer-reviewed
-    Procedia CIRP paper (same authors, same workflow, plus evaluation)
+  why: "rule 4: software-summary preprint of the same tool; superseded by the
+    peer-reviewed Procedia CIRP paper (same authors, same workflow, plus
+    evaluation)"
 - doi: 10.1007/s10614-024-10641-1
   title: Estimating Input Coefficients for Regional Input–Output Tables Using Deep
     Learning with Mixup
   year: 2024
   found: 2026-11-19
   status: rejected
-  why: regional input-output estimation with no environmental or IE angle
+  why: "rule 2: regional input-output estimation with no environmental or IE angle"
 - doi: 10.1038/s41598-026-45382-8
   title: "Keeping up with the regions: a hybrid machine learning framework for
     estimating regional input-output tables"
   year: 2026
   found: 2026-11-19
   status: rejected
-  why: regional input-output estimation with no environmental or IE angle;
-    validated on national and world tables, not regional ones
+  why: "rule 2: regional input-output estimation with no environmental or IE
+    angle; validated on national and world tables, not regional ones"
 - doi: 10.1016/j.joule.2021.06.005
   title: The challenge and opportunity of battery lifetime prediction from field data
   year: 2021
   found: 2026-11-19
   status: rejected
-  why: battery prognostics perspective; second life is one section and circularity
-    only motivation, no stock, flow or reuse analysis
+  why: "rule 2: battery prognostics perspective; second life is one section and
+    circularity only motivation, no stock, flow or reuse analysis"
 - doi: 10.1016/j.isci.2023.106547
   title: Evaluating the feasibility of batteries for second-life applications
     using machine learning
   year: 2023
   found: 2026-11-19
   status: rejected
-  why: lab-aged cells, no stock or circularity link
+  why: "rule 2: lab-aged cells, no stock or circularity link"
 - doi: 10.1038/s44435-025-00003-0
   title: "A review of smart integrated energy systems towards industrial carbon
     neutrality: Opportunity and challenge"
   year: 2026
   found: 2026-11-19
   status: rejected
-  why: energy-systems operation and control review; no footprint, MFA or
-    circularity framing
+  why: "rule 2: energy-systems operation and control review; no footprint, MFA or
+    circularity framing"
 - doi: 10.1186/s13717-025-00594-0
   title: High-resolution global modeling of wheat’s water footprint using a
     machine learning ensemble approach
   year: 2025
   found: 2026-11-19
   status: rejected
-  why: weak evaluation (random split, headline figures from one cluster, blue WF
-    R2 0.40) and no code; surrogate of a process crop model
+  why: "rule 4: weak evaluation (random split, headline figures from one cluster,
+    blue WF R2 0.40) and no code; surrogate of a process crop model"
 - doi: 10.1016/j.jclepro.2024.140715
   title: "Applications of machine learning to water resources management: A review
     of present status and future opportunities"
   year: 2024
   found: 2026-11-19
   status: rejected
-  why: water-resources-management review (groundwater, streamflow, floods,
-    hydropower); no IE framing
+  why: "rule 2: water-resources-management review (groundwater, streamflow,
+    floods, hydropower); no IE framing"
 - doi: 10.3390/w15040620
   title: "Application of Machine Learning in Water Resources Management: A
     Systematic Literature Review"
   year: 2023
   found: 2026-11-19
   status: rejected
-  why: water-resources-management review (prediction, clustering, RL); no IE framing
+  why: "rule 2: water-resources-management review (prediction, clustering, RL); no
+    IE framing"
 - doi: 10.1080/00207543.2025.2575841
   title: Enhancing supply chain visibility with knowledge graphs and large
     language models
   year: 2025
   found: 2026-11-19
   status: rejected
-  why: supply-chain visibility and risk framing; no IE accounting (sustainability
-    named only as future work); extracted text is the preprint
+  why: "rule 2: supply-chain visibility and risk framing; no IE accounting
+    (sustainability named only as future work); extracted text is the preprint"
 - doi: 10.1080/00207543.2025.2532142
   title: Αn AI-driven approach to assess sentiments and interpret context in a
     critical mineral supply chain
   year: 2025
   found: 2026-11-19
   status: rejected
-  why: LLM sentiment analysis of cobalt news for supply-chain decision-making;
-    operations-management framing, no IE accounting
+  why: "rule 2: LLM sentiment analysis of cobalt news for supply-chain
+    decision-making; operations-management framing, no IE accounting"
 - doi: 10.1038/s41598-024-52138-9
   title: Mapping the diversity of land uses following deforestation across Africa
   year: 2024
   found: 2026-11-19
   status: rejected
-  why: land-use mapping from satellite imagery; no LCA, footprint or flow
-    accounting in the paper
+  why: "rule 2: land-use mapping from satellite imagery; no LCA, footprint or flow
+    accounting in the paper"
 - doi: 10.1016/j.rcradv.2025.200263
   title: Machine learning applications for carbon emission estimation
   year: 2025
   found: 2026-11-19
   status: rejected
-  why: "adjacent: review of ML for CO2 emission forecasting, mostly transport and
+  why: "rule 4: review of ML for CO2 emission forecasting, mostly transport and
     country-level, not footprinting/LCA/MFA; no IE tag fits"
 - doi: 10.1016/j.ccst.2025.100471
   title: Perspective on artificial intelligence for carbon capture utilization and
@@ -1982,7 +1984,7 @@
   year: 2025
   found: 2026-11-19
   status: rejected
-  why: "adjacent: perspective on AI for CCUS process and catalyst design; LCA
+  why: "rule 4: perspective on AI for CCUS process and catalyst design; LCA
     appears in one subsection (2.4) only"
 - doi: 10.1016/j.rser.2020.110208
   title: "Recent advances on industrial data-driven energy savings: Digital twins
@@ -1990,7 +1992,7 @@
   year: 2021
   found: 2026-11-19
   status: rejected
-  why: "adjacent: Industry 4.0 digital twins and data infrastructure for plant
+  why: "rule 4: Industry 4.0 digital twins and data infrastructure for plant
     energy savings; no IE framing (LCA appears only as a blockchain table row)"
 - doi: 10.1016/j.procir.2024.01.057
   title: "Collaboration Platform for Enabling Industrial Symbiosis: Integrated
@@ -1998,16 +2000,16 @@
   year: 2024
   found: 2026-11-19
   status: rejected
-  why: Same group, cities (Braunschweig, Singapore) and exchange databases as
-    grimmelUrbanIndustrialSymbiosis2025, already listed; ML is only an NLP step
-    to fill class
+  why: "rule 4: Same group, cities (Braunschweig, Singapore) and exchange
+    databases as grimmelUrbanIndustrialSymbiosis2025, already listed; ML is only
+    an NLP step to fill class"
 - doi: 10.1016/j.scitotenv.2024.174262
   title: Improving rapeseed carbon footprint evaluation via the integration of
     remote sensing technology into an LCA approach
   year: 2024
   found: 2026-11-19
   status: rejected
-  why: "No ML: rapeseed mapped from Sentinel-1/2 with region-specific thresholds,
+  why: "rule 1: rapeseed mapped from Sentinel-1/2 with region-specific thresholds,
     then fed to an LCA; remote sensing plus LCA, not AI/ML. No overlap with
     round-1 entrie"
 - doi: 10.1016/j.jclepro.2023.140010
@@ -2016,15 +2018,15 @@
   year: 2024
   found: 2026-11-19
   status: rejected
-  why: generic city-level CO2 time-series forecast (ARIMA+SVR, 29 annual points);
-    no IE framing (no LCA/MFA/footprint method); no data statement; no overlap
-    with liste
+  why: "rule 2: generic city-level CO2 time-series forecast (ARIMA+SVR, 29 annual
+    points); no IE framing (no LCA/MFA/footprint method); no data statement; no
+    overlap with liste"
 - doi: 10.1080/09535314.2021.1952404
   title: A scenario-based method for projecting multi-regional input–output tables
   year: 2021
   found: 2026-11-19
   status: rejected
-  why: "no ML: SPIN is a Leontief plus RAS/GRAS balancing method; ML terms absent
+  why: "rule 1: SPIN is a Leontief plus RAS/GRAS balancing method; ML terms absent
     from the full text; Zhao et al. (2022) cite it only as a baseline family"
 - doi: 10.1080/17421772.2021.1959046
   title: Application of machine-learning models to estimate regional input
@@ -2032,40 +2034,40 @@
   year: 2021
   found: 2026-11-19
   status: rejected
-  why: regional input coefficients with no environmental angle
+  why: "rule 2: regional input coefficients with no environmental angle"
 - doi: 10.1111/wej.12945
   title: "Advancements in machine learning modelling for energy and emissions
     optimization in wastewater treatment plants: A systematic review"
   year: 2024
   found: 2026-11-19
   status: rejected
-  why: plant-level process control and energy optimisation review of WWTPs; no IE
-    framing (no LCA, footprint or MFA scope); not a listed overlap
+  why: "rule 2: plant-level process control and energy optimisation review of
+    WWTPs; no IE framing (no LCA, footprint or MFA scope); not a listed overlap"
 - doi: 10.15480/882.3589
   title: "Using natural language processing for supply chain mapping: a systematic
     review of current approaches"
   year: 2021
   found: 2026-11-19
   status: rejected
-  why: generic supply chain management review of company-relation extraction,
-    pre-LLM, no materials or IE framing; CEUR workshop paper with 12 included
-    studies
+  why: "rule 4: generic supply chain management review of company-relation
+    extraction, pre-LLM, no materials or IE framing; CEUR workshop paper with 12
+    included studies"
 - doi: 10.1016/j.ress.2025.111462
   title: "Lifetime Early Prediction for Second-Life Lithium-Ion Battery: A
     Hierarchical Bayesian Learning Method"
   year: 2026
   found: 2026-11-19
   status: rejected
-  why: cell-level battery degradation and cycle-life prediction in a
+  why: "rule 2: cell-level battery degradation and cycle-life prediction in a
     reliability-engineering venue; no stock, circularity or IE framing; data on
-    request; adjacent only
+    request; adjacent only"
 - doi: 10.12688/openreseurope.13893.2
   title: "Industrial symbiosis platforms for synergy identification and their most
     important data points: a systematic review"
   year: 2021
   found: 2026-11-19
   status: rejected
-  why: "not ML: a PRISMA review of IS platform features and data points;
+  why: "rule 1: a PRISMA review of IS platform features and data points;
     recommenders get one passing sentence"
 - doi: 10.1111/jiec.70034
   title: Bayesian model selection for network discrimination and risk-informed
@@ -2073,14 +2075,14 @@
   year: 2025
   found: 2026-11-19
   status: rejected
-  why: overlaps the other Bayesian MFA entries
+  why: "rule 4: overlaps the other Bayesian MFA entries"
 - doi: 10.1002/ep.14644
   title: "Uncertainty in inventories for life cycle assessment: State-of-the-art,
     challenges, and new technologies"
   year: 2025
   found: 2026-11-19
   status: rejected
-  why: little ML
+  why: "rule 1: little ML"
 - doi: 10.1016/j.xinn.2025.100866
   title: Tracking the carbon footprint of global generative artificial intelligence
   year: 2025
@@ -2094,7 +2096,7 @@
       - cv
   found: 2026-11-19
   status: rejected
-  why: the footprint of AI itself, not AI for IE
+  why: "rule 3: the footprint of AI itself, not AI for IE"
 - doi: 10.1016/j.jfo.2024.104242
   title: Role of artificial intelligence, machine learning and deep learning
     models in corneal disorders – A narrative review
@@ -2104,7 +2106,7 @@
   hints: {}
   found: 2026-11-19
   status: rejected
-  why: medical imaging, no IE angle
+  why: "rule 2: medical imaging, no IE angle"
 - doi: 10.1007/s44163-024-00149-w
   title: "Green AI: exploring carbon footprints, mitigation strategies, and trade
     offs in large language model training"
@@ -2119,7 +2121,7 @@
       - nlp-extraction
   found: 2026-11-19
   status: rejected
-  why: the footprint of AI itself, not AI for IE
+  why: "rule 3: the footprint of AI itself, not AI for IE"
 - doi: 10.1007/s10489-026-07208-y
   title: "Towards sustainable artificial intelligence: a comprehensive review and
     comparative analysis of deep learning models’ carbon footprint"
@@ -2131,7 +2133,7 @@
       - lca
   found: 2026-11-19
   status: rejected
-  why: the footprint of AI itself, not AI for IE
+  why: "rule 3: the footprint of AI itself, not AI for IE"
 - doi: 10.2139/ssrn.7023558
   title: The Energy and Carbon Footprint of Large Language Models in Healthcare
     Documentation
@@ -2145,7 +2147,7 @@
       - llm
   found: 2026-11-19
   status: rejected
-  why: the footprint of AI itself, not AI for IE
+  why: "rule 3: the footprint of AI itself, not AI for IE"
 - doi: 10.63090/ijitrs/3139.3209.0038
   title: "Energy and Carbon Footprint of Artificial Intelligence: Measurement,
     Disagreement and Mitigation"
@@ -2159,4 +2161,4 @@
       - water
   found: 2026-11-19
   status: rejected
-  why: the footprint of AI itself, not AI for IE
+  why: "rule 3: the footprint of AI itself, not AI for IE"

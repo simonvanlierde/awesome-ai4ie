@@ -54,6 +54,8 @@ describe("applications.yaml", () => {
   });
 });
 
+const WHY = /^rule [1-4]: /;
+
 describe("candidates.yaml", () => {
   const cands = parse(readFileSync("src/data/candidates.yaml", "utf8")) as (Raw & {
     status?: string;
@@ -61,12 +63,13 @@ describe("candidates.yaml", () => {
   })[];
   const listed = new Set(lit.map((e) => e.doi?.toLowerCase()));
 
-  it("holds each DOI once, with a known status and a why for rejects", () => {
+  it("holds each DOI once, with a known status and a numbered why for rejects", () => {
     const dois = cands.map((c) => c.doi);
     expect(new Set(dois).size).toBe(dois.length);
     for (const c of cands) {
       expect(["new", "rejected", "listed"], c.doi).toContain(c.status);
-      if (c.status === "rejected") expect(c.why, `${c.doi} needs a why`).toBeTruthy();
+      // The rule numbers are the scope rules in CONTRIBUTING.md, "Adding a paper".
+      if (c.status === "rejected") expect(c.why, `${c.doi} needs a why`).toMatch(WHY);
     }
   });
 
