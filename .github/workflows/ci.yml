@@ -91,8 +91,8 @@ jobs:
         run: |
           jq -e 'length > 0 and all(.[]; .id and .title and .href and .year)' dist/literature-index.json
           jq -e '(.applications | length > 0) and (.resources | length > 0) and (.skills | length > 0)
-            and all(.applications[]; .id and .name and .ie and .ml)
-            and all(.resources[]; .id and .title and .kind and .ie and .topic)' dist/mcp-data.json
+            and all(.applications[]; .id and .name and .ie and .ml and .href)
+            and all(.resources[]; .id and .title and .url and .kind and .ie and .topic)' dist/mcp-data.json
       - name: Page weight budget
         run: pnpm run page-weight
       # The vocabulary against SkoHub Vocabs' SHACL shape, pinned to a commit of

@@ -27,6 +27,11 @@ export function paperUrl(id: string): string {
   return siteUrl(`literature/#${id}`);
 }
 
+/** One application on the map: described in full on its first field's page, under its own id. */
+export function appUrl(a: { id: string; ie: readonly string[] }): string {
+  return siteUrl(`applications-map/${a.ie[0]}/#${a.id}`);
+}
+
 /** The issue forms in .github/ISSUE_TEMPLATE/; forms.test.ts checks each file exists. */
 export const ISSUE_FORMS = ["paper", "application", "tool", "resource", "other"] as const;
 export type IssueForm = (typeof ISSUE_FORMS)[number];

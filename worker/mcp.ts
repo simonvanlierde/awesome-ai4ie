@@ -14,13 +14,14 @@ import { IE_TAGS, ML_TAGS, TOPIC_TAGS } from "../src/data/tags.ts";
 import { cachedJson, type Env, loadIndex, MAX_QUERY, searchPapers, withinLimit } from "./search.ts";
 
 type Data = {
-  applications: AppEntry[];
+  applications: (AppEntry & { href: string })[];
   resources: ResourceEntry[];
   skills: Record<string, string>;
 };
 
 const keys = <K extends string>(o: Record<K, string>) => Object.keys(o) as [K, ...K[]];
 const fieldArg = z.enum(keys(IE_TAGS)).optional();
+const idArg = z.string().trim().min(1).max(200).optional();
 const list = (o: Record<string, string>) =>
   Object.entries(o)
     .map(([k, v]) => `${k} (${v})`)
@@ -36,6 +37,8 @@ const text = (value: unknown, isError = false) => ({
   ],
   isError,
 });
+// The text block stays for clients that read only content; structuredContent follows outputSchema.
+const json = (value: Record<string, unknown>) => ({ ...text(value), structuredContent: value });
 type Code = "not_found" | "rate_limited" | "unavailable";
 /** A tool error: JSON with a stable `error` code a client can branch on. */
 const fail = (error: Code, message: string, more: object = {}) =>
@@ -43,7 +46,7 @@ const fail = (error: Code, message: string, more: object = {}) =>
 // Every tool that reads a build asset answers "unavailable" when the asset fails to load.
 const READ_ONLY = { readOnlyHint: true, idempotentHint: true, openWorldHint: false };
 const guarded =
-  <A>(fn: (args: A) => Promise<ReturnType<typeof text>>) =>
+  <A, R>(fn: (args: A) => Promise<R>) =>
   async (args: A) => {
     try {
       return await fn(args);
@@ -53,6 +56,49 @@ const guarded =
       return fail("unavailable", "The reading list is unavailable, try again later.");
     }
   };
+
+const tags = z.array(z.string());
+const PAPER_HIT = z.object({
+  id: z.string(),
+  title: z.string(),
+  year: z.number(),
+  blurb: z.string(),
+  status: z.literal("proposal").optional(),
+  url: z.url(),
+});
+const PAPER = z.object({
+  id: z.string(),
+  title: z.string(),
+  authors: z.array(z.string()),
+  etAl: z.boolean(),
+  year: z.number(),
+  doi: z.string().optional(),
+  arxiv: z.string().optional(),
+  blurb: z.string(),
+  ie: tags,
+  topic: tags,
+  ml: tags,
+  type: tags,
+  status: z.literal("proposal").optional(),
+  url: z.url(),
+  bibtex: z.string().optional(),
+});
+// Loose: the curated entries carry more optional fields than a client needs to rely on.
+const APPLICATION = z.looseObject({
+  id: z.string(),
+  name: z.string(),
+  url: z.url(),
+  ie: tags,
+  ml: tags,
+});
+const RESOURCE = z.looseObject({
+  id: z.string(),
+  title: z.string(),
+  url: z.url(),
+  kind: z.string(),
+  ie: tags,
+  topic: tags,
+});
 
 function buildServer(request: Request, env: Env) {
   const origin = new URL(request.url).origin;
@@ -69,6 +115,7 @@ function buildServer(request: Request, env: Env) {
       title: "Search papers",
       description: `Find papers by meaning. Returns {papers: [...]} with up to 5 papers (id, title, year, blurb, url, and status "proposal" for one not yet reviewed), best first; an empty list when nothing is close. Pass an id to get_paper for the details. ${FROM}`,
       inputSchema: z.object({ question: z.string().trim().min(1).max(MAX_QUERY) }),
+      outputSchema: z.object({ papers: z.array(PAPER_HIT) }),
       annotations: READ_ONLY,
     },
     guarded(async ({ question }) => {
@@ -77,7 +124,7 @@ function buildServer(request: Request, env: Env) {
       if (!allowed) return fail("rate_limited", "Too many searches, try again in a minute.");
       const found = await searchPapers(env, origin, question);
       if (!found) return fail("unavailable", "Search is unavailable, try again later.");
-      return text({
+      return json({
         papers: found.map((e) => ({
           id: e.id,
           title: e.title,
@@ -96,12 +143,13 @@ function buildServer(request: Request, env: Env) {
       title: "Get a paper",
       description: `Get one paper by the id search_papers or list_applications returns: title, authors, year, DOI or arXiv id, blurb, IE fields, topics, ML techniques, url and BibTeX when known. ${FROM}`,
       inputSchema: z.object({ id: z.string().trim().min(1).max(200) }),
+      outputSchema: PAPER,
       annotations: READ_ONLY,
     },
     guarded(async ({ id }) => {
       const p = (await loadIndex(env, origin)).find((e) => e.id === id);
       if (!p) return fail("not_found", `No paper with id "${id}".`);
-      return text({
+      return json({
         id: p.id,
         title: p.title,
         authors: p.authors,
@@ -125,19 +173,31 @@ function buildServer(request: Request, env: Env) {
     "list_applications",
     {
       title: "List applications",
-      description: `List AI applications in industrial ecology (name, summary, maturity, IE fields, ML techniques, paper ids for get_paper). Filter by IE field and/or ML technique. ${ALL} ${FIELDS} ${FROM}`,
-      inputSchema: z.object({ field: fieldArg, technique: z.enum(keys(ML_TAGS)).optional() }),
+      description: `List AI applications in industrial ecology (id, name, summary, maturity, IE fields, ML techniques, paper ids for get_paper, url of its place on the site's map). Filter by id, IE field and/or ML technique. ${ALL} ${FIELDS} ${FROM}`,
+      inputSchema: z.object({
+        id: idArg,
+        field: fieldArg,
+        technique: z.enum(keys(ML_TAGS)).optional(),
+      }),
+      outputSchema: z.object({ applications: z.array(APPLICATION) }),
       annotations: READ_ONLY,
     },
-    guarded(async ({ field, technique }) => {
+    guarded(async ({ id, field, technique }) => {
       const all = (await loadData()).applications;
-      return text(
+      return json(
         absLinks({
           applications: all
             .filter(
-              (a) => (!field || a.ie.includes(field)) && (!technique || a.ml.includes(technique)),
+              (a) =>
+                (!id || a.id === id) &&
+                (!field || a.ie.includes(field)) &&
+                (!technique || a.ml.includes(technique)),
             )
-            .map((a) => (a.demo ? { ...a, demo: abs(a.demo) } : a)),
+            .map(({ href, ...a }) => ({
+              ...a,
+              url: abs(href),
+              ...(a.demo && { demo: abs(a.demo) }),
+            })),
         }),
       );
     }),
@@ -147,20 +207,23 @@ function buildServer(request: Request, env: Env) {
     "list_resources",
     {
       title: "List resources",
-      description: `List tools, datasets, models, courses, videos, posts and communities outside the reading list (title, url, kind, blurb, tags). Filter by kind, IE field and/or topic. ${ALL} ${FIELDS} ${TOPICS} ${FROM}`,
+      description: `List tools, datasets, models, courses, videos, posts and communities outside the reading list (id, title, url, kind, blurb, tags). Filter by id, kind, IE field and/or topic. ${ALL} ${FIELDS} ${TOPICS} ${FROM}`,
       inputSchema: z.object({
+        id: idArg,
         kind: z.enum(keys(RESOURCE_KINDS)).optional(),
         field: fieldArg,
         topic: z.enum(keys(TOPIC_TAGS)).optional(),
       }),
+      outputSchema: z.object({ resources: z.array(RESOURCE) }),
       annotations: READ_ONLY,
     },
-    guarded(async ({ kind, field, topic }) => {
+    guarded(async ({ id, kind, field, topic }) => {
       const all = (await loadData()).resources;
-      return text(
+      return json(
         absLinks({
           resources: all.filter(
             (r) =>
+              (!id || r.id === id) &&
               (!kind || r.kind === kind) &&
               (!field || r.ie.includes(field)) &&
               (!topic || r.topic.includes(topic)),

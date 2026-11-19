@@ -54,13 +54,35 @@ const MCP_DATA = {
       ie: ["lca"],
       ml: ["llm"],
       summary: "See [the map](/applications-map/).",
+      href: "/applications-map/lca/#a1",
     },
-    { id: "a2", name: "A2", ie: ["sem"], ml: ["cv"], demo: "demos/" },
+    {
+      id: "a2",
+      name: "A2",
+      ie: ["sem"],
+      ml: ["cv"],
+      demo: "demos/",
+      href: "/applications-map/sem/#a2",
+    },
   ],
   resources: [
-    { id: "r1", title: "R1", kind: "tool", ie: [], topic: [] },
-    { id: "r2", title: "R2", kind: "dataset", ie: ["lca"], topic: ["buildings"] },
-    { id: "r3", title: "R3", kind: "course", ie: ["sem"], topic: [] },
+    { id: "r1", title: "R1", url: "https://example.org/r1", kind: "tool", ie: ["eeio"], topic: [] },
+    {
+      id: "r2",
+      title: "R2",
+      url: "https://example.org/r2",
+      kind: "dataset",
+      ie: ["lca"],
+      topic: ["buildings"],
+    },
+    {
+      id: "r3",
+      title: "R3",
+      url: "https://example.org/r3",
+      kind: "course",
+      ie: ["sem"],
+      topic: [],
+    },
   ],
   skills: { "ml-reproducibility": "# Skill text" },
 };
@@ -386,14 +408,39 @@ describe("/mcp", () => {
     expect(a2.demo).toBe("https://ai4ie.org/demos/");
   });
 
-  it("filters resources by kind, field and topic", async () => {
-    const ids = async (args: object) =>
-      payload(await call("list_resources", args)).resources.map((r: { id: string }) => r.id);
-    expect(await ids({})).toEqual(["r1", "r2", "r3"]);
-    expect(await ids({ kind: "tool" })).toEqual(["r1"]);
-    expect(await ids({ field: "sem" })).toEqual(["r3"]);
-    expect(await ids({ topic: "buildings" })).toEqual(["r2"]);
-    expect(await ids({ field: "lca", topic: "buildings" })).toEqual(["r2"]);
+  it("links each application to its place on the map, and finds one by id", async () => {
+    const [a1] = payload(await call("list_applications", {})).applications;
+    expect([a1.url, a1.href]).toEqual(["https://ai4ie.org/applications-map/lca/#a1", undefined]);
+    const one = async (name: string, list: string, id: string) =>
+      payload(await call(name, { id }))[list].map((x: { id: string }) => x.id);
+    expect(await one("list_applications", "applications", "a2")).toEqual(["a2"]);
+    expect(await one("list_resources", "resources", "r2")).toEqual(["r2"]);
+    expect(await one("list_resources", "resources", "nope")).toEqual([]);
+  });
+
+  it("answers structured content that matches each tool's output schema", async () => {
+    const { tools } = (await rpc("tools/list", {})).result;
+    const withSchema = tools
+      .filter((t: { outputSchema?: object }) => t.outputSchema)
+      .map((t: { name: string }) => t.name)
+      .sort();
+    expect(withSchema).toEqual([
+      "get_paper",
+      "list_applications",
+      "list_resources",
+      "search_papers",
+    ]);
+    for (const [name, args] of [
+      ["search_papers", { question: "a b c" }],
+      ["get_paper", { id: "near" }],
+      ["list_applications", {}],
+      ["list_resources", {}],
+    ] as const) {
+      // biome-ignore lint/performance/noAwaitInLoops: the search cases share one rate-limit fake
+      const r = await call(name, args);
+      expect(r.isError, name).toBe(false);
+      expect(r.structuredContent, name).toEqual(payload(r));
+    }
   });
 
   it("returns a skill, and lists the names for an unknown one", async () => {

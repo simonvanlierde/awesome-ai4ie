@@ -49,13 +49,15 @@ A read-only [MCP](https://modelcontextprotocol.io) server runs on the site's Wor
 | --- | --- |
 | `search_papers(question)` | Up to 5 papers close in meaning to a question (at most 300 characters) |
 | `get_paper(id)` | One paper's authors, DOI or arXiv id, tags, link and BibTeX |
-| `list_applications(field?, technique?)` | Applications, filtered by IE field (`lca`, `sem`, `eeio`, `circular`, `symbiosis`) and ML technique |
-| `list_resources(kind?, field?, topic?)` | Tools, datasets, courses and other resources, filtered by kind, IE field and topic |
+| `list_applications(id?, field?, technique?)` | Applications with a link to each on the map, filtered by id, IE field (`lca`, `sem`, `eeio`, `circular`, `symbiosis`) and ML technique |
+| `list_resources(id?, kind?, field?, topic?)` | Tools, datasets, courses and other resources, filtered by id, kind, IE field and topic |
 | `get_skill(name)` | The `SKILL.md` text of one Agent Skill |
 
-`search_papers` is the search dialog's meaning search: the same code, the same limit of 30 questions a minute per IP address (per /64 for IPv6), and the same path for the question, which goes to Cloudflare Workers AI and is not stored ([privacy](src/content/docs/privacy.md)). Both share that limit, so heavy use from one address slows the dialog too. When search is down it returns a tool error, not an empty list; every tool error is JSON with a stable `error` code: `not_found`, `rate_limited` or `unavailable`. Paper ids for `get_paper` come from `search_papers` and `list_applications`.
+`search_papers` is the search dialog's meaning search: the same code, the same limit of 30 questions a minute per IP address (per /64 for IPv6), and the same path for the question, which goes to Cloudflare Workers AI and is not stored ([privacy](src/content/docs/privacy.md)). Both share that limit, so heavy use from one address slows the dialog too. When search is down it returns a tool error, not an empty list; every tool error is JSON with a stable `error` code: `not_found`, `rate_limited` or `unavailable`. Paper ids for `get_paper` come from `search_papers` and `list_applications`. Every tool but `get_skill` declares an output schema and returns its JSON as structured content too.
 
 Add it to a client, for example Claude Code: `claude mcp add --transport http ai4ie https://awesome-ai4ie.simonvanlierde.workers.dev/mcp`. Other clients take the same URL as a remote server; only Claude Code has been tested. A client outside a browser sends no Origin header and is always let in; a browser page may call only from the server's own host or localhost. The code is in [`worker/mcp.ts`](worker/mcp.ts); it reads the papers from `literature-index.json`, as `/api/search` does, and the rest from `mcp-data.json`.
+
+The server reports the version set in `worker/mcp.ts` (now 1.0.0). It versions the tool contract, not the site, and changes only in a release, with a CHANGELOG entry: the minor number when a tool, an argument or a field is added, the major number when one is removed or renamed or changes meaning.
 
 ## License
 
