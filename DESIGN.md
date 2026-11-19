@@ -94,7 +94,7 @@ the page: the favicon and the README.
   lights its bands and names its reach in a live readout line under the plate; on touch the
   first tap lights a node and the second opens its list. On load the bands run in once from
   the fields while the cover mark unfolds: together the site's
-  one entrance, about 1.2 seconds. Reduced motion
+  one entrance, under a second. Reduced motion
   skips both.
 - **Fig. 2.** The see, read, try path for one map cell, each step topped by the ink of the
   chapter it links to.

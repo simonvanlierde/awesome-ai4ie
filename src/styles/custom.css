@@ -309,7 +309,8 @@ h1#_top,
   transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .brand-mark :is(.bm-a-leg, .bm-a-full, .bm-e-ext, .bm-e-base, .bm-i1, .bm-i2, .bm-stem) {
-  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  /* As long as the moves, so no letter shows before the strokes around it have parted. */
+  transition: opacity 0.34s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .brand-mark .bm-4 {
   transition:
@@ -808,6 +809,22 @@ starlight-menu-button button {
 .cover-mark .brand-mark {
   width: 100%;
   height: auto;
+}
+/* Unfolding, the E (the longest move) leads and the shorter moves start a beat later,
+   so the 4 never crosses the E; folding back runs all at once. */
+.cover-mark.is-open .brand-mark--glyph .bm-i2 {
+  transition-delay: 30ms;
+}
+.cover-mark.is-open .brand-mark--glyph .bm-4 {
+  transition-delay: 60ms;
+}
+.cover-mark.is-open .brand-mark--glyph .bm-i1 {
+  transition-delay: 90ms;
+}
+/* Folded, the cover's Æ-4 sits flush left with the title, so the A stays put and the
+   word unfolds to the right; the 404 plate keeps it centred. */
+.cover-mark .brand-mark--glyph .bm-root {
+  transform: none;
 }
 /* Fig. 404: the mark as a plate, framed by the dashed gap outline. */
 .plate {

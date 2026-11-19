@@ -84,11 +84,11 @@ if (is404) {
     const open = () => mark.classList.add("is-open");
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) open();
     else {
-      let timer = setTimeout(open, 450);
+      let timer = setTimeout(open, 180);
       mark.addEventListener("pointerenter", () => {
         clearTimeout(timer);
         mark.classList.remove("is-open");
-        timer = setTimeout(open, 500);
+        timer = setTimeout(open, 300);
       });
     }
   }
