@@ -1,13 +1,13 @@
 ---
 title: Prompts & skills
-description: Copy-pasteable prompts with use-when notes, and complete Claude skill files ready to install.
+description: Copy-pasteable prompts with use-when notes, and complete Agent Skill files ready to install.
 ---
 
 import { Code } from '@astrojs/starlight/components';
 import mlReproducibility from '@skills/ml-reproducibility/SKILL.md?raw';
 import lcaSanityCheck from '@skills/lca-data-sanity-check/SKILL.md?raw';
 
-The copy-paste page: starter prompts to adapt, and complete Claude skill files.
+The copy-paste page: starter prompts to adapt, and complete Agent Skill files.
 When a vetted group version does better than something here, replace it.
 
 ## Reusable prompts
@@ -80,10 +80,11 @@ convert, or fill from general knowledge. Flag any value whose unit differs from
 the requested unit rather than converting it.
 ```
 
-## Claude skill files
+## Agent Skill files
 
-Reusable [Claude skills](https://docs.claude.com/en/docs/claude-code/skills) that
-package a workflow (checklist + instructions) so it triggers automatically.
+Reusable [Agent Skills](https://agentskills.io) package a workflow (checklist +
+instructions) so it triggers automatically. The format is open, and several coding
+agents read it.
 
 Two working skills follow in full. Open **Show the skill file** and use the copy
 button. Save the content as `SKILL.md` in your skills folder, or get the file from
@@ -114,5 +115,5 @@ mappings, a known-answer test, and a mass/energy balance check.
 To add your own, start from
 [`skills/SKILL-template.md`](repo:blob/main/skills/SKILL-template.md).
 Put each skill in its own folder under `skills/`.
-[CONTRIBUTING](repo:blob/main/CONTRIBUTING.md#adding-a-claude-skill) describes
+[CONTRIBUTING](repo:blob/main/CONTRIBUTING.md#adding-an-agent-skill) describes
 the format.
