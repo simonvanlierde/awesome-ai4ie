@@ -1,9 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 import { EMBED_MODEL, queryText } from "../src/lib/semantic";
 import { encodeVector } from "../src/lib/vectors";
-import worker, { limitKey } from "./index";
+import worker from "./index";
+import { limitKey } from "./search";
 
 const paper = (title: string, v?: number[]) => ({
+  id: title,
   title,
   year: 2024,
   blurb: "B.",
@@ -25,6 +27,23 @@ const INDEX = [
   paper("unembedded"),
 ];
 
+const SSE_DATA = /^data: (.*)$/m;
+const MCP_DATA = {
+  papers: [
+    {
+      ...paper("near"),
+      authors: ["Doe, J."],
+      href: "/literature/?papers=near",
+      bibtex: "@article{near}",
+    },
+  ],
+  applications: [
+    { id: "a1", name: "A1", ie: ["lca"], ml: ["llm"] },
+    { id: "a2", name: "A2", ie: ["mfa"], ml: ["cv"] },
+  ],
+  skills: { "ml-reproducibility": "# Skill text" },
+};
+
 type Opts = { allowed?: boolean; index?: object[]; ai?: () => Promise<{ data: number[][] }> };
 const env = ({ allowed = true, index = INDEX, ai }: Opts = {}) => {
   const runs: { model: string; text: string[] }[] = [];
@@ -38,12 +57,15 @@ const env = ({ allowed = true, index = INDEX, ai }: Opts = {}) => {
         return ai ? ai() : Promise.resolve({ data: [[6, 1.5]] });
       },
     },
-    ASSETS: { fetch: async () => Response.json(index) },
     SEARCH_LIMIT: {
       limit: ({ key }: { key: string }) => {
         keys.push(key);
         return Promise.resolve({ success: allowed });
       },
+    },
+    ASSETS: {
+      fetch: async (url: Request | string) =>
+        String(url).endsWith("/mcp-data.json") ? Response.json(MCP_DATA) : Response.json(index),
     },
   };
 };
@@ -120,3 +142,87 @@ describe("limitKey", () => {
     expect(limitKey("192.0.2.1")).toBe("192.0.2.1");
   });
 });
+
+describe("/mcp", () => {
+    const rpc = async (method: string, params: object, e = env()) => {
+      const r = await worker.fetch(
+        new Request("https://ai4ie.org/mcp", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            accept: "application/json, text/event-stream",
+          },
+          body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+        }),
+        e,
+      );
+      const body = await r.text();
+      // A reply is plain JSON or one SSE "data:" event.
+      const json = body.startsWith("{") ? body : (body.match(SSE_DATA)?.[1] ?? "{}");
+      return JSON.parse(json);
+    };
+    const call = (name: string, args: object, e = env()) =>
+      rpc("tools/call", { name, arguments: args }, e).then((m) => m.result);
+    const payload = (r: { content: { text: string }[] }) => JSON.parse(r.content[0].text);
+
+    it("initializes and lists the four tools", async () => {
+      const init = await rpc("initialize", {
+        protocolVersion: "2025-11-25",
+        capabilities: {},
+        clientInfo: { name: "t", version: "1" },
+      });
+      expect(init.result.serverInfo.name).toBe("ai4ie");
+      const list = await rpc("tools/list", {});
+      expect(list.result.tools.map((t: { name: string }) => t.name).sort()).toEqual([
+        "get_paper",
+        "get_skill",
+        "list_applications",
+        "search_papers",
+      ]);
+    });
+
+    it("searches with an absolute url and the id", async () => {
+      const r = await call("search_papers", { question: "waste sorting with cameras" });
+      expect(payload(r).papers).toEqual([
+        {
+          id: "near",
+          title: "near",
+          year: 2024,
+          blurb: "B.",
+          url: "https://ai4ie.org/literature/?papers=near",
+        },
+      ]);
+    });
+
+    it("gets a paper with its BibTeX, and reports an unknown id", async () => {
+      expect(payload(await call("get_paper", { id: "near" })).bibtex).toBe("@article{near}");
+      expect((await call("get_paper", { id: "nope" })).isError).toBe(true);
+    });
+
+    it("filters applications and returns a skill", async () => {
+      expect(payload(await call("list_applications", { field: "mfa" })).applications).toHaveLength(
+        1,
+      );
+      expect(payload(await call("list_applications", {})).applications).toHaveLength(2);
+      expect((await call("get_skill", { name: "ml-reproducibility" })).content[0].text).toBe(
+        "# Skill text",
+      );
+      expect(payload(await call("get_skill", { name: "toString" })).skills).toEqual([
+        "ml-reproducibility",
+      ]);
+    });
+
+    it("rejects bad arguments and rate-limited searches", async () => {
+      const bad = [
+        ["search_papers", { question: "x".repeat(301) }],
+        ["search_papers", { question: 5 }],
+        ["list_applications", { field: "bogus" }],
+        ["get_paper", {}],
+      ] as const;
+      const replies = await Promise.all(
+        bad.map(([name, args]) => rpc("tools/call", { name, arguments: args })),
+      );
+      for (const m of replies) expect(m.error ?? m.result?.isError).toBeTruthy();
+      expect((await call("search_papers", { question: "a b c" }, env({ allowed: false }))).isError).toBe(true);
+    });
+  });

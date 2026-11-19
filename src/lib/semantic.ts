@@ -16,6 +16,7 @@ export function queryText(q: string): string {
 
 /** One literature entry as the search index ships it (src/pages/literature-index.json.ts). */
 export type IndexEntry = {
+  id: string;
   title: string;
   year: number;
   blurb: string;

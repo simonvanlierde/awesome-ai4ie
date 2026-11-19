@@ -52,6 +52,19 @@ flowchart LR
 - [`src/components/overrides/`](src/components/overrides/) replaces Starlight's head, hero, page title and footer.
 - [`scripts/a11y.mjs`](scripts/a11y.mjs) runs axe over every built page. CI deploys to GitHub Pages only after the checks, the build and that scan pass.
 
+## MCP server
+
+A read-only [MCP](https://modelcontextprotocol.io) server runs on the site's Worker at `https://ai4ie.org/mcp` (Streamable HTTP, no authentication, no sessions). It serves the curated reading list; it returns sources and never writes answers. Questions go to Cloudflare Workers AI and are not logged by this code.
+
+| Tool | Returns |
+| --- | --- |
+| `search_papers(question)` | Up to 5 papers close in meaning to a question (at most 300 characters; rate-limited per IP) |
+| `get_paper(id)` | One paper's fields and BibTeX |
+| `list_applications(field?, technique?)` | Applications, filtered by IE field and ML technique tag |
+| `get_skill(name)` | The `SKILL.md` text of one Agent Skill |
+
+Add it to a client, for example Claude Code: `claude mcp add --transport http ai4ie https://ai4ie.org/mcp`. Other clients take the same URL as a remote server. The code is in [`worker/mcp.ts`](worker/mcp.ts) and reads `mcp-data.json` from the build.
+
 ## License
 
 The code is under the [MIT License](LICENSE). The content is under

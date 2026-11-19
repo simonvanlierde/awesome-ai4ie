@@ -9,6 +9,7 @@ export async function GET() {
   const vectors = loadVectors();
   const entries = (await getCollection("literature")).map(({ id, data: e }) => {
     return {
+      id,
       title: e.title,
       year: e.year,
       blurb: e.blurb,
