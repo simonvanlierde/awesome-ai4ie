@@ -44,6 +44,11 @@ describe("openalex-candidates", () => {
     expect(fresh.map((l: { doi: string }) => l.doi)).toEqual(["10.1/c"]);
   });
 
+  it("knows a preprint listed by its arXiv id", () => {
+    const fresh = newLeads([{ doi: "10.48550/arxiv.2611.07947" }], [{ arxiv: "2611.07947" }], []);
+    expect(fresh).toEqual([]);
+  });
+
   it("needs an AI term and an IE term", () => {
     expect(QUERY).toMatch(/^\(.*"machine learning".*\) AND \(.*"life cycle assessment".*\)$/);
   });
@@ -52,6 +57,11 @@ describe("openalex-candidates", () => {
     expect(QUERY).not.toContain("artificial intelligence");
     expect(VENUE_QUERY).toContain('"artificial intelligence"');
     expect(VENUE_QUERY).not.toContain("AND");
+  });
+
+  it("names input-output analysis, not any input-output pair", () => {
+    expect(QUERY).toContain('"input-output analysis"');
+    expect(QUERY).not.toContain('"input-output"');
   });
 
   it("warns when new leads score below the open queue's median", () => {

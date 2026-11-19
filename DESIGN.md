@@ -91,8 +91,9 @@ or tapping the tile inks them in again.
   holding exactly the papers it counts. Labels are the first words of each tag's full name.
   Pointing at a band lifts it and fades the rest. Pointing at, focusing or tapping a node
   lights its bands and names its reach in a live readout line under the plate; on touch the
-  first tap lights a node and the second opens its list. On load the bands run in once from
-  the fields while the title's end mark inks in. Reduced motion skips both.
+  first tap lights a node and the second opens its list. On load the bands draw
+  along their curves, field by field, while the title's end mark inks in.
+  Reduced motion skips both.
 - **Numbered tables.** A bold "Table N.N" title above, a source line below. Numbering and
   markup are in [CONTRIBUTING.md](CONTRIBUTING.md#look-and-feel).
 - **Application entries.** On the map page, each field's section has its synthesis paragraph,

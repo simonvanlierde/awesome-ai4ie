@@ -2,6 +2,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { z } from "astro/zod";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
+import { knownDois } from "../../scripts/openalex-candidates.mjs";
 import { applicationSchema, literatureSchema, resourceSchema } from "./schemas";
 import { TAG_DIMS, TOPIC_TAGS } from "./tags";
 
@@ -111,7 +112,7 @@ describe("candidates.yaml", () => {
     status?: string;
     why?: string;
   })[];
-  const listed = new Set(lit.map((e) => e.doi?.toLowerCase()));
+  const listed = knownDois(lit);
 
   it("holds each DOI once, with a known status and a numbered why for rejects", () => {
     const dois = cands.map((c) => c.doi);

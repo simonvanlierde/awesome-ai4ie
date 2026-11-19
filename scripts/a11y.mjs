@@ -84,6 +84,13 @@ for (const colorScheme of ["light", "dark"]) {
   ).newPage();
   for (const path of pages) {
     await page.goto(new URL(path, root).href);
+    if (path === "") {
+      const targets = await page
+        .locator(".flow svg:visible .flow-hit")
+        .evaluateAll((els) => els.map((el) => el.getBoundingClientRect().height));
+      if (targets.some((height) => height < 24))
+        fail("320px: a Fig. 1 label has a hit area under 24px");
+    }
     await page.addStyleTag({ content: "html { font-size: 200% !important; }" });
     const wider = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
     if (wider > 0) {
