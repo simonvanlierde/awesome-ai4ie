@@ -9,6 +9,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- A `robots.txt` that names the sitemap, lets search and answer engines index the site, and asks
+  AI training crawlers to stay away (`Content-Signal: search=yes, ai-input=yes, ai-train=no`).
 - An RSS feed of new literature entries at `/literature/feed.xml`, linked from the Literature page.
 - BibTeX and RIS export on the literature page, for one entry or for the filtered view. The
   records come from Crossref and arXiv, cleaned and cached in `src/data/citations.json` by
