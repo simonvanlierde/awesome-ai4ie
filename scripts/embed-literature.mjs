@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Embeds every literature.yaml entry for meaning search and writes
- * src/data/literature-vectors.json, which the build ships in literature-index.json.
+ * src/data/literature-vectors.json, which the build ships as literature-vectors.bin.
  * The site's /api/search Worker then embeds only the question. An entry without a
  * vector (the file is missing, or the entry was edited since) is not searched.
  *

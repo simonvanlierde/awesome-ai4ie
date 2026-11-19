@@ -77,9 +77,15 @@ jobs:
         with:
           node-version: ${{ steps.node.outputs.version }}
           build-cmd: ${{ env.EMBED == 'true' && 'pnpm run embed && pnpm run build' || 'pnpm run build' }}
+      # Rows 0 to n-1, each named once, and 4096 bytes a row: the embedding model gives
+      # 1024 float32 values.
       - name: Every entry has a vector
         if: env.EMBED == 'true'
-        run: jq -e 'length > 0 and all(.[]; .vector)' dist/literature-index.json
+        run: >-
+          jq -e --argjson bytes "$(stat -c %s dist/literature-vectors.bin)"
+          'length > 0 and ([.[].vectorRow] | sort) == [range(length)]
+          and $bytes == length * 4096'
+          dist/literature-index.json
       # The Worker's tests use hand-written fixtures; this checks the build gives what they mimic.
       - name: Worker data has the fields the tools read
         run: |
@@ -173,7 +179,7 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read
-      pull-requests: read
+      pull-requests: write
     # Shared with preview-retire.yml, so a deletion waits for an upload in flight.
     concurrency:
       group: preview-${{ github.event.pull_request.number }}
@@ -230,6 +236,17 @@ jobs:
           # Wrangler prints upload progress before the JSON object on stdout.
           url="$(sed -n '/^{/,$p' preview.json | jq -er '.preview.urls[0]')"
           echo "url=$url" >> "$GITHUB_OUTPUT"
+      # Posts the address as one pull request comment, edited on each push. It runs before
+      # the checks below, so a failing Preview still shows its link.
+      - name: Comment the Preview address
+        if: steps.preview.outputs.url != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+          URL: ${{ steps.preview.outputs.url }}
+        run: '"$GITHUB_WORKSPACE/.github/scripts/preview-comment.sh" Preview "$URL"'
       # A missing binding passes the deploy and only fails on the first request. The new
       # version takes some seconds to go live, so curl retries.
       - name: Meaning search answers on the Preview

@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { EMBED_MODEL, queryText } from "../src/lib/semantic";
-import { encodeVector } from "../src/lib/vectors";
+import { EMBED_DIM, EMBED_MODEL, queryText } from "../src/lib/semantic";
 import worker from "./index";
 import { AI_TIMEOUT_MS, limitKey } from "./search";
 
@@ -18,8 +17,19 @@ const paper = (title: string, v?: number[]) => ({
   type: ["method"],
   href: `/literature/#${title}`,
   bibtex: `@article{${title}}`,
-  vector: v && encodeVector(v),
+  vector: v,
 });
+// Fixtures name two dimensions; the Worker expects the model's full length.
+const full = (v: number[]) => [...v, ...Array(EMBED_DIM - v.length).fill(0)];
+// The two files the build ships for these papers: the index with a row per vector, and
+// literature-vectors.bin holding those rows.
+const shipped = (papers: object[]) => {
+  const rows: number[][] = [];
+  const index = papers.map(({ vector, ...e }: { vector?: number[] }) =>
+    vector ? { ...e, vectorRow: rows.push(full(vector)) - 1 } : e,
+  );
+  return { index, bin: new Float32Array(rows.flat()).buffer };
+};
 const hit = (title: string) => ({
   title,
   year: 2024,
@@ -70,7 +80,7 @@ const env = ({ allowed = true, index = INDEX, ai, assets }: Opts = {}) => {
     AI: {
       run: (model: string, input: { text: string[] }) => {
         runs.push({ model, text: input.text });
-        return ai ? ai() : Promise.resolve({ data: [[6, 1.5]] });
+        return ai ? ai() : Promise.resolve({ data: [full([6, 1.5])] });
       },
     },
     SEARCH_LIMIT: {
@@ -83,7 +93,11 @@ const env = ({ allowed = true, index = INDEX, ai, assets }: Opts = {}) => {
     ASSETS: {
       fetch: async (url: Request | string) =>
         assets?.(String(url)) ??
-        (String(url).endsWith("/mcp-data.json") ? Response.json(MCP_DATA) : Response.json(index)),
+        (String(url).endsWith("/mcp-data.json")
+          ? Response.json(MCP_DATA)
+          : String(url).endsWith("/literature-vectors.bin")
+            ? new Response(shipped(index).bin)
+            : Response.json(shipped(index).index)),
     },
   };
 };
@@ -165,6 +179,18 @@ describe("worker", () => {
 
   it("answers 503 when no entry has a vector, without calling the model", async () => {
     const e = env({ index: [paper("unembedded")] });
+    expect((await (await fresh()).fetch(post('{"q": "a b c"}'), e)).status).toBe(503);
+    expect(e.runs).toEqual([]);
+  });
+
+  it.each([
+    ["one row short", (3 - 1) * EMBED_DIM * 4],
+    ["rows of another length", 3 * 2 * 4],
+    ["empty", 0],
+  ])("answers 503 when the vectors file is %s, without calling the model", async (_, n) => {
+    const e = env({
+      assets: (url) => (url.endsWith(".bin") ? new Response(new Uint8Array(n)) : undefined),
+    });
     expect((await (await fresh()).fetch(post('{"q": "a b c"}'), e)).status).toBe(503);
     expect(e.runs).toEqual([]);
   });
@@ -320,6 +346,7 @@ describe("/mcp", () => {
   it("answers unavailable when an asset fails, and loads it again next time", async () => {
     for (const [file, name, args] of [
       ["/literature-index.json", "get_paper", { id: "near" }],
+      ["/literature-vectors.bin", "search_papers", { question: "a b c" }],
       ["/mcp-data.json", "list_applications", {}],
       ["/mcp-data.json", "list_resources", {}],
       ["/mcp-data.json", "get_skill", { name: "ml-reproducibility" }],
@@ -334,6 +361,17 @@ describe("/mcp", () => {
       expect(payload(await call(name, args, { e, w })).error).toBe("unavailable");
       expect((await call(name, args, { e, w })).isError).toBe(false);
     }
+  });
+
+  it("finds a paper by id while the vectors file fails", async () => {
+    const e = env({
+      assets: (url) => (url.endsWith(".bin") ? new Response("", { status: 500 }) : undefined),
+    });
+    const w = await fresh();
+    expect(payload(await call("search_papers", { question: "a b c" }, { e, w })).error).toBe(
+      "unavailable",
+    );
+    expect(payload(await call("get_paper", { id: "near" }, { e, w })).id).toBe("near");
   });
 
   it("filters applications, with site links made absolute", async () => {

@@ -99,7 +99,7 @@ function buildServer(request: Request, env: Env) {
       annotations: READ_ONLY,
     },
     guarded(async ({ id }) => {
-      const p = (await loadIndex(env, origin)).all.find((e) => e.id === id);
+      const p = (await loadIndex(env, origin)).find((e) => e.id === id);
       if (!p) return fail("not_found", `No paper with id "${id}".`);
       return text({
         id: p.id,

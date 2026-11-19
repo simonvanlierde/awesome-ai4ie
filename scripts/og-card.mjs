@@ -44,6 +44,8 @@ const browser = await chromium.launch();
 const page = await browser.newPage({
   viewport: { width: 1200, height: 630 },
   colorScheme: "light",
+  // The settled page: no title hand-off, which would hide the title mid-fade.
+  reducedMotion: "reduce",
   // The card CSS is an injected style, which the page's style-src would block.
   bypassCSP: true,
 });
@@ -60,9 +62,7 @@ await page.evaluate(
     card.append(h1, flow);
     document.body.replaceChildren(card);
     document
-      .querySelectorAll(
-        "#og .flow figcaption, #og .flow-readout, #og .flow-hit, #og .cover-endmark",
-      )
+      .querySelectorAll("#og .flow figcaption, #og .flow-readout, #og .flow-hit")
       .forEach((el) => {
         el.remove();
       });
@@ -71,6 +71,7 @@ await page.evaluate(
     // The page's script fitted the plate and wrote where its bands start and end. A copy
     // replaces it, so that script's resize observer does not fit it again.
     const fitted = flow.querySelector("svg");
+    if (!fitted.dataset.x1) throw new Error("Fig. 1 was not fitted: its svg has no data-x1");
     const svg = fitted.cloneNode(true);
     fitted.replaceWith(svg);
     const H = svg.viewBox.baseVal.height;
