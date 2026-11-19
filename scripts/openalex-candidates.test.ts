@@ -2,12 +2,14 @@ import { describe, expect, it } from "vitest";
 import {
   abstractText,
   floor,
+  lowBatch,
   nearest,
   neighbourTags,
   newLeads,
   QUERY,
   score,
   toLead,
+  VENUE_QUERY,
 } from "./openalex-candidates.mjs";
 
 const work = {
@@ -44,6 +46,19 @@ describe("openalex-candidates", () => {
 
   it("needs an AI term and an IE term", () => {
     expect(QUERY).toMatch(/^\(.*"machine learning".*\) AND \(.*"life cycle assessment".*\)$/);
+  });
+
+  it("counts a bare AI mention only in the core venues", () => {
+    expect(QUERY).not.toContain("artificial intelligence");
+    expect(VENUE_QUERY).toContain('"artificial intelligence"');
+    expect(VENUE_QUERY).not.toContain("AND");
+  });
+
+  it("warns when new leads score below the open queue's median", () => {
+    const leads = (...s: number[]) => s.map((v) => ({ score: v }));
+    expect(lowBatch(leads(0.02, 0.03), leads(0.05, 0.06, 0.07))).toContain("Low batch");
+    expect(lowBatch(leads(0.06, 0.08), leads(0.05, 0.06, 0.07))).toBeNull();
+    expect(lowBatch([], leads(0.05))).toBeNull();
   });
 
   // unit vectors in 2-D: listed papers near the x axis, rejected ones near the y axis

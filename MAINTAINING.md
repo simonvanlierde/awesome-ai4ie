@@ -53,8 +53,10 @@ If a suggestion doesn't hold up, say why in the issue and close it.
   doesn't check README.md or this file. Publishers that block crawlers answer 403 or 429, and
   the check counts those as fine.
 - **Weekly candidates.** Every Monday [`candidates.yml`](.github/workflows/candidates.yml) asks
-  OpenAlex for new papers that pair an AI term with an industrial-ecology term. It adds up to
-  25 to `src/data/candidates.yaml` on the `openalex-candidates` branch, with one open pull request.
+  OpenAlex for new papers that pair an AI term with an industrial-ecology term. In the core
+  industrial-ecology journals, a method term alone is enough. It adds up to 25 leads to
+  `src/data/candidates.yaml` on the `openalex-candidates` branch, with one open pull request.
+  Each run comments its counts there, and warns when its leads score low.
   Each lead carries a `score` (closeness to listed papers minus closeness to rejected leads,
   from a small local embedding model), the ids of its `near`est listed papers, and the tags
   those share as `hints`. Open leads come first, best score first, and every run re-scores

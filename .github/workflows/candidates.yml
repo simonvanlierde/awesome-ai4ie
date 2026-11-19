@@ -51,7 +51,8 @@ jobs:
             echo "FRESH=1" >>"$GITHUB_ENV" # replaces a closed PR's branch
           fi
 
-      - run: node scripts/openalex-candidates.mjs
+      - shell: bash # with pipefail, so a failed run stops the job
+        run: node scripts/openalex-candidates.mjs | tee "$RUNNER_TEMP/summary.txt"
 
       - name: Commit, push and open the PR
         env:
@@ -66,3 +67,5 @@ jobs:
               --title "chore(literature): new OpenAlex candidates" \
               --body "New leads from OpenAlex in \`src/data/candidates.yaml\`. Mark each one \`rejected\` (with a why) or \`listed\`, as MAINTAINING.md describes, then merge. A run by the workflow token starts no checks: close and reopen this PR to run CI."
           fi
+          # Each run's counts, and a warning when its leads score low, for the curator.
+          gh pr comment "$BRANCH" --body-file "$RUNNER_TEMP/summary.txt"

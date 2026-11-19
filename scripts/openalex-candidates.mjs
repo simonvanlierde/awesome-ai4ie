@@ -13,6 +13,7 @@
 // already in literature.yaml or candidates.yaml, so a rejected lead stays rejected.
 import { readFile, writeFile } from "node:fs/promises";
 import process from "node:process";
+import { setTimeout as sleep } from "node:timers/promises";
 import { pathToFileURL } from "node:url";
 import { parse, stringify } from "yaml";
 
@@ -21,18 +22,20 @@ const LIT_PATH = new URL("../src/data/literature.yaml", import.meta.url);
 const CAND_PATH = new URL("../src/data/candidates.yaml", import.meta.url);
 const MODEL = "Xenova/bge-small-en-v1.5";
 const K = 3;
-// Share of listed papers allowed to score below the cut-off: about 94% of listed
-// and 75% of rejected papers fall on the right side of it (leave-one-out, 2026-11).
+// Share of listed papers allowed to score below the cut-off: 79 of 83 listed and
+// 30 of 53 rejected papers fall on the right side of it (leave-one-out, 2026-11).
+// A higher cut catches few more rejects for each listed paper it loses.
 const FLOOR_PERCENTILE = 0.06;
 const TAG_DIMS = ["ie", "topic", "ml"];
 
+// A bare "artificial intelligence" mostly matches papers that mention AI in
+// passing, so it counts only in the core venues below.
 const AI = [
   "machine learning",
   "deep learning",
   "neural network",
   "large language model",
   "computer vision",
-  "artificial intelligence",
 ];
 const IE = [
   "life cycle assessment",
@@ -45,7 +48,27 @@ const IE = [
   "input-output",
   "carbon footprint",
 ];
-export const QUERY = `(${AI.map((t) => `"${t}"`).join(" OR ")}) AND (${IE.map((t) => `"${t}"`).join(" OR ")})`;
+// J. Ind. Ecol., Environ. Sci. Technol., Resour. Conserv. Recycl. (and its Advances),
+// Waste Manag. and Int. J. Life Cycle Assess. Their abstracts often name no IE
+// term, as the venue already implies one, so a method term is enough there.
+const VENUES = ["S203731762", "S13479253", "S18051569", "S4210240235", "S19266977", "S108239708"];
+const METHODS = [
+  ...AI,
+  "artificial intelligence",
+  "random forest",
+  "gradient boosting",
+  "natural language processing",
+  "Bayesian",
+  "remote sensing",
+  "satellite",
+];
+
+function anyOf(terms) {
+  return terms.map((t) => `"${t}"`).join(" OR ");
+}
+
+export const QUERY = `(${anyOf(AI)}) AND (${anyOf(IE)})`;
+export const VENUE_QUERY = anyOf(METHODS);
 
 /** OpenAlex stores abstracts as word → positions; rebuild the text. */
 export function abstractText(index) {
@@ -144,6 +167,21 @@ export function rate(lead, vec, listed, rejected) {
   };
 }
 
+function median(xs) {
+  const s = [...xs].sort((a, b) => a - b);
+  return s[Math.floor(s.length / 2)];
+}
+
+/** A warning when this run's leads score below the middle of the open queue, else null. */
+export function lowBatch(added, open) {
+  if (added.length === 0 || open.length === 0) return null;
+  const a = median(added.map((l) => l.score));
+  const o = median(open.map((l) => l.score));
+  return a < o
+    ? `Low batch: the new leads' median score (${a.toFixed(3)}) is below the open queue's (${o.toFixed(3)}), so expect most of them to be rejected.`
+    : null;
+}
+
 /** Split `xs` into consecutive parts of the given lengths, plus the rest. */
 function splitAt(xs, lengths) {
   const parts = [];
@@ -155,10 +193,15 @@ function splitAt(xs, lengths) {
   return [...parts, xs.slice(i)];
 }
 
-async function openalex(params) {
+async function openalex(params, retries = 3) {
   const res = await fetch(`https://api.openalex.org/works?${new URLSearchParams(params)}`, {
     headers: { "User-Agent": UA },
   });
+  // Without a key, a search with more than a few boolean operators runs once a second.
+  if (res.status === 429 && retries > 0) {
+    await sleep(1500);
+    return openalex(params, retries - 1);
+  }
   if (!res.ok) throw new Error(`OpenAlex ${res.status}: ${await res.text()}`);
   return res.json();
 }
@@ -213,18 +256,27 @@ async function main() {
   const limit = Number(arg("limit", 25));
   // shortcut: one page of results; page with cursor=* if a backfill ever needs more.
   if (!(limit > 0 && limit <= 100)) throw new Error("--limit must be 1 to 100");
-  const { meta, results } = await openalex({
-    filter: [
-      `title_and_abstract.search:${QUERY}`,
-      `from_publication_date:${since}`,
-      "type:article|review|preprint",
-      "is_retracted:false",
-      "language:en",
-    ].join(","),
-    sort: "relevance_score:desc",
-    "per-page": "100",
-    select: SELECT,
-  });
+  const window = [
+    `from_publication_date:${since}`,
+    "type:article|review|preprint",
+    "is_retracted:false",
+    "language:en",
+  ];
+  const searches = [
+    [`title_and_abstract.search:${QUERY}`],
+    [`title_and_abstract.search:${VENUE_QUERY}`, `primary_location.source.id:${VENUES.join("|")}`],
+  ];
+  const pages = [];
+  for (const filter of searches)
+    pages.push(
+      await openalex({
+        filter: [...filter, ...window].join(","),
+        sort: "relevance_score:desc",
+        "per-page": "100",
+        select: SELECT,
+      }),
+    );
+  const results = pages.flatMap((p) => p.results);
 
   const literature = parse(await readFile(LIT_PATH, "utf8"));
   const candidates = parse(await readFile(CAND_PATH, "utf8").catch(() => "")) ?? [];
@@ -268,9 +320,12 @@ async function main() {
   const queue = [...rescored, ...added].sort((a, b) => b.score - a.score);
   const closed = candidates.filter((c) => c.status !== "new");
   await writeFile(CAND_PATH, `${HEADER}${stringify([...queue, ...closed])}`);
+  const [all, venue] = pages.map((p) => p.meta.count);
   console.log(
-    `${meta.count} matches since ${since}; ${fresh.length} unseen, ${added.length} new leads above ${cut.toFixed(3)}; ${open.length} open leads re-scored`,
+    `${all} matches since ${since}, and ${venue} in the core IE venues; ${fresh.length} unseen, ${added.length} new leads above ${cut.toFixed(3)}; ${open.length} open leads re-scored.`,
   );
+  const warning = lowBatch(added, rescored);
+  if (warning) console.log(warning);
 }
 
 const HEADER = `# Leads from OpenAlex (scripts/openalex-candidates.mjs), for a curator.
