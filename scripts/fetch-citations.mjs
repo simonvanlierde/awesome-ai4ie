@@ -123,7 +123,12 @@ export function cleanText(s) {
       );
     });
   }
-  return out.replace(/<\/?[a-z][^<>]*>/gi, "");
+  // Repeat until stable: removing one tag can join the halves of another.
+  for (let prev = ""; prev !== out; ) {
+    prev = out;
+    out = out.replace(/<\/?[a-z][^<>]*>/gi, "");
+  }
+  return out;
 }
 
 /** Clean BibTeX: whitespace collapsed inside braced values, bare `&` escaped, month as a macro, year from the YAML. */
