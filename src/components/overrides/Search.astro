@@ -1,8 +1,8 @@
 ---
 // Starlight's search dialog (Pagefind, keyword matches across every page), plus a
 // meaning search over the reading list: a reader who types a question gets the
-// closest literature entries above the keyword results. The embedding model runs
-// in the browser and loads only after the reader turns the search on.
+// closest literature entries above the keyword results. The site's /api/embed
+// Worker embeds the question; the entries come embedded from the build.
 import Default from "@astrojs/starlight/components/Search.astro";
 import { issueUrl } from "../../lib/urls";
 ---
@@ -10,20 +10,9 @@ import { issueUrl } from "../../lib/urls";
 <Default />
 
 <semantic-search hidden data-suggest={issueUrl("paper")}>
-  <div class="ss-hint" data-off>
-    <p>
-      You can also ask in plain words.
-      <button type="button" class="ss-on" aria-describedby="ss-note">Search by meaning</button>
-    </p>
-    <p class="ss-note" id="ss-note">
-      Matches the reading list on your device, after a one-time 23 MB download from
-      cdn.jsdelivr.net and huggingface.co (hf.co). This browser remembers the choice.
-    </p>
-  </div>
-  <p class="ss-hint" data-on hidden>
-    Meaning search is on for questions of three words or more.
+  <p class="ss-hint">
+    You can also ask in plain words, to match the reading list by meaning.
     <button type="button" class="ss-example">Try an example</button>
-    <button type="button" class="ss-off">Turn off</button>
   </p>
   <p class="ss-status" role="status"></p>
   <ol class="ss-results" aria-label="Papers that match by meaning"></ol>
@@ -33,74 +22,28 @@ import { issueUrl } from "../../lib/urls";
 </semantic-search>
 
 <script>
-  import {
-    DTYPE,
-    decodeVector,
-    type IndexEntry,
-    isPhrase,
-    MODEL,
-    MODEL_REVISION,
-    rank,
-    stems,
-  } from "../../lib/semantic";
-  import { StalledError } from "../../lib/stall";
-  import { loadPipeline } from "../../lib/transformers";
+  import { decodeVector, type IndexEntry, isPhrase, rank, stems } from "../../lib/semantic";
   import { siteUrl } from "../../lib/urls";
 
-  const OPT_IN = "ai4ie-meaning-search";
-  const VECTORS = "ai4ie-meaning-vectors";
   const EXAMPLE = "which papers map building stocks from satellites?";
 
-  type Embed = (texts: string | string[]) => Promise<number[][]>;
-  type Search = {
-    entries: IndexEntry[];
-    vectors: number[][];
-    entryStems: Set<string>[];
-    embed: Embed;
-  };
-  type Pipe = (texts: string | string[], opts: object) => Promise<{ tolist(): number[][] }>;
+  type Search = { entries: IndexEntry[]; vectors: number[][]; entryStems: Set<string>[] };
 
-  // Load progress goes to whichever run is waiting now, not the one that started the load.
-  let report = (_msg: string) => {};
-  let ready = false;
+  // Entries without a build-time vector (a build that skipped `pnpm run embed`) are left out.
   let searchPromise: Promise<Search> | null = null;
   function getSearch(): Promise<Search> {
-    searchPromise ??= Promise.all([
-      loadPipeline<Pipe>("feature-extraction", MODEL, MODEL_REVISION, (m) => report(m), {
-        dtype: DTYPE,
-      }),
-      fetch(siteUrl("literature-index.json")).then((r) => {
+    searchPromise ??= fetch(siteUrl("literature-index.json"))
+      .then((r) => {
         if (!r.ok) throw new Error(`literature-index.json: HTTP ${r.status}`);
-        return r.text();
-      }),
-    ])
-      .then(async ([pipe, json]) => {
-        const entries: IndexEntry[] = JSON.parse(json);
-        const embed: Embed = async (texts) =>
-          (await pipe(texts, { pooling: "mean", normalize: true })).tolist();
-        // Build-time vectors (src/lib/vectors.ts) cover the deployed site; an entry
-        // without one, as in a local build, is embedded here once and cached.
-        let vectors: number[][] = entries.map((e) => (e.vector ? decodeVector(e.vector) : []));
-        const missing = entries.flatMap((e, i) => (e.vector ? [] : [i]));
-        if (missing.length) {
-          const key = await cacheKey(json);
-          const cached = readVectors(key, entries.length);
-          if (cached) vectors = cached;
-          else {
-            report(
-              missing.length === entries.length
-                ? `Reading the ${entries.length} papers…`
-                : `Reading ${missing.length} new ${missing.length === 1 ? "paper" : "papers"}…`,
-            );
-            const fresh = await embed(missing.map((i) => entries[i].text));
-            missing.forEach((i, k) => {
-              vectors[i] = fresh[k];
-            });
-            writeVectors(key, vectors);
-          }
-        }
-        ready = true;
-        return { entries, vectors, entryStems: entries.map((e) => stems(e.text)), embed };
+        return r.json() as Promise<IndexEntry[]>;
+      })
+      .then((all) => {
+        const entries = all.filter((e) => e.vector);
+        return {
+          entries,
+          vectors: entries.map((e) => decodeVector(e.vector as string)),
+          entryStems: entries.map((e) => stems(e.text)),
+        };
       })
       .catch((err) => {
         searchPromise = null; // a failed load must not poison every retry
@@ -109,52 +52,14 @@ import { issueUrl } from "../../lib/urls";
     return searchPromise;
   }
 
-  // Entry vectors embedded in the browser are kept in localStorage, so a new page
-  // embeds only the query. The key changes with the index and the model revision.
-  async function cacheKey(json: string): Promise<string> {
-    const bytes = new TextEncoder().encode(`${MODEL_REVISION}\n${json}`);
-    return btoa(String.fromCharCode(...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))));
-  }
-  function readVectors(key: string, n: number): number[][] | null {
-    try {
-      const cached = JSON.parse(localStorage.getItem(VECTORS) ?? "null");
-      if (cached?.key !== key) return null;
-      const flat = new Float32Array(Uint8Array.from(atob(cached.data), (c) => c.charCodeAt(0)).buffer);
-      const dim = flat.length / n;
-      return Array.from({ length: n }, (_, i) => Array.from(flat.subarray(i * dim, (i + 1) * dim)));
-    } catch {
-      return null;
-    }
-  }
-  function writeVectors(key: string, vectors: number[][]) {
-    try {
-      const bytes = new Uint8Array(Float32Array.from(vectors.flat()).buffer);
-      let bin = "";
-      for (let i = 0; i < bytes.length; i += 0x8000)
-        bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
-      localStorage.setItem(VECTORS, JSON.stringify({ key, data: btoa(bin) }));
-    } catch {
-      // storage full or blocked: the next page embeds the entries again
-    }
-  }
-
-  function saved(): boolean {
-    try {
-      return localStorage.getItem(OPT_IN) === "1";
-    } catch {
-      return false;
-    }
-  }
-  function save(on: boolean) {
-    try {
-      if (on) localStorage.setItem(OPT_IN, "1");
-      else {
-        localStorage.removeItem(OPT_IN);
-        localStorage.removeItem(VECTORS);
-      }
-    } catch {
-      // private mode: the choice lasts for this page only
-    }
+  async function embedQuery(q: string): Promise<number[]> {
+    const r = await fetch(siteUrl("api/embed"), {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ q }),
+    });
+    if (!r.ok) throw new Error(`api/embed: HTTP ${r.status}`);
+    return (await r.json()).vector;
   }
 
   class SemanticSearch extends HTMLElement {
@@ -171,7 +76,6 @@ import { issueUrl } from "../../lib/urls";
       const gap = $(".ss-gap");
       const suggest = $<HTMLAnchorElement>(".ss-suggest");
       let input: HTMLInputElement | null = null;
-      let enabled = false;
       let timer: ReturnType<typeof setTimeout> | undefined;
       let seq = 0;
 
@@ -199,18 +103,12 @@ import { issueUrl } from "../../lib/urls";
         clearTimeout(timer);
         const q = input?.value.trim() ?? "";
         const mine = ++seq;
-        if (!(enabled && isPhrase(q))) {
-          report = () => {};
+        if (!isPhrase(q)) {
           show([], "");
           return;
         }
-        report = (m) => {
-          if (mine === seq) status.textContent = m;
-        };
-        if (!ready) report("Loading meaning search…");
         try {
-          const s = await getSearch();
-          const [qv] = await s.embed(q);
+          const [s, qv] = await Promise.all([getSearch(), embedQuery(q)]);
           if (mine !== seq) return; // a newer query owns the results
           const hits = rank(qv, s.vectors, stems(q), s.entryStems).map((i) => s.entries[i]);
           const n = hits.length;
@@ -223,21 +121,8 @@ import { issueUrl } from "../../lib/urls";
           // biome-ignore lint/suspicious/noConsole: the status line cannot show the cause; the console keeps it for debugging
           console.error(err);
           if (mine !== seq) return;
-          show(
-            [],
-            err instanceof StalledError
-              ? "The model download stopped making progress. Check your connection, then type again to retry."
-              : "Could not load meaning search. Check your connection, then type again to retry.",
-          );
+          show([], "Meaning search did not answer. Check your connection, then type again to retry.");
         }
-      };
-
-      const setEnabled = (on: boolean) => {
-        enabled = on;
-        save(on);
-        $("[data-off]").hidden = on;
-        $("[data-on]").hidden = !on;
-        void run();
       };
 
       // Starlight closes the dialog on clicks it does not recognise, so each button stops the event.
@@ -247,8 +132,6 @@ import { issueUrl } from "../../lib/urls";
           fn();
           input?.focus();
         });
-      onClick(".ss-on", () => setEnabled(true));
-      onClick(".ss-off", () => setEnabled(false));
       onClick(".ss-example", () => {
         if (!input) return;
         input.value = EXAMPLE;
@@ -273,13 +156,11 @@ import { issueUrl } from "../../lib/urls";
         clear?.addEventListener("click", afterPagefind);
         input.addEventListener("keydown", (e) => e.key === "Escape" && afterPagefind());
         this.hidden = false;
-        if (saved()) setEnabled(true);
-        // Once the reader has opted in, start loading as the dialog opens, so the
-        // model is ready by the time a question is typed.
+        // Fetch the index as the dialog opens, so a first question waits only for its own vector.
         const dialog = this.closest("dialog");
         if (dialog)
           new MutationObserver(() => {
-            if (dialog.open && enabled) getSearch().catch(() => {}); // a query shows any error
+            if (dialog.open) getSearch().catch(() => {}); // a query shows any error
           }).observe(dialog, { attributes: true, attributeFilter: ["open"] });
         return true;
       };
@@ -306,9 +187,6 @@ import { issueUrl } from "../../lib/urls";
     margin: 0;
     color: var(--sl-color-gray-2);
   }
-  .ss-hint p {
-    margin: 0;
-  }
   .ss-hint button {
     margin-inline-start: 0.25rem;
     padding: 0.2rem 0.6rem;
@@ -320,13 +198,8 @@ import { issueUrl } from "../../lib/urls";
     font-stretch: 85%;
     cursor: pointer;
   }
-  .ss-hint button:hover,
-  .ss-hint .ss-on {
+  .ss-hint button:hover {
     border-color: var(--sl-color-accent);
-  }
-  .ss-note {
-    margin-top: 0.25rem;
-    font-size: var(--sl-text-xs);
   }
   .ss-status:empty,
   .ss-results:empty {

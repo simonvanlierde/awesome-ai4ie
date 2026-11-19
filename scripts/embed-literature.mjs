@@ -2,25 +2,24 @@
 /**
  * Embeds every literature.yaml entry for meaning search and writes
  * src/data/literature-vectors.json, which the build ships in literature-index.json.
- * The browser then embeds only the question, not the 100-odd entries (about 11 s
- * on a phone-speed CPU). Without the file, or for an entry edited since, the
- * browser embeds the entry itself, so a skipped or failed run changes speed only.
+ * The site's /api/embed Worker then embeds only the question. An entry without a
+ * vector (the file is missing, or the entry was edited since) is not searched.
  *
- *   pnpm run embed    # before `pnpm run build`; downloads ~30 MB once
+ *   pnpm run embed    # before `pnpm run build`
  *
- * Needs a Chromium for Playwright: `pnpm exec playwright install chromium`.
+ * Needs CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN (scripts/lib/workers-ai.mjs).
  */
 
 import { readFile, writeFile } from "node:fs/promises";
 import { parse } from "yaml";
-import { entryText, MODEL_REVISION } from "../src/lib/semantic.ts";
-import { encodeVector, textKey, VECTORS_FILE } from "../src/lib/vectors.ts";
-import { embedInChromium } from "./lib/embed-in-chromium.mjs";
+import { entryText } from "../src/lib/semantic.ts";
+import { encodeVector, MODEL_KEY, textKey, VECTORS_FILE } from "../src/lib/vectors.ts";
+import { embed } from "./lib/workers-ai.mjs";
 
 const texts = parse(await readFile("src/data/literature.yaml", "utf8")).map(entryText);
-const [vectors] = await embedInChromium(texts);
+const vectors = await embed(texts);
 const out = {
-  revision: MODEL_REVISION,
+  model: MODEL_KEY,
   vectors: Object.fromEntries(texts.map((t, i) => [textKey(t), encodeVector(vectors[i])])),
 };
 await writeFile(VECTORS_FILE, `${JSON.stringify(out)}\n`);

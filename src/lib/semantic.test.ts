@@ -1,23 +1,31 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
-import { decodeVector, entryText, isPhrase, MAX_HITS, rank, stems } from "./semantic";
+import {
+  decodeVector,
+  entryText,
+  isPhrase,
+  MAX_HITS,
+  rank,
+  SOFT_SCORE,
+  STRONG_SCORE,
+  stems,
+  unit,
+} from "./semantic";
 
 const none = [new Set<string>()];
+// A unit vector whose cosine with [1, 0] is `s`.
+const at = (s: number) => [s, Math.sqrt(1 - s * s)];
 
 describe("rank", () => {
   it("shows strong matches on meaning alone, best first", () => {
     const q = [1, 0];
-    const vs = [
-      [0.3, 0.95], // 0.3: below both cut-offs
-      [0.6, 0.8],
-      [1, 0],
-    ];
+    const vs = [at(SOFT_SCORE - 0.1), at(STRONG_SCORE + 0.01), [1, 0]];
     expect(rank(q, vs, new Set(), [new Set(), new Set(), new Set()])).toEqual([2, 1]);
   });
 
   it("shows a weaker match only when it shares a content word with the query", () => {
-    const weak = [[0.4, Math.sqrt(1 - 0.16)]];
+    const weak = [at((SOFT_SCORE + STRONG_SCORE) / 2)];
     expect(rank([1, 0], weak, stems("hallucinated citations"), none)).toEqual([]);
     expect(
       rank([1, 0], weak, stems("hallucinated citations"), [stems("citation hallucination")]),
@@ -79,5 +87,12 @@ describe("decodeVector", () => {
     const { encodeVector } = await import("./vectors");
     const v = [0.5, -0.25, 0.125];
     expect(decodeVector(encodeVector(v))).toEqual(v);
+  });
+});
+
+describe("unit", () => {
+  it("scales a vector to length 1 and leaves a zero vector alone", () => {
+    expect(unit([3, 4])).toEqual([0.6, 0.8]);
+    expect(unit([0, 0])).toEqual([0, 0]);
   });
 });

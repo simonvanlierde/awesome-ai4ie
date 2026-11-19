@@ -53,10 +53,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      # Embeds the reading list for meaning search before the build ships it in
-      # literature-index.json, so a first-time reader's phone embeds only the question
-      # (about 11 s saved). The site embeds any entry without a vector itself, so a
-      # failed download from jsDelivr or Hugging Face slows search but must not block a deploy.
+      # Embeds the reading list for meaning search with Workers AI before the build
+      # ships it in literature-index.json; an entry without a vector is not searched.
+      # A fork's pull request gets no secrets, so it builds without vectors; on this
+      # repo's pull requests and on main a failure here fails the build.
       # No cache here: withastro/action sets up pnpm again and caches the store
       # itself, and this action's post-step then fails on the path it moved.
       - uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
@@ -65,11 +65,11 @@ jobs:
           cache: false
           install: false
       - run: pnpm install --frozen-lockfile
-      # No --with-deps: the runner has Chromium's libraries, and apt would only add
-      # fonts the site does not use, from a mirror that can take minutes for them.
-      - run: pnpm exec playwright install chromium
       - name: Embed the reading list
-        continue-on-error: true
+        if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: pnpm run embed
       # withastro/action has no node-version-file input, so read .nvmrc here.
       - id: node
@@ -81,6 +81,9 @@ jobs:
       - name: Page weight budget
         run: pnpm run page-weight
       # withastro/action leaves node_modules and dist/ in place, so axe can scan the build.
+      # No --with-deps: the runner has Chromium's libraries, and apt would only add
+      # fonts the site does not use, from a mirror that can take minutes for them.
+      - run: pnpm exec playwright install chromium
       - name: Accessibility (axe, WCAG 2.2 AA, light and dark)
         run: |
           pnpm exec astro preview --port 4321 &

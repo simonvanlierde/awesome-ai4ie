@@ -1,11 +1,10 @@
-// Meaning-based search over the reading list: the search dialog embeds the query
-// and every entry with the same model, then ranks entries by cosine similarity.
+// Meaning-based search over the reading list: entries are embedded at build time
+// (scripts/embed-literature.mjs), the query by the site's /api/embed Worker
+// (worker/index.ts), both with this Workers AI model, then ranked by cosine similarity.
 
-// The embedding model, pinned to a commit of its Hugging Face repo like the demo's.
-export const MODEL = "Xenova/all-MiniLM-L6-v2";
-// biome-ignore lint/security/noSecrets: a public git commit id, not a secret
-export const MODEL_REVISION = "751bff37182d3f1213fa05d7196b954e230abad9";
-export const DTYPE = "q8";
+export const EMBED_MODEL = "@cf/baai/bge-small-en-v1.5";
+// cls is the model card's recommended pooling; vectors from mean and cls do not mix.
+export const EMBED_POOLING = "cls";
 
 /** One literature entry as the search index ships it (src/pages/literature-index.json.ts). */
 export type IndexEntry = {
@@ -14,9 +13,16 @@ export type IndexEntry = {
   blurb: string;
   href: string;
   text: string;
-  /** Base64 float32 vector computed at build time (src/lib/vectors.ts), when one matches. */
+  /** Base64 float32 vector computed at build time (src/lib/vectors.ts); missing in a
+   * build that skipped `pnpm run embed`, and then the entry is not searched. */
   vector?: string;
 };
+
+/** The vector scaled to length 1, so a dot product of two is their cosine. */
+export function unit(v: number[]): number[] {
+  const n = Math.hypot(...v) || 1;
+  return v.map((x) => x / n);
+}
 
 /** Reverses encodeVector() in src/lib/vectors.ts. */
 export function decodeVector(b64: string): number[] {
@@ -35,13 +41,14 @@ export function entryText(e: {
   return `${e.title}. ${e.blurb} Tags: ${[...(e.ie ?? []), ...(e.ml ?? []), ...(e.type ?? [])].join(", ")}`;
 }
 
-// Cut-offs for all-MiniLM-L6-v2 (q8), tuned on src/data/search-eval.yaml with
-// scripts/search-eval.mjs. At or above STRONG an entry shows on meaning alone;
-// between SOFT and STRONG it shows only when it also shares a content word with
-// the query. Meaning alone left a window of 0.414 (an off-list question) to 0.430
-// (a right answer) on that set; the word gate makes it wide.
-export const STRONG_SCORE = 0.45;
-export const SOFT_SCORE = 0.38;
+// Cut-offs for EMBED_MODEL with EMBED_POOLING, tuned on src/data/search-eval.yaml
+// with scripts/search-eval.mjs; a model or pooling change needs a new tuning. At or
+// above STRONG an entry shows on meaning alone; between SOFT and STRONG it shows
+// only when it also shares a content word with the query. On that set, STRONG holds
+// from 0.74 to 0.80, and SOFT sits between an off-list question's 0.702 and the
+// weakest right answer's 0.728.
+export const STRONG_SCORE = 0.77;
+export const SOFT_SCORE = 0.715;
 export const MAX_HITS = 5;
 
 // Words too common in questions and entries to say what they are about.

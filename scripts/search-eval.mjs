@@ -1,30 +1,27 @@
 #!/usr/bin/env node
 /**
  * Scores the search dialog's meaning search on src/data/search-eval.yaml. It runs the
- * same model, revision and transformers.js build as the site, in Chromium, and ranks
- * with the site's own rank(). It prints the misses, each question's best score and
+ * site's Workers AI model through the REST API and ranks with the site's own rank(). It prints the misses, each question's best score and
  * its first right answer, so the cut-offs in src/lib/semantic.ts can be tuned.
  * Exits 1 when an off-list question shows a paper, or an in-list one shows only
  * wrong ones.
  *
- *   pnpm run search-eval    # downloads ~30 MB from jsDelivr and Hugging Face once
+ *   pnpm run search-eval
  *
- * Needs a Chromium for Playwright: `pnpm exec playwright install chromium`.
+ * Needs CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN (scripts/lib/workers-ai.mjs).
  */
 
 import { readFile } from "node:fs/promises";
 import process from "node:process";
 import { parse } from "yaml";
 import { entryText, rank, stems } from "../src/lib/semantic.ts";
-import { embedInChromium } from "./lib/embed-in-chromium.mjs";
+import { embed } from "./lib/workers-ai.mjs";
 
 const entries = parse(await readFile("src/data/literature.yaml", "utf8"));
 const questions = parse(await readFile("src/data/search-eval.yaml", "utf8"));
 const texts = entries.map(entryText);
-const [vectors, queryVectors] = await embedInChromium(
-  texts,
-  questions.map((q) => q.q),
-);
+const vectors = await embed(texts);
+const queryVectors = await embed(questions.map((q) => q.q));
 
 const entryStems = texts.map(stems);
 let found = 0;
