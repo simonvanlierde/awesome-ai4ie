@@ -89,6 +89,16 @@ jobs:
             and all(.resources[]; .id and .title and .kind and .ie and .topic)' dist/mcp-data.json
       - name: Page weight budget
         run: pnpm run page-weight
+      # The vocabulary against SkoHub Vocabs' SHACL shape, pinned to a commit of
+      # skohub-io/skohub-shapes. pyshacl exits 1 on a violation.
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          enable-cache: false
+          version: "0.13.6"
+      - name: Vocabulary is valid SKOS
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/skohub.shacl.ttl" https://raw.githubusercontent.com/skohub-io/skohub-shapes/ce46984871b93cb129ce5b71c12e25dc0876de90/skohub.shacl.ttl
+          uvx --exclude-newer "1 week" pyshacl@0.40.2 -s "$RUNNER_TEMP/skohub.shacl.ttl" -sf turtle -df turtle dist/vocabulary.ttl
       # Checks wrangler.jsonc against dist/ here, not first on the push-to-main deploy.
       - name: Workers config (dry run)
         run: pnpm exec wrangler deploy --dry-run --outdir "$RUNNER_TEMP/wrangler"

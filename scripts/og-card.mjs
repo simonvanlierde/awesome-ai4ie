@@ -36,7 +36,6 @@ const CARD_CSS = `
   #og .line { top: 186px; margin: 0; font: 500 40px/1.22 var(--font-read, serif); text-wrap: balance; }
   #og .flow { position: absolute; left: 0; top: 356px; width: 1200px; height: 232px; margin: 0; }
   #og .flow-bands { animation: none; }
-  #og h1 .x { animation: none; }
   #og .flow svg { display: block; width: 1200px; max-width: none; height: 232px; margin: 0; overflow: visible; }
   #og .flow text { font-size: 26px; }
 `;
@@ -62,7 +61,7 @@ await page.evaluate(
     document.body.replaceChildren(card);
     document
       .querySelectorAll(
-        "#og .flow figcaption, #og .flow-readout, #og .flow-hit, #og .flow-plate--wide",
+        "#og .flow figcaption, #og .flow-readout, #og .flow-hit, #og .flow-plate--wide, #og .cover-endmark",
       )
       .forEach((el) => {
         el.remove();

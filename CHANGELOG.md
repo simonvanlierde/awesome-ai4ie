@@ -14,6 +14,10 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   similar papers by meaning, a copyable link and an edit form. `/literature/#<id>` opens
   that paper's panel, and citations, field pages, search results and the MCP tools now
   link papers that way.
+- A tag vocabulary page at `/vocabulary/`: each IE field, topic, AI technique and entry type
+  with its definition, source and Wikidata or OpenAlex matches, and an anchor per tag. The
+  vocabulary is also published as SKOS at `/vocabulary.ttl` and `/vocabulary.jsonld`. Old
+  literature links with a retired tag, such as `?ie=mfa`, show its replacement.
 - Resources in `src/data/resources.yaml`: the tools, datasets and models from the tools
   pages, plus 14 courses, videos, posts and communities proposed for review. The tools pages
   and the literature page list them with a `Resources` component, which explainer sections

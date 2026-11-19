@@ -34,7 +34,7 @@ body:
       description: One or two sentences for the list. Who is it for, and what will they learn or find? Honest limits help more than praise.
     validations:
       required: true
-  # The three tag dropdowns list the labels in src/data/tags.ts; forms.test.ts keeps them in step.
+  # The three tag dropdowns list the labels in src/data/vocabulary.yaml; forms.test.ts keeps them in step.
   - type: dropdown
     id: ie
     attributes:

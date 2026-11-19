@@ -1,0 +1,42 @@
+{
+  "@context": {
+    "@language": "en",
+    "broader": {
+      "@id": "skos:broader",
+      "@type": "@vocab"
+    },
+    "closeMatch": {
+      "@id": "skos:closeMatch",
+      "@type": "@id"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "definition": "skos:definition",
+    "deprecated": "owl:deprecated",
+    "exactMatch": {
+      "@id": "skos:exactMatch",
+      "@type": "@id"
+    },
+    "id": "@id",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "prefLabel": "skos:prefLabel",
+    "related": {
+      "@id": "skos:related",
+      "@type": "@vocab"
+    },
+    "replacedBy": {
+      "@id": "dct:isReplacedBy",
+      "@type": "@vocab"
+    },
+    "reserved": null,
+    "scheme": {
+      "@id": "skos:inScheme",
+      "@type": "@vocab"
+    },
+    "short": "skos:altLabel",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "source": {
+      "@id": "dct:source",
+      "@type": "@id"
+    }
+  }
+}

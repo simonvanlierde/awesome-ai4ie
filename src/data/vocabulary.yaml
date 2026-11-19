@@ -1,0 +1,217 @@
+# The tag vocabulary: every IE field, topic, AI technique and entry type, one
+# concept each. CONTRIBUTING.md ("The tag vocabulary") has the rules; the site
+# shows the result at /vocabulary/. Concepts are listed per scheme in display
+# order. An id is permanent: retire a concept with `deprecated: true` and,
+# where one exists, `replacedBy`, and never give its id to a new concept.
+
+# IE fields: the subject sections of the International Society for Industrial
+# Ecology. Each has an ink, a page and a section on the map.
+- id: lca
+  scheme: field
+  prefLabel: Life cycle assessment
+  short: Life cycle
+  definition: Life cycle assessment (LCA) adds up the environmental impacts of a product or service over its whole life, from raw materials to waste.
+  source: https://is4ie.org/sections
+  exactMatch:
+    - http://www.wikidata.org/entity/Q581950
+  closeMatch:
+    - https://openalex.org/T10435
+# SEM as the umbrella over MFA: Pauliuk & Hertwich 2015, doi:10.1016/j.ecolecon.2015.08.012
+- id: sem
+  scheme: field
+  prefLabel: Socio-economic metabolism
+  short: Socio-economic
+  definition: Socio-economic metabolism (SEM) studies the biophysical basis of a society, the materials it takes in, keeps as stocks and lets go, and is the umbrella for material flow analysis and stock models.
+  source: https://is4ie.org/sections
+  exactMatch:
+    - http://www.wikidata.org/entity/Q27095618
+- id: eeio
+  scheme: field
+  prefLabel: Input-output
+  short: Input-output
+  definition: Environmentally extended input-output (EEIO) analysis links the trade between the sectors of an economy to the emissions and resources behind it, which gives economy-wide footprints.
+  source: https://is4ie.org/sections
+  closeMatch:
+    - http://www.wikidata.org/entity/Q18206850
+- id: circular
+  scheme: field
+  prefLabel: Circular economy
+  short: Circular economy
+  definition: The circular economy keeps products and materials in use; after use they are collected, sorted, reused, remanufactured or recycled into secondary resources.
+  source: https://is4ie.org/sections
+  exactMatch:
+    - http://www.wikidata.org/entity/Q497743
+- id: symbiosis
+  scheme: field
+  prefLabel: Industrial symbiosis
+  short: Industrial symbiosis
+  definition: In industrial symbiosis, one firm's waste or by-product becomes another firm's input, as in an eco-industrial park.
+  source: https://is4ie.org/sections
+  exactMatch:
+    - http://www.wikidata.org/entity/Q977291
+  closeMatch:
+    - https://openalex.org/T12746
+- id: mfa
+  scheme: field
+  prefLabel: MFA & stocks and flows
+  definition: Material flow analysis and the stock models built on it, now part of socio-economic metabolism.
+  exactMatch:
+    - http://www.wikidata.org/entity/Q1770543
+  deprecated: true
+  replacedBy: sem
+- id: eol
+  scheme: field
+  prefLabel: Waste, EoL & circularity
+  definition: Waste, end of life and circularity, now part of the circular economy.
+  deprecated: true
+  replacedBy: circular
+- id: urban-mining
+  scheme: field
+  prefLabel: Urban mining & secondary resources
+  definition: Secondary resources recovered from the stocks of cities and discarded products. Its entries moved to socio-economic metabolism or the circular economy.
+  closeMatch:
+    - http://www.wikidata.org/entity/Q2500233
+  deprecated: true
+
+# Topics: the system or problem an entry is about. A topic cuts across fields.
+- id: buildings
+  scheme: topic
+  prefLabel: Buildings & construction
+  definition: Buildings, infrastructure and the construction sector.
+- id: chemicals
+  scheme: topic
+  prefLabel: Chemicals & toxicity
+  definition: Chemicals and their toxicity to people and ecosystems.
+- id: electronics
+  scheme: topic
+  prefLabel: Electronics & e-waste
+  definition: Electronic products and the waste they become.
+- id: metals
+  scheme: topic
+  prefLabel: Metals & critical materials
+  definition: Metals, among them the critical raw materials.
+- id: food
+  scheme: topic
+  prefLabel: Agriculture & food
+  definition: Agriculture, food production and food waste.
+- id: water
+  scheme: topic
+  prefLabel: Water
+  definition: Water use, water footprints and water scarcity.
+- id: lifetime
+  scheme: topic
+  prefLabel: Product lifetime, reuse & repair
+  definition: How long products last, and how they are reused and repaired.
+- id: energy
+  scheme: topic
+  prefLabel: Energy & industrial decarbonisation
+  definition: Energy systems and the decarbonisation of industry.
+- id: supply-risk
+  scheme: topic
+  prefLabel: Supply chains & resource security
+  definition: Supply chains and the security of resource supply.
+- id: io
+  scheme: topic
+  prefLabel: Input–output & economy-wide footprints
+  definition: Input-output analysis and economy-wide footprints, now an IE field.
+  deprecated: true
+  replacedBy: eeio
+
+# AI techniques: the method an entry uses.
+- id: llm
+  scheme: technique
+  prefLabel: LLMs & agents
+  short: LLMs
+  definition: Large language models and the agents built on them.
+  closeMatch:
+    - http://www.wikidata.org/entity/Q115305900
+- id: nlp-extraction
+  scheme: technique
+  prefLabel: NLP & information extraction
+  short: NLP
+  definition: Natural language processing that pulls structured data out of text, such as papers and reports.
+  closeMatch:
+    - http://www.wikidata.org/entity/Q1662562
+    - https://openalex.org/T10181
+- id: cv
+  scheme: technique
+  prefLabel: Computer vision
+  short: Computer vision
+  definition: Models that recognise, count and measure things in images.
+  exactMatch:
+    - http://www.wikidata.org/entity/Q844240
+- id: segmentation
+  scheme: technique
+  prefLabel: Detection & segmentation
+  short: Detection
+  definition: Computer vision that finds objects in an image and outlines them.
+  broader: [cv]
+  closeMatch:
+    - http://www.wikidata.org/entity/Q3045304
+    - http://www.wikidata.org/entity/Q56933
+- id: depth
+  scheme: technique
+  prefLabel: Depth & 3D geometry
+  short: Depth & 3D
+  definition: Estimating depth and 3D shape from images or scans.
+- id: remote-sensing
+  scheme: technique
+  prefLabel: Remote sensing
+  short: Remote sensing
+  definition: Analysis of satellite and aerial imagery.
+  closeMatch:
+    - http://www.wikidata.org/entity/Q199687
+- id: tabular-ml
+  scheme: technique
+  prefLabel: Tabular ML & regression
+  short: Tabular ML
+  definition: Machine learning on tables of features, such as regression and classification.
+- id: generative
+  scheme: technique
+  prefLabel: Generative models
+  short: Generative models
+  definition: Models that generate new data, such as images, text or synthetic samples.
+- id: foundation
+  scheme: technique
+  prefLabel: Foundation models & transformers
+  short: Foundation models
+  definition: Large pretrained models, often transformers, adapted to many tasks.
+  closeMatch:
+    - http://www.wikidata.org/entity/Q112702082
+- id: anomaly-detection
+  scheme: technique
+  prefLabel: Anomaly & condition detection
+  short: Anomaly
+  definition: Finding unusual patterns in data, such as faults or a change in a machine's condition.
+  closeMatch:
+    - http://www.wikidata.org/entity/Q3560506
+    - https://openalex.org/T11512
+- id: uncertainty
+  scheme: technique
+  prefLabel: Uncertainty & probabilistic ML
+  short: Uncertainty
+  definition: Methods that quantify uncertainty, such as Bayesian inference and probabilistic machine learning.
+  closeMatch:
+    - http://www.wikidata.org/entity/Q7882499
+
+# Entry types: what kind of paper an entry is.
+- id: landmark-ml
+  scheme: type
+  prefLabel: ML landmark
+  definition: A machine learning paper behind today's tools, not specific to industrial ecology.
+- id: meta
+  scheme: type
+  prefLabel: Research practice
+  definition: Work on how research is done, such as reproducibility, verification and disclosure.
+- id: review
+  scheme: type
+  prefLabel: Review
+  definition: A review or survey of a body of work.
+- id: method
+  scheme: type
+  prefLabel: Method
+  definition: A paper that proposes or tests a method.
+- id: dataset
+  scheme: type
+  prefLabel: Dataset
+  definition: A paper that publishes a dataset.

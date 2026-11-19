@@ -24,7 +24,8 @@
     "licenses": "node scripts/check-licenses.mjs",
     "page-weight": "node scripts/page-weight.mjs",
     "search-eval": "node scripts/search-eval.mjs",
-    "embed": "node scripts/embed-literature.mjs"
+    "embed": "node scripts/embed-literature.mjs",
+    "vocabulary": "node scripts/vocabulary.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.2",
@@ -51,6 +52,8 @@
     "@types/react-dom": "19.3.0",
     "@vitest/coverage-v8": "4.1.12",
     "happy-dom": "21.0.4",
+    "jsonld": "9.0.0",
+    "n3": "2.13.12",
     "playwright": "1.64.0",
     "starlight-links-validator": "0.25.3",
     "typescript": "6.0.3",
