@@ -16,6 +16,7 @@ const { title, href, src } = Astro.props;
 
 <space-embed class="space-embed not-content" data-src={src} data-title={`Demo: ${title}`}>
   <p><a href={href}>Open {title} on Hugging Face</a></p>
+  <div role="status"></div>
   <button type="button" class="space-embed-load" aria-label={`Load demo for ${title}`} hidden>
     Load demo
   </button>
@@ -25,10 +26,25 @@ const { title, href, src } = Astro.props;
   class SpaceEmbed extends HTMLElement {
     connectedCallback() {
       const button = this.querySelector("button");
-      if (!button) return;
+      const status = this.querySelector('[role="status"]');
+      if (!button || !status) return;
       button.hidden = false;
       button.addEventListener("click", () => {
+        if (!navigator.onLine) {
+          status.textContent = "You're offline. Reconnect and try again.";
+          return;
+        }
+        status.textContent = "Loading demo from Hugging Face…";
+        const timer = setTimeout(() => {
+          status.textContent = "Still loading. You can also use the Hugging Face link above.";
+        }, 10000);
         const iframe = document.createElement("iframe");
+        // The load event can also fire for blocked frames. Keep the direct
+        // link available and use this event only to stop the loading message.
+        iframe.addEventListener("load", () => {
+          clearTimeout(timer);
+          status.textContent = "";
+        }, { once: true });
         iframe.src = this.dataset.src ?? "";
         iframe.title = this.dataset.title ?? "";
         iframe.referrerPolicy = "no-referrer";
