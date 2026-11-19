@@ -5,7 +5,8 @@ import { FORMATS } from "../lib/citations";
 import { StalledError } from "../lib/stall";
 import AppList from "./AppList";
 import ApplicationsExplorer from "./ApplicationsExplorer";
-import LiteratureBrowser, { exportCitations } from "./LiteratureBrowser";
+import { exportCitations } from "./exportCitations";
+import LiteratureBrowser from "./LiteratureBrowser";
 import { EMPTY_FILTER, toggleTag } from "./litFilter";
 import TagChips from "./TagChips";
 import ZeroShotDemo, {

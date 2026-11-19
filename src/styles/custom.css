@@ -1243,6 +1243,7 @@ starlight-menu-button button {
   min-width: 0;
 }
 .lit-cite {
+  flex-wrap: wrap;
   margin-top: 0.4rem;
 }
 .lit-export .lit-clear:disabled {

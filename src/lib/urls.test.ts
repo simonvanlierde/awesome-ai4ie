@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { repoUrl } from "../site";
-import { BASE, contentUrl, issueUrl, litUrl, siteUrl } from "./urls";
+import { BASE, contentUrl, issueUrl, litUrl, paperUrl, siteUrl } from "./urls";
 
 describe("litUrl", () => {
   it("uses the literature page with optional filters", () => {
@@ -33,5 +33,11 @@ describe("contentUrl", () => {
       `${repoUrl}/blob/main/CONTRIBUTING.md`,
     );
     expect(contentUrl("/applications-map/")).toBe(`${BASE}applications-map/`);
+  });
+});
+
+describe("paperUrl", () => {
+  it("is the entry's own page under the literature section", () => {
+    expect(paperUrl("preuss2024")).toBe(`${BASE}literature/preuss2024/`);
   });
 });

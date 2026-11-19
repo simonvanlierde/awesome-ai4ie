@@ -1,0 +1,94 @@
+---
+import { getCollection } from "astro:content";
+// One static page per reading-list entry, so a single paper can be indexed and
+// cited. The reading list links here from each entry.
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import { TAG_DIMS, tagLabel } from "../../data/tags";
+import { FORMATS } from "../../lib/citations";
+import { formatAuthors, paperDescription, paperLink } from "../../lib/literature";
+import { litUrl, siteUrl } from "../../lib/urls";
+
+export async function getStaticPaths() {
+  return (await getCollection("literature")).map((e) => ({
+    params: { id: e.id },
+    props: { entry: { id: e.id, ...e.data } },
+  }));
+}
+
+const { entry } = Astro.props;
+const link = paperLink(entry);
+const apps = (await getCollection("applications")).filter((a) => a.data.papers.includes(entry.id));
+---
+
+<StarlightPage
+  frontmatter={{
+    title: entry.title,
+    description: paperDescription(entry),
+    tableOfContents: false,
+    pagefind: true,
+  }}
+>
+  <p class="lit-meta">
+    {formatAuthors(entry)} · {entry.year}
+    {entry.status === "proposal" && <span class="lit-proposal">proposal</span>}
+  </p>
+  <p>{entry.blurb}</p>
+  <p class="lit-tags">
+    {
+      TAG_DIMS.flatMap((dim) =>
+        entry[dim].map((t) => (
+          <a
+            class={`lit-tag lit-tag-${dim}${dim === "ie" ? ` field-${t}` : ""}`}
+            href={litUrl({ [dim]: [t] })}
+            title="Reading list filtered by this tag"
+          >
+            {tagLabel(dim, t)}
+          </a>
+        )),
+      )
+    }
+  </p>
+  <p><a href={link.href}>{link.label}</a></p>
+
+  <h2 id="cite">Cite</h2>
+  <fieldset class="lit-cite not-content" aria-label={`Cite ${entry.title}`} data-entry={JSON.stringify(entry)}>
+    Download
+    {FORMATS.map((f) => <button type="button" class="lit-clear" data-format={f.key}>{f.label}</button>)}
+  </fieldset>
+  <span class="sr-only" aria-live="polite" id="cite-status"></span>
+
+  {
+    apps.length > 0 && (
+      <>
+        <h2 id="applications">Applications that cite it</h2>
+        <ul>
+          {apps.map((a) => (
+            <li>
+              <a href={siteUrl("applications-map/")}>{a.data.name}</a> on the applications map
+            </li>
+          ))}
+        </ul>
+      </>
+    )
+  }
+
+  <p><a href={litUrl()}>Back to the reading list</a></p>
+</StarlightPage>
+
+<script>
+  // No React island here: it would put every entry page over the page-weight budget.
+  import { FORMATS } from "../../lib/citations";
+  import { exportCitations } from "../../components/exportCitations";
+
+  const box = document.querySelector<HTMLElement>("[data-entry]");
+  const status = document.getElementById("cite-status");
+  const entry = JSON.parse(box?.dataset.entry ?? "null");
+  for (const button of box?.querySelectorAll("button") ?? []) {
+    button.addEventListener("click", async () => {
+      const format = FORMATS.find((f) => f.key === button.dataset.format);
+      if (!(status && format)) return;
+      status.textContent = ""; // so the same message twice is announced twice
+      status.textContent = await exportCitations([entry], format, entry.id);
+    });
+  }
+</script>

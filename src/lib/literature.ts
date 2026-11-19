@@ -39,3 +39,14 @@ export function isNew(added: string, now: Date = new Date()): boolean {
   const age = now.getTime() - Date.UTC(y, m - 1, 1);
   return age >= 0 && age < NEW_FOR_MS;
 }
+
+const DESCRIPTION_MAX = 160;
+const LAST_WORD = /\s+\S*$/;
+
+/** Meta description for an entry's page: "Author (year): blurb", cut at a word
+ * boundary with an ellipsis when over about 160 characters. */
+export function paperDescription(e: Authored & { year: number; blurb: string }): string {
+  const text = `${citeAuthors(e)} (${e.year}): ${e.blurb}`;
+  if (text.length <= DESCRIPTION_MAX) return text;
+  return `${text.slice(0, DESCRIPTION_MAX).replace(LAST_WORD, "")}…`;
+}

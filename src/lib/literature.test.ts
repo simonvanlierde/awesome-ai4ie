@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { citeAuthors, formatAuthors, isNew, paperLink } from "./literature";
+import { citeAuthors, formatAuthors, isNew, paperDescription, paperLink } from "./literature";
 
 const one = { authors: ["van Lierde, S."] };
 const two = { authors: ["Peled, Y.", "Fishman, T."] };
@@ -45,5 +45,18 @@ describe("isNew", () => {
     expect(isNew("2026-09", now)).toBe(true);
     expect(isNew("2026-08", now)).toBe(false);
     expect(isNew("2026-11", now)).toBe(false);
+  });
+});
+
+describe("paperDescription", () => {
+  it("leads with author and year, and keeps a short blurb whole", () => {
+    expect(paperDescription({ ...two, year: 2024, blurb: "A short blurb." })).toBe(
+      "Peled & Fishman (2024): A short blurb.",
+    );
+  });
+  it("cuts a long blurb at a word boundary with an ellipsis", () => {
+    const d = paperDescription({ ...one, year: 2024, blurb: "word ".repeat(60) });
+    expect(d.length).toBeLessThanOrEqual(161);
+    expect(d.endsWith("word…")).toBe(true);
   });
 });

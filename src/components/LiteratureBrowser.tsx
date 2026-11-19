@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { LitEntry } from "../data/schemas";
 import { DIM_LABELS, TAG_DIMS, TAGS, type TagDim, tagLabel } from "../data/tags";
-import { type Citations, citationFile, FORMATS } from "../lib/citations";
+import { FORMATS } from "../lib/citations";
 import { formatAuthors, isNew, paperLink } from "../lib/literature";
+import { paperUrl } from "../lib/urls";
+import { exportCitations } from "./exportCitations";
 import {
   DEFAULT_SORT,
   EMPTY_FILTER,
@@ -230,7 +232,12 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
             <a href={paperLink(e).href} className="lit-title">
               {e.title}
             </a>
-            <p className="lit-blurb">{e.blurb}</p>
+            <p className="lit-blurb">
+              {e.blurb}{" "}
+              <a className="lit-clear" href={paperUrl(e.id)} aria-label={`Entry page: ${e.title}`}>
+                Entry page
+              </a>
+            </p>
             <span className="lit-tags">
               <TagChips ie={e.ie} ml={e.ml} type={e.type} />
             </span>
@@ -253,30 +260,4 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
       {shown.length === 0 && <p className="lit-empty">{emptyMessage(filter, tagLabel)}</p>}
     </div>
   );
-}
-
-/** Build a citation download in the browser and return the screen-reader status line. */
-export async function exportCitations(
-  picked: LitEntry[],
-  format: (typeof FORMATS)[number],
-  name: string,
-  loadCache: () => Promise<Citations> = async () =>
-    (await import("../data/citations.json")).default,
-): Promise<string> {
-  try {
-    const cache = await loadCache();
-    const blob = new Blob([citationFile(picked, cache, format.key)], {
-      type: `${format.mime};charset=utf-8`,
-    });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${name}.${format.ext}`;
-    a.click();
-    // Revoking in the same task can cancel the download in Firefox and Safari.
-    setTimeout(() => URL.revokeObjectURL(a.href), 0);
-    const n = picked.length;
-    return `Exported ${n} ${n === 1 ? "entry" : "entries"} as ${format.label}`;
-  } catch {
-    return "Export failed, try again";
-  }
 }

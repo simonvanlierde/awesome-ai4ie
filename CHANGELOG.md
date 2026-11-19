@@ -9,6 +9,7 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- A page for every reading-list entry at `/literature/<id>/`, with its authors, tags, citation export and the applications that cite it, linked from each entry in the list.
 - An RSS feed of new literature entries at `/literature/feed.xml`, linked from the Literature page.
 - BibTeX and RIS export on the literature page, for one entry or for the filtered view. The
   records come from Crossref and arXiv, cleaned and cached in `src/data/citations.json` by
