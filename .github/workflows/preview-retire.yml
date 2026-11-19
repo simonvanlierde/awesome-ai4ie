@@ -1,0 +1,56 @@
+name: Retire Preview
+
+# Deletes a pull request's Cloudflare Preview (ci.yml creates it) when the pull request
+# closes or goes back to draft. Runs on pull_request, never pull_request_target, so a
+# fork's code never runs with credentials; a fork has no Preview to delete anyway.
+on:
+  pull_request:
+    types: [closed, converted_to_draft]
+
+permissions:
+  contents: read
+
+# Shared with ci.yml's preview job, so deletion waits for an upload in flight.
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  retire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check this pull request can have a Preview
+        id: policy
+        env:
+          FORK: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if test "$FORK" = true; then
+            echo "::notice::No Preview to delete: fork pull requests never get one."
+          elif test -z "$CLOUDFLARE_API_TOKEN"; then
+            echo "::notice::Cannot delete the Preview: the repo has no CLOUDFLARE_API_TOKEN secret."
+          else
+            echo "retire=true" >> "$GITHUB_OUTPUT"
+          fi
+      # The head commit, not the merge ref, which a closed pull request may no longer have.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        if: steps.policy.outputs.retire == 'true'
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
+        if: steps.policy.outputs.retire == 'true'
+        with:
+          runtime: node@26
+          cache: true
+          install: false
+      - if: steps.policy.outputs.retire == 'true'
+        run: pnpm install --frozen-lockfile
+      - name: Delete the Preview
+        if: steps.policy.outputs.retire == 'true'
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: pnpm exec wrangler preview delete --name "pr-$PR" --skip-confirmation

@@ -47,6 +47,7 @@
     "playwright": "1.64.0",
     "starlight-links-validator": "0.25.3",
     "typescript": "6.0.3",
-    "vitest": "4.1.12"
+    "vitest": "4.1.12",
+    "wrangler": "^4.160.1"
   }
 }
