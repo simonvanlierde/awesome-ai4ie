@@ -1109,6 +1109,19 @@
   type: [method]
   added: 2026-11
 
+- id: zhuMappingAluminumFlows2026
+  title: "Mapping aluminum flows in the United States using advanced Bayesian material flow analysis"
+  authors: ["Zhu, Y."]
+  etAl: true
+  year: 2026
+  doi: "10.1021/acs.est.6c02808"
+  blurb: "ARCADE, an open Bayesian MFA framework that maps data pedigree to noise and carries the 2017 posterior into 2022, reconciles US aluminum: end-of-life collection 67.6% [62.3, 73.9] in 2022."
+  ie: [sem]
+  topic: [metals]
+  ml: [tabular-ml, uncertainty]
+  type: [method]
+  added: 2026-11
+
 # ── Topics with no IE field yet ───────────────────────────────────────────────
 - id: kuCapabilitiesLimitationsAI2024
   title: "Capabilities and limitations of AI large language models (LLMs) for materials criticality research"

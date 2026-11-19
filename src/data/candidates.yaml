@@ -273,26 +273,6 @@
     - ghoroghiAdvancesApplicationMachine2022
     - gkousisMachineLearningLarge2026
     - romeikoReviewMachineLearning2024
-- doi: 10.1016/j.wasman.2026.115978
-  title: Rapid identification of hazardous waste from the steel industry based on
-    machine learning-driven infrared spectroscopy
-  year: 2026
-  venue: Waste Management
-  oa: https://doi.org/10.2139/ssrn.7460835
-  found: 2026-11-19
-  status: new
-  score: 0.065
-  near:
-    - wuApplicationsConvolutionalNeural2023
-    - koyanakaIndividualModelIdentification2024
-    - vogelgesangAutomatedMaterialFlow2025
-  hints:
-    ie:
-      - circular
-    topic:
-      - electronics
-    ml:
-      - cv
 - doi: 10.1016/j.jclepro.2025.145613
   title: "Automated machine learning-assisted enhanced product carbon footprint
     tracking and analysis in refinery industry: A graph-based life cycle
@@ -312,27 +292,6 @@
     - dengAutoPCFEfficientProduct2023
     - ulissiEvaluationCriteriaAIassisted2026
     - romeikoReviewMachineLearning2024
-- doi: 10.1021/acs.est.6c02808
-  title: Mapping Aluminum Flows in the United States Using Advanced Bayesian
-    Material Flow Analysis
-  year: 2026
-  venue: Environmental Science & Technology
-  oa: https://pubs.acs.org/esthag/article-pdf/doi/10.1021/acs.est.6c02808/69193149/acs.est.6c02808.pdf
-  found: 2026-11-19
-  status: new
-  score: 0.06
-  near:
-    - wangBayesianMaterialFlow2024
-    - masonBayesianMaterialFlow2025
-    - liaoIntelligentDataCollection2025
-  hints:
-    ie:
-      - sem
-    topic:
-      - metals
-    ml:
-      - tabular-ml
-      - uncertainty
 - doi: 10.3808/jei.202600562
   title: Carbon Footprint Accounting Driven by Large Language Models and
     Retrieval-Augmented Generation
@@ -910,24 +869,6 @@
     - gongEvolutionResearchIntersection2025
     - aboagyeLeveragingMachineLearning2025
     - zhaoDataScienceApplications2024
-- doi: 10.3390/batteries12110477
-  title: Accounting-Guided Data Augmentation for LightGBM Prediction of
-    Cradle-to-Gate Carbon Footprints of LFP and NMC811 Battery Cells
-  year: 2026
-  venue: Batteries
-  oa: https://doi.org/10.3390/batteries12110477
-  found: 2026-11-19
-  status: new
-  score: 0.021
-  near:
-    - testiniExAnteProductCarbon2026
-    - dengAutoPCFEfficientProduct2023
-    - ulissiEvaluationCriteriaAIassisted2026
-  hints:
-    ie:
-      - lca
-    ml:
-      - llm
 - doi: 10.1016/j.jclepro.2026.149235
   title: A cradle-to-grave life cycle assessment of United States’ grain and pulse
     carbon footprint using Bayesian machine learning and global uncertainty
@@ -1125,25 +1066,6 @@
     - preussAutomatingLifeCycle2026
     - gongEvolutionResearchIntersection2025
     - zhangSustainabilityAssessmentUsing2026
-- doi: 10.48550/arxiv.2611.07947
-  title: "ChemE-as-Code: An Open-Source Platform for Agentic AI in Chemical
-    Engineering"
-  year: 2026
-  venue: arXiv (Cornell University)
-  oa: https://arxiv.org/pdf/2611.07947
-  found: 2026-11-19
-  status: new
-  score: 0.012
-  near:
-    - davisMachineLearningassistedIndustrial2022
-    - kallitsisAutomatingLifeCycle2026
-    - zhaoConstructionWastetoresourceKnowledge2025
-  hints:
-    ie:
-      - symbiosis
-    ml:
-      - nlp-extraction
-      - llm
 - doi: 10.1007/s40996-026-02303-z
   title: "Bacterial Geopolymer Concrete: A Critical Review of Microstructural
     Mechanisms, Durability, and Field Readiness"
@@ -1479,6 +1401,35 @@
     - davisMachineLearningassistedIndustrial2022
     - haberlGlobalBuiltEnvironment2024
   hints: {}
+- doi: 10.1016/j.wasman.2026.115978
+  title: Rapid identification of hazardous waste from the steel industry based on
+    machine learning-driven infrared spectroscopy
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: enforcement screening of hazardous waste from digitised reference
+    spectra of pure compounds, no recovery or circularity question"
+- doi: 10.1021/acs.est.6c02808
+  title: Mapping Aluminum Flows in the United States Using Advanced Bayesian
+    Material Flow Analysis
+  year: 2026
+  found: 2026-11-19
+  status: listed
+- doi: 10.3390/batteries12110477
+  title: Accounting-Guided Data Augmentation for LightGBM Prediction of
+    Cradle-to-Gate Carbon Footprints of LFP and NMC811 Battery Cells
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 4: LightGBM re-learns a weighted inventory sum from one source; no
+    out-of-distribution test, and the authors claim no gain over direct
+    calculation"
+- doi: 10.48550/arxiv.2611.07947
+  title: "ChemE-as-Code: An Open-Source Platform for Agentic AI in Chemical
+    Engineering"
+  year: 2026
+  found: 2026-11-19
+  status: listed
 - doi: 10.1016/j.wasman.2026.115988
   title: Deep learning-based hyperspectral imaging for the identification and
     quantification of multi-component polypropylene blends
