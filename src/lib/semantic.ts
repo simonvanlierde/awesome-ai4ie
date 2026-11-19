@@ -1,6 +1,12 @@
 // Meaning-based search over the reading list: the search dialog embeds the query
 // and every entry with the same model, then ranks entries by cosine similarity.
 
+// The embedding model, pinned to a commit of its Hugging Face repo like the demo's.
+export const MODEL = "Xenova/all-MiniLM-L6-v2";
+// biome-ignore lint/security/noSecrets: a public git commit id, not a secret
+export const MODEL_REVISION = "751bff37182d3f1213fa05d7196b954e230abad9";
+export const DTYPE = "q8";
+
 /** One literature entry as the search index ships it (src/pages/literature-index.json.ts). */
 export type IndexEntry = {
   title: string;
@@ -21,10 +27,32 @@ export function entryText(e: {
   return `${e.title}. ${e.blurb} Tags: ${[...(e.ie ?? []), ...(e.ml ?? []), ...(e.type ?? [])].join(", ")}`;
 }
 
-// Below this cosine (all-MiniLM-L6-v2, q8) an entry is not shown. In-list questions
-// scored 0.52–0.78 on their best entry and off-topic ones 0.14–0.35 (trial, 10+4 queries).
-export const MIN_SCORE = 0.45;
+// Cut-offs for all-MiniLM-L6-v2 (q8), tuned on src/data/search-eval.yaml with
+// scripts/search-eval.mjs. At or above STRONG an entry shows on meaning alone;
+// between SOFT and STRONG it shows only when it also shares a content word with
+// the query. Meaning alone left a window of 0.414 (an off-list question) to 0.430
+// (a right answer) on that set; the word gate makes it wide.
+export const STRONG_SCORE = 0.45;
+export const SOFT_SCORE = 0.38;
 export const MAX_HITS = 5;
+
+// Words too common in questions and entries to say what they are about.
+const STOP = new Set(
+  (
+    "about also approach based best could data does first find from have help into know " +
+    "learning like machine made make method methods model models more most only other " +
+    "paper papers read review should some studies study tags than that their them then " +
+    "there these they this those used using very what when where which with would your"
+  ).split(" "),
+);
+const LETTERS = /[a-z]+/g;
+
+/** Content words of a text, cut to five letters so "citations" meets "citation" and
+ * "hallucinate" meets "hallucination". */
+export function stems(text: string): Set<string> {
+  const words = text.toLowerCase().match(LETTERS) ?? [];
+  return new Set(words.filter((w) => w.length >= 4 && !STOP.has(w)).map((w) => w.slice(0, 5)));
+}
 
 const WORD = /\S+/g;
 
@@ -33,16 +61,22 @@ export function isPhrase(query: string): boolean {
   return (query.match(WORD)?.length ?? 0) >= 3;
 }
 
-/** Indices of the best entries for a query vector, best first, all scoring at least MIN_SCORE.
+/** Indices of the best entries for a query, best first (see STRONG_SCORE).
  * Vectors must be normalized, so the dot product is the cosine. */
-export function rank(query: ArrayLike<number>, vectors: ArrayLike<number>[]): number[] {
+export function rank(
+  query: ArrayLike<number>,
+  vectors: ArrayLike<number>[],
+  queryStems: Set<string>,
+  entryStems: Set<string>[],
+): number[] {
+  const shares = (i: number) => [...queryStems].some((w) => entryStems[i].has(w));
   return vectors
     .map((v, i) => {
       let s = 0;
       for (let j = 0; j < v.length; j++) s += v[j] * query[j];
       return { i, s };
     })
-    .filter((h) => h.s >= MIN_SCORE)
+    .filter((h) => h.s >= STRONG_SCORE || (h.s >= SOFT_SCORE && shares(h.i)))
     .sort((a, b) => b.s - a.s)
     .slice(0, MAX_HITS)
     .map((h) => h.i);
