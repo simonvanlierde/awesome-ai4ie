@@ -68,9 +68,9 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
   }, [filter]);
 
   // The records are a separate chunk, fetched on the first export click.
-  async function download(ids: string[], format: (typeof FORMATS)[number], name: string) {
+  async function download(picked: LitEntry[], format: (typeof FORMATS)[number], name: string) {
     const { default: cache } = await import("../data/citations.json");
-    const blob = new Blob([citationFile(ids, cache, format.key)], {
+    const blob = new Blob([citationFile(picked, cache, format.key)], {
       type: `${format.mime};charset=utf-8`,
     });
     const a = document.createElement("a");
@@ -209,13 +209,7 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
               className="lit-clear"
               disabled={shown.length === 0}
               aria-label={`Export ${shown.length} shown ${shown.length === 1 ? "entry" : "entries"} as ${f.label}`}
-              onClick={() =>
-                download(
-                  shown.map((e) => e.id),
-                  f,
-                  "ai4ie-literature",
-                )
-              }
+              onClick={() => download(shown, f, "ai4ie-literature")}
             >
               {f.label}
             </button>
@@ -255,7 +249,7 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
                   key={f.key}
                   className="lit-clear"
                   aria-label={`Download ${f.label} for ${e.title}`}
-                  onClick={() => download([e.id], f, e.id)}
+                  onClick={() => download([e], f, e.id)}
                 >
                   {f.label}
                 </button>

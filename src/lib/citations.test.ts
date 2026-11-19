@@ -1,19 +1,77 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
-import { arxivBibtex, arxivRis, parseAtom, rekeyBibtex } from "../../scripts/fetch-citations.mjs";
-import { type Citations, citationFile } from "./citations";
+import {
+  arxivBibtex,
+  arxivRis,
+  MONTHS,
+  normaliseBibtex,
+  normaliseRis,
+  parseAtom,
+  rekeyBibtex,
+  sourceOf,
+} from "../../scripts/fetch-citations.mjs";
+import { type Citations, type CiteEntry, citationFile, fallbackRecord } from "./citations";
 
 const cache = JSON.parse(readFileSync("src/data/citations.json", "utf8")) as Citations;
-const lit = parse(readFileSync("src/data/literature.yaml", "utf8")) as { id: string }[];
+const lit = parse(readFileSync("src/data/literature.yaml", "utf8")) as CiteEntry[];
+
+const RIS_RECORD = /^TY {2}- [\s\S]*ER {2}-$/;
+const ENTITY = /&(#x?[0-9a-f]+|amp|lt|gt|quot|apos);/i;
+const TAG = /<\/?[a-z][^<>]*>/i;
+const BARE_AMP = /(?<!\\)&/;
+const MONTH_FIELD = /\bmonth\s*=\s*(\S+?)[,\s}]/g;
+const RIS_DATE = /^(?:PY|Y1|DA) {2}- (.*)$/gm;
 
 describe("citations.json", () => {
-  it("has BibTeX and RIS for every literature entry", () => {
-    const missing = lit.filter((e) => !cache[e.id]?.bibtex || !cache[e.id]?.ris).map((e) => e.id);
-    expect(missing, "run `pnpm run citations` to fetch these").toEqual([]);
+  it("lists the entries that export a short fallback record", () => {
+    const missing = lit.filter((e) => !cache[e.id]).map((e) => e.id);
+    if (missing.length > 0) {
+      // biome-ignore lint/suspicious/noConsole: the coverage gap is a warning, not a failure
+      console.warn(`No full citation record (run \`pnpm run citations\`): ${missing.join(", ")}`);
+    }
   });
-  it("keys each BibTeX entry by its id", () => {
-    for (const e of lit) expect(cache[e.id].bibtex).toMatch(new RegExp(`^@\\w+\\{${e.id},`));
+  const byId = new Map(lit.map((e) => [e.id, e]));
+  it.each(Object.entries(cache))("%s is a clean record for its YAML entry", (id, rec) => {
+    const e = byId.get(id);
+    expect(e, "stale id: run `pnpm run citations`").toBeDefined();
+    if (!e) return;
+    expect(rec.source, "fetched for another doi/arxiv: run `pnpm run citations`").toBe(sourceOf(e));
+    expect(rec.bibtex).toMatch(new RegExp(`^@\\w+\\{${id},`));
+    expect(rec.ris).toMatch(RIS_RECORD);
+    for (const text of [rec.bibtex, rec.ris]) {
+      expect(text).not.toMatch(ENTITY);
+      expect(text).not.toMatch(TAG);
+      expect(text).not.toContain("\r");
+    }
+    expect(rec.bibtex).not.toMatch(BARE_AMP);
+    for (const m of rec.bibtex.matchAll(MONTH_FIELD)) expect(MONTHS).toContain(m[1]);
+    expect(rec.bibtex).toMatch(new RegExp(`\\byear\\s*=\\s*\\{${e.year}\\}`));
+    for (const m of rec.ris.matchAll(RIS_DATE)) {
+      expect(m[1].startsWith(String(e.year))).toBe(true);
+    }
+  });
+});
+
+describe("normalise", () => {
+  it("decodes entities, drops tags, collapses whitespace and escapes a bare &", () => {
+    const raw =
+      "@article{k, title={Green\r\n      <scp>AI</scp> &amp;amp; Co}, journal={A \\& B}, year={2023}, month=Sept }";
+    expect(normaliseBibtex(raw, 2023)).toBe(
+      "@article{k, title={Green AI \\& Co}, journal={A \\& B}, year={2023}, month=sep }",
+    );
+  });
+  it("takes the year from the YAML and drops the month that went with the served one", () => {
+    expect(normaliseBibtex("@article{k, year={2019}, month=Nov, pages={1} }", 2020)).toBe(
+      "@article{k, year={2020}, pages={1} }",
+    );
+  });
+  it("folds RIS continuation lines, ends at ER and sets the year", () => {
+    const raw =
+      "TY  - JOUR\r\nTI  - A &amp; B\r\nAB  - one\r\n  two\r\nPY  - 2019\r\nDA  - 2019/11/24\r\nER  - \r\n";
+    expect(normaliseRis(raw, 2020)).toBe(
+      "TY  - JOUR\nTI  - A & B\nAB  - one two\nPY  - 2020\nDA  - 2020\nER  -",
+    );
   });
 });
 
@@ -72,9 +130,67 @@ describe("arXiv formatting", () => {
   });
 });
 
+const doiEntry: CiteEntry = {
+  id: "a",
+  title: "Cats & dogs_",
+  authors: ["Doe, J.", "Roe, R."],
+  etAl: true,
+  year: 2024,
+  doi: "10.1000/x_1",
+};
+const arxivEntry: CiteEntry = {
+  id: "b",
+  title: "B",
+  authors: ["Poe, E."],
+  etAl: false,
+  year: 2017,
+  arxiv: "1706.03762",
+};
+
+describe("fallbackRecord", () => {
+  it("writes an escaped @article with `and others` for a cut-short author list", () => {
+    expect(fallbackRecord(doiEntry, "bibtex")).toBe(
+      [
+        "@article{a,",
+        "  title = {{Cats \\& dogs\\_}},",
+        "  author = {Doe, J. and Roe, R. and others},",
+        "  year = {2024},",
+        "  doi = {10.1000/x_1},",
+        "  url = {https://doi.org/10.1000/x_1},",
+        "}",
+      ].join("\n"),
+    );
+  });
+  it("writes an arXiv @misc", () => {
+    const bib = fallbackRecord(arxivEntry, "bibtex");
+    expect(bib).toContain("@misc{b,");
+    expect(bib).toContain("eprint = {1706.03762},");
+    expect(bib).toContain("archivePrefix = {arXiv},");
+  });
+  it("writes RIS with the listed authors only", () => {
+    expect(fallbackRecord(doiEntry, "ris")).toBe(
+      [
+        "TY  - JOUR",
+        "AU  - Doe, J.",
+        "AU  - Roe, R.",
+        "TI  - Cats & dogs_",
+        "PY  - 2024",
+        "DO  - 10.1000/x_1",
+        "UR  - https://doi.org/10.1000/x_1",
+        "ER  -",
+      ].join("\n"),
+    );
+    expect(fallbackRecord(arxivEntry, "ris")).toMatch(
+      /^TY {2}- GEN\n[\s\S]*UR {2}- https:\/\/arxiv\.org\/abs\/1706\.03762\nER {2}-$/,
+    );
+  });
+});
+
 describe("citationFile", () => {
-  it("joins records in order", () => {
-    const c: Citations = { a: { bibtex: "@a{a,}", ris: "A" }, b: { bibtex: "@b{b,}", ris: "B" } };
-    expect(citationFile(["b", "a"], c, "bibtex")).toBe("@b{b,}\n\n@a{a,}\n");
+  it("joins records in order and falls back for an uncached entry", () => {
+    const c: Citations = { a: { source: "doi:10.1000/x_1", bibtex: "@a{a,}", ris: "A" } };
+    expect(citationFile([arxivEntry, doiEntry], c, "ris")).toBe(
+      `${fallbackRecord(arxivEntry, "ris")}\n\nA\n`,
+    );
   });
 });
