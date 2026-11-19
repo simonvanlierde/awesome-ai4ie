@@ -35,6 +35,7 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
   const [sort, setSort] = useState<SortKey>(DEFAULT_SORT);
   const [hydrated, setHydrated] = useState(false);
   const [open, setOpen] = useState<TagDim | null>(null);
+  const [exportStatus, setExportStatus] = useState("");
   const triggers = useRef<Partial<Record<TagDim, HTMLButtonElement | null>>>({});
   const activeRow = useRef<HTMLDivElement | null>(null);
   const countRef = useRef<HTMLSpanElement | null>(null);
@@ -69,16 +70,23 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
 
   // The records are a separate chunk, fetched on the first export click.
   async function download(picked: LitEntry[], format: (typeof FORMATS)[number], name: string) {
-    const { default: cache } = await import("../data/citations.json");
-    const blob = new Blob([citationFile(picked, cache, format.key)], {
-      type: `${format.mime};charset=utf-8`,
-    });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${name}.${format.ext}`;
-    a.click();
-    // Revoking in the same task can cancel the download in Firefox and Safari.
-    setTimeout(() => URL.revokeObjectURL(a.href), 0);
+    setExportStatus(""); // so the same message twice is announced twice
+    try {
+      const { default: cache } = await import("../data/citations.json");
+      const blob = new Blob([citationFile(picked, cache, format.key)], {
+        type: `${format.mime};charset=utf-8`,
+      });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${name}.${format.ext}`;
+      a.click();
+      // Revoking in the same task can cancel the download in Firefox and Safari.
+      setTimeout(() => URL.revokeObjectURL(a.href), 0);
+      const n = picked.length;
+      setExportStatus(`Exported ${n} ${n === 1 ? "entry" : "entries"} as ${format.label}`);
+    } catch {
+      setExportStatus("Export failed, try again");
+    }
   }
 
   function closePanel(dim: TagDim) {
@@ -200,21 +208,23 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
         <span role="status" ref={countRef} tabIndex={-1}>
           {shown.length} of {entries.length} entries
         </span>
-        <fieldset className="lit-export" aria-label="Export shown entries">
-          Export
+        <fieldset className="lit-export" aria-labelledby="lit-export-label">
+          <span id="lit-export-label">Export</span>
           {FORMATS.map((f) => (
             <button
               type="button"
               key={f.key}
               className="lit-clear"
               disabled={shown.length === 0}
-              aria-label={`Export ${shown.length} shown ${shown.length === 1 ? "entry" : "entries"} as ${f.label}`}
               onClick={() => download(shown, f, "ai4ie-literature")}
             >
               {f.label}
             </button>
           ))}
         </fieldset>
+        <span className="sr-only" aria-live="polite">
+          {exportStatus}
+        </span>
         <label className="lit-sort">
           Sort
           <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
@@ -241,20 +251,19 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
             <span className="lit-tags">
               <TagChips ie={e.ie} ml={e.ml} type={e.type} />
             </span>
-            <span className="lit-cite">
+            <fieldset className="lit-cite" aria-label={`Cite ${e.title}`}>
               Cite
               {FORMATS.map((f) => (
                 <button
                   type="button"
                   key={f.key}
                   className="lit-clear"
-                  aria-label={`Download ${f.label} for ${e.title}`}
                   onClick={() => download([e], f, e.id)}
                 >
                   {f.label}
                 </button>
               ))}
-            </span>
+            </fieldset>
           </li>
         ))}
       </ol>

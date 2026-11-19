@@ -1145,8 +1145,7 @@ starlight-menu-button button {
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--sl-color-gray-3);
-}
-.lit-export {
+  /* Both are fieldsets: drop the browser's border and padding. */
   border: 0;
   padding: 0;
   margin: 0;
