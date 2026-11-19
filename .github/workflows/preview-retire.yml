@@ -33,12 +33,13 @@ jobs:
           else
             echo "retire=true" >> "$GITHUB_OUTPUT"
           fi
-      # The head commit, not the merge ref, which a closed pull request may no longer have.
+      # The base branch, not the head: a branch made before Workers hosting has no wrangler,
+      # though ci.yml previews its merge ref. Deleting needs only the CLI and the Worker name.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         if: steps.policy.outputs.retire == 'true'
         with:
           persist-credentials: false
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.base.ref }}
       - uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
         if: steps.policy.outputs.retire == 'true'
         with:

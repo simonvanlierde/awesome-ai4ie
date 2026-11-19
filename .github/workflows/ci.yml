@@ -65,6 +65,9 @@ jobs:
           node-version: ${{ steps.node.outputs.version }}
       - name: Page weight budget
         run: pnpm run page-weight
+      # Checks wrangler.jsonc against dist/ here, not first on the push-to-main deploy.
+      - name: Workers config (dry run)
+        run: pnpm exec wrangler deploy --dry-run --outdir "$RUNNER_TEMP/wrangler"
       # withastro/action leaves node_modules and dist/ in place, so axe can scan the build.
       # No --with-deps: the runner has Chromium's libraries, and apt would only add
       # fonts the site does not use, from a mirror that can take minutes for them.
@@ -125,24 +128,7 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: pnpm exec wrangler deploy --message "${GITHUB_SHA::7}"
 
-  # Fork pull requests get no secrets, and drafts are not ready to show.
-  preview-skipped:
-    needs: build
-    if: >-
-      github.event_name == 'pull_request' &&
-      (github.event.pull_request.draft || github.event.pull_request.head.repo.full_name != github.repository)
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - env:
-          IS_DRAFT: ${{ github.event.pull_request.draft }}
-        run: |
-          if test "$IS_DRAFT" = "true"; then
-            echo "::notice::No Preview for a draft pull request; marking it ready creates one."
-          else
-            echo "::notice::No Preview for a fork pull request: it gets no Cloudflare credentials."
-          fi
-
+  # Fork pull requests get no secrets, and drafts are not ready to show, so preview skips them.
   preview:
     needs: build
     if: >-
