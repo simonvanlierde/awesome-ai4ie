@@ -63,6 +63,6 @@ jobs:
           git push ${FRESH:+--force} "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$BRANCH"
           if [ -z "$(gh pr list --head "$BRANCH" --state open --json number -q '.[0].number')" ]; then
             gh pr create --head "$BRANCH" --base main \
-              --title "chore(literature): new OpenAlex candidates" \
+              --title "chore(literature): add OpenAlex candidates" \
               --body "New leads from OpenAlex in \`src/data/candidates.yaml\`. Mark each one \`rejected\` (with a why) or \`listed\`, as MAINTAINING.md describes, then merge. A run by the workflow token starts no checks: close and reopen this PR to run CI."
           fi
