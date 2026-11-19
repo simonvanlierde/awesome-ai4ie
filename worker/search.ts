@@ -88,14 +88,18 @@ export function limitKey(ip: string): string {
     .join(":");
 }
 
-/** False when this visitor has used up SEARCH_LIMIT or all visitors together SEARCH_LIMIT_GLOBAL
+/** False when this visitor has used up SEARCH_LIMIT, or all visitors at this Cloudflare location
+ * SEARCH_LIMIT_GLOBAL (approximate: counts are per location)
  * (many IPs, or a whole IPv6 range, would get past the per-visitor count), null when a limiter
  * fails: the caller then answers "unavailable" rather than spend AI calls unmetered. */
 export async function withinLimit(env: Env, request: Request): Promise<boolean | null> {
   const key = limitKey(request.headers.get("cf-connecting-ip") ?? "unknown");
   try {
     if (!(await env.SEARCH_LIMIT.limit({ key })).success) return false;
-    return (await env.SEARCH_LIMIT_GLOBAL.limit({ key: "all" })).success;
+    const ok = (await env.SEARCH_LIMIT_GLOBAL.limit({ key: "all" })).success;
+    // biome-ignore lint/suspicious/noConsole: Workers Logs show when the shared cap turns readers away
+    if (!ok) console.warn("search: SEARCH_LIMIT_GLOBAL reached");
+    return ok;
   } catch (err) {
     // biome-ignore lint/suspicious/noConsole: Workers Logs keep the cause
     console.error(err);

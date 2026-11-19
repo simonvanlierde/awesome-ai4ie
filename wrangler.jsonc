@@ -28,7 +28,9 @@
     {
       "name": "SEARCH_LIMIT_GLOBAL",
       "namespace_id": "1003",
-      // All visitors together, keyed on a constant: caps the AI spend when many IPs search at once.
+      // All visitors at one Cloudflare location, keyed on a constant: an approximate brake on AI
+      // spend when many IPs search at once, not a worldwide cap (Cloudflare counts per location,
+      // eventually consistent). A flood from many IPs also blocks readers at that location.
       "simple": { "limit": 300, "period": 60 }
     }
   ],

@@ -157,7 +157,8 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: pnpm exec wrangler deploy --message "${GITHUB_SHA::7}"
-      # The new version takes some seconds to go live, so curl retries.
+      # A liveness check: production answers a search. It cannot tell the new version from the
+      # old one; curl retries while the deploy goes live.
       - name: Meaning search answers on production
         shell: bash
         run: >-
