@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { LitEntry } from "../data/schemas";
 import { DIM_LABELS, TAG_DIMS, TAGS, type TagDim, tagLabel } from "../data/tags";
-import { citationFile, FORMATS } from "../lib/citations";
+import { type Citations, citationFile, FORMATS } from "../lib/citations";
 import { formatAuthors, isNew, paperLink } from "../lib/literature";
 import {
   DEFAULT_SORT,
@@ -13,6 +13,7 @@ import {
   SORTS,
   type SortKey,
   sortEntries,
+  toggleTag,
   toQuery,
 } from "./litFilter";
 import TagChips from "./TagChips";
@@ -71,22 +72,7 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
   // The records are a separate chunk, fetched on the first export click.
   async function download(picked: LitEntry[], format: (typeof FORMATS)[number], name: string) {
     setExportStatus(""); // so the same message twice is announced twice
-    try {
-      const { default: cache } = await import("../data/citations.json");
-      const blob = new Blob([citationFile(picked, cache, format.key)], {
-        type: `${format.mime};charset=utf-8`,
-      });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `${name}.${format.ext}`;
-      a.click();
-      // Revoking in the same task can cancel the download in Firefox and Safari.
-      setTimeout(() => URL.revokeObjectURL(a.href), 0);
-      const n = picked.length;
-      setExportStatus(`Exported ${n} ${n === 1 ? "entry" : "entries"} as ${format.label}`);
-    } catch {
-      setExportStatus("Export failed, try again");
-    }
+    setExportStatus(await exportCitations(picked, format, name));
   }
 
   function closePanel(dim: TagDim) {
@@ -95,11 +81,7 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
   }
 
   function toggle(dim: TagDim, tag: string) {
-    const active = filter[dim].includes(tag);
-    setFilter({
-      ...filter,
-      [dim]: active ? filter[dim].filter((t) => t !== tag) : [...filter[dim], tag],
-    });
+    setFilter((current) => toggleTag(current, dim, tag));
   }
 
   const shown = sortEntries(
@@ -142,66 +124,32 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
         })}
       </div>
       {open && (
-        <fieldset id="lit-facet-panel" className="lit-facet-panel" aria-label={DIM_LABELS[open]}>
-          {Object.entries(TAGS[open]).map(([tag, label]) => (
-            <button
-              type="button"
-              key={tag}
-              className="lit-chip"
-              aria-pressed={filter[open].includes(tag)}
-              onClick={() => toggle(open, tag)}
-              onKeyDown={(e) => {
-                if (e.key === "Escape") closePanel(open);
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </fieldset>
+        <FacetPanel
+          dim={open}
+          selected={filter[open]}
+          onToggle={(tag) => toggle(open, tag)}
+          onClose={() => closePanel(open)}
+        />
       )}
 
       {anyActive && (
-        <div className="lit-active" ref={activeRow}>
-          {pills.map((p, i) => (
-            <button
-              type="button"
-              key={p.id}
-              className="lit-pill"
-              aria-label={`Remove filter: ${p.label}`}
-              onClick={() => {
-                refocus.current = i;
-                toggle(p.dim, p.tag);
-              }}
-            >
-              {p.label}
-              <span aria-hidden="true">×</span>
-            </button>
-          ))}
-          {filter.papers.length > 0 && (
-            <button
-              type="button"
-              className="lit-pill"
-              aria-label="Remove filter: linked papers"
-              onClick={() => {
-                refocus.current = pills.length;
-                setFilter({ ...filter, papers: [] });
-              }}
-            >
-              {filter.papers.length} linked {filter.papers.length === 1 ? "paper" : "papers"}
-              <span aria-hidden="true">×</span>
-            </button>
-          )}
-          <button
-            type="button"
-            className="lit-clear"
-            onClick={() => {
-              refocus.current = 0;
-              setFilter(EMPTY_FILTER);
-            }}
-          >
-            Clear all
-          </button>
-        </div>
+        <ActivePills
+          pills={pills}
+          paperCount={filter.papers.length}
+          rowRef={activeRow}
+          onRemoveTag={(i, dim, tag) => {
+            refocus.current = i;
+            toggle(dim, tag);
+          }}
+          onRemovePapers={() => {
+            refocus.current = pills.length;
+            setFilter({ ...filter, papers: [] });
+          }}
+          onClearAll={() => {
+            refocus.current = 0;
+            setFilter(EMPTY_FILTER);
+          }}
+        />
       )}
 
       <div className="lit-count">
@@ -269,6 +217,112 @@ export default function LiteratureBrowser({ entries }: { entries: LitEntry[] }) 
         ))}
       </ol>
       {shown.length === 0 && <p className="lit-empty">{emptyMessage(filter, tagLabel)}</p>}
+    </div>
+  );
+}
+
+/** Build a citation download in the browser and return the screen-reader status line. */
+export async function exportCitations(
+  picked: LitEntry[],
+  format: (typeof FORMATS)[number],
+  name: string,
+  loadCache: () => Promise<Citations> = async () =>
+    (await import("../data/citations.json")).default,
+): Promise<string> {
+  try {
+    const cache = await loadCache();
+    const blob = new Blob([citationFile(picked, cache, format.key)], {
+      type: `${format.mime};charset=utf-8`,
+    });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${name}.${format.ext}`;
+    a.click();
+    // Revoking in the same task can cancel the download in Firefox and Safari.
+    setTimeout(() => URL.revokeObjectURL(a.href), 0);
+    const n = picked.length;
+    return `Exported ${n} ${n === 1 ? "entry" : "entries"} as ${format.label}`;
+  } catch {
+    return "Export failed, try again";
+  }
+}
+
+/** Open chip panel for one tag dimension. */
+export function FacetPanel({
+  dim,
+  selected,
+  onToggle,
+  onClose,
+}: {
+  dim: TagDim;
+  selected: readonly string[];
+  onToggle: (tag: string) => void;
+  onClose: () => void;
+}) {
+  return (
+    <fieldset id="lit-facet-panel" className="lit-facet-panel" aria-label={DIM_LABELS[dim]}>
+      {Object.entries(TAGS[dim]).map(([tag, label]) => (
+        <button
+          type="button"
+          key={tag}
+          className="lit-chip"
+          aria-pressed={selected.includes(tag)}
+          onClick={() => onToggle(tag)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") onClose();
+          }}
+        >
+          {label}
+        </button>
+      ))}
+    </fieldset>
+  );
+}
+
+/** Removable pills for active tag filters and `?papers=` deep-links. */
+export function ActivePills({
+  pills,
+  paperCount,
+  rowRef,
+  onRemoveTag,
+  onRemovePapers,
+  onClearAll,
+}: {
+  pills: readonly { id: string; dim: TagDim; tag: string; label: string }[];
+  paperCount: number;
+  rowRef?: React.RefObject<HTMLDivElement | null>;
+  onRemoveTag: (index: number, dim: TagDim, tag: string) => void;
+  onRemovePapers: () => void;
+  onClearAll: () => void;
+}) {
+  return (
+    <div className="lit-active" ref={rowRef}>
+      {pills.map((p, i) => (
+        <button
+          type="button"
+          key={p.id}
+          className="lit-pill"
+          aria-label={`Remove filter: ${p.label}`}
+          onClick={() => onRemoveTag(i, p.dim, p.tag)}
+        >
+          {p.label}
+          <span aria-hidden="true">×</span>
+        </button>
+      ))}
+      {paperCount > 0 && (
+        <button
+          type="button"
+          className="lit-pill"
+          aria-label="Remove filter: linked papers"
+          onClick={onRemovePapers}
+        >
+          {paperCount} linked {paperCount === 1 ? "paper" : "papers"}
+          <span aria-hidden="true">×</span>
+        </button>
+      )}
+      <button type="button" className="lit-clear" onClick={onClearAll}>
+        Clear all
+      </button>
     </div>
   );
 }
