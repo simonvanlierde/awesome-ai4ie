@@ -21,8 +21,9 @@ const X0 = 260;
 const NODE = 8;
 const X1 = 920;
 const W = X1 + NODE + 240;
-// Node links get at least this tall a hit area: 24px at the smallest scale the script
-// sets, about 0.53 on a 320px screen (WCAG 2.5.8).
+// Node links get up to this tall a hit area: 24px at the smallest scale the script sets,
+// about 0.53 on a 320px screen (WCAG 2.5.8). Small nodes packed closer than that share the
+// space between them instead (see hit below); each node also has its literature filter.
 const HIT = 46;
 
 const entries = (await getCollection("literature")).map((e) => e.data);
@@ -46,7 +47,22 @@ const pourDelay = (b: (typeof bands)[number]) => {
   const nth = bands.filter((o) => o.ie === b.ie).indexOf(b);
   return `--pour: ${(field * 0.075 + nth * 0.025).toFixed(3)}s`;
 };
-const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT) / 2;
+// Each hit area is at least HIT tall, but stops halfway to the next node in its column, so
+// neighbouring targets never overlap.
+const hit = (nodes: readonly { y: number; h: number }[], i: number) => {
+  const n = nodes[i];
+  const prev = nodes[i - 1];
+  const next = nodes[i + 1];
+  const top = Math.max(
+    n.y + n.h / 2 - Math.max(n.h, HIT) / 2,
+    prev ? (prev.y + prev.h + n.y) / 2 : -Infinity,
+  );
+  const bottom = Math.min(
+    n.y + n.h / 2 + Math.max(n.h, HIT) / 2,
+    next ? (n.y + n.h + next.y) / 2 : Infinity,
+  );
+  return { y: top, height: bottom - top };
+};
 // What a lit node adds to its label: how far across the other column it reaches.
 const readout = (dim: "ie" | "ml", n: { tag: string; papers: number }) => {
   const other = dim === "ie" ? "ml" : "ie";
@@ -111,7 +127,7 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
       }
     </g>
     {
-      ieNodes.map((n) => (
+      ieNodes.map((n, i) => (
         <a
           href={litUrl({ ie: [n.tag], ml: mlInFlow })}
           class="flow-node"
@@ -119,7 +135,7 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
           data-tag={n.tag}
           data-readout={readout("ie", n)}
         >
-          <rect class="flow-hit" x="0" y={hitY(n)} width={X0 + NODE} height={Math.max(n.h, HIT)} />
+          <rect class="flow-hit" x="0" width={X0 + NODE} {...hit(ieNodes, i)} />
           <rect class={`node field-${n.tag}`} x={X0} y={n.y} width={NODE} height={n.h} />
           <text x={X0 - 10} y={n.y + n.h / 2} text-anchor="end" dominant-baseline="middle">
             {`${shortLabel(n.tag)} `}
@@ -129,7 +145,7 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
       ))
     }
     {
-      mlNodes.map((n) => (
+      mlNodes.map((n, i) => (
         <a
           href={litUrl({ ie: ieInFlow, ml: [n.tag] })}
           class="flow-node"
@@ -137,7 +153,7 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
           data-tag={n.tag}
           data-readout={readout("ml", n)}
         >
-          <rect class="flow-hit" x={X1} y={hitY(n)} width={W - X1} height={Math.max(n.h, HIT)} />
+          <rect class="flow-hit" x={X1} width={W - X1} {...hit(mlNodes, i)} />
           <rect class="node" x={X1} y={n.y} width={NODE} height={n.h} />
           <text x={X1 + NODE + 10} y={n.y + n.h / 2} dominant-baseline="middle">
             {`${shortLabel(n.tag)} `}
@@ -173,10 +189,14 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
   const NODE = 8;
   const LABEL = 19;
   const BANDS = 0.3;
-  const fit = (svg: SVGSVGElement) => {
-    const px = svg.getBoundingClientRect().width;
-    if (!px) return;
-    const H = svg.viewBox.baseVal.height;
+  // Label widths in user units, measured at the first fitted scale and again when the web
+  // font is ready. A text length read at each fit drifts with the on-screen scale
+  // (hinting), and the fit that drift causes changes the svg's height, so the observer
+  // would refit for ever. The fonts use font-display: optional, so a font that misses the
+  // first paint never swaps in later and needs no refit.
+  const widths = new WeakMap<SVGSVGElement, { ie: number; ml: number }>();
+  const fitted = new WeakMap<SVGSVGElement, number>();
+  const measure = (svg: SVGSVGElement) => {
     const widest = (dim: string) =>
       Math.max(
         0,
@@ -184,8 +204,20 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
           t.getComputedTextLength(),
         ),
       );
-    const X0 = Math.ceil(widest("ie") + 14);
-    const right = widest("ml") + 14 + NODE;
+    const w = { ie: widest("ie"), ml: widest("ml") };
+    widths.set(svg, w);
+    return w;
+  };
+  const fit = (svg: SVGSVGElement, force = false) => {
+    const px = svg.getBoundingClientRect().width;
+    // A height change alone, as this fit's own viewBox causes, needs no refit.
+    if (!px || (!force && fitted.get(svg) === px)) return;
+    fitted.set(svg, px);
+    const H = svg.viewBox.baseVal.height;
+    const first = !widths.has(svg);
+    const w = widths.get(svg) ?? measure(svg);
+    const X0 = Math.ceil(w.ie + 14);
+    const right = w.ml + 14 + NODE;
     const labels = X0 + NODE + right;
     const size = Math.min(17, 11.5 + px * 0.0045, (px * LABEL * (1 - BANDS)) / labels);
     const W = (px * LABEL) / Math.max(10, size);
@@ -212,16 +244,39 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
     for (const m of svg.querySelectorAll("mask")) m.setAttribute("width", `${W + 8}`);
     svg.dataset.x0 = `${X0 + NODE}`;
     svg.dataset.x1 = `${X1}`;
+    // The first widths were read at the build's desktop scale: read them again at this one.
+    if (first) {
+      measure(svg);
+      fit(svg, true);
+    }
   };
   const plates = [...document.querySelectorAll<SVGSVGElement>(".flow svg")];
   const observer = new ResizeObserver((rows) => {
     for (const r of rows) fit(r.target as SVGSVGElement);
   });
   for (const svg of plates) observer.observe(svg);
-  // Label widths change once the web font loads.
   document.fonts.ready.then(() => {
-    for (const svg of plates) fit(svg);
+    for (const svg of plates) {
+      measure(svg);
+      fit(svg, true);
+    }
   });
+  // Once the bands have poured in, their masks only cost paint, on every resize: drop them.
+  const unmask = (svg: SVGSVGElement) => {
+    for (const b of svg.querySelectorAll(".band")) b.removeAttribute("mask");
+    for (const m of svg.querySelectorAll("mask")) m.remove();
+  };
+  for (const svg of plates) {
+    const pours = svg.querySelectorAll(".pour").length;
+    if (!pours || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      unmask(svg);
+      continue;
+    }
+    let left = pours;
+    svg.addEventListener("animationend", (e) => {
+      if ((e.target as Element).classList.contains("pour") && --left === 0) unmask(svg);
+    });
+  }
 
   // Lighting a node fades every band but its own and names its reach in the
   // readout. Mouse lights on hover, keyboard on focus. On touch the first tap

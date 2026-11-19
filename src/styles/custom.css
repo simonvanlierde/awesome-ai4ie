@@ -616,6 +616,8 @@ starlight-menu-button button {
 .flow text {
   font-family: var(--sl-font);
   font-size: 19px; /* user units: the script in FlowFigure.astro sets 13-17px on screen */
+  /* Lengths that scale exactly with the plate, so the fitted label columns hold at any size. */
+  text-rendering: geometricPrecision;
   font-weight: 650;
   font-stretch: 82%;
   fill: var(--sl-color-white);
