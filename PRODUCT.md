@@ -33,7 +33,7 @@ evidence, try it.
 - It is a proposal from one maintainer to the working group, still in a demo phase, and
   meant to be argued with and handed over. The working group has not adopted it yet; the
   org move and a second maintainer are open.
-- Contributions arrive as pull requests against two YAML data files and Markdown pages.
+- Contributions arrive as pull requests against three YAML data files and Markdown pages.
 
 ## Capabilities and Constraints
 
@@ -42,7 +42,8 @@ evidence, try it.
 - Three React islands: the literature browser, the applications explorer, and an in-browser
   CLIP zero-shot demo that loads transformers.js from cdn.jsdelivr.net and a model from
   huggingface.co only on demand.
-- Data in `src/data/literature.yaml` and `applications.yaml`, Zod-validated at build and in
+- Data in `src/data/literature.yaml`, `applications.yaml` and `resources.yaml` (tools,
+  datasets, courses, videos, posts and communities), Zod-validated at build and in
   tests; tags must come from `src/data/tags.ts`.
 - Terminology: "IE field" and "AI technique" are the two map axes; "Wanted" marks an open
   gap or placeholder.

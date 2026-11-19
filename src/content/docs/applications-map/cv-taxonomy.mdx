@@ -4,6 +4,7 @@ description: A draft taxonomy of computer-vision tasks for product-scale data co
 ---
 
 import Cite from '../../../components/Cite.astro';
+import Resources from '../../../components/Resources.astro';
 
 One member's **draft working taxonomy** of computer-vision tasks for product-scale
 data collection at end-of-life: a worked example of how one corner of the
@@ -109,3 +110,11 @@ parts.
 - **Condition (plausible but unvalidated).** Corrosion, degradation, and contamination.
   Surface segmentation can isolate regions, but per-region grading on arbitrary products is
   not validated.
+
+## Learning the methods
+
+The cells above build on a few model families: image classifiers (CNNs and vision
+transformers), detectors such as YOLO, and segmenters. These courses teach them hands-on
+in Python:
+
+<Resources kind="course" ml="cv" />

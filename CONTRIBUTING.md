@@ -6,17 +6,20 @@ Anyone can contribute. If you've found hardware that works, a tool worth the tim
 
 **No pull request needed.** [Suggest a paper](../../issues/new?template=paper.yml),
 [map an application](../../issues/new?template=application.yml),
-[suggest a tool](../../issues/new?template=tool.yml) or
+[suggest a tool](../../issues/new?template=tool.yml),
+[suggest a course, video or post](../../issues/new?template=resource.yml) or
 [suggest anything else](../../issues/new?template=other.yml). Each is a short form, and a
 maintainer turns it into an entry. The forms need a free GitHub account. Without one, post in
 the [AI4IE Discord](https://discord.gg/zhHAZakXHX).
 
 To make the change yourself:
 
-1. **Papers and applications live in data files**, not in page text:
-   [`src/data/literature.yaml`](src/data/literature.yaml) and
-   [`src/data/applications.yaml`](src/data/applications.yaml). Copy a neighbouring
-   entry and edit the fields. The pages are built from the data.
+1. **Papers, applications and resources live in data files**, not in page text:
+   [`src/data/literature.yaml`](src/data/literature.yaml),
+   [`src/data/applications.yaml`](src/data/applications.yaml) and
+   [`src/data/resources.yaml`](src/data/resources.yaml) (tools, datasets, models,
+   courses, videos, posts and communities). Copy a neighbouring entry and edit the
+   fields. The pages are built from the data.
 2. **Everything else** is a Markdown page under `src/content/docs/`:
    `best-practices/`, `tools/`, `demos.mdx`, `applications-map/index.mdx`.
    Copy the format of the entries next to yours.
@@ -25,16 +28,31 @@ To make the change yourself:
 
 To edit text, you need no local setup: edit the Markdown on GitHub, or click the **edit pencil** on any page of the live site. To preview locally, see the [development section](README.md#development).
 
-### Adding a paper or an application
+### Adding a paper, an application or a resource
 
 - Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR, with a short label in `SHORT_LABELS` (the start of the full label, for Fig. 1 on the home page). Add its full label to the matching dropdown in the paper and application forms in [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) too. `pnpm test` checks that they match.
 - Literature entries need an `id` (the citation key), `title`, `authors`, `year`, a one-line `blurb` saying why it's worth reading, tags, and `added: YYYY-MM`.
 - Write `authors` as a list with one `"Surname, I."` per author. Add `etAl: true` when you stop before the last author.
 - Give a `doi` (the bare `10.…` id), an `arxiv` id (the bare id, such as `2401.01234`), or both.
 - An entry is marked "new" in the list for about two months from the start of its `added` month.
+- Resource entries need an `id`, `title`, `url`, a `kind`, a one-line `blurb` saying why it's worth the time, and `checked: YYYY-MM`, the month you last opened the link. A tool also takes `good` and `notFor` (the "Good for" and "Not for" verdict), `cost`, `data` (whether data leaves your machine) and `group` (its list on the tools pages).
 - Application entries need both tag dimensions (`ie:` and `ml:`), an honest one-line `maturity:`, and `papers:` referencing literature ids.
 - `pnpm test` checks every field, tag, and cross-reference. CI runs it on your PR.
 - A maintainer fetches the full BibTeX and RIS record for a new paper after merging. If you work locally, you can run `pnpm run citations` yourself.
+
+### Listing resources on a page
+
+To show resources in a page's prose, such as a video beside an explanation, drop in the
+`Resources` component. It lists the entries of one kind, tool group or tag:
+
+```mdx
+import Resources from '../../components/Resources.astro';
+
+<Resources kind="video" ml="llm" />
+```
+
+`ie="any"` lists entries with an IE tag and `ie="none"` those without one. A filter that
+matches no entry fails the build.
 
 ### Citing a source in prose
 

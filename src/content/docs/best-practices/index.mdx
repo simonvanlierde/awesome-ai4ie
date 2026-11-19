@@ -4,6 +4,7 @@ description: The two different things IE researchers call "AI", how to use each,
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
+import Resources from '../../../components/Resources.astro';
 
 Two different things get called "using AI". One is **AI as a research method**: a
 model inside your pipeline, producing results you publish. The other is **AI as an
@@ -66,6 +67,14 @@ than the barrier to noticing a broken one.
   one from a mass balance. Uncertainty is IE's central methodological concern and
   still has no column in the [map](/applications-map/#ai-techniques-with-no-tag).
 
+### If you're new to ML
+
+Most of the failures above are caught by habits a first course teaches: hold out a
+test set, cross-validate, start with a simple model. Both of these are free and in
+Python:
+
+<Resources kind="course" ml="tabular-ml" />
+
 ## AI as an assistant
 
 Chatbots and coding agents helping you write code, prose, or analysis. The model is
@@ -94,6 +103,14 @@ surface while you can still catch them.
   your memory of how you phrased it last time.
 - **Learn prompting properly** from the [Prompt Engineering Guide](https://www.promptingguide.ai),
   which is free and tool-agnostic.
+
+### How an LLM works
+
+An LLM predicts the next piece of text from the text so far. Nothing in that process
+checks a fact, which is why the [pitfalls](#pitfalls) below look the way they do. These
+two videos show the mechanism, one as a talk and one in animation:
+
+<Resources kind="video" ml="llm" />
 
 ## Pitfalls
 

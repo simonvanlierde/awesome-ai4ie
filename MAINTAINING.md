@@ -29,8 +29,10 @@ before you add it.
    - Set `type`, and set `added` to this month (`YYYY-MM`).
 
    An application goes in [`src/data/applications.yaml`](src/data/applications.yaml), with the
-   same tags. A tool goes on its page under `src/content/docs/tools/`, in the format of the
-   entries next to it. If the issue gives no checked date, use the month it was opened.
+   same tags. A tool, dataset, model or other resource goes in
+   [`src/data/resources.yaml`](src/data/resources.yaml): set `kind`, and for a tool its `group`
+   (the list it sits in on the tools pages), `cost` and `data`. Set `checked` to the month you
+   opened the link, or the month the issue was opened if it gives no date.
 4. For a paper, run `pnpm run citations`. It fetches the entry's BibTeX and RIS from Crossref or
    arXiv into [`src/data/citations.json`](src/data/citations.json). Commit that file with the
    entry. A `FAIL` line means Crossref or arXiv has no record yet, so rerun it later. Until then

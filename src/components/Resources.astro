@@ -1,0 +1,57 @@
+---
+// A list of resources.yaml entries, picked by kind, tool group and tags, in the
+// same one-line-per-entry form the tools pages used as Markdown. A filter that
+// matches nothing fails the build, so a typo cannot leave an empty list.
+//   <Resources kind="video" ml="llm" />  <Resources kind="dataset" ie="none" />
+import { getCollection } from "astro:content";
+import { DATA_LABELS, RESOURCE_KINDS } from "../data/schemas";
+import { pickResources, type ResourceFilter, textParts } from "../lib/resources";
+import { siteUrl } from "../lib/urls";
+
+type Props = ResourceFilter;
+
+const all = (await getCollection("resources")).map((e) => ({ id: e.id, ...e.data }));
+const entries = pickResources(all, Astro.props);
+if (entries.length === 0) {
+  throw new Error(`<Resources ${JSON.stringify(Astro.props)} />: no resources.yaml entry matches`);
+}
+// Name the kind only when the list mixes kinds.
+const mixed = new Set(entries.map((e) => e.kind)).size > 1;
+const parts = (s: string) =>
+  textParts(s).map((p) => ({ ...p, href: p.href?.startsWith("/") ? siteUrl(p.href) : p.href }));
+---
+
+<ul class="res-list">
+  {
+    entries.map((e) => (
+      <li>
+        <strong>
+          <a href={e.url}>{e.title}</a>
+        </strong>
+        {e.status === "proposal" && <span class="lit-proposal">proposal</span>}
+        {mixed && <span> ({RESOURCE_KINDS[e.kind].toLowerCase()})</span>}:{" "}
+        {parts(e.blurb).map((p) => (p.href ? <a href={p.href}>{p.text}</a> : p.code ? <code>{p.text}</code> : p.text))}
+        {e.good && (
+          <>
+            {" "}
+            <em>Good for:</em> {parts(e.good).map((p) => (p.href ? <a href={p.href}>{p.text}</a> : p.text))}
+          </>
+        )}
+        {e.notFor && (
+          <>
+            {" "}
+            <em>Not for:</em> {parts(e.notFor).map((p) => (p.href ? <a href={p.href}>{p.text}</a> : p.text))}
+          </>
+        )}
+        {e.cost && ` ${e.cost}.`}
+        {e.data && (
+          <>
+            {" "}
+            <strong>{DATA_LABELS[e.data]}</strong>
+          </>
+        )}{" "}
+        <em>(checked {e.checked})</em>
+      </li>
+    ))
+  }
+</ul>
