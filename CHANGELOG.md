@@ -46,7 +46,9 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   ranks the papers. Where the host has no `/api/search`, the dialog leaves meaning search out.
 - A read-only MCP server at `/mcp` on the Worker, so AI assistants can search the reading list
   and read papers, applications, resources and the Agent Skills. Its tools are marked
-  read-only, return absolute links, and answer errors with a stable code.
+  read-only, return absolute links, and answer errors with a stable code. Every tool but
+  `get_skill` declares an output schema, the list tools filter by id, each application links
+  to its place on the map, and retired tag ids map to their replacements.
 - A privacy page at `/privacy/`, linked from the footer: what the site sends where, including
   the questions meaning search sends to Cloudflare.
 - An accessibility statement at `/accessibility/`, linked from the footer.
