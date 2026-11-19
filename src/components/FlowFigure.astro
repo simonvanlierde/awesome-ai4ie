@@ -21,9 +21,9 @@ const X0 = 260;
 const NODE = 8;
 const X1 = 920;
 const W = X1 + NODE + 240;
-// Node links get up to this tall a hit area: 24px at the smallest scale the script sets,
-// about 0.53 on a 320px screen (WCAG 2.5.8). Small nodes packed closer than that share the
-// space between them instead (see hit below); each node also has its literature filter.
+// Node links get at least this tall a hit area: 24px at the smallest scale the script sets,
+// about 0.53 on a 320px screen (WCAG 2.5.8, checked by scripts/a11y.mjs). Small nodes
+// packed closer than that overlap a little; the later node takes the shared strip.
 const HIT = 46;
 
 const entries = (await getCollection("literature")).map((e) => e.data);
@@ -47,22 +47,7 @@ const pourDelay = (b: (typeof bands)[number]) => {
   const nth = bands.filter((o) => o.ie === b.ie).indexOf(b);
   return `--pour: ${(field * 0.075 + nth * 0.025).toFixed(3)}s`;
 };
-// Each hit area is at least HIT tall, but stops halfway to the next node in its column, so
-// neighbouring targets never overlap.
-const hit = (nodes: readonly { y: number; h: number }[], i: number) => {
-  const n = nodes[i];
-  const prev = nodes[i - 1];
-  const next = nodes[i + 1];
-  const top = Math.max(
-    n.y + n.h / 2 - Math.max(n.h, HIT) / 2,
-    prev ? (prev.y + prev.h + n.y) / 2 : -Infinity,
-  );
-  const bottom = Math.min(
-    n.y + n.h / 2 + Math.max(n.h, HIT) / 2,
-    next ? (n.y + n.h + next.y) / 2 : Infinity,
-  );
-  return { y: top, height: bottom - top };
-};
+const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT) / 2;
 // What a lit node adds to its label: how far across the other column it reaches.
 const readout = (dim: "ie" | "ml", n: { tag: string; papers: number }) => {
   const other = dim === "ie" ? "ml" : "ie";
@@ -127,7 +112,7 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
       }
     </g>
     {
-      ieNodes.map((n, i) => (
+      ieNodes.map((n) => (
         <a
           href={litUrl({ ie: [n.tag], ml: mlInFlow })}
           class="flow-node"
@@ -135,7 +120,7 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
           data-tag={n.tag}
           data-readout={readout("ie", n)}
         >
-          <rect class="flow-hit" x="0" width={X0 + NODE} {...hit(ieNodes, i)} />
+          <rect class="flow-hit" x="0" y={hitY(n)} width={X0 + NODE} height={Math.max(n.h, HIT)} />
           <rect class={`node field-${n.tag}`} x={X0} y={n.y} width={NODE} height={n.h} />
           <text x={X0 - 10} y={n.y + n.h / 2} text-anchor="end" dominant-baseline="middle">
             {`${shortLabel(n.tag)} `}
@@ -145,7 +130,7 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
       ))
     }
     {
-      mlNodes.map((n, i) => (
+      mlNodes.map((n) => (
         <a
           href={litUrl({ ie: ieInFlow, ml: [n.tag] })}
           class="flow-node"
@@ -153,7 +138,7 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
           data-tag={n.tag}
           data-readout={readout("ml", n)}
         >
-          <rect class="flow-hit" x={X1} width={W - X1} {...hit(mlNodes, i)} />
+          <rect class="flow-hit" x={X1} y={hitY(n)} width={W - X1} height={Math.max(n.h, HIT)} />
           <rect class="node" x={X1} y={n.y} width={NODE} height={n.h} />
           <text x={X1 + NODE + 10} y={n.y + n.h / 2} dominant-baseline="middle">
             {`${shortLabel(n.tag)} `}
