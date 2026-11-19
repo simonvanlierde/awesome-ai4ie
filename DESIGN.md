@@ -94,8 +94,8 @@ the page: the favicon and the README.
   holding exactly the papers it counts. Labels are the first words of each tag's full name.
   Pointing at a band lifts it and fades the rest. Pointing at, focusing or tapping a node
   lights its bands and names its reach in a live readout line under the plate; on touch the
-  first tap lights a node and the second opens its list. On load the bands run in once from
-  the fields while the cover mark unfolds and the title spells it out: together the site's
+  first tap lights a node and the second opens its list. On load each band pours once from
+  its field along its own curve, field by field from the top, while the cover mark unfolds and the title spells it out: together the site's
   one entrance, about 1.2 seconds. Reduced motion
   skips both.
 - **Fig. 2.** The see, read, try path for one map cell, each step topped by the ink of the

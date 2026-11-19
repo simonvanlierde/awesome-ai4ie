@@ -35,7 +35,7 @@ const CARD_CSS = `
   #og h1 { position: absolute; left: 285px; top: 38px; width: 630px; margin: 0; font-size: 70px; line-height: 0.98; letter-spacing: -0.01em; }
   #og .line { top: 186px; margin: 0; font: 500 40px/1.22 var(--font-read, serif); text-wrap: balance; }
   #og .flow { position: absolute; left: 0; top: 356px; width: 1200px; height: 232px; margin: 0; }
-  #og .flow-bands { animation: none; }
+  #og .flow .pour { animation: none; }
   #og h1 .x { animation: none; }
   #og .flow svg { display: block; width: 1200px; max-width: none; height: 232px; margin: 0; overflow: visible; }
   #og .flow text { font-size: 26px; }

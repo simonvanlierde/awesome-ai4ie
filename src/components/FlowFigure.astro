@@ -39,6 +39,19 @@ const missing = missingTechniques(mlNodes).map((t) => tagLabel("ml", t));
 const band = (p: (typeof PLATES)[number], b: (typeof bands)[number]) =>
   `M${X0 + NODE} ${b.y0}C${p.mid} ${b.y0} ${p.mid} ${b.y1} ${p.X1} ${b.y1}` +
   `V${b.y1 + b.h}C${p.mid} ${b.y1 + b.h} ${p.mid} ${b.y0 + b.h} ${X0 + NODE} ${b.y0 + b.h}Z`;
+// The entrance pours each band along its own centre line, through a mask stroke as wide
+// as the band is tall: at any x the band lies within h/2 of the line, so the stroke covers
+// it however steep the curve. Fields start top to bottom, their bands a beat apart.
+const spine = (p: (typeof PLATES)[number], b: (typeof bands)[number]) => {
+  const a = b.y0 + b.h / 2;
+  const z = b.y1 + b.h / 2;
+  return `M${X0 + NODE} ${a}C${p.mid} ${a} ${p.mid} ${z} ${p.X1} ${z}`;
+};
+const pourDelay = (b: (typeof bands)[number]) => {
+  const field = ieNodes.findIndex((n) => n.tag === b.ie);
+  const nth = bands.filter((o) => o.ie === b.ie).indexOf(b);
+  return `--pour: ${(field * 0.075 + nth * 0.025).toFixed(3)}s`;
+};
 const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT) / 2;
 // What a lit node adds to its label: how far across the other column it reaches.
 const readout = (dim: "ie" | "ml", n: { tag: string; papers: number }) => {
@@ -63,9 +76,26 @@ const idle = "Point at, focus or tap a label to light its flows.";
     aria-label="IE fields, linked to the AI techniques their papers use"
     tabindex="-1"
   >
+    <defs>
+      {
+        p.bands.map((b, i) => (
+          <mask id={`pour-${p.name}-${i}`} maskUnits="userSpaceOnUse" x="-4" y="-4" width={p.W + 8} height={p.H + 8}>
+            <path
+              class="pour"
+              d={spine(p, b)}
+              stroke="#fff"
+              stroke-width={b.h + 2}
+              fill="none"
+              pathLength="1"
+              style={pourDelay(layouts[0].bands[i])}
+            />
+          </mask>
+        ))
+      }
+    </defs>
     <g class="flow-bands">
       {
-        p.bands.map((b) => (
+        p.bands.map((b, i) => (
           // Out of the tab order: the node links below reach the same lists
           // from the keyboard, and the literature filters reach every pair.
           <a
@@ -73,7 +103,13 @@ const idle = "Point at, focus or tap a label to light its flows.";
             tabindex="-1"
             aria-label={`${tagLabel("ie", b.ie)} with ${tagLabel("ml", b.ml)}: ${b.count} ${b.count === 1 ? "paper" : "papers"}`}
           >
-            <path class={`band field-${b.ie}`} data-ie={b.ie} data-ml={b.ml} d={band(p, b)}>
+            <path
+              class={`band field-${b.ie}`}
+              data-ie={b.ie}
+              data-ml={b.ml}
+              d={band(p, b)}
+              mask={`url(#pour-${p.name}-${i})`}
+            >
               <title>{`${tagLabel("ie", b.ie)} → ${tagLabel("ml", b.ml)}: ${b.count}`}</title>
             </path>
           </a>
