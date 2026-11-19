@@ -73,7 +73,7 @@ await page.evaluate(
     const svg = flow.querySelector("svg");
     svg.setAttribute("viewBox", "0 0 1200 232");
     svg.removeAttribute("width");
-    const [X0, X1, SY, LEFT, RIGHT] = [223, 455, 232 / 420, 300, 900];
+    const [X0, X1, SY, LEFT, RIGHT] = [268, 500, 232 / 420, 300, 900];
     const sx = (RIGHT - LEFT) / (X1 - X0);
     const bands = svg.querySelector(".flow-bands");
     bands.setAttribute("transform", `translate(${LEFT - X0 * sx} 0) scale(${sx} ${SY})`);
