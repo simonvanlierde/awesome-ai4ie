@@ -67,6 +67,11 @@ If a suggestion doesn't hold up, say why in the issue and close it.
   openalex.org/settings/api raises the daily budget). The repository setting *Allow GitHub Actions to
   create and approve pull requests* (Settings, Actions, General) must be on. To catch up on a
   longer gap, run `node scripts/openalex-candidates.mjs --since <date> --limit <n>` locally.
+- **Meaning search quality.** After changing `src/data/search-eval.yaml`, the embedding model or
+  `MIN_SCORE`, run `pnpm run embed && pnpm run search-eval` with `CLOUDFLARE_ACCOUNT_ID` and
+  `CLOUDFLARE_API_TOKEN` (a token with Workers AI: Read) set. Tune `MIN_SCORE` on the tuning
+  half only, and set `HIT1_MIN` and `MRR_MIN` in `scripts/lib/eval-metrics.mjs` just below the
+  held-out scores it prints.
 - **Citation records.** After a publisher corrects a record at Crossref, run
   `pnpm run citations -- --refresh` and review the diff of `src/data/citations.json` before
   you commit it.
@@ -153,5 +158,10 @@ go to the Worker instead, as a Workers custom domain (a zone on the same Cloudfl
    `https://<domain>/mcp` with `Accept: application/json, text/event-stream` returns 200, not 405.
 4. Change the Worker address to the domain in README.md and in the "Ask an AI assistant" section
    of `src/content/docs/literature.mdx`.
+5. Move the Cloudflare account to the Workers Paid plan ($5 a month). On the free plan, Workers AI
+   stops answering for the rest of the day once the free 10,000 neurons are used, about 230,000
+   searches. Only a flood gets there, but after the move every reader's meaning search depends on
+   it. On the paid plan, usage past the free allowance costs $0.011 per 1,000 neurons, and the
+   search caps in `wrangler.jsonc` hold a full day of flooding to about 10 cents a location.
 
 To roll back, delete the Worker's custom domain and redo the Pages steps.
