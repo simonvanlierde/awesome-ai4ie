@@ -906,6 +906,18 @@
   type: [method]
   added: 2026-11
 
+- id: neoDeepLearningbasedHyperspectral2027
+  title: "Deep learning-based hyperspectral imaging for the identification and quantification of multi-component polypropylene blends"
+  authors: ["Neo, E. R. K."]
+  etAl: true
+  year: 2027
+  doi: "10.1016/j.wasman.2026.115988"
+  blurb: "An NIR hyperspectral CNN detects talc, PE and flame-retardant additives in PP for recycling sorting (0.934 accuracy on unseen blends), though from 44 lab-made samples and missing the flame retardant below about 3 wt%."
+  ie: [circular]
+  ml: [cv]
+  type: [method, dataset]
+  added: 2026-11
+
 # ── Industrial symbiosis ─────────────────────────────────────────────────────
 - id: zhaoConstructionWastetoresourceKnowledge2025
   title: "Construction of waste-to-resource knowledge graph for industrial symbiosis identification using large language models"

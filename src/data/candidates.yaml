@@ -406,24 +406,6 @@
     ml:
       - nlp-extraction
       - llm
-- doi: 10.1016/j.wasman.2026.115988
-  title: Deep learning-based hyperspectral imaging for the identification and
-    quantification of multi-component polypropylene blends
-  year: 2026
-  venue: Waste Management
-  oa: https://www.sciencedirect.com/science/article/pii/S0956053X26006586/pdf
-  found: 2026-11-19
-  status: new
-  score: 0.05
-  near:
-    - vogelgesangAutomatedMaterialFlow2025
-    - funkEvaluationVisionLanguage2026
-    - davisMachineLearningassistedIndustrial2022
-  hints:
-    ie:
-      - circular
-    ml:
-      - cv
 - doi: 10.65102/is2026792
   title: Graph neural network modeling digital economy industrial ecology and
     artificial intelligence collaborative development mechanism
@@ -1497,6 +1479,12 @@
     - davisMachineLearningassistedIndustrial2022
     - haberlGlobalBuiltEnvironment2024
   hints: {}
+- doi: 10.1016/j.wasman.2026.115988
+  title: Deep learning-based hyperspectral imaging for the identification and
+    quantification of multi-component polypropylene blends
+  year: 2026
+  found: 2026-11-19
+  status: listed
 - doi: 10.1021/acs.est.6c09376
   title: Near-Real-Time Mapping of Seamless All-Hour Aerosol Optical Depth in China
   year: 2026
