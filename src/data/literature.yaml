@@ -517,6 +517,19 @@
   type: [method]
   added: 2026-11
 
+- id: testiniExAnteProductCarbon2026
+  title: "Ex-ante product carbon footprint forecasting in electric arc furnace stainless steel production: a probabilistic machine learning framework for alloy eco-design"
+  authors: ["Testini, L."]
+  etAl: true
+  year: 2026
+  doi: "10.1021/acssusresmgt.6c00459"
+  blurb: "Quantile random forest forecasts an EAF stainless-steel heat's carbon footprint from its charge mix before melting, with calibrated 95% intervals (95.3% coverage); it learns the authors' own LCA model, not measured footprints."
+  ie: [lca]
+  topic: [metals]
+  ml: [tabular-ml, uncertainty]
+  type: [method]
+  added: 2026-11
+
 # ── Input-output ─────────────────────────────────────────────────────────────
 - id: balajiCaMLCarbonFootprinting2023
   title: "CaML: carbon footprinting of household products with zero-shot semantic text similarity"
@@ -671,6 +684,19 @@
   blurb: "Regression trees fill in missing road-layer data and Cox/Weibull lifetime models drive a dynamic MFA of Norway's roads to 2050; the authors say results illustrate the method only."
   ie: [sem]
   topic: [lifetime]
+  ml: [tabular-ml]
+  type: [method]
+  added: 2026-11
+
+- id: longBuildingStockTurnoverReshapes2026
+  title: "Building-stock turnover reshapes mitigation priorities in China's building sector"
+  authors: ["Long, Y."]
+  etAl: true
+  year: 2026
+  doi: "10.1021/acs.est.6c06129"
+  blurb: "A province-level dynamic stock and LCA model of China's buildings to 2060, with each intensity parameter forecast by the best of four ML models (random forest to GA-BiLSTM) under expanding-window validation."
+  ie: [sem, lca]
+  topic: [buildings]
   ml: [tabular-ml]
   type: [method]
   added: 2026-11

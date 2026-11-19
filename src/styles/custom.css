@@ -309,7 +309,8 @@ h1#_top,
   transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .brand-mark :is(.bm-a-leg, .bm-a-full, .bm-e-ext, .bm-e-base, .bm-i1, .bm-i2, .bm-stem) {
-  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  /* As long as the moves, so no letter shows before the strokes around it have parted. */
+  transition: opacity 0.34s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .brand-mark .bm-4 {
   transition:
@@ -318,71 +319,57 @@ h1#_top,
 }
 /* Expanded AI4IE state: default in the header, and on hover/focus of the 404 plate. */
 .brand-mark--wordmark .bm-root,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-root,
-.cover-mark.is-open .brand-mark--glyph .bm-root {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-root {
   transform: translateX(0);
 }
 .brand-mark--wordmark .bm-a,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a,
-.cover-mark.is-open .brand-mark--glyph .bm-a {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a {
   transform: translateX(0);
 }
 .brand-mark--wordmark .bm-a-leg,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a-leg,
-.cover-mark.is-open .brand-mark--glyph .bm-a-leg {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a-leg {
   opacity: 0;
 }
 .brand-mark--wordmark .bm-a-full,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a-full,
-.cover-mark.is-open .brand-mark--glyph .bm-a-full {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-a-full {
   opacity: 1;
 }
 .brand-mark--wordmark .bm-i1,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-i1,
-.cover-mark.is-open .brand-mark--glyph .bm-i1 {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-i1 {
   transform: translateX(8.5px);
   opacity: 1;
 }
 .brand-mark--wordmark .bm-4,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-4,
-.cover-mark.is-open .brand-mark--glyph .bm-4 {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-4 {
   transform: translateX(28.5px);
   color: var(--ink-1);
 }
 .brand-mark--wordmark .bm-4 > path,
 .brand-mark--wordmark .bm-4-stem,
 .plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-4 > path,
-.cover-mark.is-open .brand-mark--glyph .bm-4 > path,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-4-stem,
-.cover-mark.is-open .brand-mark--glyph .bm-4-stem {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-4-stem {
   stroke: currentColor;
 }
 .brand-mark--wordmark .bm-i2,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-i2,
-.cover-mark.is-open .brand-mark--glyph .bm-i2 {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-i2 {
   transform: translateX(41px);
   opacity: 1;
 }
 .brand-mark--wordmark .bm-e,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e,
-.cover-mark.is-open .brand-mark--glyph .bm-e {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e {
   transform: translateX(51px);
 }
 .brand-mark--wordmark .bm-e-base,
 .brand-mark--wordmark .bm-e .bm-stem,
 .plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e-base,
-.cover-mark.is-open .brand-mark--glyph .bm-e-base,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e .bm-stem,
-.cover-mark.is-open .brand-mark--glyph .bm-e .bm-stem {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e .bm-stem {
   stroke: currentColor;
 }
 .brand-mark--wordmark .bm-e-ext,
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e-ext,
-.cover-mark.is-open .brand-mark--glyph .bm-e-ext {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-e-ext {
   opacity: 1;
 }
-.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-gap-cut,
-.cover-mark.is-open .brand-mark--glyph .bm-gap-cut {
+.plate-link:is(:hover, :focus-visible) .brand-mark--glyph .bm-gap-cut {
   opacity: 0;
 }
 
@@ -610,12 +597,9 @@ starlight-menu-button button {
   }
   .cover-copy {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-areas: "mark mark" "title tagline" "title actions";
+    grid-template-areas: "title tagline" "title actions";
     column-gap: 3rem;
     align-items: start;
-  }
-  .cover-mark {
-    grid-area: mark;
   }
   .cover h1#_top {
     grid-area: title;
@@ -638,6 +622,99 @@ starlight-menu-button button {
 .cover h1#_top {
   font-size: clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem);
   margin: 0;
+}
+/* Cap height of the narrow Archivo title, sitting on its baseline. */
+.cover-endmark {
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  vertical-align: baseline;
+}
+/* On load the tile lands, then its strokes ink in as a draftsman would draw the mark:
+   the 4, its stem (the I), and last the faded A leg and E arms. It ends with the Fig. 1
+   bands, as part of the one entrance. The paths follow public/favicon.svg's order:
+   faded strokes, the 4, the stem. Pointing at the tile replays the inking, faster and
+   over a ghost of the mark (script in Hero.astro). The dash gap is three path lengths,
+   so an undrawn stroke leaves no sliver at either end. */
+.endmark-ghost {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cover-endmark rect {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: endmark-land 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+  }
+  .endmark-ink path {
+    stroke-dasharray: 1 3;
+    animation: endmark-ink 0.3s cubic-bezier(0.65, 0, 0.35, 1) backwards;
+  }
+  .endmark-ink path:nth-child(2) {
+    animation-delay: 0.25s;
+  }
+  .endmark-ink path:nth-child(3) {
+    animation-delay: 0.45s;
+  }
+  .endmark-ink path:nth-child(1) {
+    animation-delay: 0.6s;
+  }
+  .reink-a .endmark-ink path {
+    animation-name: endmark-ink-a;
+  }
+  .reink-b .endmark-ink path {
+    animation-name: endmark-ink-b;
+  }
+  .cover-endmark:is(.reink-a, .reink-b) .endmark-ink path {
+    animation-duration: 0.2s;
+  }
+  .cover-endmark:is(.reink-a, .reink-b) .endmark-ink path:nth-child(2) {
+    animation-delay: 0s;
+  }
+  .cover-endmark:is(.reink-a, .reink-b) .endmark-ink path:nth-child(3) {
+    animation-delay: 0.15s;
+  }
+  .cover-endmark:is(.reink-a, .reink-b) .endmark-ink path:nth-child(1) {
+    animation-delay: 0.3s;
+  }
+  .reink-a .endmark-ghost {
+    animation: endmark-ghost-a 0.5s linear;
+  }
+  .reink-b .endmark-ghost {
+    animation: endmark-ghost-b 0.5s linear;
+  }
+}
+@keyframes endmark-land {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+@keyframes endmark-ink {
+  from {
+    stroke-dashoffset: 1.01;
+  }
+}
+@keyframes endmark-ink-a {
+  from {
+    stroke-dashoffset: 1.01;
+  }
+}
+@keyframes endmark-ink-b {
+  from {
+    stroke-dashoffset: 1.01;
+  }
+}
+@keyframes endmark-ghost-a {
+  from,
+  80% {
+    opacity: 0.35;
+  }
+}
+@keyframes endmark-ghost-b {
+  from,
+  80% {
+    opacity: 0.35;
+  }
 }
 .cover-tagline {
   margin: 0;
@@ -797,41 +874,6 @@ starlight-menu-button button {
 }
 .glyph-stem {
   stroke: color-mix(in srgb, currentColor 72%, var(--sl-color-bg));
-}
-/* The home cover's mark: the Æ-4 glyph unfolds into AI4IE once on load, as the Fig. 1
-   flows run in, and again on hover or tap (script in Hero.astro). */
-.cover-mark {
-  width: clamp(7rem, 5rem + 6vw, 10rem);
-  color: var(--sl-color-white);
-}
-.cover-mark .brand-mark {
-  width: 100%;
-  height: auto;
-}
-/* Then the title spells the mark out: the rest of each word fades in around the
-   initials, and "for" arrives in the 4's cobalt. */
-@media (prefers-reduced-motion: no-preference) {
-  .cover-expand .x {
-    animation: spell-out 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.75s backwards;
-  }
-  .cover-expand .x-for {
-    animation: spell-out-for 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.55s backwards;
-  }
-}
-@keyframes spell-out {
-  from {
-    opacity: 0;
-  }
-}
-@keyframes spell-out-for {
-  from {
-    opacity: 0;
-    color: var(--ink-1);
-  }
-  45% {
-    opacity: 1;
-    color: var(--ink-1);
-  }
 }
 /* Fig. 404: the mark as a plate, framed by the dashed gap outline. */
 .plate {

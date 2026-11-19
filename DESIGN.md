@@ -67,15 +67,16 @@ Columns of numbers use tabular figures.
 The mark is an Æ with a 4 drawn inside it ([`Glyph.astro`](src/components/Glyph.astro)). It
 sits outside the six inks: on the page it is neutral ink, with the 4 at full strength and
 the A's leg and the E's arms faded to grey. The stem is the I of AI4IE, so it takes a lighter
-tint; the large mark (the home cover, the 404 plate, the card) also cuts a hairline gap beside it. Cobalt is ink 1, so the mark is cobalt only off
-the page: the favicon and the README.
+tint; the large mark (the 404 plate, the card) also cuts a hairline gap beside it. Cobalt is ink 1, so the mark is cobalt only off
+the page (the favicon and the README), with one exception: the home title ends on the
+favicon tile as its end mark, at cap height, hidden from screen readers. On load its strokes
+ink in as the mark is drawn: the 4, its stem, then the faded A leg and E arms. Pointing at
+or tapping the tile inks them in again.
 
 - **Header, home cover, colophon, and 404.** The top bar shows the unfolded `AI4IE` drafting
   wordmark, which collapses to the Æ-4 mark on hover/focus and on narrow screens. The home
-  cover shows the mark large above the title: Æ-4 unfolds into `AI4IE` once on load, while the
-  Fig. 1 flows run in, and again on hover or tap. Then the title spells it out: the letters
-  A, I, I and E stay, the rest fades in around them, and "for" arrives in the 4's cobalt.
-  The full title is in the HTML throughout; only its opacity animates. The 404 plate shows the Æ-4 mark in a dashed
+  cover carries no mark of its own: the header wordmark and the title already name the site.
+  The 404 plate shows the Æ-4 mark in a dashed
   frame and expands it into `AI4IE` on hover/focus. Every inner page
   and the home page also carry the mark in the colophon before the licences.
 - **Never decoration.** No patterns, bullets, loaders or watermarks.
@@ -95,9 +96,8 @@ the page: the favicon and the README.
   Pointing at a band lifts it and fades the rest. Pointing at, focusing or tapping a node
   lights its bands and names its reach in a live readout line under the plate; on touch the
   first tap lights a node and the second opens its list. On load each band pours once from
-  its field along its own curve, field by field from the top, while the cover mark unfolds and the title spells it out: together the site's
-  one entrance, about 1.2 seconds. Reduced motion
-  skips both.
+  its field along its own curve, field by field from the top, while the title's end mark
+  inks in: together the site's one entrance, under a second. Reduced motion skips both.
 - **Fig. 2.** The see, read, try path for one map cell, each step topped by the ink of the
   chapter it links to.
 - **Numbered tables.** A bold "Table N.N" title above, a source line below. Numbering and
