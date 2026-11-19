@@ -44,7 +44,7 @@ evidence, try it.
   huggingface.co only on demand.
 - Data in `src/data/literature.yaml`, `applications.yaml` and `resources.yaml` (tools,
   datasets, courses, videos, posts and communities), Zod-validated at build and in
-  tests; tags must come from `src/data/tags.ts`.
+  tests; tags must come from `src/data/vocabulary.yaml`.
 - Terminology: "IE field" and "AI technique" are the two map axes; "Wanted" marks an open
   gap or placeholder. The five IE fields follow the [ISIE sections](https://is4ie.org/sections):
   life cycle assessment, socio-economic metabolism, input-output, circular economy and

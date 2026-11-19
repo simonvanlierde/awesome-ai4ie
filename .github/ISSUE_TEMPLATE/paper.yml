@@ -27,7 +27,7 @@ body:
     attributes:
       label: Does it fill a gap on the map?
       description: If you came from a gap under "Not mapped yet", it's filled in here. A field, topic or technique that isn't in the lists below gets its tag with its first paper.
-  # The four dropdowns list the labels in src/data/tags.ts; forms.test.ts keeps them in step.
+  # The four dropdowns list the labels in src/data/vocabulary.yaml; forms.test.ts keeps them in step.
   - type: dropdown
     id: ie
     attributes:

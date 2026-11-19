@@ -34,7 +34,7 @@ body:
     attributes:
       label: Papers behind it
       description: DOIs or arXiv ids, one per line. Papers that aren't on the reading list yet are welcome; we add both.
-  # The two dropdowns list the labels in src/data/tags.ts; forms.test.ts keeps them in step.
+  # The two dropdowns list the labels in src/data/vocabulary.yaml; forms.test.ts keeps them in step.
   - type: dropdown
     id: ie
     attributes:

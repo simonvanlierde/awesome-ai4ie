@@ -4,7 +4,7 @@
 # short), year, doi (bare 10.x id) or arxiv (bare id) or both, blurb (one line,
 # why read this), type, added (YYYY-MM). Optional: status: proposal, for an
 # entry a curator suggests before the group has vetted it.
-# Tags must exist in src/data/tags.ts; the test suite enforces this.
+# Tags must exist in src/data/vocabulary.yaml; the test suite enforces this.
 # See CONTRIBUTING.md for how to add an entry.
 
 # ── AI × IE: cross-cutting perspectives ──────────────────────────────────────
