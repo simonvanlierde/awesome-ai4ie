@@ -76,13 +76,13 @@
 .field-lca {
   --field: var(--ink-1);
 }
-.field-eol {
+.field-circular {
   --field: var(--ink-2);
 }
-.field-mfa {
+.field-sem {
   --field: var(--ink-3);
 }
-.field-urban-mining {
+.field-eeio {
   --field: var(--ink-4);
 }
 .field-symbiosis {
@@ -1349,6 +1349,27 @@ starlight-menu-button button {
   font-family: var(--sl-font);
   font-size: 0.875rem;
   color: var(--sl-color-gray-2);
+}
+
+/* ── Field pages: the jump list to each technique's section ─────────────── */
+.field-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  font-family: var(--sl-font);
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+.field-jump ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.field-jump li {
+  margin: 0;
 }
 
 /* ── Applications explorer ───────────────────────────────────────────────── */

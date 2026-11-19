@@ -1,15 +1,38 @@
 // The site on Cloudflare Workers: the static Astro build in dist/, with headers from
-// public/_headers. CI deploys main with `wrangler deploy` and each pull request with
-// `wrangler preview --name pr-<number>` (.github/workflows/ci.yml).
+// public/_headers, plus worker/index.ts for /api/*. CI deploys main with `wrangler deploy`
+// and each pull request with `wrangler preview --name pr-<number>` (.github/workflows/ci.yml).
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "awesome-ai4ie",
+  "main": "worker/index.ts",
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": "./dist",
+    // The Worker reads literature-index.json from here.
+    "binding": "ASSETS",
+    // Only /api/* runs the Worker; every other request is a static file, which is not
+    // billed or counted against the free plan's daily requests.
+    "run_worker_first": ["/api/*"],
     "not_found_handling": "404-page"
   },
-  // Required for `wrangler preview`; Previews need no settings of their own yet.
-  "previews": {},
+  // Workers AI always runs remotely, in `wrangler dev` too (needs `wrangler login`).
+  "ai": { "binding": "AI", "remote": true },
+  "ratelimits": [
+    {
+      "name": "SEARCH_LIMIT",
+      // Any account-unique number; names this limit's counter.
+      "namespace_id": "1001",
+      // Per visitor IP: a reader types far slower; a script hitting the endpoint does not.
+      "simple": { "limit": 30, "period": 60 }
+    }
+  ],
+  // Settings for `wrangler preview`. Previews inherit no bindings, so they repeat them; their
+  // own limiter namespace keeps Preview traffic off production's counter.
+  "previews": {
+    "ai": { "binding": "AI", "remote": true },
+    "ratelimits": [
+      { "name": "SEARCH_LIMIT", "namespace_id": "1002", "simple": { "limit": 30, "period": 60 } }
+    ]
+  },
   "observability": { "enabled": true }
 }

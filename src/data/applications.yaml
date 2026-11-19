@@ -3,7 +3,7 @@
 # src/data/tags.ts (both dimensions required), papers[] reference ids in
 # literature.yaml. See CONTRIBUTING.md for how to add an entry.
 
-# ── LCA & footprinting ───────────────────────────────────────────────────────
+# ── Life cycle assessment ────────────────────────────────────────────────────
 - id: impact-screening-ml
   name: "Rapid impact screening with tabular ML"
   ie: [lca]
@@ -47,61 +47,61 @@
   maturity: "Demonstrated at national scale; depends on rich household microdata that most countries don't have."
   papers: [froemeltMachineLearningBased2020]
 
-# ── MFA & stocks and flows ───────────────────────────────────────────────────
+# ── Socio-economic metabolism ────────────────────────────────────────────────
 - id: satellite-stock-mapping
   name: "Material stock mapping from satellite data"
-  ie: [mfa]
+  ie: [sem]
   ml: [remote-sensing]
   summary: "Combine Earth-observation imagery, OSM, and material intensities to map building/infrastructure stocks without cadastral data."
   maturity: "National 10 m maps and a global 90 m estimate exist. Compared with independent studies, results range from 53% to 200%; neither side is ground truth, so treat that spread as the uncertainty."
   papers: [haberlHighResolutionMaps2021, haberlGlobalBuiltEnvironment2024, jiangBottomUpApproachIntegrating2025]
 - id: nightlights-stock-proxy
   name: "Night-lights & multi-source stock estimation"
-  ie: [mfa]
+  ie: [sem]
   ml: [remote-sensing]
   summary: "Use nighttime-light radiance, alone or fused with optical imagery by deep models, as a proxy for built-up volume and stocks."
   maturity: "Continent-scale proxy validated; deep fusion improves accuracy but still needs ground data for calibration."
   papers: [peledSpatialMaterialStock2021, baoDeepLearningFusion2023]
 - id: street-view-building-attributes
   name: "Building attributes from street-level imagery"
-  ie: [mfa]
+  ie: [sem]
   ml: [cv, segmentation]
   summary: "Predict floor area, age, and component counts (windows, doors) from street-view photos to feed urban stock models."
   maturity: "Feasibility shown (≈19% MAPE floor area, ~70% age accuracy in-city); transfer between cities degrades sharply."
   papers: [huangImageBasedPrediction2024, arbabiScalableDataCollection2021]
 - id: interior-stock-prediction
   name: "Interior component stocks from exterior features"
-  ie: [mfa, urban-mining]
+  ie: [sem]
   ml: [tabular-ml, cv]
   summary: "Predict interior wall length and room counts from exterior features and facade images, as input to building stock models: a shortcut around impossible surveys."
   maturity: "One study, 2,000 UK houses; useful priors, wide uncertainty per building."
   papers: [daiModelingInteriorComponent2025]
 
-# ── Waste, EoL & circularity ─────────────────────────────────────────────────
+# ── Circular economy ─────────────────────────────────────────────────────────
 - id: label-ocr-identification
   name: "Product identification from labels (OCR + retrieval)"
-  ie: [eol, urban-mining]
+  ie: [circular]
   ml: [cv, nlp-extraction]
   summary: "Read model/serial text off product labels and match it against a reference database to identify products at end-of-life."
   maturity: "Deployed in pilots; reads 95.7% of labels in repair settings but 39.7% at the recycler; label wear is the limit."
   papers: [sterkensProductLabelIdentification2023, koyanakaIndividualModelIdentification2024]
 - id: waste-stream-classification
   name: "Waste image classification & detection"
-  ie: [eol]
+  ie: [circular]
   ml: [cv]
   summary: "CNN/transformer classifiers recognize waste categories in images, from litter surveys to conveyor streams."
   maturity: "The most-published application in the field; lab accuracies are high, but performance under plant conditions is the real test."
   papers: [luComputerVisionSolid2022, wuApplicationsConvolutionalNeural2023, majchrowskaDeepLearningbasedWaste2022]
 - id: sorting-plant-characterization
   name: "Sensor-based material flow characterization in sorting plants"
-  ie: [eol, mfa]
+  ie: [sem, circular]
   ml: [cv, segmentation]
   summary: "Cameras on sorting lines classify waste particles and estimate the composition of the flow, which could feed MFA with plant data."
   maturity: "Tested on an industrial sorter at pilot scale with shredded WEEE (mAP50 ≈ 0.99, composition within about 5%), on recorded data. No plant runs it yet."
   papers: [vogelgesangAutomatedMaterialFlow2025]
 - id: component-detection
   name: "Component detection & counting in opened products"
-  ie: [eol]
+  ie: [circular]
   ml: [cv, segmentation]
   summary: "Detect, segment, and count components inside opened devices to build bills of components for disassembly and recycling."
   maturity: "Accurate on the benchmarks it was tuned for, untested on field photos. Foundation segmenters (SAM) still need a class-assignment layer."
@@ -109,7 +109,7 @@
   demo: "demos/" # site-relative: the explorer prefixes the deploy base
 - id: zero-shot-eol-recognition
   name: "Zero-shot recognition with vision-language models"
-  ie: [eol]
+  ie: [circular]
   ml: [cv, foundation]
   summary: "CLIP-class models score user-chosen labels against images: recognition without task-specific training data."
   maturity: "Without training, CLIP sorts single-material waste photos well (about 90% on a curated set, 79% on landfill photos) but drops to 40% when items carry several materials. Not yet sorting-grade."
@@ -117,7 +117,7 @@
   demo: "demos/" # site-relative: the explorer prefixes the deploy base
 - id: single-image-geometry
   name: "Geometry & quantity from single images"
-  ie: [eol]
+  ie: [circular]
   ml: [depth, cv]
   summary: "Monocular depth and feed-forward 3D reconstruction recover error-bounded product geometry from ordinary photos."
   maturity: "Gives approximate geometry from one photo. Accuracy on field photos of real products is untested; reflective, transparent, and thin parts fail."
@@ -125,7 +125,7 @@
   demo: "demos/" # site-relative: the explorer prefixes the deploy base
 - id: robotic-disassembly
   name: "Vision-guided robotic disassembly"
-  ie: [eol]
+  ie: [circular]
   ml: [cv, segmentation]
   summary: "Perception + planning pipelines locate fasteners and components to disassemble products robotically for reuse and recycling."
   maturity: "Working cells exist for narrow product families (phones); generalization across products is the open problem."
@@ -143,7 +143,7 @@
 # ── Uncertainty & Bayesian MFA ───────────────────────────────────────────
 - id: bayesian-mfa
   name: "Bayesian material flow analysis"
-  ie: [mfa]
+  ie: [sem]
   ml: [tabular-ml, uncertainty]
   summary: "Treat MFA flows as uncertain variables, combine expert priors with noisy data by Bayesian inference, and use the posterior to choose which data to collect next."
   maturity: "Methods papers, tested on US steel and global aluminium cycles, plus one national case on England's construction aggregates; each releases code or data."

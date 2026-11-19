@@ -33,7 +33,7 @@ To edit text, you need no local setup: edit the Markdown on GitHub, or click the
 An AI-in-IE paper belongs in the reading list when all four hold:
 
 1. **An AI or ML method is central:** it is built, trained, compared or evaluated. Bayesian and probabilistic inference count, and so do knowledge graphs, NLP, remote sensing or image analysis that maps stocks, and datasets made to train or test such models. Descriptive statistics, fixed thresholds, deterministic balancing (RAS, Leontief projections) and a passing mention of "AI" don't.
-2. **The question is industrial ecology,** framed as such by the paper itself: LCA, material flows and stocks, end of life, urban mining, symbiosis, input-output analysis, or the materials, chemicals, food, water, energy and supply risk questions those methods answer.
+2. **The question is industrial ecology,** framed as such by the paper itself: LCA, socio-economic metabolism (material flows and stocks), input-output analysis, the circular economy (waste, end of life, secondary resources), industrial symbiosis, or the materials, chemicals, food, water, energy and supply risk questions those methods answer.
 3. **It is not about the footprint of AI itself.**
 4. **It is worth an IE researcher's time:** a research article, review, dataset, framework, or a perspective written for IE researchers. Surveys of firms adopting "AI for the circular economy", and reviews of neighbouring fields that never use an IE method, don't qualify.
 
@@ -115,7 +115,7 @@ Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUC
 - Tables are numbered by chapter: "Table 4.1" is the first table in chapter 4. Figures continue from Fig. 1 and Fig. 2 on the home page.
 - In Markdown, set the title as `<p class="table-title"><b>Table 4.1</b> …</p>` and the source as `<p class="table-src">Source: …</p>`.
 - For a figure built from the data, start from [`src/components/PathFigure.astro`](src/components/PathFigure.astro). It counts entries at build time, so its numbers stay true as entries are added.
-- A new IE field needs three things beside its tag: a short label, a `.field-<tag>` ink rule, and a `<FieldApplications ie="<tag>" />` section on the map page. The type check and `pnpm test` flag a missing one. Ink 6 is the one left, so a new field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md). A domain such as water or chemicals is a topic, not a field: topics take no ink.
+- A new IE field needs four things beside its tag: a short label, a `.field-<tag>` ink rule, a `<FieldApplications ie="<tag>" />` section on the map page, and its own page at `src/content/docs/applications-map/<tag>.mdx`. That page holds a short definition of the field, `<FieldPage ie="<tag>" />`, and the field's gaps; copy an existing one. The type check and `pnpm test` flag a missing one. Ink 6 is the one left, so a new field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md). A domain such as water or chemicals is a topic, not a field: topics take no ink.
 
 ### Checking accessibility
 

@@ -1,8 +1,10 @@
 ---
 // One IE field's applications, collapsed, under that field's section on the
-// map page. Static: the disclosures need no JavaScript, only printing does.
+// map page, then a link to the field's own page. Static: the disclosures need
+// no JavaScript, only printing does.
 import { getCollection } from "astro:content";
 import { type IeTag, tagLabel } from "../data/tags";
+import { siteUrl } from "../lib/urls";
 import AppList from "./AppList";
 
 interface Props {
@@ -20,6 +22,11 @@ const apps = (await getCollection("applications"))
     {apps.length} {apps.length === 1 ? "application" : "applications"} in {tagLabel("ie", ie)}
   </p>
   <AppList apps={apps} />
+  <p class="apx-links">
+    <a href={siteUrl(`applications-map/${ie}/`)}>
+      {tagLabel("ie", ie)}: every technique, paper and demo →
+    </a>
+  </p>
 </div>
 
 <script>

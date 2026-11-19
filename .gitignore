@@ -8,6 +8,8 @@ coverage/
 node_modules/
 # `wrangler dev` local state
 .wrangler/
+# meaning-search vectors, written by `pnpm run embed` before a build
+src/data/literature-vectors.json
 # misc
 .DS_Store
 npm-debug.log*

@@ -1,23 +1,28 @@
 // Shared tag vocabulary for the literature list, the applications map and the
 // data schemas. Four facets, each answering one question about an entry:
-//   ie     which IE method it serves (LCA, MFA, ...): few, each with an ink
+//   ie     which IE field it serves: few, each with an ink
 //   topic  which system or problem it is about (chemicals, water, ...): no ink
 //   ml     which AI technique it uses
 //   type   what kind of paper it is
-// A concern that cuts across methods (uncertainty) or a domain (water) is not an
-// IE field: it goes in `ml` or `topic`, so the inks stay with the few methods.
+// The IE fields follow the subject sections of the International Society for
+// Industrial Ecology (https://is4ie.org/sections). Socio-economic metabolism is
+// the umbrella for MFA and stock models (Pauliuk & Hertwich 2015,
+// https://doi.org/10.1016/j.ecolecon.2015.08.012). A concern that
+// cuts across fields (uncertainty) or a domain (water) is not an IE field: it goes
+// in `ml` or `topic`, so the inks stay with the few fields.
 // Add a tag here first: the collections test rejects data that uses a tag not
 // defined here. A new IE field also needs a `.field-<tag>` ink rule in
-// src/styles/custom.css (the inks are in DESIGN.md) and a section on the map
-// page; chapters.test.ts checks both. The issue forms in .github/ISSUE_TEMPLATE/
-// list the labels too; forms.test.ts checks them. Add a tag together with its
-// first vetted entry, not before.
+// src/styles/custom.css (the inks are in DESIGN.md), a section on the map page,
+// and its own page at src/content/docs/applications-map/<tag>.mdx (definition,
+// <FieldPage>, gaps); chapters.test.ts checks all three. The issue forms in
+// .github/ISSUE_TEMPLATE/ list the labels too; forms.test.ts checks them. Add a
+// tag together with its first vetted entry, not before.
 export const IE_TAGS = {
-  lca: "LCA & footprinting",
-  mfa: "MFA & stocks and flows",
-  eol: "Waste, EoL & circularity",
-  "urban-mining": "Urban mining & secondary resources",
-  symbiosis: "Symbiosis & by-product exchange",
+  lca: "Life cycle assessment",
+  sem: "Socio-economic metabolism",
+  eeio: "Input-output",
+  circular: "Circular economy",
+  symbiosis: "Industrial symbiosis",
 } as const;
 
 export const TOPIC_TAGS = {
@@ -30,7 +35,6 @@ export const TOPIC_TAGS = {
   lifetime: "Product lifetime, reuse & repair",
   energy: "Energy & industrial decarbonisation",
   "supply-risk": "Supply chains & resource security",
-  io: "Input–output & economy-wide footprints",
 } as const;
 
 /** What a topic wants, one line each, shown in the map page's "Not mapped yet"
@@ -47,7 +51,6 @@ export const TOPIC_WANTED: Record<TopicTag, string> = {
   energy:
     "Marginal versus average grid factors, temporal accounting, process and heat integration.",
   "supply-risk": "Supply risk, critical raw materials, trade-network disruption.",
-  io: "ML for MRIO balancing, nowcasting and scenario tables.",
 };
 
 /** A topic with fewer entries than this is listed as wanted on the map page. */
@@ -90,11 +93,11 @@ export const TAG_DIMS = Object.keys(TAGS) as TagDim[];
  * reads as the filter chip of the same name. Typed so that a new IE or ML tag
  * fails the type check until it has one. */
 export const SHORT_LABELS: Record<IeTag | MlTag, string> = {
-  lca: "LCA",
-  mfa: "MFA",
-  eol: "Waste, EoL",
-  "urban-mining": "Urban mining",
-  symbiosis: "Symbiosis",
+  lca: "Life cycle",
+  sem: "Socio-economic",
+  eeio: "Input-output",
+  circular: "Circular economy",
+  symbiosis: "Industrial symbiosis",
   llm: "LLMs",
   "nlp-extraction": "NLP",
   cv: "Computer vision",

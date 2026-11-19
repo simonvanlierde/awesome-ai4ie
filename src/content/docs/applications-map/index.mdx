@@ -10,8 +10,10 @@ import SuggestPaper from '../../../components/SuggestPaper.astro';
 import TopicGaps from '../../../components/TopicGaps.astro';
 
 This map shows where AI is applied in industrial ecology, along **two
-dimensions**: the IE field (LCA, MFA, waste & circularity, …) and the AI technique
-(LLMs, computer vision, tabular ML, …). Every entry links to the
+dimensions**: the IE field and the AI technique (LLMs, computer vision, tabular ML, …).
+The five fields follow the [subject sections](https://is4ie.org/sections) of the
+International Society for Industrial Ecology (ISIE): life cycle assessment,
+socio-economic metabolism, input-output, circular economy and industrial symbiosis. Every entry links to the
 [literature list](/literature/) pre-filtered to the same tags, so the map is also an
 index into the reading list. The list has a third facet the map leaves out: the
 **topic**, the system a paper is about (chemicals, water, buildings, …). A topic cuts
@@ -27,7 +29,7 @@ One section per field: a paragraph on what works today, then the field's
 applications, each with a maturity call. Open an application for its description and
 the papers behind it, or see every paper in the [literature list](/literature/).
 
-### LCA & footprinting
+### Life cycle assessment
 
 Two things demonstrably work. The first is **tabular ML** for rapid impact screening
 and inventory gap-filling, validated repeatedly since 2017. The second is **LLM
@@ -42,9 +44,10 @@ covers the model, not the declarations it learned from <Cite id="baehrPredicting
 
 <FieldApplications ie="lca" />
 
-### MFA & stocks and flows
+### Socio-economic metabolism
 
-Satellite stock mapping is the furthest along here. It works at
+Socio-economic metabolism covers material flow analysis (MFA) and the stock models built on
+it ([Pauliuk & Hertwich, 2015](https://doi.org/10.1016/j.ecolecon.2015.08.012)). Satellite stock mapping is the furthest along here. It works at
 **national scale (10 m)** <Cite id="haberlHighResolutionMaps2021" /> from free data, and a **global estimate (90 m, 547 Gt in
 buildings)** <Cite id="haberlGlobalBuiltEnvironment2024" /> exists. Against independent
 studies, results range from 53% to 200%. Neither side is ground truth, so treat that
@@ -59,11 +62,20 @@ systems with around 180 flow and stock variables <Cite id="wangBayesianMaterialF
 and can rank which flow is worth measuring next <Cite id="liaoIntelligentDataCollection2025" />.
 Applied to England's construction aggregates, it quantifies 146 flows and stock changes from reported
 data that cover 20% of the system <Cite id="masonBayesianMaterialFlow2025" />.
-[Papers →](/literature/?ie=mfa) · [Uncertainty papers →](/literature/?ml=uncertainty)
+[Papers →](/literature/?ie=sem) · [Uncertainty papers →](/literature/?ml=uncertainty)
 
-<FieldApplications ie="mfa" />
+<FieldApplications ie="sem" />
 
-### Waste, EoL & circularity
+### Input-output
+
+<span class="wanted">Wanted</span> A paragraph on what works here, from someone who knows
+the field. Two entries so far: deep learning fills gaps in next year's IO tables <Cite id="zhaoUsingDeepLearning2022" />,
+and one dataset turns EXIOBASE into ML-ready emission-factor tables <Cite id="guoGlobalEmissionFactor2026" />.
+[Papers →](/literature/?ie=eeio)
+
+<FieldApplications ie="eeio" />
+
+### Circular economy
 
 The corner with the most publications. Detecting and counting waste and components is
 accurate on the benchmarks a model was tuned for, and untested on field photos <Cite id="majchrowskaDeepLearningbasedWaste2022" />. On a pilot-scale
@@ -73,19 +85,12 @@ products are the recurring failure mode. Foundation models (<Cite id="kirillovSe
 impressively. They still need a class-assignment layer and sorting-grade evaluation
 before they count as methods.
 Robotic disassembly works for narrow product families <Cite id="ameurFutureRoboticDisassembly2025" />.
-[Papers →](/literature/?ie=eol) · Full depth in the
+[Papers →](/literature/?ie=circular) · Full depth in the
 [CV taxonomy worked example](/applications-map/cv-taxonomy/).
 
-<FieldApplications ie="eol" />
+<FieldApplications ie="circular" />
 
-### Urban mining & secondary resources
-
-<span class="wanted">Wanted</span> A paragraph on what works here, from someone who knows
-the field. [Papers →](/literature/?ie=urban-mining)
-
-<FieldApplications ie="urban-mining" />
-
-### Symbiosis & by-product exchange
+### Industrial symbiosis
 
 In industrial symbiosis, matching one plant's waste to another's input is, in part, a
 recommender problem, and most of the work so far mines text for the matches. LLMs can build a waste-to-resource
@@ -119,13 +124,21 @@ The same applications as a grid of IE field × AI technique, or grouped by techn
 ## Not mapped yet
 
 The gaps in this map matter as much as the filled cells, so we name them here
-instead of leaving them implicit. Two kinds of gap: **topics** with fewer than three
-entries, and **AI techniques** with no tag in the vocabulary yet.
+instead of leaving them implicit. Three kinds of gap: an **ISIE section** with no field here
+yet, **topics** with fewer than three entries, and **AI techniques** with no tag in the
+vocabulary yet.
 
 A caveat on how to read this: none of it claims the work doesn't exist. It claims we
 have not vetted any of it. Our sweep either found nothing that survived verification,
 or never looked. Each line is the easiest possible contribution: one paper, one entry. Its
 link opens a short form on GitHub with the gap filled in.
+
+### ISIE sections with no field
+
+- <span class="wanted">Wanted</span> **Sustainable urban systems.** ISIE's section on cities.
+  Entries on building stocks and urban factories touch cities, but none asks an
+  urban-systems question yet, so it has no field of its own.
+  <SuggestPaper gap="Sustainable urban systems" />
 
 ### Topics with few entries
 
@@ -149,7 +162,7 @@ someone brings a paper that earns one.
   usually made with correlational tools.
   <SuggestPaper gap="Causal inference" />
 - <span class="wanted">Wanted</span> **Reinforcement learning.** Disassembly sequence planning and process control. The
-  EoL paragraph above already discusses robotic disassembly with no technique tag behind it.
+  circular economy paragraph above already discusses robotic disassembly with no technique tag behind it.
   <SuggestPaper gap="Reinforcement learning" />
 - <span class="wanted">Wanted</span> **Knowledge graphs & ontologies.** LCI interoperability and semantic flow matching,
   distinct from NLP extraction.
@@ -169,8 +182,8 @@ someone brings a paper that earns one.
 ### Where the gaps meet
 
 Several of these are not separate holes but one cell each: **chemicals × graph neural
-networks**, **scenarios × surrogates**, **symbiosis × matching**, **EoL × reinforcement
-learning**. Those four are the most concrete places to start, because each names both a
+networks**, **scenarios × surrogates**, **symbiosis × matching**, **circular economy ×
+reinforcement learning**. Those four are the most concrete places to start, because each names both a
 field and a method rather than a vague area.
 
 ## Deeper dives

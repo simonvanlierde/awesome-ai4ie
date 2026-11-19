@@ -1,0 +1,34 @@
+---
+title: AI in socio-economic metabolism and material flow analysis
+description: How AI is used in socio-economic metabolism, from mapping material stocks with satellite and street-level images to Bayesian material flow analysis, how mature each use is, and the papers.
+tableOfContents: false
+---
+
+import FieldPage from '../../../components/FieldPage.astro';
+import SuggestPaper from '../../../components/SuggestPaper.astro';
+import TopicGaps from '../../../components/TopicGaps.astro';
+
+Socio-economic metabolism (SEM) studies the biophysical basis of a society: the materials it
+takes in, keeps as stocks and lets go. It is the umbrella for material flow analysis (MFA)
+and the stock models built on it
+([Pauliuk & Hertwich, 2015](https://doi.org/10.1016/j.ecolecon.2015.08.012)). AI helps most
+with the stocks, the materials built into buildings and infrastructure: it estimates them
+from satellite, night-light and street-level images. Bayesian methods estimate flows that no
+one measured. The [map](/applications-map/#socio-economic-metabolism) sums up what works today.
+
+<FieldPage ie="sem" />
+
+## Not mapped yet
+
+From the [gap list on the map](/applications-map/#not-mapped-yet), the gaps that touch
+socio-economic metabolism:
+
+- <span class="wanted">Wanted</span> **Graph neural networks & network analysis.** A
+  material-flow system is a network, and nothing here treats it as one yet.
+  <SuggestPaper gap="Graph neural networks & network analysis" />
+- <span class="wanted">Wanted</span> **Sustainable urban systems.** ISIE's section on cities
+  has no field here yet. Entries on building stocks touch cities, but none asks an
+  urban-systems question.
+  <SuggestPaper gap="Sustainable urban systems" />
+
+<TopicGaps ie="sem" />

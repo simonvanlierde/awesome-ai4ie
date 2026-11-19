@@ -15,7 +15,7 @@
   year: 2022
   doi: "10.1111/jiec.13313"
   blurb: "The JIE perspective on what AI can and cannot do for IE; a good starting point for this whole resource."
-  ie: [lca, mfa, eol]
+  ie: [lca, sem, circular]
   type: [review]
   added: 2026-07
 - id: gongEvolutionResearchIntersection2025
@@ -25,7 +25,7 @@
   year: 2025
   doi: "10.1111/jiec.13612"
   blurb: "Topic-model map of the IE-and-AI literature: which applications the field has actually been publishing on."
-  ie: [lca, mfa, eol]
+  ie: [lca, sem, circular]
   type: [review]
   added: 2026-07
 - id: zhaoDataScienceApplications2024
@@ -35,7 +35,7 @@
   year: 2024
   doi: "10.1021/acs.est.3c08331"
   blurb: "Status check on data science across CE applications, with a sober view of the data bottlenecks."
-  ie: [eol]
+  ie: [circular]
   ml: [tabular-ml]
   type: [review]
   added: 2026-07
@@ -46,7 +46,7 @@
   year: 2015
   doi: "10.1111/jiec.12241"
   blurb: "The early (2015) case for data-intensive IE; useful context for everything newer on this list."
-  ie: [lca, mfa]
+  ie: [lca, sem]
   type: [review]
   added: 2026-07
 
@@ -71,7 +71,7 @@
   type: [review]
   added: 2026-11
 
-# ── LCA & footprinting ───────────────────────────────────────────────────────
+# ── Life cycle assessment ────────────────────────────────────────────────────
 - id: ghoroghiAdvancesApplicationMachine2022
   title: "Advances in application of machine learning to life cycle assessment: a literature review"
   authors: ["Ghoroghi, A."]
@@ -321,8 +321,7 @@
   year: 2026
   doi: "10.1038/s41597-026-06699-1"
   blurb: "Open ML-ready emission-factor tables from Exiobase 3.8.2 (49 regions, 1995-2022) with a GHG regression baseline where gradient boosting nearly matches deep models."
-  ie: [lca]
-  topic: [io]
+  ie: [lca, eeio]
   ml: [tabular-ml]
   type: [dataset]
   added: 2026-11
@@ -357,7 +356,7 @@
   year: 2024
   doi: "10.1111/jiec.13528"
   blurb: "LCA of a bakery demand-forecasting service: ML cut returns about 30%, and avoided-return benefits outweigh the service's own impacts by one to three orders of magnitude."
-  ie: [lca, eol]
+  ie: [lca, circular]
   topic: [food]
   ml: [tabular-ml]
   type: [method]
@@ -467,8 +466,7 @@
   year: 2022
   doi: "10.1021/acs.est.2c01640"
   blurb: "A GRAS+DNN hybrid predicts next-year US 71-sector IO tables; on the cells GRAS handles worst, median error falls from 37% to 11%, but it needs the target year's marginal totals."
-  ie: [lca]
-  topic: [io]
+  ie: [eeio]
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
@@ -519,7 +517,7 @@
   type: [method]
   added: 2026-11
 
-# ── MFA, stocks & flows ──────────────────────────────────────────────────────
+# ── Socio-economic metabolism ────────────────────────────────────────────────
 - id: haberlHighResolutionMaps2021
   title: "High-resolution maps of material stocks in buildings and infrastructures in Austria and Germany"
   authors: ["Haberl, H."]
@@ -527,7 +525,7 @@
   year: 2021
   doi: "10.1021/acs.est.0c05642"
   blurb: "National material stock maps at 10 m from free satellite data and OSM, no cadastre needed; ~5 Gt Austria, ~38 Gt Germany."
-  ie: [mfa]
+  ie: [sem]
   topic: [buildings]
   ml: [remote-sensing, tabular-ml]
   type: [method]
@@ -539,7 +537,7 @@
   year: 2024
   doi: "10.1111/jiec.13585"
   blurb: "Global building material stocks (547 Gt) at 90 m from Earth observation, with an honest 53–200% validation spread."
-  ie: [mfa]
+  ie: [sem]
   topic: [buildings]
   ml: [remote-sensing]
   type: [method]
@@ -550,7 +548,7 @@
   year: 2021
   doi: "10.1016/j.resconrec.2021.105509"
   blurb: "Night-lights radiance as a continent-scale proxy for built-up volume: MFA without a single site visit."
-  ie: [mfa]
+  ie: [sem]
   topic: [buildings]
   ml: [remote-sensing]
   type: [method]
@@ -562,7 +560,7 @@
   year: 2023
   doi: "10.1111/jiec.13356"
   blurb: "Feature-fusion deep model beats single-source baselines for Beijing's building stock (<14% total error), but still needs ground data."
-  ie: [mfa]
+  ie: [sem]
   topic: [buildings]
   ml: [remote-sensing]
   type: [method]
@@ -574,7 +572,7 @@
   year: 2024
   doi: "10.1111/jiec.13591"
   blurb: "Street-view CV predicts floor area (~19% MAPE) and age (~70%) in Toronto, and degrades sharply in other cities; feasibility, not production."
-  ie: [mfa]
+  ie: [sem]
   topic: [buildings]
   ml: [cv]
   type: [method]
@@ -586,7 +584,7 @@
   year: 2021
   doi: "10.1111/jiec.13198"
   blurb: "Mobile sensing and CV count doors and windows across a whole neighborhood at accuracy comparable to manual surveys."
-  ie: [mfa, "urban-mining"]
+  ie: [sem]
   topic: [buildings]
   ml: [cv, segmentation]
   type: [method]
@@ -598,7 +596,7 @@
   year: 2025
   doi: "10.1111/jiec.70048"
   blurb: "Predicts interior walls and rooms from what's visible outside, facade images included: ML as a shortcut around impossible surveys."
-  ie: [mfa, "urban-mining"]
+  ie: [sem]
   topic: [buildings]
   ml: [tabular-ml, cv]
   type: [method]
@@ -611,13 +609,13 @@
   year: 2022
   doi: "10.1111/jiec.13232"
   blurb: "Regression trees fill in missing road-layer data and Cox/Weibull lifetime models drive a dynamic MFA of Norway's roads to 2050; the authors say results illustrate the method only."
-  ie: [mfa]
+  ie: [sem]
   topic: [lifetime]
   ml: [tabular-ml]
   type: [method]
   added: 2026-11
 
-# ── Waste, EoL & circularity ─────────────────────────────────────────────────
+# ── Circular economy ─────────────────────────────────────────────────────────
 - id: sterkensProductLabelIdentification2023
   title: "Product label identification with OCR for model-specific reuse, repair, and recycling: A case study for washing machines"
   authors: ["Sterkens, W."]
@@ -625,7 +623,7 @@
   year: 2023
   doi: "10.1111/jiec.13279"
   blurb: "Deployed label-OCR pipeline for e-waste identification; reads 95.7% of labels in repair shops but 39.7% at the recycler."
-  ie: [eol]
+  ie: [circular]
   topic: [electronics]
   ml: [cv, nlp-extraction]
   type: [method]
@@ -636,7 +634,7 @@
   year: 2022
   doi: "10.1016/j.wasman.2022.02.009"
   blurb: "The critical review of CV-for-waste-sorting research, including why lab accuracies don't survive the sorting plant."
-  ie: [eol]
+  ie: [circular]
   ml: [cv]
   type: [review]
   added: 2026-07
@@ -647,7 +645,7 @@
   year: 2023
   doi: "10.1016/j.resconrec.2022.106813"
   blurb: "Systematic review of CNN waste-identification work: datasets, architectures, and the recurring benchmark gaps."
-  ie: [eol]
+  ie: [circular]
   ml: [cv]
   type: [review]
   added: 2026-07
@@ -658,7 +656,7 @@
   year: 2025
   doi: "10.3389/frobt.2025.1584657"
   blurb: "Where robotic disassembly stands: a systematic review of perception, planning, and human-robot collaboration."
-  ie: [eol]
+  ie: [circular]
   ml: [cv]
   type: [review]
   added: 2026-07
@@ -669,7 +667,7 @@
   year: 2024
   doi: "10.1007/s10163-024-01961-3"
   blurb: "A CNN and a weight sensor identify individual device models on a sorting line: identity recovery under real EoL conditions."
-  ie: [eol]
+  ie: [circular]
   topic: [electronics]
   ml: [cv]
   type: [method]
@@ -681,7 +679,7 @@
   year: 2025
   doi: "10.1016/j.wasman.2025.114904"
   blurb: "Camera-based deep learning estimates the composition of shredded WEEE on a pilot-scale industrial sorter: CV feeding MFA directly."
-  ie: [eol, mfa]
+  ie: [sem, circular]
   topic: [electronics]
   ml: [cv, segmentation]
   type: [method]
@@ -693,7 +691,7 @@
   year: 2025
   doi: "10.1021/acs.est.5c01600"
   blurb: "Finds rooftop solar panels in satellite images and feeds a dynamic MFA of their recycling potential; CV and MFA in one pipeline."
-  ie: [mfa, urban-mining]
+  ie: [sem, circular]
   ml: [cv, remote-sensing]
   type: [method]
   added: 2026-07
@@ -704,7 +702,7 @@
   year: 2022
   doi: "10.1016/j.wasman.2021.12.001"
   blurb: "Waste detection benchmarks and datasets in one place, plus semi-supervised tricks for the label-scarcity problem."
-  ie: [eol]
+  ie: [circular]
   ml: [cv, segmentation]
   type: [method, dataset]
   added: 2026-07
@@ -715,7 +713,7 @@
   year: 2026
   doi: "10.1016/j.clwas.2026.100475"
   blurb: "Do CLIP-class models sort waste without training data? A measured answer on curated, landfill and multi-material lab images."
-  ie: [eol]
+  ie: [circular]
   ml: [cv, foundation]
   type: [method]
   added: 2026-07
@@ -726,7 +724,7 @@
   year: 2026
   doi: "10.48550/ARXIV.2603.27441"
   blurb: "Head-to-head of foundation vs. lightweight segmenters on opened e-waste: what 'SAM needs a class layer' looks like in practice."
-  ie: [eol]
+  ie: [circular]
   topic: [electronics]
   ml: [cv, segmentation, foundation]
   type: [method]
@@ -738,7 +736,7 @@
   year: 2025
   doi: "10.48550/ARXIV.2509.23048"
   blurb: "A full working cell, from perception to manipulation, for selective phone disassembly; where the integration problems live."
-  ie: [eol]
+  ie: [circular]
   topic: [electronics]
   ml: [cv, segmentation]
   type: [method]
@@ -750,7 +748,7 @@
   year: 2020
   doi: "10.1038/s41597-020-0573-9"
   blurb: "95 products physically disassembled into validated BoM data: the ground truth CV-based approaches need to beat."
-  ie: [eol, "urban-mining"]
+  ie: [circular]
   type: [dataset]
   added: 2026-07
 - id: vanlierdeReverseEngineeringLab2026
@@ -759,7 +757,7 @@
   year: 2026
   doi: "10.5281/zenodo.19703316"
   blurb: "Open platform for structured product-disassembly data collection (CML): infrastructure for the datasets this field lacks."
-  ie: [eol, "urban-mining"]
+  ie: [circular]
   ml: [cv]
   type: [dataset]
   added: 2026-07
@@ -781,7 +779,7 @@
   year: 2024
   doi: "10.3390/a17120562"
   blurb: "Survey of ML and data-driven methods in remanufacturing: an LDA topic map of about 6000 Web of Science papers, then applications by task; names data curation and explainability as open problems."
-  ie: [eol]
+  ie: [circular]
   topic: [lifetime]
   ml: [cv, tabular-ml]
   type: [review]
@@ -793,7 +791,7 @@
   year: 2021
   doi: "10.1016/j.procir.2021.01.107"
   blurb: "Concept for ML-assisted identification, inspection and sorting of returned cores, from 10 remanufacturer interviews; a vision test on 1,440 automotive parts reaches 96.36% on same-part images."
-  ie: [eol]
+  ie: [circular]
   topic: [lifetime]
   ml: [cv]
   type: [method]
@@ -805,7 +803,7 @@
   year: 2025
   doi: "10.1016/j.procir.2024.12.143"
   blurb: "Detector-prompted SAM segments laptop scratches and K3M thinning measures their length for reuse grading: 83.7% mAP, 1.60 mm mean error; over 90% of the scratches were made by hand."
-  ie: [eol]
+  ie: [circular]
   topic: [electronics, lifetime]
   ml: [segmentation, foundation]
   type: [method]
@@ -816,7 +814,7 @@
   year: 2026
   doi: "10.1016/j.compenvurbsys.2026.102481"
   blurb: "Gradient-boosted trees rank Swiss buildings by demolition risk 1 to 4 years ahead; the top 0.1% of the 4-year ranking is 85% precise, but data are on request only."
-  ie: [urban-mining]
+  ie: [sem]
   topic: [buildings, lifetime]
   ml: [tabular-ml]
   type: [method]
@@ -898,7 +896,7 @@
   year: 2023
   doi: "10.1111/jiec.13399"
   blurb: "Expert-elicited priors and learned data noise for Bayesian MFA, tested on 2012 US steel flows with eight experts; multi-year data cut noise uncertainty further."
-  ie: [mfa]
+  ie: [sem]
   topic: [metals]
   ml: [tabular-ml, uncertainty]
   type: [method]
@@ -910,7 +908,7 @@
   year: 2024
   doi: "10.1111/jiec.13550"
   blurb: "Bayesian MFA that relaxes mass balance and handles disaggregated processes; on a global aluminum cycle with about 180 variables, weak priors still captured the reported flows."
-  ie: [mfa]
+  ie: [sem]
   topic: [metals]
   ml: [tabular-ml, uncertainty]
   type: [method]
@@ -922,7 +920,7 @@
   year: 2025
   doi: "10.1111/jiec.70111"
   blurb: "Bayesian optimal experimental design picks which MFA data to collect to cut network-structure uncertainty; on US steel the best pair is not the two best single flows."
-  ie: [mfa]
+  ie: [sem]
   topic: [metals]
   ml: [tabular-ml, uncertainty]
   type: [method]
@@ -947,7 +945,7 @@
   year: 2025
   doi: "10.1016/j.resconrec.2025.108135"
   blurb: "Applies Bayesian MFA to England's 2019 construction aggregates: reported data cover 20% of the system, expert priors fill the rest, giving 146 stocks and flows with credible intervals."
-  ie: [mfa]
+  ie: [sem]
   topic: [buildings]
   ml: [tabular-ml, uncertainty]
   type: [method]
@@ -1007,7 +1005,7 @@
   year: 2026
   doi: "10.21203/rs.3.rs-9270723/v1"
   blurb: "CML survey of ML-in-IE papers; data leakage and poor computational reporting are the two dominant failure modes."
-  ie: [lca, mfa, eol]
+  ie: [lca, sem, circular]
   ml: [tabular-ml]
   type: [meta, review]
   added: 2026-07
