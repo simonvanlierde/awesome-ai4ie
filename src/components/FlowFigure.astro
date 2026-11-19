@@ -18,7 +18,7 @@ const NODE = 8;
 const PLATES = [
   { name: "compact", H: 420, X1: 455 },
   { name: "wide", H: 340, X1: 875 },
-].map((p) => ({ ...p, W: p.X1 + NODE + 230, mid: (X0 + NODE + p.X1) / 2 }));
+].map((p) => ({ ...p, W: p.X1 + NODE + 240, mid: (X0 + NODE + p.X1) / 2 }));
 // Node links get at least this tall a hit area: 24px even at a 320px-wide
 // screen, where the compact plate shrinks to about 0.42 (WCAG 2.5.8).
 const HIT = 66;
@@ -165,6 +165,11 @@ const idle = "Point at or tap a label to light its flows.";
     }
     svg.addEventListener("focusout", (e) => {
       if (!svg.contains(e.relatedTarget as Node)) light(null);
+    });
+    // A resize across 64rem hides this plate: drop its state so the readout is not stale.
+    matchMedia("(min-width: 64rem)").addEventListener("change", () => {
+      for (const m of nodes) m.classList.remove("armed");
+      light(null);
     });
     document.addEventListener("pointerdown", (e) => {
       if (!svg.contains(e.target as Node)) {

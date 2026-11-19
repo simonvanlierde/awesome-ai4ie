@@ -45,13 +45,7 @@ if (is404) {
   <div class="cover-grid">
     <div class="cover-copy">
       {isHome && <div class="cover-mark"><BrandMark mode="glyph" large /></div>}
-      {
-        expanded ? (
-          <h1 id="_top" data-page-title class="cover-expand" set:html={expanded} />
-        ) : (
-          <h1 id="_top" data-page-title set:html={title} />
-        )
-      }
+      <h1 id="_top" data-page-title class:list={[expanded && "cover-expand"]} set:html={expanded ?? title} />
       {tagline && <p class="cover-tagline" set:html={tagline} />}
       <div class="cover-actions">
         {

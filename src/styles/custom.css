@@ -773,8 +773,7 @@ starlight-menu-button button {
 .flow figcaption > :first-child {
   flex-basis: 100%;
 }
-.flow-gap,
-.flow-src {
+.flow-gap {
   font-size: 0.75rem;
   color: var(--sl-color-gray-3);
 }
@@ -879,6 +878,11 @@ starlight-menu-button button {
 }
 .flow svg.flow-plate--wide {
   display: none;
+}
+/* About life size: filling a 60rem column would set its labels larger than the wide plate's. */
+.flow svg.flow-plate--compact {
+  max-width: 42rem;
+  margin-inline: auto;
 }
 @media (min-width: 64rem) {
   .flow svg.flow-plate--wide {
