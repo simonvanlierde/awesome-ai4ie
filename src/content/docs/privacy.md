@@ -19,7 +19,7 @@ For searches of three or more words, your browser sends the query to a Cloudflar
 The Worker sends it to Cloudflare Workers AI to find related papers. The site's code does
 not store your query.
 
-The site's MCP server, which lets AI assistants search the reading list, works the same way.
+The site's [MCP server](/literature/#ask-an-ai-assistant), which lets AI assistants search the reading list, works the same way.
 When your assistant calls its `search_papers` tool, the question goes to the same Worker and
 on to Workers AI, as from the search dialog, and is not stored either. The other tools only
 read the site's own data.
