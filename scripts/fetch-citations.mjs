@@ -115,7 +115,7 @@ export function cleanText(s) {
   let out = s.replace(/\r\n?/g, "\n");
   for (let prev = ""; prev !== out; ) {
     prev = out;
-    out = out.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos);/gi, (m, c) => {
+    out = out.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos);/gi, (_m, c) => {
       const named = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'" }[c.toLowerCase()];
       if (named) return named;
       return String.fromCodePoint(
