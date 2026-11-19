@@ -26,12 +26,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
-        with:
-          runtime: node@26
-          cache: true
-          install: false
-      - run: pnpm install --frozen-lockfile
+      - uses: $/.github/actions/setup-pnpm
       - name: Lint & format check
         run: pnpm run lint
       - name: Dependency licences
@@ -151,12 +146,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
-        with:
-          runtime: node@26
-          cache: true
-          install: false
-      - run: pnpm install --frozen-lockfile
+      - uses: $/.github/actions/setup-pnpm
       # The build job's Pages artifact: dist/ as one tar file.
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
@@ -167,6 +157,13 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: pnpm exec wrangler deploy --message "${GITHUB_SHA::7}"
+      # The new version takes some seconds to go live, so curl retries.
+      - name: Meaning search answers on production
+        shell: bash
+        run: >-
+          curl -fsS --retry 6 --retry-all-errors --retry-delay 10 -X POST
+          https://awesome-ai4ie.simonvanlierde.workers.dev/api/search -H 'content-type: application/json'
+          -d '{"q": "which papers map building stocks from satellites?"}' | jq -e '.hits | length > 0'
 
   # Fork pull requests get no secrets, and drafts are not ready to show, so preview skips them.
   preview:
@@ -210,14 +207,8 @@ jobs:
         if: steps.policy.outputs.deploy == 'true'
         with:
           persist-credentials: false
-      - uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
+      - uses: $/.github/actions/setup-pnpm
         if: steps.policy.outputs.deploy == 'true'
-        with:
-          runtime: node@26
-          cache: true
-          install: false
-      - if: steps.policy.outputs.deploy == 'true'
-        run: pnpm install --frozen-lockfile
       # The build job's Pages artifact: dist/ as one tar file.
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         if: steps.policy.outputs.deploy == 'true'
