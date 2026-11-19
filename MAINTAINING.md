@@ -31,8 +31,12 @@ before you add it.
    An application goes in [`src/data/applications.yaml`](src/data/applications.yaml), with the
    same tags. A tool goes on its page under `src/content/docs/tools/`, in the format of the
    entries next to it. If the issue gives no checked date, use the month it was opened.
-4. Run `pnpm test`. It checks every field, tag and reference.
-5. Open a pull request with `Closes #<issue>` in its description, and thank the person who
+4. For a paper, run `pnpm run citations`. It fetches the entry's BibTeX and RIS from Crossref or
+   arXiv into [`src/data/citations.json`](src/data/citations.json). Commit that file with the
+   entry. A `FAIL` line means Crossref or arXiv has no record yet, so rerun it later. Until then
+   the export falls back to a short record built from the YAML entry.
+5. Run `pnpm test`. It checks every field, tag and reference.
+6. Open a pull request with `Closes #<issue>` in its description, and thank the person who
    suggested it.
 
 If a suggestion doesn't hold up, say why in the issue and close it.
@@ -46,6 +50,9 @@ If a suggestion doesn't hold up, say why in the issue and close it.
   or updates the open one, when a link on the site or a DOI in `literature.yaml` breaks. It
   doesn't check README.md or this file. Publishers that block crawlers answer 403 or 429, and
   the check counts those as fine.
+- **Citation records.** After a publisher corrects a record at Crossref, run
+  `pnpm run citations -- --refresh` and review the diff of `src/data/citations.json` before
+  you commit it.
 - **Every October.** Move `Expires` in [`public/.well-known/security.txt`](public/.well-known/security.txt)
   a year on (an expired file is invalid), and review the
   [accessibility statement](src/content/docs/accessibility.md) and its date.

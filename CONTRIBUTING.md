@@ -34,6 +34,7 @@ To edit text, you need no local setup: edit the Markdown on GitHub, or click the
 - An entry is marked "new" in the list for about two months from the start of its `added` month.
 - Application entries need both tag dimensions (`ie:` and `ml:`), an honest one-line `maturity:`, and `papers:` referencing literature ids.
 - `pnpm test` checks every field, tag, and cross-reference. CI runs it on your PR.
+- A maintainer fetches the full BibTeX and RIS record for a new paper after merging. If you work locally, you can run `pnpm run citations` yourself.
 
 ### Citing a source in prose
 
