@@ -31,16 +31,20 @@ export function loadVectors(): Record<string, string> {
   return data.model === EMBED_MODEL ? data.vectors : {};
 }
 
-/** The vectors for `texts` as the Worker loads them: each text's row in one float32 file
- * (undefined for a text without a vector), and that file's bytes, rows in text order. */
-export function vectorRows(texts: string[]): { rows: (number | undefined)[]; bytes: Buffer } {
-  const stored = loadVectors();
+/** The vectors for `entries` as the Worker loads them: each embedded entry's row in one
+ * float32 file, by id, and that file's bytes. Rows follow the ids' sort order, not the
+ * order given, so the index and the file agree however each caller lists the entries. */
+export function vectorRows(
+  entries: { id: string; text: string }[],
+  stored: Record<string, string> = loadVectors(),
+): { rows: Map<string, number>; bytes: Buffer } {
+  const rows = new Map<string, number>();
   const found: Buffer[] = [];
-  const rows = texts.map((t) => {
-    const v = stored[textKey(t)];
-    if (!v) return undefined;
+  for (const { id, text } of [...entries].sort((a, b) => (a.id < b.id ? -1 : 1))) {
+    const v = stored[textKey(text)];
+    if (!v) continue;
+    rows.set(id, found.length);
     found.push(Buffer.from(v, "base64"));
-    return found.length - 1;
-  });
+  }
   return { rows, bytes: Buffer.concat(found) };
 }

@@ -9,9 +9,9 @@ import { vectorRows } from "../lib/vectors";
 
 export async function GET() {
   const literature = await getCollection("literature");
-  const { rows } = vectorRows(literature.map(({ data }) => entryText(data)));
+  const { rows } = vectorRows(literature.map(({ id, data }) => ({ id, text: entryText(data) })));
   const bibtex: Record<string, { bibtex: string } | undefined> = citations;
-  const entries: IndexEntry[] = literature.map(({ id, data: e }, i) => ({
+  const entries: IndexEntry[] = literature.map(({ id, data: e }) => ({
     id,
     title: e.title,
     authors: e.authors,
@@ -27,7 +27,7 @@ export async function GET() {
     status: e.status,
     href: paperUrl(id),
     bibtex: bibtex[id]?.bibtex,
-    vectorRow: rows[i],
+    vectorRow: rows.get(id),
   }));
   return Response.json(entries);
 }

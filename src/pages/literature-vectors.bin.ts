@@ -6,7 +6,7 @@ import { vectorRows } from "../lib/vectors";
 
 export async function GET() {
   const literature = await getCollection("literature");
-  const { bytes } = vectorRows(literature.map(({ data }) => entryText(data)));
+  const { bytes } = vectorRows(literature.map(({ id, data }) => ({ id, text: entryText(data) })));
   return new Response(new Uint8Array(bytes), {
     headers: { "content-type": "application/octet-stream" },
   });
