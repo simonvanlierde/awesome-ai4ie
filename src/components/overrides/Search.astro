@@ -4,7 +4,7 @@
 // closest literature entries above the keyword results, from the site's /api/search
 // Worker (worker/index.ts).
 import Default from "@astrojs/starlight/components/Search.astro";
-import { issueUrl } from "../../lib/urls";
+import { issueUrl, siteUrl } from "../../lib/urls";
 ---
 
 <Default />
@@ -14,10 +14,14 @@ import { issueUrl } from "../../lib/urls";
     You can also ask in plain words, to match the reading list by meaning.
     <button type="button" class="ss-example">Try an example</button>
   </p>
+  <p class="ss-hint">
+    Questions of three or more words go to this site's server to be matched by meaning
+    (<a href={siteUrl("privacy/")}>privacy</a>).
+  </p>
   <p class="ss-status" role="status"></p>
   <ol class="ss-results" aria-label="Papers that match by meaning"></ol>
   <p class="ss-gap" hidden>
-    Know a paper on this? <a class="ss-suggest">Suggest it for the reading list</a>
+    Know a paper on this? <a class="ss-suggest">Suggest it for the reading list, with your question filled in</a>
   </p>
 </semantic-search>
 
@@ -28,14 +32,17 @@ import { issueUrl } from "../../lib/urls";
 
   const EXAMPLE = "which papers map building stocks from satellites?";
 
-  async function search(q: string): Promise<Hit[]> {
+  // A host without the search Worker, such as GitHub Pages, answers 404 or 405.
+  const NOT_SERVED = [404, 405];
+
+  async function search(q: string): Promise<{ status: number; hits: Hit[] }> {
     const r = await fetch(siteUrl("api/search"), {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ q }),
+      signal: AbortSignal.timeout(8000),
     });
-    if (!r.ok) throw new Error(`api/search: HTTP ${r.status}`);
-    return (await r.json()).hits;
+    return { status: r.status, hits: r.ok ? (await r.json()).hits : [] };
   }
 
   class SemanticSearch extends HTMLElement {
@@ -52,8 +59,10 @@ import { issueUrl } from "../../lib/urls";
       const gap = $(".ss-gap");
       const suggest = $<HTMLAnchorElement>(".ss-suggest");
       let input: HTMLInputElement | null = null;
+      let keywordPlaceholder = "";
       let timer: ReturnType<typeof setTimeout> | undefined;
       let seq = 0;
+      let served = true;
 
       const show = (hits: Hit[], msg: string, noMatch = false) => {
         list.replaceChildren(
@@ -79,15 +88,24 @@ import { issueUrl } from "../../lib/urls";
         clearTimeout(timer);
         const q = input?.value.trim() ?? "";
         const mine = ++seq;
+        if (!served) return;
         if (!isPhrase(q)) {
           show([], "");
           return;
         }
         try {
-          const hits = await search(q);
+          const { status, hits } = await search(q);
           if (mine !== seq) return; // a newer query owns the results
           const n = hits.length;
-          if (n) show(hits, `${n} ${n === 1 ? "paper matches" : "papers match"} by meaning`);
+          if (NOT_SERVED.includes(status)) {
+            served = false;
+            this.hidden = true;
+            if (input) input.placeholder = keywordPlaceholder;
+          } else if (status === 429)
+            show([], "Too many searches. Wait a minute, then type again.");
+          else if (status !== 200)
+            show([], "Meaning search is unavailable right now. The keyword results below still work.");
+          else if (n) show(hits, `${n} ${n === 1 ? "paper matches" : "papers match"} by meaning`);
           else {
             suggest.href = `${this.dataset.suggest}&gap=${encodeURIComponent(`Searched for: ${q}`)}`;
             show([], "No paper in the reading list is close to that question.", true);
@@ -119,6 +137,7 @@ import { issueUrl } from "../../lib/urls";
       const attach = () => {
         input = container.querySelector<HTMLInputElement>(".pagefind-ui__search-input");
         if (!input) return false;
+        keywordPlaceholder = input.placeholder;
         input.placeholder = "Search, or ask a question";
         const clear = input.form?.querySelector(".pagefind-ui__search-clear");
         clear?.after(this);
@@ -153,7 +172,7 @@ import { issueUrl } from "../../lib/urls";
     display: none;
   }
   .ss-hint {
-    margin: 0;
+    margin: 0 0 0.25rem;
     color: var(--sl-color-gray-2);
   }
   .ss-hint button {
@@ -207,6 +226,7 @@ import { issueUrl } from "../../lib/urls";
     margin: 0.25rem 0 0;
     color: var(--sl-color-gray-2);
   }
+  .ss-hint a,
   .ss-gap a {
     color: var(--sl-color-text-accent);
     text-decoration: underline;
