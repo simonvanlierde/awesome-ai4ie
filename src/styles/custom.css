@@ -635,6 +635,23 @@ starlight-menu-button button {
   width: 1.62em;
   height: 1.62em;
 }
+/* With Fig. 1's pour, the lockup's strokes ink in once on the still tile: the 4, the stem,
+   then the faded leg and arms. */
+@media (prefers-reduced-motion: no-preference) {
+  .cover-lockup .glyph path {
+    stroke-dasharray: 1 3;
+    animation: flow-pour 0.32s cubic-bezier(0.65, 0, 0.35, 1) backwards;
+  }
+  .cover-lockup .glyph-stem {
+    animation-delay: 0.22s;
+  }
+  .cover-lockup .glyph-fade:nth-child(1) {
+    animation-delay: 0.4s;
+  }
+  .cover-lockup .glyph-fade:nth-child(n + 2) {
+    animation-delay: 0.52s;
+  }
+}
 .cover-tagline {
   margin: 0;
   max-width: 34ch;
@@ -1429,7 +1446,8 @@ starlight-menu-button button {
 /* Print: application entries print open, so descriptions and links survive. */
 @media print {
   /* A media switch restarts the entrance, and a print can catch it half drawn. */
-  .flow .pour {
+  .flow .pour,
+  .cover-lockup .glyph path {
     animation: none;
   }
   .apx-entry details::details-content {

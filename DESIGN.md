@@ -72,6 +72,8 @@ strokes at 40% and a light-blue stem, the same in both themes.
 - **Header, home cover, colophon, and 404.** The top bar shows the unfolded `AI4IE` drafting
   wordmark, which folds onto the tile as the Æ-4 mark on hover/focus and at rest on narrow screens. The home
   title opens on the tile, as tall as its two lines: the site's lockup, as on the social card.
+  On load its strokes ink in once with Fig. 1's pour (the 4, the stem, then the faded strokes,
+  under a second); the tile stays still, and reduced motion skips it.
   The 404 plate shows the Æ-4 mark in a dashed
   frame and expands it into `AI4IE` on hover/focus. Every inner page
   and the home page end on the tile in the colophon, before the licences.
