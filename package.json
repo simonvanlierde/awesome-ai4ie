@@ -20,6 +20,7 @@
     "test:coverage": "vitest run --coverage",
     "test:a11y": "node scripts/a11y.mjs",
     "og-card": "node scripts/og-card.mjs",
+    "citations": "node scripts/fetch-citations.mjs",
     "licenses": "node scripts/check-licenses.mjs",
     "page-weight": "node scripts/page-weight.mjs"
   },

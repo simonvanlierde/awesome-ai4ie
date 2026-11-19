@@ -10,6 +10,10 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - An RSS feed of new literature entries at `/literature/feed.xml`, linked from the Literature page.
+- BibTeX and RIS export on the literature page, for one entry or for the filtered view. The
+  records come from Crossref and arXiv, cleaned and cached in `src/data/citations.json` by
+  `pnpm run citations`. An entry with no cached record yet exports a short one built from its
+  YAML fields.
 - An accessibility statement at `/accessibility/`, linked from the footer.
 - A Content-Security-Policy `<meta>` tag on every page, and `/.well-known/security.txt`.
 - Weekly OpenSSF Scorecard and advisory audits, a cold-install check of the README's

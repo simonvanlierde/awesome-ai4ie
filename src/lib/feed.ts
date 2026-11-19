@@ -33,7 +33,7 @@ export function pubDate(added: string): string {
 }
 
 /** `siteRoot` is the site's absolute URL with its base path and no trailing slash. */
-export function buildFeed(entries: FeedEntry[], siteRoot: string, now = new Date()): string {
+export function buildFeed(entries: FeedEntry[], siteRoot: string): string {
   // Newest month first; the sort is stable, so entries of one month keep file order.
   const newest = [...entries].sort((a, b) => b.added.localeCompare(a.added)).slice(0, FEED_LIMIT);
   const items = newest
@@ -56,8 +56,7 @@ export function buildFeed(entries: FeedEntry[], siteRoot: string, now = new Date
     <link>${esc(siteRoot)}/literature/</link>
     <description>Papers newly added to the AI4IE reading list. Every entry is a first proposal that the AI4IE group has not reviewed yet.</description>
     <language>en</language>
-    <lastBuildDate>${now.toUTCString()}</lastBuildDate>
-    <atom:link href="${esc(siteRoot)}/literature/feed.xml" rel="self" type="application/rss+xml"/>
+${newest.length ? `    <lastBuildDate>${pubDate(newest[0].added)}</lastBuildDate>\n` : ""}    <atom:link href="${esc(siteRoot)}/literature/feed.xml" rel="self" type="application/rss+xml"/>
 ${items}
   </channel>
 </rss>

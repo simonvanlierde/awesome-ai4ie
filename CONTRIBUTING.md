@@ -34,6 +34,7 @@ To edit text, you need no local setup: edit the Markdown on GitHub, or click the
 - An entry is marked "new" in the list for about two months from the start of its `added` month.
 - Application entries need both tag dimensions (`ie:` and `ml:`), an honest one-line `maturity:`, and `papers:` referencing literature ids.
 - `pnpm test` checks every field, tag, and cross-reference. CI runs it on your PR.
+- A maintainer fetches the full BibTeX and RIS record for a new paper after merging. If you work locally, you can run `pnpm run citations` yourself.
 
 ### Citing a source in prose
 
@@ -77,7 +78,7 @@ Create `src/content/docs/your-section.md` with a `title:` in the front matter. T
 { label: 'Your section title', slug: 'your-section' },
 ```
 
-A page inside an existing chapter needs nothing else. A new top-level entry is a new chapter, and it also needs an entry in [`src/lib/chapters.ts`](src/lib/chapters.ts) and one of the five inks in [`src/styles/custom.css`](src/styles/custom.css) (an `--ink-N` pair and the sidebar's `li:nth-child` rule). All five are in use, so open an issue first. `pnpm test` checks that they agree.
+A page inside an existing chapter needs nothing else. A new top-level entry is a new chapter, and it also needs an entry in [`src/lib/chapters.ts`](src/lib/chapters.ts) and one of the five chapter inks in [`src/styles/custom.css`](src/styles/custom.css) (an `--ink-N` pair and the sidebar's `li:nth-child` rule). All five are in use, so open an issue first. `pnpm test` checks that they agree.
 
 ### Look and feel
 
@@ -87,11 +88,11 @@ Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUC
 - Tables are numbered by chapter: "Table 4.1" is the first table in chapter 4. Figures continue from Fig. 1 and Fig. 2 on the home page.
 - In Markdown, set the title as `<p class="table-title"><b>Table 4.1</b> …</p>` and the source as `<p class="table-src">Source: …</p>`.
 - For a figure built from the data, start from [`src/components/PathFigure.astro`](src/components/PathFigure.astro). It counts entries at build time, so its numbers stay true as entries are added.
-- A new IE field needs three things beside its tag: a short label, a `.field-<tag>` ink rule, and a `<FieldApplications ie="<tag>" />` section on the map page. The type check and `pnpm test` flag a missing one. All five inks are taken, so a fifth field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md).
+- A new IE field needs three things beside its tag: a short label, a `.field-<tag>` ink rule, and a `<FieldApplications ie="<tag>" />` section on the map page. The type check and `pnpm test` flag a missing one. All six inks are taken, so a seventh field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md).
 
 ### Checking accessibility
 
-`pnpm install` sets up the git hooks, which run with [prek](https://prek.j178.dev/). On each commit they check formatting, spelling, links, the workflows and the commit message; before each push they run the type check and the tests. A hook that fixes a file fails the commit: `git add` the file and commit again. The build and the accessibility check run in CI. To run the accessibility check locally:
+`pnpm install` sets up the git hooks, which run with [prek](https://prek.j178.dev/). On each commit they check formatting, spelling, links, the workflows and the commit message; before each push they run the type check and the tests. A hook that fixes a file fails the commit: `git add` the file and commit again. The first commit on a clone downloads the hooks' tools, so it needs a network connection. The build and the accessibility check run in CI. To run the accessibility check locally:
 
 1. Run `pnpm exec playwright install chromium` (once).
 2. Run `pnpm run build`, then `pnpm exec astro preview` in one terminal.
@@ -112,6 +113,15 @@ One folder per skill under `skills/`, with a `SKILL.md` and any supporting files
 A change to code comes with tests. A fix adds a test that fails without it, and a feature adds
 one for what it does. Run `pnpm run check`, `pnpm run lint` and `pnpm test` before you push; CI
 runs them on every pull request.
+
+CI also weighs every built page: the page's gzipped HTML plus the CSS, JS, fonts and images it
+loads on a first visit. A page over its budget fails the build. Check it with `pnpm run build`
+and then `pnpm run page-weight`. If a page has to get heavier, raise its budget in
+[`scripts/page-weight.mjs`](scripts/page-weight.mjs) and say why in the pull request.
+
+The citation files `CITATION.cff`, `codemeta.json` and `.zenodo.json` must agree, and a hook
+checks that they do. Edit `CITATION.cff`, then run
+`pnpm exec prek run citesync-write --stage manual --all-files` to update the other two.
 
 Coding standards: [Biome](https://biomejs.dev) formats and lints everything, so run
 `pnpm run lint:fix` rather than formatting by hand. Comments say why, not what. A new

@@ -25,24 +25,33 @@ describe("pubDate", () => {
 });
 
 describe("buildFeed", () => {
-  const now = new Date("2026-08-01T00:00:00Z");
   it("lists the newest month first and links the DOI, falling back to arXiv", () => {
     const xml = buildFeed(
       [entry("a", "2026-05"), entry("b", "2026-07", { doi: undefined, arxiv: "2401.00001" })],
       "https://ai4ie.org",
-      now,
     );
     expect(xml.indexOf("Title b")).toBeLessThan(xml.indexOf("Title a"));
     expect(xml).toContain("<link>https://arxiv.org/abs/2401.00001</link>");
     expect(xml).toContain('<guid isPermaLink="true">https://doi.org/10.1000/a</guid>');
     expect(xml).toContain("Donati, F., et al. (2022).");
   });
-  it("escapes titles and caps the item count", () => {
-    const many = Array.from({ length: FEED_LIMIT + 5 }, (_, i) =>
-      entry(`e${i}`, "2026-07", { title: "A & B <i>" }),
-    );
-    const xml = buildFeed(many, "https://ai4ie.org", now);
-    expect(xml.match(/<item>/g)).toHaveLength(FEED_LIMIT);
+  it("escapes titles", () => {
+    const xml = buildFeed([entry("a", "2026-07", { title: "A & B <i>" })], "https://ai4ie.org");
     expect(xml).toContain("<title>A &amp; B &lt;i&gt;</title>");
+  });
+  it("caps the item count after sorting, so the newest entries stay", () => {
+    const old = Array.from({ length: FEED_LIMIT }, (_, i) => entry(`old${i}`, "2026-05"));
+    const xml = buildFeed([...old, entry("newest", "2026-07")], "https://ai4ie.org");
+    expect(xml.match(/<item>/g)).toHaveLength(FEED_LIMIT);
+    expect(xml).toContain("Title newest");
+    expect(xml).not.toContain(`Title old${FEED_LIMIT - 1}<`);
+  });
+  it("keeps file order within a month and dates the feed by its newest entry", () => {
+    const xml = buildFeed(
+      [entry("x", "2026-07"), entry("y", "2026-07"), entry("z", "2026-05")],
+      "https://ai4ie.org",
+    );
+    expect(xml.indexOf("Title x")).toBeLessThan(xml.indexOf("Title y"));
+    expect(xml).toContain("<lastBuildDate>Wed, 01 Jul 2026 00:00:00 GMT</lastBuildDate>");
   });
 });

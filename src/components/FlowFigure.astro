@@ -7,19 +7,28 @@ import { shortLabel, tagLabel } from "../data/tags";
 import { missingTechniques, sankeyLayout } from "../lib/sankey";
 import { litUrl } from "../lib/urls";
 
-// viewBox geometry, in user units: label column, flow, label column.
-const H = 420;
+// viewBox geometry, in user units: label column, flow, label column. The label
+// columns fit the widest short labels ("Urban mining 4", "Foundation models 2") at the
+// phone font size in custom.css, the largest; wider columns only shrink the plate.
+// Two plates: a compact one up to 64rem, and from there a wide, short one that spans
+// the cover, with long bands (custom.css shows one of them). Each is a labelled group
+// with tabindex -1: Chromium otherwise gives the svg a Tab stop and maps it to img,
+// whose children (the links) are presentational.
 const GAP = 18;
-const X0 = 200;
-const X1 = 480;
+const X0 = 175;
 const NODE = 8;
-const W = X1 + NODE + 290;
+const PLATES = [
+  { name: "compact", H: 420, X1: 455 },
+  { name: "wide", H: 340, X1: 875 },
+].map((p) => ({ ...p, W: p.X1 + NODE + 240, mid: (X0 + NODE + p.X1) / 2 }));
 // Node links get at least this tall a hit area: 24px even at a 320px-wide
-// screen, where the plate shrinks to about 0.37 (WCAG 2.5.8).
+// screen, where the compact plate shrinks to about 0.42 (WCAG 2.5.8).
 const HIT = 66;
 
 const entries = (await getCollection("literature")).map((e) => e.data);
-const { ieNodes, mlNodes, bands, total, papers } = sankeyLayout(entries, H, GAP);
+const layouts = PLATES.map((p) => ({ ...p, ...sankeyLayout(entries, p.H, GAP) }));
+// Both plates count the same papers; only their geometry differs.
+const { ieNodes, mlNodes, bands, total, papers } = layouts[0];
 // A node opens the list scoped to the flow (the other column's tags ORed), so
 // the list shows exactly the papers the node's number counts.
 const ieInFlow = ieNodes.map((n) => n.tag);
@@ -27,10 +36,9 @@ const mlInFlow = mlNodes.map((n) => n.tag);
 // Techniques in the vocabulary with no paper in the flow yet: named in the
 // caption, so the figure does not imply the vocabulary ends at its right edge.
 const missing = missingTechniques(mlNodes).map((t) => tagLabel("ml", t));
-const mid = (X0 + NODE + X1) / 2;
-const band = (b: (typeof bands)[number]) =>
-  `M${X0 + NODE} ${b.y0}C${mid} ${b.y0} ${mid} ${b.y1} ${X1} ${b.y1}` +
-  `V${b.y1 + b.h}C${mid} ${b.y1 + b.h} ${mid} ${b.y0 + b.h} ${X0 + NODE} ${b.y0 + b.h}Z`;
+const band = (p: (typeof PLATES)[number], b: (typeof bands)[number]) =>
+  `M${X0 + NODE} ${b.y0}C${p.mid} ${b.y0} ${p.mid} ${b.y1} ${p.X1} ${b.y1}` +
+  `V${b.y1 + b.h}C${p.mid} ${b.y1 + b.h} ${p.mid} ${b.y0 + b.h} ${X0 + NODE} ${b.y0 + b.h}Z`;
 const hitY = (n: { y: number; h: number }) => n.y + n.h / 2 - Math.max(n.h, HIT) / 2;
 // What a lit node adds to its label: how far across the other column it reaches.
 const readout = (dim: "ie" | "ml", n: { tag: string; papers: number }) => {
@@ -46,10 +54,18 @@ const idle = "Point at, focus or tap a label to light its flows.";
 ---
 
 <figure class="flow not-content">
-  <svg viewBox={`0 0 ${W} ${H}`}>
+  {
+    layouts.map((p) => (
+  <svg
+    class={`flow-plate flow-plate--${p.name}`}
+    viewBox={`0 0 ${p.W} ${p.H}`}
+    role="group"
+    aria-label="IE fields, linked to the AI techniques their papers use"
+    tabindex="-1"
+  >
     <g class="flow-bands">
       {
-        bands.map((b) => (
+        p.bands.map((b) => (
           // Out of the tab order: the node links below reach the same lists
           // from the keyboard, and the literature filters reach every pair.
           <a
@@ -57,7 +73,7 @@ const idle = "Point at, focus or tap a label to light its flows.";
             tabindex="-1"
             aria-label={`${tagLabel("ie", b.ie)} with ${tagLabel("ml", b.ml)}: ${b.count} ${b.count === 1 ? "paper" : "papers"}`}
           >
-            <path class={`band field-${b.ie}`} data-ie={b.ie} data-ml={b.ml} d={band(b)}>
+            <path class={`band field-${b.ie}`} data-ie={b.ie} data-ml={b.ml} d={band(p, b)}>
               <title>{`${tagLabel("ie", b.ie)} → ${tagLabel("ml", b.ml)}: ${b.count}`}</title>
             </path>
           </a>
@@ -65,7 +81,7 @@ const idle = "Point at, focus or tap a label to light its flows.";
       }
     </g>
     {
-      ieNodes.map((n) => (
+      p.ieNodes.map((n) => (
         <a
           href={litUrl({ ie: [n.tag], ml: mlInFlow })}
           class="flow-node"
@@ -83,7 +99,7 @@ const idle = "Point at, focus or tap a label to light its flows.";
       ))
     }
     {
-      mlNodes.map((n) => (
+      p.mlNodes.map((n) => (
         <a
           href={litUrl({ ie: ieInFlow, ml: [n.tag] })}
           class="flow-node"
@@ -91,9 +107,9 @@ const idle = "Point at, focus or tap a label to light its flows.";
           data-tag={n.tag}
           data-readout={readout("ml", n)}
         >
-          <rect class="flow-hit" x={X1} y={hitY(n)} width={W - X1} height={Math.max(n.h, HIT)} />
-          <rect class="node" x={X1} y={n.y} width={NODE} height={n.h} />
-          <text x={X1 + NODE + 10} y={n.y + n.h / 2} dominant-baseline="middle">
+          <rect class="flow-hit" x={p.X1} y={hitY(n)} width={p.W - p.X1} height={Math.max(n.h, HIT)} />
+          <rect class="node" x={p.X1} y={n.y} width={NODE} height={n.h} />
+          <text x={p.X1 + NODE + 10} y={n.y + n.h / 2} dominant-baseline="middle">
             {`${shortLabel(n.tag)} `}
             <tspan class="flow-n">{n.papers}</tspan>
           </text>
@@ -101,19 +117,19 @@ const idle = "Point at, focus or tap a label to light its flows.";
       ))
     }
   </svg>
+    ))
+  }
   <p class="flow-readout" aria-live="polite">{idle}</p>
   <figcaption>
-    <span><b>Fig. 1</b> What the {papers} AI-in-IE papers apply, from IE field to AI technique.
-      Numbers count papers; band width counts field-technique pairings ({total}), since one paper
-      can sit in several bands. Follow a label or band to read the papers.</span>
+    <span><b>Fig. 1</b> The {papers} AI-in-IE papers, from IE field to AI technique. Numbers
+      count papers; bands count the {total} field-technique pairings. Source: src/data/literature.yaml.</span>
     {
       missing.length > 0 && (
         <span class="flow-gap">
-          <span class="wanted">Wanted</span> No paper yet applies {missing.join(", ")} to an IE field.
+          <span class="wanted">Wanted</span> {missing.join(", ")}.
         </span>
       )
     }
-    <span class="flow-src">Source: src/data/literature.yaml</span>
   </figcaption>
 </figure>
 
@@ -122,10 +138,9 @@ const idle = "Point at, focus or tap a label to light its flows.";
   // readout. Mouse lights on hover, keyboard on focus. On touch the first tap
   // on a node lights it and the second follows the link, since there is no
   // hover; a click without a pointer (a screen reader, Enter) follows at once.
-  for (const fig of document.querySelectorAll<HTMLElement>(".flow")) {
-    const svg = fig.querySelector("svg");
-    const out = fig.querySelector(".flow-readout");
-    if (!svg || !out) continue;
+  for (const svg of document.querySelectorAll<SVGSVGElement>(".flow svg")) {
+    const out = svg.closest(".flow")?.querySelector(".flow-readout");
+    if (!out) continue;
     const idle = out.textContent;
     const nodes = [...svg.querySelectorAll<SVGAElement>(".flow-node")];
     const bands = [...svg.querySelectorAll<SVGPathElement>(".band")];
@@ -158,6 +173,11 @@ const idle = "Point at, focus or tap a label to light its flows.";
     }
     svg.addEventListener("focusout", (e) => {
       if (!svg.contains(e.relatedTarget as Node)) light(null);
+    });
+    // A resize across 64rem hides this plate: drop its state so the readout is not stale.
+    matchMedia("(min-width: 64rem)").addEventListener("change", () => {
+      for (const m of nodes) m.classList.remove("armed");
+      light(null);
     });
     document.addEventListener("pointerdown", (e) => {
       if (!svg.contains(e.target as Node)) {

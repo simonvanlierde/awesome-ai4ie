@@ -5,7 +5,6 @@
   "description": "A community-curated guide to using AI in industrial ecology: literature, tools, skills and in-browser demos, proposed to the AI4IE working group.",
   "codeRepository": "https://github.com/simonvanlierde/awesome-ai4ie",
   "license": [
-    "https://spdx.org/licenses/MIT",
     "https://spdx.org/licenses/CC-BY-4.0"
   ],
   "author": [
