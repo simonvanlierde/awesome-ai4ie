@@ -6,6 +6,10 @@
 
 /* ── Tokens: dark (Starlight's default root) — Blueprint / Cyanotype ──────── */
 :root {
+  /* The favicon's tile, the same in both themes: cobalt, white strokes, a light-blue stem. */
+  --tile: #0353a4;
+  --tile-ink: #fff;
+  --tile-stem: #b9d7fa;
   --ink-1: #5cb3ff;
   --ink-2: #ff856d;
   --ink-3: #4fd1c5;
@@ -371,6 +375,30 @@ h1#_top,
   color: inherit;
 }
 
+/* The folded Æ4 in the header lands on the favicon's tile, in the favicon's colours. */
+.brand-mark .bm-tile {
+  fill: var(--tile);
+  opacity: 0;
+  transform: scale(0.8);
+  transform-origin: 16px 16px;
+  transition:
+    opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.site-title:is(:hover, :focus-visible) .brand-mark--wordmark .bm-tile {
+  opacity: 1;
+  transform: none;
+}
+.site-title:is(:hover, :focus-visible) .brand-mark--wordmark .bm-4 {
+  color: var(--tile-ink);
+}
+.site-title:is(:hover, :focus-visible) .brand-mark--wordmark :is(.bm-a-leg, .bm-e-base) {
+  stroke: color-mix(in srgb, var(--tile-ink) 40%, var(--tile));
+}
+.site-title:is(:hover, :focus-visible) .brand-mark--wordmark :is(.bm-e .bm-stem, .bm-4-stem) {
+  stroke: var(--tile-stem);
+}
+
 @media (max-width: 30rem) {
   .site-title {
     width: 1.9rem;
@@ -388,13 +416,23 @@ h1#_top,
   .brand-mark--wordmark .bm-e-base {
     stroke: var(--sl-color-gray-4);
   }
-  .brand-mark--wordmark .bm-e .bm-stem {
-    stroke: color-mix(in srgb, currentColor 72%, var(--sl-color-bg));
+  .brand-mark--wordmark .bm-tile {
+    opacity: 1;
+    transform: none;
+  }
+  .brand-mark--wordmark .bm-4 {
+    color: var(--tile-ink);
+  }
+  .brand-mark--wordmark :is(.bm-a-leg, .bm-e-base) {
+    stroke: color-mix(in srgb, var(--tile-ink) 40%, var(--tile));
+  }
+  .brand-mark--wordmark :is(.bm-e .bm-stem, .bm-4-stem) {
+    stroke: var(--tile-stem);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .brand-mark :is(.bm-root, .bm-a, .bm-i1, .bm-4, .bm-i2, .bm-e) {
+  .brand-mark :is(.bm-root, .bm-a, .bm-i1, .bm-4, .bm-i2, .bm-e, .bm-tile) {
     transition: none;
   }
   .brand-mark :is(.bm-a-leg, .bm-a-full, .bm-e-ext, .bm-e-base, .bm-i1, .bm-i2, .bm-stem) {
@@ -800,7 +838,8 @@ starlight-menu-button button {
 }
 
 /* ── The mark (Glyph.astro) ───────────────────────────────────────────────
-   Neutral ink, never cobalt on the page: cobalt is ink 1. DESIGN.md, "The mark". */
+   Neutral ink on the page, since cobalt is ink 1, except as the favicon's tile.
+   DESIGN.md, "The mark". */
 .glyph {
   display: block;
   flex: none;
@@ -810,6 +849,19 @@ starlight-menu-button button {
 }
 .glyph-stem {
   stroke: color-mix(in srgb, currentColor 72%, var(--sl-color-bg));
+}
+/* The tile: the favicon itself, on the page as the brand's sign-off. */
+.glyph--tile {
+  color: var(--tile-ink);
+}
+.glyph--tile .glyph-bg {
+  fill: var(--tile);
+}
+.glyph--tile .glyph-fade {
+  stroke: color-mix(in srgb, var(--tile-ink) 40%, var(--tile));
+}
+.glyph--tile .glyph-stem {
+  stroke: var(--tile-stem);
 }
 /* Fig. 404: the mark as a plate, framed by the dashed gap outline. */
 .plate {
@@ -836,7 +888,6 @@ starlight-menu-button button {
 /* Colophon (Footer override): the end mark and the licences. */
 .colophon {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
   margin: 3rem 0 0;
@@ -847,9 +898,9 @@ starlight-menu-button button {
   color: var(--sl-color-gray-3);
 }
 .colophon .glyph {
-  width: 1rem;
-  height: 1rem;
-  color: var(--sl-color-white);
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-inline-end: 0.25rem;
 }
 .colophon a {
   color: inherit;

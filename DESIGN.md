@@ -65,18 +65,16 @@ Columns of numbers use tabular figures.
 The mark is an Æ with a 4 drawn inside it ([`Glyph.astro`](src/components/Glyph.astro)). It
 sits outside the six inks: on the page it is neutral ink, with the 4 at full strength and
 the A's leg and the E's arms faded to grey. The stem is the I of AI4IE, so it takes a lighter
-tint; the large mark (the 404 plate, the card) also cuts a hairline gap beside it. Cobalt is ink 1, so the mark is cobalt only off
-the page (the favicon and the README), with one exception: the home title ends on the
-favicon tile as its end mark, at cap height, hidden from screen readers. On load its strokes
-ink in as the mark is drawn: the 4, its stem, then the faded A leg and E arms. Pointing at
-or tapping the tile inks them in again.
+tint; the large mark (the 404 plate, the card) also cuts a hairline gap beside it. Cobalt is ink 1, so on the page the
+mark takes cobalt only as the favicon's tile: the cobalt square with white strokes, the faded
+strokes at 40% and a light-blue stem, the same in both themes.
 
 - **Header, home cover, colophon, and 404.** The top bar shows the unfolded `AI4IE` drafting
-  wordmark, which collapses to the Æ-4 mark on hover/focus and on narrow screens. The home
+  wordmark, which folds onto the tile as the Æ-4 mark on hover/focus and at rest on narrow screens. The home
   cover carries no mark of its own: the header wordmark and the title already name the site.
   The 404 plate shows the Æ-4 mark in a dashed
   frame and expands it into `AI4IE` on hover/focus. Every inner page
-  and the home page also carry the mark in the colophon before the licences.
+  and the home page end on the tile in the colophon, before the licences.
 - **Never decoration.** No patterns, bullets, loaders or watermarks.
 - **Always beside text** that carries the meaning, so the SVG stays hidden from screen
   readers.

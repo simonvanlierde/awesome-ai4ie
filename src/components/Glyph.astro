@@ -4,14 +4,17 @@
 // fade back to --glyph-fade. Always decorative: the text beside it carries the
 // meaning. DESIGN.md says where it may appear. The stem is the I of AI4IE: it always takes a
 // lighter tint, and `large` also cuts a hairline gap beside it (too fine below about 64 px).
+// `tile` draws it as the favicon: on the cobalt square, in the favicon's colours.
 interface Props {
   class?: string;
   large?: boolean;
+  tile?: boolean;
 }
-const { class: className, large = false } = Astro.props;
+const { class: className, large = false, tile = false } = Astro.props;
 ---
 
-<svg class:list={["glyph", className]} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+<svg class:list={["glyph", { "glyph--tile": tile }, className]} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+  {tile && <rect class="glyph-bg" width="32" height="32" />}
   <g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="butt" stroke-linejoin="miter">
     {
       large && (
