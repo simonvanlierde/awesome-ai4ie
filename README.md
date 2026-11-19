@@ -7,6 +7,7 @@ A community-curated guide to using AI in industrial ecology (IE) research. Indus
 [![Discord](https://img.shields.io/badge/chat-Discord-5865F2?logo=discord&logoColor=white)](https://discord.gg/zhHAZakXHX)
 [![CI](https://img.shields.io/github/actions/workflow/status/simonvanlierde/awesome-ai4ie/ci.yml?label=CI)](https://github.com/simonvanlierde/awesome-ai4ie/actions)
 [![Coverage](https://img.shields.io/codecov/c/github/simonvanlierde/awesome-ai4ie)](https://codecov.io/gh/simonvanlierde/awesome-ai4ie)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/16926/badge)](https://www.bestpractices.dev/projects/16926)
 [![Built with Astro](https://img.shields.io/badge/built%20with-Astro-BC52EE?logo=astro&logoColor=white)](https://astro.build)
 [![Code: MIT](https://img.shields.io/badge/code-MIT-green)](LICENSE)
 [![Content: CC BY 4.0](https://img.shields.io/badge/content-CC--BY--4.0-lightgrey)](LICENSE-CONTENT)
