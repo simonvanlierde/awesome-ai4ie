@@ -33,19 +33,17 @@ export const TOPIC_TAGS = {
   io: "Input–output & economy-wide footprints",
 } as const;
 
-/** What a topic still lacks, one line each. The map page's "Not mapped yet" shows
- * it for every topic with fewer than THIN_TOPIC entries, so it must stay true
- * whatever the count. */
+/** What a topic wants, one line each, shown in the map page's "Not mapped yet"
+ * for every topic with fewer than THIN_TOPIC entries. Each names the work to
+ * add, never what the list holds now, so it stays true as entries arrive. */
 export const TOPIC_WANTED: Record<TopicTag, string> = {
-  buildings: "Stock models from imagery are many; renovation and demolition flows are few.",
-  chemicals:
-    "Most of the tens of thousands of untested substances still have no characterisation factor.",
-  electronics: "Identification and sorting work is many; repair and reuse data are few.",
-  metals: "Bayesian MFA of steel and aluminium; little on minor and critical metals.",
-  food: "The field our remote-sensing tag most obviously serves, yet no entry here uses it.",
-  water: "Water footprints and scarcity factors; little on water in MFA.",
-  lifetime:
-    "Survival analysis and failure prediction that feed stock models; nothing yet on repair data.",
+  buildings: "Renovation and demolition flows, beyond stock models from imagery.",
+  chemicals: "Characterisation factors for the tens of thousands of substances nobody has tested.",
+  electronics: "Mostly identification and sorting; repair and reuse data are scarce.",
+  metals: "Flows of minor metals, and the criticality and supply risk of each.",
+  food: "Crop, land-use and food-waste footprints; the field remote sensing most obviously serves.",
+  water: "Water footprints, scarcity factors, and water in MFA.",
+  lifetime: "Survival analysis and failure prediction that feed stock models, and repair data.",
   energy:
     "Marginal versus average grid factors, temporal accounting, process and heat integration.",
   "supply-risk": "Supply risk, critical raw materials, trade-network disruption.",

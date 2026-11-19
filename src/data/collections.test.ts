@@ -3,6 +3,7 @@ import { z } from "astro/zod";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 import { applicationSchema, literatureSchema } from "./schemas";
+import { TAG_DIMS, TOPIC_TAGS } from "./tags";
 
 // Field-level rules live in the schemas (same ones the site build enforces);
 // these tests only add what zod can't express: uniqueness and cross-references.
@@ -25,10 +26,14 @@ describe("literature.yaml", () => {
   });
   it("lists each tag at most once per entry", () => {
     for (const e of [...lit, ...apps] as Record<string, unknown>[])
-      for (const dim of ["ie", "ml", "type"]) {
+      for (const dim of TAG_DIMS) {
         const tags = (e[dim] as string[] | undefined) ?? [];
         expect(new Set(tags).size, `${e.id}: duplicate ${dim} tag`).toBe(tags.length);
       }
+  });
+  it("gives every topic at least one entry, since a tag arrives with its first", () => {
+    const used = new Set(lit.flatMap((e) => (e as { topic?: string[] }).topic ?? []));
+    for (const t of Object.keys(TOPIC_TAGS)) expect(used.has(t), t).toBe(true);
   });
   it("requires a doi or an arxiv id", () => {
     const { doi: _d, arxiv: _a, ...bare } = lit[0] as Record<string, unknown>;
