@@ -14,6 +14,7 @@ export type Env = {
   AI: { run(model: string, input: object): Promise<{ data: number[][] }> };
   ASSETS: { fetch(req: Request | string): Promise<Response> };
   SEARCH_LIMIT: { limit(opts: { key: string }): Promise<{ success: boolean }> };
+  SEARCH_LIMIT_GLOBAL: { limit(opts: { key: string }): Promise<{ success: boolean }> };
 };
 
 // Longer than any question a reader types; caps what one request can spend.
@@ -87,12 +88,18 @@ export function limitKey(ip: string): string {
     .join(":");
 }
 
-/** False when this visitor has used up SEARCH_LIMIT, null when the limiter fails: the caller
- * then answers "unavailable" rather than spend AI calls unmetered. */
+/** False when this visitor has used up SEARCH_LIMIT, or all visitors at this Cloudflare location
+ * SEARCH_LIMIT_GLOBAL (approximate: counts are per location)
+ * (many IPs, or a whole IPv6 range, would get past the per-visitor count), null when a limiter
+ * fails: the caller then answers "unavailable" rather than spend AI calls unmetered. */
 export async function withinLimit(env: Env, request: Request): Promise<boolean | null> {
   const key = limitKey(request.headers.get("cf-connecting-ip") ?? "unknown");
   try {
-    return (await env.SEARCH_LIMIT.limit({ key })).success;
+    if (!(await env.SEARCH_LIMIT.limit({ key })).success) return false;
+    const ok = (await env.SEARCH_LIMIT_GLOBAL.limit({ key: "all" })).success;
+    // biome-ignore lint/suspicious/noConsole: Workers Logs show when the shared cap turns readers away
+    if (!ok) console.warn("search: SEARCH_LIMIT_GLOBAL reached");
+    return ok;
   } catch (err) {
     // biome-ignore lint/suspicious/noConsole: Workers Logs keep the cause
     console.error(err);

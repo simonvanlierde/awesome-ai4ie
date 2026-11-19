@@ -89,16 +89,19 @@ const MCP_DATA = {
 
 type Opts = {
   allowed?: boolean | "throws";
+  globalAllowed?: boolean;
   index?: object[];
   ai?: () => Promise<{ data: number[][] }>;
   assets?: (url: string) => Response | undefined;
 };
-const env = ({ allowed = true, index = INDEX, ai, assets }: Opts = {}) => {
+const env = ({ allowed = true, globalAllowed = true, index = INDEX, ai, assets }: Opts = {}) => {
   const runs: { model: string; text: string[] }[] = [];
   const keys: string[] = [];
+  const globalKeys: string[] = [];
   return {
     runs,
     keys,
+    globalKeys,
     AI: {
       run: (model: string, input: { text: string[] }) => {
         runs.push({ model, text: input.text });
@@ -110,6 +113,12 @@ const env = ({ allowed = true, index = INDEX, ai, assets }: Opts = {}) => {
         keys.push(key);
         if (allowed === "throws") return Promise.reject(new Error("no binding"));
         return Promise.resolve({ success: allowed });
+      },
+    },
+    SEARCH_LIMIT_GLOBAL: {
+      limit: ({ key }: { key: string }) => {
+        globalKeys.push(key);
+        return Promise.resolve({ success: globalAllowed });
       },
     },
     ASSETS: {
@@ -157,6 +166,16 @@ describe("worker", () => {
   it("rejects a body that is not JSON by its content type", async () => {
     const r = await worker.fetch(post('{"q": "a b c"}', { type: "text/plain" }), env());
     expect(r.status).toBe(415);
+  });
+
+  it("answers 429 when all visitors together pass the global cap, whatever their IP", async () => {
+    const e = env({ globalAllowed: false });
+    expect((await worker.fetch(post('{"q": "a b c"}', { ip: "192.0.2.1" }), e)).status).toBe(429);
+    expect((await worker.fetch(post('{"q": "a b c"}', { ip: "198.51.100.7" }), e)).status).toBe(
+      429,
+    );
+    expect(e.globalKeys).toEqual(["all", "all"]);
+    expect(e.runs).toEqual([]);
   });
 
   it("limits requests, other methods and other paths", async () => {

@@ -138,3 +138,20 @@ To roll back, revert the pull request from step 4. Once the revert has deployed,
 domain. Keep the DNS records until the old address works again. If the Pages site is ever
 switched off or the repo deleted, remove the DNS records too. Another GitHub user can take over
 a domain that points at GitHub Pages with no site behind it.
+
+### Moving the domain to the Worker
+
+The steps above point the domain at GitHub Pages. To serve `/api/*` and `/mcp`, the domain has to
+go to the Worker instead, as a Workers custom domain (a zone on the same Cloudflare account).
+
+1. Remove the GitHub Pages custom domain (Settings → Pages) and the four `A`, four `AAAA` and
+   `www` records from the table above. A custom domain cannot be added over existing records.
+2. Add the domain to the Worker: Cloudflare dashboard → Workers & Pages → `awesome-ai4ie` →
+   Settings → Domains & Routes → Add → Custom domain. Cloudflare creates the DNS record and the
+   certificate.
+3. Check that `curl -sI https://<domain>/` no longer says `server: GitHub.com`, and that a `POST` to
+   `https://<domain>/mcp` with `Accept: application/json, text/event-stream` returns 200, not 405.
+4. Change the Worker address to the domain in README.md and in the "Ask an AI assistant" section
+   of `src/content/docs/literature.mdx`.
+
+To roll back, delete the Worker's custom domain and redo the Pages steps.
