@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { LitEntry } from "../data/schemas";
 import { DIM_LABELS, TAG_DIMS, TAGS, type TagDim, tagLabel } from "../data/tags";
 import { type Citations, citationFile, FORMATS } from "../lib/citations";
-import { citeAuthors, formatAuthors, isNew, paperLink } from "../lib/literature";
+import { citeAuthors, formatAuthors, isNew, type PaperExtras, paperLink } from "../lib/literature";
 import { issueUrl, litUrl, paperUrl, siteUrl } from "../lib/urls";
 import {
   DEFAULT_SORT,
@@ -41,7 +41,6 @@ import TagChips from "./TagChips";
  * fragment to the last card still open. A linked paper the filters hide gets a
  * notice that clears them; a card only opened on the page gets neither mark nor notice.
  */
-export type PaperExtras = { apps: { name: string; href: string }[]; similar: string[] };
 
 export default function LiteratureBrowser({
   entries,

@@ -1,6 +1,9 @@
 // How a literature.yaml entry reads on the page: author lists, citation
-// labels, the paper link and the "new" marker. Pure functions over entry fields,
-// so the list, <Cite> and sorting all show an entry the same way.
+// labels, the paper link, the "new" marker and what its details panel adds. Pure
+// functions over entry fields, so the list, <Cite> and sorting all show an entry the
+// same way.
+import { nearest } from "./semantic";
+import { siteUrl } from "./urls";
 
 type Authored = { authors: readonly string[]; etAl?: boolean };
 
@@ -38,4 +41,29 @@ export function isNew(added: string, now: Date = new Date()): boolean {
   const [y, m] = added.split("-").map(Number);
   const age = now.getTime() - Date.UTC(y, m - 1, 1);
   return age >= 0 && age < NEW_FOR_MS;
+}
+
+/** What a card's details panel adds to the entry itself. */
+export type PaperExtras = { apps: { name: string; href: string }[]; similar: string[] };
+
+/** Each entry's citing applications and its three most similar entries, by id. `vectors`
+ * lines up with `entries`; an entry without one gets no similar papers and is nobody's.
+ * An application is described in full on its first field's page, under its own id. */
+export function paperExtras(
+  entries: readonly { id: string }[],
+  apps: readonly { id: string; name: string; ie: readonly string[]; papers: readonly string[] }[],
+  vectors: (ArrayLike<number> | undefined)[],
+): Record<string, PaperExtras> {
+  const near = nearest(vectors, 3);
+  return Object.fromEntries(
+    entries.map((e, i) => [
+      e.id,
+      {
+        apps: apps
+          .filter((a) => a.papers.includes(e.id))
+          .map((a) => ({ name: a.name, href: siteUrl(`applications-map/${a.ie[0]}/#${a.id}`) })),
+        similar: near[i].map((j) => entries[j].id),
+      },
+    ]),
+  );
 }

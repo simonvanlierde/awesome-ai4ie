@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { citeAuthors, formatAuthors, isNew, paperLink } from "./literature";
+import { citeAuthors, formatAuthors, isNew, paperExtras, paperLink } from "./literature";
+import { siteUrl } from "./urls";
 
 const one = { authors: ["van Lierde, S."] };
 const two = { authors: ["Peled, Y.", "Fishman, T."] };
@@ -45,5 +46,30 @@ describe("isNew", () => {
     expect(isNew("2026-09", now)).toBe(true);
     expect(isNew("2026-08", now)).toBe(false);
     expect(isNew("2026-11", now)).toBe(false);
+  });
+});
+
+describe("paperExtras", () => {
+  const entries = [{ id: "lcaPaper" }, { id: "lciPaper" }, { id: "noVector" }, { id: "farPaper" }];
+  const apps = [
+    { id: "llmLci", name: "LLM-filled inventories", ie: ["lca", "sem"], papers: ["lciPaper"] },
+    { id: "unused", name: "Cites nothing here", ie: ["eeio"], papers: ["elsewhere"] },
+  ];
+  // lca and lci point almost the same way; far is at right angles to both.
+  const vectors = [[1, 0], [0.9, 0.44], undefined, [0, 1]];
+  const x = paperExtras(entries, apps, vectors);
+
+  it("links each citing application on its first field's page", () => {
+    expect(x.lciPaper.apps).toEqual([
+      { name: "LLM-filled inventories", href: siteUrl("applications-map/lca/#llmLci") },
+    ]);
+    expect(x.lcaPaper.apps).toEqual([]);
+  });
+
+  it("names similar papers by id, and none for an entry without a vector", () => {
+    expect(x.lcaPaper.similar).toEqual(["lciPaper"]);
+    expect(x.lciPaper.similar).toEqual(["lcaPaper"]);
+    expect(x.noVector.similar).toEqual([]);
+    expect(x.farPaper.similar).toEqual([]);
   });
 });
