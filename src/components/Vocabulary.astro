@@ -40,6 +40,7 @@ const termSets = schemes.map(([s, scheme]) => ({
   "@id": NAMESPACE + s,
   name: scheme.label,
   description: scheme.definition,
+  license: "https://creativecommons.org/licenses/by/4.0/",
   hasDefinedTerm: concepts
     .filter((c) => c.scheme === s && !c.deprecated)
     .map((c) => ({

@@ -27,6 +27,11 @@ describe("matchesFilter", () => {
 });
 
 describe("parseView", () => {
+  it("drops a retired tag that has no replacement", () => {
+    const { filter } = parseView("?ie=urban-mining&ml=cv");
+    expect(filter.ie).toEqual([]);
+    expect(filter.ml).toEqual(["cv"]);
+  });
   it("parses comma-separated params and ignores unknown keys", () => {
     expect(parseView("?ie=circular,lca&ml=cv&foo=x")).toEqual({
       filter: { ...none, ie: ["circular", "lca"], ml: ["cv"] },

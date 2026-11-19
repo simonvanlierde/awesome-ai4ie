@@ -45,7 +45,8 @@ export function emptyMessage(f: Filter, label: (dim: TagDim, tag: string) => str
 
 /** Read a view from a query string. Unknown keys and unknown sort values are
  * ignored. A retired tag (`?ie=mfa`) reads as its replacement (`?ie=sem`), and
- * a tag that moved dimension follows it (`?ie=uncertainty` to `ml`). */
+ * a tag that moved dimension follows it (`?ie=uncertainty` to `ml`). A retired tag
+ * with no replacement (`?ie=urban-mining`) is dropped, so that filter goes away. */
 export function parseView(search: string): View {
   const params = new URLSearchParams(search);
   const get = (k: string) => params.get(k)?.split(",").filter(Boolean) ?? [];

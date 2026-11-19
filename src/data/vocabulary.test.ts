@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -54,6 +55,11 @@ describe("vocabulary.yaml", () => {
   it("has ids unique across schemes, none named like a scheme", () => {
     expect(new Set(concepts.map((c) => c.id)).size).toBe(concepts.length);
     for (const s of Object.keys(SCHEMES)) expect(byId.has(s), s).toBe(false);
+    const terms = JSON.parse(readFileSync("vocabulary/context.jsonld", "utf8"))["@context"];
+    for (const c of concepts) {
+      expect(c.id in terms, `${c.id} is a context term`).toBe(false);
+      expect(c.id.startsWith("retired-"), `${c.id} clashes with a retired anchor`).toBe(false);
+    }
   });
 
   it("replaces a concept only when it is retired, and with a live one", () => {
@@ -110,6 +116,14 @@ describe("tags in use", () => {
 });
 
 describe("vocabulary/context.jsonld", () => {
+  it("has the pinned hash; both sites' copies change together", () => {
+    const sha = createHash("sha256")
+      .update(readFileSync("vocabulary/context.jsonld"))
+      .digest("hex");
+    expect(sha, "update the pin, and the other site's copy, in the same change").toBe(
+      "a363f7dc0069a593fffdb47f9d107d3224174812ecfa6a2f02d3c90a885bdce2",
+    );
+  });
   it("is key-sorted with a 2-space indent, so both sites can hold it byte for byte", () => {
     const text = readFileSync("vocabulary/context.jsonld", "utf8");
     const sort = (v: unknown): unknown =>

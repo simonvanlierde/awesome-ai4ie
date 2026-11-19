@@ -16,6 +16,7 @@
     - http://www.wikidata.org/entity/Q581950
   closeMatch:
     - https://openalex.org/T10435
+# SEM as the umbrella over MFA: Pauliuk & Hertwich 2015, doi:10.1016/j.ecolecon.2015.08.012
 - id: sem
   scheme: field
   prefLabel: Socio-economic metabolism

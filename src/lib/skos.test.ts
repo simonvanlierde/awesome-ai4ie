@@ -30,6 +30,13 @@ describe("skosExpanded", () => {
       { "@id": "https://ai4ie.org/vocabulary/#field" },
     ]);
   });
+  it("marks retired concepts, and carries definitions and exact matches", () => {
+    expect(node("mfa")?.["http://www.w3.org/2002/07/owl#deprecated"]).toBeTruthy();
+    expect(node("lca")?.[`${SKOS}definition`]).toBeDefined();
+    expect(node("lca")?.[`${SKOS}exactMatch`]).toBeDefined();
+    const field = node("field")?.[`${SKOS}hasTopConcept`] as { "@id": string }[] | undefined;
+    expect((field ?? []).map((t) => t["@id"])).not.toContain("https://ai4ie.org/vocabulary/#mfa");
+  });
   it("adds one concept scheme per scheme, with its top concepts", () => {
     const schemes = nodes.filter((n) => (n["@type"] as string[]).includes(`${SKOS}ConceptScheme`));
     expect(schemes.map((s) => s["@id"])).toEqual(

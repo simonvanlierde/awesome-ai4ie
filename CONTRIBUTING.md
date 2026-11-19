@@ -123,7 +123,9 @@ Every tag is a concept in [`src/data/vocabulary.yaml`](src/data/vocabulary.yaml)
 - `exactMatch` and `closeMatch`: IRIs of the concept elsewhere. Use `exactMatch` only for the
   same concept, such as the Wikidata item for life cycle assessment. An OpenAlex topic is
   always a `closeMatch`. Open each IRI before you add it.
-- `reserved: true`: no entry uses the concept yet.
+- `reserved: true`: no entry uses the concept yet. Set it on a concept added before any entry
+  uses it, such as a planned facet. `pnpm test` fails once an entry uses it, so remove the flag
+  in the same change.
 
 To add a tag:
 
@@ -140,14 +142,16 @@ against the vocabulary.
 
 To retire a tag, keep its concept and add `deprecated: true`. When one concept takes its
 place, add `replacedBy: <id>` too. Then retag the entries. A literature link that still uses
-the old tag shows its replacement.
+the old tag shows its replacement. A retired tag with no `replacedBy` is dropped from old
+links, so the filter it set goes away.
 
 [`vocabulary/context.jsonld`](vocabulary/context.jsonld) maps the YAML fields to SKOS. The
 build uses it to publish the vocabulary at `/vocabulary.ttl` and `/vocabulary.jsonld`, and
 CI checks the Turtle against the SHACL shape of SkoHub Vocabs. The same file is in
 [simonvanlierde.github.io](https://github.com/simonvanlierde/simonvanlierde.github.io), byte
 for byte, so it holds no `@base` or `@vocab`: each site adds its own namespace when it builds
-(`src/lib/skos.ts` here). Do not edit it here alone: change both copies in the same way.
+(`src/lib/skos.ts` here). Do not edit it here alone: change both copies in the same way. `pnpm test` pins the file's SHA-256, and the pin moves in
+both repos in the same change.
 
 ### Look and feel
 
