@@ -620,18 +620,6 @@ starlight-menu-button button {
   font-size: clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem);
   margin: 0;
 }
-/* The title's acronym hand-off (script in Hero.astro). A key is an inline block, so it can
-   move; its word stays on one line. */
-.cover .ac-word {
-  white-space: nowrap;
-}
-.cover .ac {
-  display: inline-block;
-  transform-origin: left center;
-}
-.ac-run .cover :is(.ac, .ac-rest) {
-  opacity: 0;
-}
 .cover-tagline {
   margin: 0;
   max-width: 34ch;

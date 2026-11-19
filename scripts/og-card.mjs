@@ -44,7 +44,7 @@ const browser = await chromium.launch();
 const page = await browser.newPage({
   viewport: { width: 1200, height: 630 },
   colorScheme: "light",
-  // The settled page: no title hand-off, which would hide the title mid-fade.
+  // The settled page, without the entrance.
   reducedMotion: "reduce",
   // The card CSS is an injected style, which the page's style-src would block.
   bypassCSP: true,
