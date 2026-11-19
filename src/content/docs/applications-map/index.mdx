@@ -7,12 +7,15 @@ import ApplicationsSection from '../../../components/ApplicationsSection.astro';
 import FieldApplications from '../../../components/FieldApplications.astro';
 import Cite from '../../../components/Cite.astro';
 import SuggestPaper from '../../../components/SuggestPaper.astro';
+import TopicGaps from '../../../components/TopicGaps.astro';
 
 This map shows where AI is applied in industrial ecology, along **two
 dimensions**: the IE field (LCA, MFA, waste & circularity, …) and the AI technique
 (LLMs, computer vision, tabular ML, …). Every entry links to the
 [literature list](/literature/) pre-filtered to the same tags, so the map is also an
-index into the reading list.
+index into the reading list. The list has a third facet the map leaves out: the
+**topic**, the system a paper is about (chemicals, water, buildings, …). A topic cuts
+across fields, so it gets a filter but no section of its own.
 
 :::note[A proposal: argue with it]
 Every entry here is a first proposal: the AI4IE group has not reviewed it yet. If an entry looks wrong or something is missing, [tell us](repo:issues/new?template=other.yml) or [suggest a paper](repo:issues/new?template=paper.yml).
@@ -32,7 +35,10 @@ extraction** of inventory data from literature and reports: working systems reac
 an F1 score of 0.82–0.86 (1 would mean every value found and none wrong) <Cite id="kumarLargeLanguageModelbased2025" />, with a person checking the values. The papers here use LLMs to *extract*
 inventory data, not to generate it <Cite id="preussLargeLanguageModels2024" />. A 2025 benchmark found 37% of general-purpose
 LLM answers to LCA questions inaccurate or misleading, with hallucinated-citation
-rates up to 40% <Cite id="donaldsonExpertGroundedBenchmark2025" />. Automated footprinting works for products with a clear match in the emission-factor database. In one evaluation, a few wrong matches caused most of the error <Cite id="balajiFlamingoEnvironmentalImpact2023" />. [Papers →](/literature/?ie=lca)
+rates up to 40% <Cite id="donaldsonExpertGroundedBenchmark2025" />. Automated footprinting works for products with a clear match in the emission-factor database. In one evaluation, a few wrong matches caused most of the error <Cite id="balajiFlamingoEnvironmentalImpact2023" />.
+A model that predicts construction products' footprints from their declarations
+reports its own uncertainty: low between 3 and 500 kg CO₂e, significant below 3 kg. That uncertainty
+covers the model, not the declarations it learned from <Cite id="baehrPredictingProductLife2024" />. [Papers →](/literature/?ie=lca)
 
 <FieldApplications ie="lca" />
 
@@ -45,7 +51,15 @@ studies, results range from 53% to 200%. Neither side is ground truth, so treat 
 spread as the uncertainty. Night-lights proxies <Cite id="peledSpatialMaterialStock2021" /> and deep multi-source
 fusion <Cite id="baoDeepLearningFusion2023" /> improve on single sources but still need ground data. Street-view CV for
 building attributes is demonstrated feasibility: good in the training city, sharply
-worse elsewhere <Cite id="huangImageBasedPrediction2024" />. [Papers →](/literature/?ie=mfa)
+worse elsewhere <Cite id="huangImageBasedPrediction2024" />.
+
+**Bayesian MFA** is the most developed uncertainty thread. It combines expert-elicited
+priors with noisy data <Cite id="dongExpertElicitationData2023" />, scales to disaggregated
+systems with around 180 flow and stock variables <Cite id="wangBayesianMaterialFlow2024" />,
+and can rank which flow is worth measuring next <Cite id="liaoIntelligentDataCollection2025" />.
+Applied to England's construction aggregates, it quantifies 146 flows and stock changes from reported
+data that cover 20% of the system <Cite id="masonBayesianMaterialFlow2025" />.
+[Papers →](/literature/?ie=mfa) · [Uncertainty papers →](/literature/?ml=uncertainty)
 
 <FieldApplications ie="mfa" />
 
@@ -88,21 +102,6 @@ Its F1 is above 0.82 on held-out ecoinvent data but 0.63 to 0.73 on 40 real exch
 
 <FieldApplications ie="symbiosis" />
 
-### Uncertainty & Bayesian methods
-
-Bayesian material flow analysis is the most developed thread. It combines expert-elicited
-priors with noisy data <Cite id="dongExpertElicitationData2023" />, scales to disaggregated
-systems with around 180 flow and stock variables <Cite id="wangBayesianMaterialFlow2024" />,
-and can rank which flow is worth measuring next <Cite id="liaoIntelligentDataCollection2025" />.
-Applied to England's construction aggregates, it quantifies 146 flows and stock changes from reported
-data that cover 20% of the system <Cite id="masonBayesianMaterialFlow2025" />.
-On the ML side, a model that predicts construction products' footprints from their
-declarations reports its own uncertainty: low between 3 and 500 kg CO₂e, significant below
-3 kg. That uncertainty covers the model, not the declarations it learned from <Cite id="baehrPredictingProductLife2024" />.
-[Papers →](/literature/?ie=uncertainty)
-
-<FieldApplications ie="uncertainty" />
-
 :::note[A first pass]
 These entries are a first pass and certainly incomplete. Argue with them, and add
 what's missing: [map an application](repo:issues/new?template=application.yml) in a
@@ -120,53 +119,20 @@ The same applications as a grid of IE field × AI technique, or grouped by techn
 ## Not mapped yet
 
 The gaps in this map matter as much as the filled cells, so we name them here
-instead of leaving them implicit. Two kinds of gap: **IE fields** with no field of their own yet, and
-**AI techniques** with no tag in the vocabulary yet.
+instead of leaving them implicit. Two kinds of gap: **topics** with fewer than three
+entries, and **AI techniques** with no tag in the vocabulary yet.
 
 A caveat on how to read this: none of it claims the work doesn't exist. It claims we
 have not vetted any of it. Our sweep either found nothing that survived verification,
 or never looked. Each line is the easiest possible contribution: one paper, one entry. Its
 link opens a short form on GitHub with the gap filled in.
 
-### IE fields with no section
+### Topics with few entries
 
-- <span class="wanted">Wanted</span> **Chemicals, toxicity & QSAR.** One LCA entry screens chemicals' impacts from
-  their molecular structure. A review covers structure-based ML for chemicals' life-cycle impacts,
-  filed under LCA <Cite id="zhaoMachineLearningModels2025" />, and three more predict impacts from
-  chemical properties <Cite id="sunImprovedMachineLearningModels2022" /> <Cite id="aboagyeLeveragingMachineLearning2025" />.
-  For toxicity, random forests fill missing USEtox ecotoxicity factors for 552 chemicals <Cite id="houEstimateEcotoxicityCharacterization2020" />
-  and boosted models estimate effect factors for nanomaterials <Cite id="liUsingMachineLearning2026" />. Most of the
-  tens of thousands of untested substances are still out of reach.
-  <SuggestPaper gap="Chemicals, toxicity & QSAR" />
-- <span class="wanted">Wanted</span> **Energy systems & industrial decarbonisation.** Marginal versus average grid
-  factors, temporal accounting, process and heat-integration optimisation.
-  <SuggestPaper gap="Energy systems & industrial decarbonisation" />
-- <span class="wanted">Wanted</span> **Supply chains, criticality & resource security.** Supply risk, critical raw
-  materials, trade-network disruption.
-  <SuggestPaper gap="Supply chains, criticality & resource security" />
-- <span class="wanted">Wanted</span> **Agriculture, food & land use.** The field our remote-sensing tag most obviously
-  serves, yet none of these entries uses it. Filed under LCA: an LCA of demand forecasting against bakery
-  food waste <Cite id="hubnerMachinelearningbasedDemandForecasting2024" />, a neural network and genetic
-  algorithm that lower an orchard's modelled footprint <Cite id="nikkhahMachineLearningbasedLife2024" />,
-  and the water footprints of crops and diets under Water below.
-  <SuggestPaper gap="Agriculture, food & land use" />
-- <span class="wanted">Wanted</span> **Product lifetime, reuse & repair.** Survival analysis and failure prediction;
-  feeds both MFA stock models and the EoL corner. Entries so far sit in those two fields:
-  lifetime models in a road-stock MFA <Cite id="ebrahimiMachineLearningbasedStocks2022" />,
-  and grading and sorting of returned products for reuse <Cite id="wuEnhancingElectronicsGrading2025" /> <Cite id="schluterAIenhancedIdentificationInspection2021" />,
-  with a survey for remanufacturing <Cite id="kimUnlockingPotentialRemanufacturing2024" />.
-  For buildings, an urban-mining entry ranks Swiss buildings by demolition risk <Cite id="gaoSpatiotemporalMachineLearning2026" />.
-  Nothing yet on repair data.
-  <SuggestPaper gap="Product lifetime, reuse & repair" />
-- <span class="wanted">Wanted</span> **Water.** Water footprints, scarcity characterisation, and hydrological modelling. Three
-  entries are filed under LCA. One forecasts the AWARE water-scarcity factor <Cite id="engbergForecastingFutureStates2026" />,
-  one emulates crop water footprints from a crop model's output <Cite id="liMachineLearningModeling2023" />,
-  and one ranks what drives individual dietary water footprints <Cite id="huangNovelMachineLearning2025" />.
-  <SuggestPaper gap="Water" />
-- <span class="wanted">Wanted</span> **Input–output analysis, forecasting & scenario modelling.** Economy-wide
-  footprints and what-if scenarios. One dataset, filed under LCA, turns EXIOBASE into
-  ML-ready emission-factor tables <Cite id="guoGlobalEmissionFactor2026" />.
-  <SuggestPaper gap="Input–output analysis, forecasting & scenario modelling" />
+This list is built from the reading list: a topic drops off it once it has three
+entries, and a new topic appears here with its first.
+
+<TopicGaps />
 
 ### AI techniques with no tag
 

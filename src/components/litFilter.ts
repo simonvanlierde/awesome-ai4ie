@@ -1,18 +1,18 @@
 import { TAG_DIMS, type TagDim } from "../data/tags";
 import { surname } from "../lib/literature";
 
-export type Filter = { ie: string[]; ml: string[]; type: string[]; papers: string[] };
+export type Filter = Record<TagDim, string[]> & { papers: string[] };
 
 export type SortKey = "year" | "authors" | "title";
 
 /** Everything the literature list shows that a shared URL must reproduce. */
 export type View = { filter: Filter; sort: SortKey };
 
-type Tagged = { id?: string; ie?: string[]; ml?: string[]; type?: string[] };
+type Tagged = { id?: string } & Partial<Record<TagDim, string[]>>;
 
 const KEYS = [...TAG_DIMS, "papers"] as const;
 
-export const EMPTY_FILTER: Filter = { ie: [], ml: [], type: [], papers: [] };
+export const EMPTY_FILTER = Object.fromEntries(KEYS.map((k) => [k, []])) as unknown as Filter;
 export const DEFAULT_SORT: SortKey = "year";
 
 export const SORTS: { key: SortKey; label: string }[] = [
@@ -49,7 +49,7 @@ export function parseView(search: string): View {
   const get = (k: string) => params.get(k)?.split(",").filter(Boolean) ?? [];
   const s = params.get("sort");
   return {
-    filter: { ie: get("ie"), ml: get("ml"), type: get("type"), papers: get("papers") },
+    filter: Object.fromEntries(KEYS.map((k) => [k, get(k)])) as unknown as Filter,
     sort: SORTS.find((o) => o.key === s)?.key ?? DEFAULT_SORT,
   };
 }
