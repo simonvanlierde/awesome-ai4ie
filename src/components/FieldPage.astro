@@ -7,9 +7,9 @@
 // first, as a link back to it under the second.
 import { getCollection } from "astro:content";
 import { type IeTag, tagLabel } from "../data/tags";
-import { citeAuthors } from "../lib/literature";
-import { issueUrl, litUrl, siteUrl } from "../lib/urls";
+import { issueUrl, siteUrl } from "../lib/urls";
 import { groupBy } from "./appPivot";
+import PaperList from "./PaperList.astro";
 
 interface Props {
   ie: IeTag;
@@ -33,6 +33,10 @@ const sections = [...groupBy(apps, "ml")]
       .sort((a, b) => b.year - a.year || a.title.localeCompare(b.title, "en"));
     return { ml, label: tagLabel("ml", ml), apps: group, papers };
   });
+// With no application to group by, the page lists the field's papers instead.
+const fieldPapers = literature
+  .filter((p) => p.ie.includes(ie))
+  .sort((a, b) => b.year - a.year || a.title.localeCompare(b.title, "en"));
 const shown = new Set<string>();
 const parts = sections.map((s) => {
   const fresh = s.apps.filter((a) => !shown.has(a.id));
@@ -41,12 +45,30 @@ const parts = sections.map((s) => {
 });
 ---
 
-<nav class="field-jump" aria-label="AI techniques on this page">
-  <span>{sections.length === 1 ? "Technique" : "Techniques"}:</span>
-  <ul>
-    {sections.map((s) => <li><a href={`#${s.ml}`}>{s.label}</a></li>)}
-  </ul>
-</nav>
+{
+  apps.length === 0 && (
+    <>
+      <p>No application is mapped in {tagLabel("ie", ie)} yet. These are its papers so far.</p>
+      <h2 id="papers">Papers in {tagLabel("ie", ie)}</h2>
+      <PaperList papers={fieldPapers} />
+    </>
+  )
+}
+
+{
+  sections.length > 0 && (
+    <nav class="field-jump" aria-label="AI techniques on this page">
+      <span>{sections.length === 1 ? "Technique" : "Techniques"}:</span>
+      <ul>
+        {sections.map((s) => (
+          <li>
+            <a href={`#${s.ml}`}>{s.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
 
 {
   parts.map((s) => (
@@ -80,25 +102,7 @@ const parts = sections.map((s) => {
       <h3>
         Papers on {s.label} in {tagLabel("ie", ie)}
       </h3>
-      <ol class="lit-list not-content">
-        {s.papers.map((p) => (
-          <li class="lit-entry">
-            <span class="lit-meta">
-              {citeAuthors(p)}, {p.year}
-              {p.status === "proposal" && <span class="lit-proposal">proposal</span>}
-            </span>
-            <a href={litUrl({ papers: [p.id] })} class="lit-title">
-              {p.title}
-            </a>
-            <p class="lit-blurb">{p.blurb}</p>
-          </li>
-        ))}
-      </ol>
-      <p>
-        <a href={litUrl({ papers: s.papers.map((p) => p.id) })}>
-          Open these {s.papers.length} papers in the literature list →
-        </a>
-      </p>
+      <PaperList papers={s.papers} />
     </section>
   ))
 }

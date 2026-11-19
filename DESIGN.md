@@ -16,11 +16,11 @@ colour; everything else is slate grey.
 
 | Ink | Chapter | IE field |
 | --- | --- | --- |
-| 1 cobalt | Map | LCA |
-| 2 cadmium red | Literature | Waste, EoL & circularity |
-| 3 verdigris teal | Best practices | MFA |
-| 4 brass | Tools | Urban mining |
-| 5 indigo | Demos | Symbiosis & by-product exchange |
+| 1 cobalt | Map | Life cycle assessment |
+| 2 cadmium red | Literature | Circular economy |
+| 3 verdigris teal | Best practices | Socio-economic metabolism |
+| 4 brass | Tools | Input-output |
+| 5 indigo | Demos | Industrial symbiosis |
 | 6 moss | none | free, for the next field |
 
 Cobalt is also the accent: links, focus rings, the primary button.

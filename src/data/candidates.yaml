@@ -226,7 +226,7 @@
   oa: https://www.sciencedirect.com/science/article/pii/S2212827126012011/pdf
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -251,7 +251,7 @@
     - davisMachineLearningassistedIndustrial2022
   hints:
     ie:
-      - mfa
+      - sem
 - doi: 10.1016/j.spc.2025.03.015
   title: "Machine learning algorithms for supporting life cycle assessment
     studies: An analytical review"
@@ -320,7 +320,7 @@
     - zhaoDataScienceApplications2024
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - cv
       - tabular-ml
@@ -332,7 +332,7 @@
   oa: https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/csr.2827
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -350,7 +350,7 @@
   oa: https://doi.org/10.1016/j.sftr.2025.100784
   hints:
     ie:
-      - eol
+      - circular
   found: 2026-11-19
   status: new
   score: 0.068
@@ -373,8 +373,8 @@
     - jiangBottomUpApproachIntegrating2025
   hints:
     ie:
-      - eol
-      - mfa
+      - circular
+      - sem
     ml:
       - cv
 - doi: 10.1016/j.autcon.2024.105412
@@ -404,7 +404,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -459,7 +459,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
   found: 2026-11-19
   status: new
   score: 0.063
@@ -476,7 +476,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
   found: 2026-11-19
   status: new
   score: 0.062
@@ -545,7 +545,7 @@
   oa: https://doi.org/10.1080/13662716.2026.2713753
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -571,7 +571,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
     ml:
       - tabular-ml
 - doi: 10.1177/0734242x261497041
@@ -602,8 +602,8 @@
   hints:
     ie:
       - lca
-      - mfa
-      - eol
+      - sem
+      - circular
   found: 2026-11-19
   status: new
   score: 0.059
@@ -620,7 +620,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -713,7 +713,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -732,7 +732,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -766,8 +766,8 @@
   oa: https://textile-journal.com/index.php/textile/article/download/22/16
   hints:
     ie:
-      - mfa
-      - eol
+      - sem
+      - circular
     ml:
       - cv
   found: 2026-11-19
@@ -810,7 +810,7 @@
     - haberlGlobalBuiltEnvironment2024
   hints:
     ie:
-      - mfa
+      - sem
 - doi: 10.3808/jei.202600562
   title: Carbon Footprint Accounting Driven by Large Language Models and
     Retrieval-Augmented Generation
@@ -837,7 +837,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
   found: 2026-11-19
   status: new
   score: 0.053
@@ -860,7 +860,7 @@
     - zhaoConstructionWastetoresourceKnowledge2025
   hints:
     ie:
-      - eol
+      - circular
 - doi: 10.31181/sor202795
   title: "Evolution of Multicriteria Decision Making Methods: A Thirty-Year Review
     of Theory, Applications, and Future Trends"
@@ -905,7 +905,7 @@
   oa: null
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -963,7 +963,7 @@
     - gongEvolutionResearchIntersection2025
   hints:
     ie:
-      - mfa
+      - sem
 - doi: 10.67620/sai.510a0012
   title: VECTOR APPROACHES TO THE AUTOMATIC GENERATION OF GRAPHIC DESIGN ELEMENTS
     USING ARTIFICIAL INTELLIGENCE
@@ -979,8 +979,7 @@
     - daiModelingInteriorComponent2025
   hints:
     ie:
-      - mfa
-      - urban-mining
+      - sem
     ml:
       - cv
 - doi: 10.1016/j.jenvman.2025.125471
@@ -1087,7 +1086,7 @@
     - gaoSpatiotemporalMachineLearning2026
   hints:
     ie:
-      - mfa
+      - sem
     ml:
       - tabular-ml
 - doi: 10.31235/osf.io/6qmhf
@@ -1098,7 +1097,7 @@
   oa: https://osf.io/6qmhf/download
   hints:
     ie:
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -1153,7 +1152,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -1172,7 +1171,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
     ml:
       - tabular-ml
   found: 2026-11-19
@@ -1209,7 +1208,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
   found: 2026-11-19
   status: new
   score: 0.041
@@ -1304,7 +1303,7 @@
   hints:
     ie:
       - lca
-      - eol
+      - circular
   found: 2026-11-19
   status: new
   score: 0.034

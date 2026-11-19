@@ -9,6 +9,10 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- The IE fields now follow the [ISIE sections](https://is4ie.org/sections): life cycle
+  assessment, socio-economic metabolism, input-output, circular economy and industrial
+  symbiosis. They replace MFA, waste & EoL and urban mining, and the input-output topic
+  became a field. Sustainable urban systems is listed as a gap on the map.
 - A page per IE field under `/applications-map/<field>/`: what the field is, each AI technique
   used there with its applications, maturity calls, demos and papers, and the field's gaps.
   The pages render from the data files, and the map links each field section to its page.

@@ -45,7 +45,9 @@ evidence, try it.
 - Data in `src/data/literature.yaml` and `applications.yaml`, Zod-validated at build and in
   tests; tags must come from `src/data/tags.ts`.
 - Terminology: "IE field" and "AI technique" are the two map axes; "Wanted" marks an open
-  gap or placeholder.
+  gap or placeholder. The five IE fields follow the [ISIE sections](https://is4ie.org/sections):
+  life cycle assessment, socio-economic metabolism, input-output, circular economy and
+  industrial symbiosis.
 
 ## Brand Commitments
 
@@ -54,7 +56,7 @@ Name: "Awesome AI for Industrial Ecology", short form AI4IE. Beyond the name, th
 
 ## Evidence on Hand
 
-- 75 literature entries and 17 application entries in `src/data/`.
+- 124 literature entries and 19 application entries in `src/data/`.
 - Two worked skills in `skills/`, the CLIP demo, and two embedded Hugging Face Spaces.
 - The mark SVG in `src/assets/`, the favicon and the social card in `public/`.
 - No testimonials, adoption figures or user counts exist; do not invent any.

@@ -46,16 +46,16 @@ than the barrier to noticing a broken one.
 - **Expect performance to collapse off the training distribution.** It happens
   repeatedly across the map: street-view models degrade sharply outside their
   training city, and label OCR falls from 96% in repair shops to 40% at the recycler
-  ([evidence](/applications-map/#waste-eol--circularity)). Report where your model
+  ([evidence](/applications-map/#circular-economy)). Report where your model
   was validated, and don't claim beyond it.
 - **Validate against something independent.** Satellite-derived material stocks
   range from 53% to 200% of independent studies
-  ([evidence](/applications-map/#mfa--stocks-and-flows)). Neither side is ground
+  ([evidence](/applications-map/#socio-economic-metabolism)). Neither side is ground
   truth, so that spread is your uncertainty. It belongs in your results, not an appendix.
 - **Use generative models to extract, not to generate.** The LCA papers on this use
   LLMs to pull inventory data out of documents, with a person checking the values.
   They should not produce inventory values themselves
-  ([evidence](/applications-map/#lca--footprinting)). The
+  ([evidence](/applications-map/#life-cycle-assessment)). The
   [extraction prompt](/best-practices/prompts-and-skills/#extract-without-inventing)
   encodes the difference. Synthetic data is a modeling assumption. If you use it,
   report it in the methods section.
@@ -106,7 +106,7 @@ tracks; the third decides whether you can use a hosted service at all.
   ([Walters & Wilder, 2023](https://doi.org/10.1038/s41598-023-41032-5)). Newer
   models still invent sources: a 2025 benchmark on LCA questions found
   hallucinated-citation rates up to 40%
-  ([evidence](/applications-map/#lca--footprinting)). The cost is real: US lawyers were sanctioned for filing a brief
+  ([evidence](/applications-map/#life-cycle-assessment)). The cost is real: US lawyers were sanctioned for filing a brief
   with six invented cases
   ([Mata v. Avianca](https://apnews.com/article/artificial-intelligence-chatgpt-fake-case-lawyers-d6ae9fa79d0542db9e1455397aef381c)).
   Rule: a citation an AI gives you does not exist until you've opened it.

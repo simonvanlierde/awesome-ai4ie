@@ -21,7 +21,7 @@ const base = basePath || "/";
 const ogHash = createHash("sha256").update(readFileSync("public/og.png")).digest("hex").slice(0, 8);
 const ogImage = `${site}${basePath}/og.png?v=${ogHash}`;
 const ogImageAlt =
-  "AI4IE logo and the title Awesome AI for Industrial Ecology: a community-curated guide to using AI in industrial ecology, at ai4ie.org, above a flow diagram that links four industrial ecology fields to the AI techniques papers apply to them.";
+  "AI4IE logo and the title Awesome AI for Industrial Ecology: a community-curated guide to using AI in industrial ecology, at ai4ie.org, above a flow diagram that links five industrial ecology fields to the AI techniques papers apply to them.";
 
 // https://astro.build/config
 export default defineConfig({

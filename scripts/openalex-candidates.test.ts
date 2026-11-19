@@ -52,7 +52,7 @@ describe("openalex-candidates", () => {
     key: `l${i}`,
     id: `lit-${i}`,
     vec: at(d),
-    tags: { ie: i < 2 ? ["mfa"] : ["lca"], ml: ["cv"] },
+    tags: { ie: i < 2 ? ["sem"] : ["lca"], ml: ["cv"] },
   }));
   const rejected = [80, 85, 90].map((d, i) => ({ key: `r${i}`, vec: at(d) }));
 
@@ -68,7 +68,7 @@ describe("openalex-candidates", () => {
   });
 
   it("hints only the tags that two of the nearest papers share", () => {
-    expect(neighbourTags(nearest(at(0), listed, 3))).toEqual({ ie: ["mfa"], ml: ["cv"] });
+    expect(neighbourTags(nearest(at(0), listed, 3))).toEqual({ ie: ["sem"], ml: ["cv"] });
   });
 
   it("sets the floor so a typical listed paper clears it and an off-topic one does not", () => {

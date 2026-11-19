@@ -76,13 +76,13 @@
 .field-lca {
   --field: var(--ink-1);
 }
-.field-eol {
+.field-circular {
   --field: var(--ink-2);
 }
-.field-mfa {
+.field-sem {
   --field: var(--ink-3);
 }
-.field-urban-mining {
+.field-eeio {
   --field: var(--ink-4);
 }
 .field-symbiosis {

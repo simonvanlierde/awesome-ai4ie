@@ -1,0 +1,34 @@
+---
+// A list of literature entries, newest first as given, each linked to the
+// reading list filtered to that paper, then one link that opens them all there.
+import type { LitEntry } from "../data/schemas";
+import { citeAuthors } from "../lib/literature";
+import { litUrl } from "../lib/urls";
+
+interface Props {
+  papers: LitEntry[];
+}
+const { papers } = Astro.props;
+---
+
+<ol class="lit-list not-content">
+  {
+    papers.map((p) => (
+      <li class="lit-entry">
+        <span class="lit-meta">
+          {citeAuthors(p)}, {p.year}
+          {p.status === "proposal" && <span class="lit-proposal">proposal</span>}
+        </span>
+        <a href={litUrl({ papers: [p.id] })} class="lit-title">
+          {p.title}
+        </a>
+        <p class="lit-blurb">{p.blurb}</p>
+      </li>
+    ))
+  }
+</ol>
+<p>
+  <a href={litUrl({ papers: papers.map((p) => p.id) })}>
+    Open {papers.length === 1 ? "this paper" : `these ${papers.length} papers`} in the literature list →
+  </a>
+</p>

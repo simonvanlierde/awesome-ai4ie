@@ -16,8 +16,8 @@ describe("latest", () => {
 
 describe("sourcesFor", () => {
   it("adds the data files a data-rendered page draws on", () => {
-    expect(sourcesFor("applications-map/mfa")).toEqual([
-      "src/content/docs/applications-map/mfa.mdx",
+    expect(sourcesFor("applications-map/sem")).toEqual([
+      "src/content/docs/applications-map/sem.mdx",
       "src/data/applications.yaml",
       "src/data/literature.yaml",
     ]);

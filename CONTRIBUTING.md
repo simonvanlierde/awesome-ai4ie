@@ -30,7 +30,7 @@ To edit text, you need no local setup: edit the Markdown on GitHub, or click the
 An AI-in-IE paper belongs in the reading list when all four hold:
 
 1. **An AI or ML method is central:** it is built, trained, compared or evaluated. Bayesian and probabilistic inference count, and so do knowledge graphs, NLP, remote sensing or image analysis that maps stocks, and datasets made to train or test such models. Descriptive statistics, fixed thresholds, deterministic balancing (RAS, Leontief projections) and a passing mention of "AI" don't.
-2. **The question is industrial ecology,** framed as such by the paper itself: LCA, material flows and stocks, end of life, urban mining, symbiosis, input-output analysis, or the materials, chemicals, food, water, energy and supply risk questions those methods answer.
+2. **The question is industrial ecology,** framed as such by the paper itself: LCA, socio-economic metabolism (material flows and stocks), input-output analysis, the circular economy (waste, end of life, secondary resources), industrial symbiosis, or the materials, chemicals, food, water, energy and supply risk questions those methods answer.
 3. **It is not about the footprint of AI itself.**
 4. **It is worth an IE researcher's time:** a research article, review, dataset, framework, or a perspective written for IE researchers. Surveys of firms adopting "AI for the circular economy", and reviews of neighbouring fields that never use an IE method, don't qualify.
 
