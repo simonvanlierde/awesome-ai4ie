@@ -14,6 +14,8 @@
       "!**/dist",
       "!**/build",
       "!codemeta.json",
+      // scripts/vocabulary.mjs writes it from vocabulary.yaml; vocabulary.test.ts checks it.
+      "!src/data/vocabulary.gen.ts",
       "!.zenodo.json"
     ]
   },

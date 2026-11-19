@@ -33,6 +33,16 @@ describe("parseView", () => {
       sort: "year",
     });
   });
+  it("reads a retired tag as its replacement and moves a tag to its current dimension", () => {
+    expect(parseView("?ie=mfa,sem,eol,urban-mining,uncertainty&topic=io").filter).toEqual({
+      ...none,
+      ie: ["sem", "circular", "eeio"],
+      ml: ["uncertainty"],
+    });
+  });
+  it("keeps a tag the vocabulary does not know", () => {
+    expect(parseView("?ie=nope").filter.ie).toEqual(["nope"]);
+  });
   it("handles empty search", () => {
     expect(parseView("")).toEqual({ filter: none, sort: "year" });
   });

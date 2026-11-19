@@ -47,7 +47,7 @@ flowchart LR
   ci -->|push to main| pages_host["GitHub Pages<br/>ai4ie.org"]
 ```
 
-- [`src/data/schemas.ts`](src/data/schemas.ts) defines the shape of an entry, and [`src/data/tags.ts`](src/data/tags.ts) the tag vocabulary that the entries, the issue forms and the home page's Fig. 1 share.
+- [`src/data/schemas.ts`](src/data/schemas.ts) defines the shape of an entry, and [`src/data/vocabulary.yaml`](src/data/vocabulary.yaml) the tag vocabulary that the entries, the issue forms and the home page's Fig. 1 share. The site lists it at [/vocabulary/](https://ai4ie.org/vocabulary/), also as SKOS.
 - [`src/lib/`](src/lib/) holds the logic that has tests: filtering, the Sankey layout and the chapter list.
 - [`src/components/overrides/`](src/components/overrides/) replaces Starlight's head, hero, page title and footer.
 - [`scripts/a11y.mjs`](scripts/a11y.mjs) runs axe over every built page. CI deploys to GitHub Pages only after the checks, the build and that scan pass.

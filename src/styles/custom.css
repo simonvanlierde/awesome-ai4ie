@@ -1764,6 +1764,26 @@ starlight-menu-button button {
   }
 }
 
+/* The /vocabulary/ page (Vocabulary.astro): one term per concept, its anchor
+   clear of the sticky header. */
+.vocab dt {
+  font-weight: 600;
+  margin-top: 1.25rem;
+  scroll-margin-top: calc(var(--sl-nav-height) + 1rem);
+}
+.vocab dt code {
+  font-weight: 400;
+}
+.vocab dd {
+  margin-inline-start: 0;
+}
+.vocab dd p {
+  margin-top: 0.25rem;
+}
+.vocab-meta {
+  font-size: var(--sl-text-sm);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .apx-entry summary::after,
   .lit-facet-trigger::after,

@@ -39,7 +39,7 @@ An AI-in-IE paper belongs in the reading list when all four hold:
 
 When you reject a weekly lead, give the rule it fails as its `why`.
 
-- Tags come from the shared vocabulary in [`src/data/tags.ts`](src/data/tags.ts) (IE field · topic · AI technique · entry type). Need a tag that doesn't exist? Add it there in the same PR, with a short label in `SHORT_LABELS` (the start of the full label, for Fig. 1 on the home page); a new topic gets a line in `TOPIC_WANTED` instead, saying what work it still wants. Add its full label to the matching dropdown in the paper and application forms in [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) too. `pnpm test` checks that they match.
+- Tags come from the [tag vocabulary](#the-tag-vocabulary) (IE field · topic · AI technique · entry type). Need a tag that doesn't exist? Add it in the same PR.
 - Literature entries need an `id` (the citation key), `title`, `authors`, `year`, a one-line `blurb` saying why it's worth reading, tags, and `added: YYYY-MM`.
 - Write `authors` as a list with one `"Surname, I."` per author. Add `etAl: true` when you stop before the last author.
 - Give a `doi` (the bare `10.…` id), an `arxiv` id (the bare id, such as `2401.01234`), or both.
@@ -107,6 +107,47 @@ Create `src/content/docs/your-section.md` with a `title:` in the front matter. T
 
 A page inside an existing chapter needs nothing else. A new top-level entry is a new chapter, and it also needs an entry in [`src/lib/chapters.ts`](src/lib/chapters.ts) and one of the five chapter inks in [`src/styles/custom.css`](src/styles/custom.css) (an `--ink-N` pair and the sidebar's `li:nth-child` rule). All five are in use, so open an issue first. `pnpm test` checks that they agree.
 
+### The tag vocabulary
+
+Every tag is a concept in [`src/data/vocabulary.yaml`](src/data/vocabulary.yaml), and the
+[vocabulary page](https://ai4ie.org/vocabulary/) lists them. A concept has these fields:
+
+- `id`: the tag itself, in kebab-case. It is permanent: never reuse one, not even in another
+  scheme. The page has an anchor for it, such as `/vocabulary/#lca`.
+- `scheme`: `field`, `topic`, `technique` or `type`. In the data files these are the `ie`,
+  `topic`, `ml` and `type` lists.
+- `prefLabel`: the label that chips, forms and pages show. `short` is the start of it, for
+  Fig. 1 on the home page. Every IE field and AI technique needs a `short`.
+- `definition`: one line. An IE field gives its ISIE section as `source`.
+- `broader` and `related`: ids of other concepts.
+- `exactMatch` and `closeMatch`: IRIs of the concept elsewhere. Use `exactMatch` only for the
+  same concept, such as the Wikidata item for life cycle assessment. An OpenAlex topic is
+  always a `closeMatch`. Open each IRI before you add it.
+- `reserved: true`: no entry uses the concept yet.
+
+To add a tag:
+
+1. Add the concept to `vocabulary.yaml`, in display order within its scheme.
+2. Run `pnpm run vocabulary`. It writes `src/data/vocabulary.gen.ts`, the labels the site's
+   code imports.
+3. Add the `prefLabel` to the matching dropdown in the issue forms in
+   [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/).
+4. For a new topic, add a line to `TOPIC_WANTED` in [`src/data/tags.ts`](src/data/tags.ts)
+   that says what work the topic still wants.
+
+`pnpm test` checks the forms, the generated file, and every tag in the data files and pages
+against the vocabulary.
+
+To retire a tag, keep its concept and add `deprecated: true`. When one concept takes its
+place, add `replacedBy: <id>` too. Then retag the entries. A literature link that still uses
+the old tag shows its replacement.
+
+[`vocabulary/context.jsonld`](vocabulary/context.jsonld) maps the YAML fields to SKOS. The
+build uses it to publish the vocabulary at `/vocabulary.ttl` and `/vocabulary.jsonld`, and
+CI checks the Turtle against the SHACL shape of SkoHub Vocabs. The same file is in
+[simonvanlierde.github.io](https://github.com/simonvanlierde/simonvanlierde.github.io), byte
+for byte. Do not edit it here alone: change both copies in the same way.
+
 ### Look and feel
 
 Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUCT.md`](PRODUCT.md).
@@ -115,7 +156,7 @@ Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUC
 - Tables are numbered by chapter: "Table 4.1" is the first table in chapter 4. Figures continue from Fig. 1 and Fig. 2 on the home page.
 - In Markdown, set the title as `<p class="table-title"><b>Table 4.1</b> …</p>` and the source as `<p class="table-src">Source: …</p>`.
 - For a figure built from the data, start from [`src/components/PathFigure.astro`](src/components/PathFigure.astro). It counts entries at build time, so its numbers stay true as entries are added.
-- A new IE field needs four things beside its tag: a short label, a `.field-<tag>` ink rule, a `<FieldApplications ie="<tag>" />` section on the map page, and its own page at `src/content/docs/applications-map/<tag>.mdx`. That page holds a short definition of the field, `<FieldPage ie="<tag>" />`, and the field's gaps; copy an existing one. The type check and `pnpm test` flag a missing one. Ink 6 is the one left, so a new field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md). A domain such as water or chemicals is a topic, not a field: topics take no ink.
+- A new IE field needs four things beside its concept in the vocabulary: a short label, a `.field-<tag>` ink rule, a `<FieldApplications ie="<tag>" />` section on the map page, and its own page at `src/content/docs/applications-map/<tag>.mdx`. That page holds a short definition of the field, `<FieldPage ie="<tag>" />`, and the field's gaps; copy an existing one. The type check and `pnpm test` flag a missing one. Ink 6 is the one left, so a new field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md). A domain such as water or chemicals is a topic, not a field: topics take no ink.
 
 ### Checking accessibility
 
