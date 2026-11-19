@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 
 const META = /(<meta http-equiv="content-security-policy" content=")([^"]*)(")/;
 const INLINE_SCRIPT = /<script(?![^>]*\ssrc=)[^>]*>([\s\S]*?)<\/script>/g;
+const SCRIPT_SRC = /(script-src [^;]*)/;
 
 /** `html` with every inline script's hash in the `script-src` of its CSP meta tag. */
 export function addInlineScriptHashes(html) {
@@ -21,7 +22,7 @@ export function addInlineScriptHashes(html) {
     .map(([, body]) => `'sha256-${createHash("sha256").update(body).digest("base64")}'`)
     .filter((hash) => !meta[2].includes(hash));
   if (!hashes.length) return html;
-  const policy = meta[2].replace(/(script-src [^;]*)/, `$1 ${[...new Set(hashes)].join(" ")}`);
+  const policy = meta[2].replace(SCRIPT_SRC, `$1 ${[...new Set(hashes)].join(" ")}`);
   return html.replace(META, (_, open, __, close) => open + policy + close);
 }
 
