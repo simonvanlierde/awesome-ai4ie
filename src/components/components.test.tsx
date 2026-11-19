@@ -5,7 +5,7 @@ import { FORMATS } from "../lib/citations";
 import { StalledError } from "../lib/stall";
 import AppList from "./AppList";
 import ApplicationsExplorer from "./ApplicationsExplorer";
-import LiteratureBrowser, { exportCitations } from "./LiteratureBrowser";
+import LiteratureBrowser, { exportCitations, PaperDetails } from "./LiteratureBrowser";
 import { EMPTY_FILTER, toggleTag } from "./litFilter";
 import TagChips from "./TagChips";
 import ZeroShotDemo, {
@@ -227,5 +227,56 @@ describe("toggleTag", () => {
     expect(added.ie).toEqual(["lca"]);
     const removed = toggleTag(added, "ie", "lca");
     expect(removed.ie).toEqual([]);
+  });
+});
+
+describe("PaperDetails", () => {
+  const byId = new Map(SAMPLE_LIT.map((e) => [e.id, e]));
+  const both: LitEntry = {
+    ...SAMPLE_LIT[1],
+    doi: "10.1000/both",
+    ie: ["circular"],
+    topic: ["buildings"],
+  };
+
+  it("lists both links, where the tags lead, citing applications and similar papers", () => {
+    const html = renderToStaticMarkup(
+      <PaperDetails
+        entry={both}
+        extras={{
+          apps: [{ name: "Scrap sorting", href: "/applications-map/circular/#scrap" }],
+          similar: ["preuss2024", "gone"],
+        }}
+        byId={byId}
+        onCopy={() => undefined}
+      />,
+    );
+    expect(html).toContain('id="draft2025-details"');
+    expect(html).toContain("https://doi.org/10.1000/both");
+    expect(html).toContain("https://arxiv.org/abs/2501.00001");
+    expect(html).toContain("The full author list is there.");
+    expect(html).toContain('href="/applications-map/circular/"');
+    expect(html).toContain("field-circular");
+    expect(html).toContain("topic=buildings");
+    expect(html).toContain("ml=cv");
+    expect(html).toContain('href="/applications-map/circular/#scrap"');
+    // A similar id that is no longer listed is skipped.
+    expect(html).toContain('href="#preuss2024"');
+    expect(html).not.toContain("#gone");
+    expect(html).toContain("Copy link");
+    expect(html).toContain("template=other.yml");
+  });
+
+  it("leaves out rows with nothing to say", () => {
+    const html = renderToStaticMarkup(
+      <PaperDetails
+        entry={{ ...SAMPLE_LIT[0], ml: [], ie: [] }}
+        byId={byId}
+        onCopy={() => undefined}
+      />,
+    );
+    for (const row of ["More on", "Cited by", "Similar"]) expect(html).not.toContain(`<dt>${row}`);
+    expect(html).toContain("<dt>Read</dt>");
+    expect(html).not.toContain("arXiv");
   });
 });

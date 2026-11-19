@@ -380,7 +380,7 @@ export default function LiteratureBrowser({
 }
 
 /** The open half of an entry's card. Rows with nothing to say are left out. */
-function PaperDetails({
+export function PaperDetails({
   entry: e,
   extras,
   byId,
