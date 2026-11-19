@@ -586,25 +586,6 @@
     - tautoratDirectionsInnovationDecarbonization2023
     - kallitsisAutomatingLifeCycle2026
     - aboagyeLeveragingMachineLearning2025
-- doi: 10.1021/acs.est.6c09376
-  title: Near-Real-Time Mapping of Seamless All-Hour Aerosol Optical Depth in China
-  year: 2026
-  venue: Environmental Science & Technology
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.04
-  near:
-    - haberlHighResolutionMaps2021
-    - baoDeepLearningFusion2023
-    - haberlGlobalBuiltEnvironment2024
-  hints:
-    ie:
-      - sem
-    topic:
-      - buildings
-    ml:
-      - remote-sensing
 - doi: 10.31181/sor202795
   title: "Evolution of Multicriteria Decision Making Methods: A Thirty-Year Review
     of Theory, Applications, and Future Trends"
@@ -623,26 +604,6 @@
       - lca
     ml:
       - llm
-- doi: 10.1021/acs.est.6c09725
-  title: "TP-Agent: An Auditable LLM Agent for Predicting Pollutant Transformation
-    Products in Oxidative Water Treatment"
-  year: 2026
-  venue: Environmental Science & Technology
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.038
-  near:
-    - zhaoMachineLearningModels2025
-    - houEstimateEcotoxicityCharacterization2020
-    - kumarLargeLanguageModelbased2025
-  hints:
-    ie:
-      - lca
-    topic:
-      - chemicals
-    ml:
-      - tabular-ml
 - doi: 10.3390/eng7110612
   title: Physically Based Strength Simulation and Multi-Objective Design of
     Permeable Concrete Pavement Composition for Urban Stormwater Management
@@ -719,45 +680,6 @@
     - zhangSustainabilityAssessmentUsing2026
     - preussAutomatingLifeCycle2026
     - kumarArtificialIntelligenceMeets2026
-- doi: 10.3390/s26227106
-  title: A Data-Driven Inverse ARX Framework for Force Reconstruction in Dynamic
-    Systems from Vibration Measurements
-  year: 2026
-  venue: Sensors
-  oa: https://doi.org/10.3390/s26227106
-  found: 2026-11-19
-  status: new
-  score: 0.035
-  near:
-    - dongExpertElicitationData2023
-    - wangBayesianMaterialFlow2024
-    - liaoIntelligentDataCollection2025
-  hints:
-    ie:
-      - sem
-    topic:
-      - metals
-    ml:
-      - tabular-ml
-      - uncertainty
-- doi: 10.1021/acs.est.6c11406
-  title: Rapid Emission–Economy Decoupling alongside the Urbanization of Chinese
-    Counties
-  year: 2026
-  venue: Environmental Science & Technology
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.034
-  near:
-    - longBuildingStockTurnoverReshapes2026
-    - froemeltMachineLearningBased2020
-    - haoPatternsDriversProjections2025
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
 - doi: 10.1016/j.biombioe.2026.110313
   title: Integrating life cycle assessment, Emergy Accounting, and neural network
     prediction for comprehensive sustainability evaluation of a
@@ -777,42 +699,6 @@
       - lca
     ml:
       - tabular-ml
-- doi: 10.1021/acs.est.6c07619
-  title: Global Analysis and Prediction of Bicarbonate in Groundwater under
-    Climate Change
-  year: 2026
-  venue: Environmental Science & Technology
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.032
-  near:
-    - lawleyGeospatialDataDeep2024
-    - engbergForecastingFutureStates2026
-    - songRapidLifeCycleImpact2017
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
-- doi: 10.1016/j.wasman.2026.115990
-  title: UAV-assisted downscaling of Sentinel-2 for spontaneous combustion
-    detection in reclaimed coal waste dumps
-  year: 2026
-  venue: Waste Management
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.032
-  near:
-    - majchrowskaDeepLearningbasedWaste2022
-    - jiangBottomUpApproachIntegrating2025
-    - luComputerVisionSolid2022
-  hints:
-    ie:
-      - circular
-    ml:
-      - cv
 - doi: 10.63456/tsrj-1-1-22
   title: "Artificial Intelligence for Sustainable Textiles: A Review of Circular
     Economy Applications"
@@ -881,27 +767,6 @@
     - gongEvolutionResearchIntersection2025
     - preussAutomatingLifeCycle2026
     - zhaoDataScienceApplications2024
-- doi: 10.1021/acs.est.6c08722
-  title: "Maternal 6PPD-Quinone Exposure is Associated with Infant
-    Neurodevelopmental Delay: Epidemiological Evidence and Mechanistic Insights
-    from a Birth Cohort Study"
-  year: 2026
-  venue: Environmental Science & Technology
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.03
-  near:
-    - songRapidLifeCycleImpact2017
-    - houEstimateEcotoxicityCharacterization2020
-    - zhaoMachineLearningModels2025
-  hints:
-    ie:
-      - lca
-    topic:
-      - chemicals
-    ml:
-      - tabular-ml
 - doi: 10.1177/0734242x261497041
   title: "Circular economy-enabled smart waste management systems: A systematic
     review of digital technologies, environmental monitoring and future research
@@ -990,25 +855,6 @@
     - gongEvolutionResearchIntersection2025
     - hubnerMachinelearningbasedDemandForecasting2024
     - gkousisMachineLearningLarge2026
-- doi: 10.5281/zenodo.24275846
-  title: "Decoupling Attribution from Inference: Strengthening Legal-Geometric
-    Auditing (RFC-006) via Deterministic Gates, Cryptographic Seams, and
-    Anti-Conflation Provenance (RFC-007)"
-  year: 2026
-  venue: Zenodo (CERN European Organization for Nuclear Research)
-  oa: https://doi.org/10.5281/zenodo.24275846
-  found: 2026-11-19
-  status: new
-  score: 0.027
-  near:
-    - donaldsonExpertGroundedBenchmark2025
-    - rankinCallEnsureReproducibility2026
-    - kumarArtificialIntelligenceMeets2026
-  hints:
-    ie:
-      - lca
-    ml:
-      - llm
 - doi: 10.1016/j.procir.2026.03.261
   title: Implementation challenges of artificial intelligence in the circular economy
   year: 2026
@@ -1026,24 +872,6 @@
     - gongEvolutionResearchIntersection2025
     - kimUnlockingPotentialRemanufacturing2024
     - zhaoDataScienceApplications2024
-- doi: 10.1021/acs.est.6c07329
-  title: Nonlinear Ozone-Phytoplankton-Sea-Ice Coupling Regulates Fine-Scale
-    Gaseous Elemental Mercury Enhancement in the Arctic Marginal Ice Zone
-  year: 2026
-  venue: Environmental Science & Technology
-  oa: https://pubs.acs.org/esthag/article-pdf/doi/10.1021/acs.est.6c07329/69113064/acs.est.6c07329.pdf
-  found: 2026-11-19
-  status: new
-  score: 0.026
-  near:
-    - lawleyGeospatialDataDeep2024
-    - guoGlobalEmissionFactor2026
-    - daiGaussianProcessRegression2022
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
 - doi: 10.67620/sai.510a0012
   title: VECTOR APPROACHES TO THE AUTOMATIC GENERATION OF GRAPHIC DESIGN ELEMENTS
     USING ARTIFICIAL INTELLIGENCE
@@ -1062,24 +890,6 @@
       - sem
     topic:
       - buildings
-    ml:
-      - cv
-- doi: 10.1016/j.engappai.2026.116731
-  title: A bidirectional transformer framework for bearing capacity prediction and
-    embedment length determination of prebored and precast piles
-  year: 2026
-  venue: Engineering Applications of Artificial Intelligence
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.024
-  near:
-    - ebrahimiMachineLearningbasedStocks2022
-    - koyanakaIndividualModelIdentification2024
-    - huangImageBasedPrediction2024
-  hints:
-    ie:
-      - sem
     ml:
       - cv
 - doi: 10.14445/22315381/ijett-v74i10p105
@@ -1155,24 +965,6 @@
     - yuPredictingEnvironmentalImpacts2024
     - akramiAddressingUncertaintyMachine2025
     - gkousisMachineLearningLarge2026
-- doi: 10.1021/jasms.6c00239
-  title: "“Vibe-Coding” Process with AI in Analytical Chemistry: A Rapid
-    Development Method for Prototyping Instrumentation and Data Workflows"
-  year: 2026
-  venue: Journal of the American Society for Mass Spectrometry
-  oa: https://doi.org/10.1021/jasms.6c00239
-  found: 2026-11-19
-  status: new
-  score: 0.019
-  near:
-    - kallitsisAutomatingLifeCycle2026
-    - donaldsonExpertGroundedBenchmark2025
-    - zhangSustainabilityAssessmentUsing2026
-  hints:
-    ie:
-      - lca
-    ml:
-      - llm
 - doi: 10.1016/j.eti.2024.103685
   title: New evidence about artificial intelligence and eco-investment as boosters
     of the circular economy
@@ -1262,42 +1054,6 @@
     - gongEvolutionResearchIntersection2025
     - zhaoDataScienceApplications2024
     - hubnerMachinelearningbasedDemandForecasting2024
-- doi: 10.31713/mcit.2026.037
-  title: ARCHITECTURE OF AN INFORMATION SYSTEM FOR GEOSPATIAL DATA INTEGRATION IN
-    CIRCULAR ORGANIC WASTE MANAGEMENT
-  year: 2026
-  venue: Modeling Control and Information Technologies
-  oa: https://mcitjournal.org.ua/index.php/MCIT/article/download/800/557
-  found: 2026-11-19
-  status: new
-  score: 0.016
-  near:
-    - zhaoConstructionWastetoresourceKnowledge2025
-    - daiGaussianProcessRegression2022
-    - zhaoDataScienceApplications2024
-  hints:
-    ml:
-      - tabular-ml
-- doi: 10.5281/zenodo.24056130
-  title: "SŌRĪLŪN: Exact Inverse Updates, Sharp Coefficient-Dependency Bounds, and
-    Certified Recursive Self-Improvement - Theory, Compiler Optimization, and
-    Reproducible Experiments"
-  year: 2026
-  venue: Zenodo (CERN European Organization for Nuclear Research)
-  oa: https://doi.org/10.5281/zenodo.24056130
-  found: 2026-11-19
-  status: new
-  score: 0.016
-  near:
-    - donaldsonExpertGroundedBenchmark2025
-    - rankinCallEnsureReproducibility2026
-    - gkousisMachineLearningLarge2026
-  hints:
-    ie:
-      - lca
-    ml:
-      - llm
-      - tabular-ml
 - doi: 10.33002/nr2581.6853.0703ukr08
   title: Artificial Intelligence in Waste Management in the Context of
     Implementing Circular Economy
@@ -1387,42 +1143,6 @@
     - preussAutomatingLifeCycle2026
     - gongEvolutionResearchIntersection2025
     - zhangSustainabilityAssessmentUsing2026
-- doi: 10.48550/arxiv.2611.10798
-  title: "RTLREX: LLM-Guided Framework for Exact High-Level RTL Recovery"
-  year: 2026
-  venue: arXiv (Cornell University)
-  oa: https://arxiv.org/pdf/2611.10798
-  found: 2026-11-19
-  status: new
-  score: 0.013
-  near:
-    - wuEnhancingElectronicsGrading2025
-    - donaldsonExpertGroundedBenchmark2025
-    - kuCapabilitiesLimitationsAI2024
-  hints:
-    ml:
-      - llm
-- doi: 10.1038/s41598-026-79334-z
-  title: Deep-learning surrogate modeling for rapid design of high-sensitivity
-    terahertz metasurface sensors
-  year: 2026
-  venue: Scientific Reports
-  oa: https://www.nature.com/articles/s41598-026-79334-z_reference.pdf
-  found: 2026-11-19
-  status: new
-  score: 0.012
-  near:
-    - testiniExAnteProductCarbon2026
-    - zhaoMachineLearningModels2025
-    - dongExpertElicitationData2023
-  hints:
-    ie:
-      - lca
-    topic:
-      - metals
-    ml:
-      - tabular-ml
-      - uncertainty
 - doi: 10.48550/arxiv.2611.07947
   title: "ChemE-as-Code: An Open-Source Platform for Agentic AI in Chemical
     Engineering"
@@ -1479,45 +1199,6 @@
     - gongEvolutionResearchIntersection2025
     - zhaoDataScienceApplications2024
     - hubnerMachinelearningbasedDemandForecasting2024
-- doi: 10.48550/arxiv.2611.08437
-  title: Deep-learning surrogate model for rapid quantum-noise computation in
-    dual-pump fiber-optic phase-sensitive amplifiers
-  year: 2026
-  venue: arXiv (Cornell University)
-  oa: https://arxiv.org/pdf/2611.08437
-  found: 2026-11-19
-  status: new
-  score: 0.011
-  near:
-    - testiniExAnteProductCarbon2026
-    - dongExpertElicitationData2023
-    - liaoIntelligentDataCollection2025
-  hints:
-    ie:
-      - sem
-    topic:
-      - metals
-    ml:
-      - tabular-ml
-      - uncertainty
-- doi: 10.1021/acs.est.6c06286
-  title: Patterns and Mitigation of Large Language Models’ Hallucinations on
-    Environmental Regulatory Facts
-  year: 2026
-  venue: Environmental Science & Technology
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.011
-  near:
-    - donaldsonExpertGroundedBenchmark2025
-    - rankinCallEnsureReproducibility2026
-    - gongEvolutionResearchIntersection2025
-  hints:
-    ie:
-      - lca
-      - sem
-      - circular
 - doi: 10.1007/s10668-026-08244-x
   title: "Designing a circular economy-driven reverse logistics based on
     sustainability and resilience dimensions for the automotive industry: a
@@ -1539,23 +1220,6 @@
       - lifetime
     ml:
       - cv
-- doi: 10.26437/wagbny69
-  title: "Engineering of the Future: Combining Big Data, Analytics and Artificial
-    Intelligence to Develop Sustainable Technological Solutions"
-  year: 2026
-  venue: African Journal Of Applied Research
-  oa: https://www.ajaronline.com/index.php/AJAR/article/download/2320/984
-  found: 2026-11-19
-  status: new
-  score: 0.01
-  near:
-    - xuBigDataIndustrial2015
-    - zhangSustainabilityAssessmentUsing2026
-    - gongEvolutionResearchIntersection2025
-  hints:
-    ie:
-      - lca
-      - sem
 - doi: 10.1016/j.seta.2025.104436
   title: "Life Cycle Assessment and Circular Economy in Emerging Green and
     Sustainable Energy Sectors: A Critical Review"
@@ -1574,44 +1238,6 @@
     - zhaoDataScienceApplications2024
     - romeikoReviewMachineLearning2024
     - akramiAddressingUncertaintyMachine2025
-- doi: 10.48550/arxiv.2611.17331
-  title: "TTB: Test-time Baking for Efficient Rendering of Decoder-only View
-    Synthesis Models"
-  year: 2026
-  venue: arXiv (Cornell University)
-  oa: https://arxiv.org/pdf/2611.17331
-  found: 2026-11-19
-  status: new
-  score: 0.008
-  near:
-    - huangImageBasedPrediction2024
-    - funkEvaluationVisionLanguage2026
-    - wuEnhancingElectronicsGrading2025
-  hints:
-    ie:
-      - circular
-    ml:
-      - cv
-      - foundation
-- doi: 10.1021/acs.est.6c10708
-  title: Cross-Domain Tracing of Rice Stem Stress under Soil Cadmium Pollution
-  year: 2026
-  venue: Environmental Science & Technology
-  oa: null
-  found: 2026-11-19
-  status: new
-  score: 0.007
-  near:
-    - zhaoMachineLearningModels2025
-    - songRapidLifeCycleImpact2017
-    - dingCharacterizingChemicalToxicity2026
-  hints:
-    ie:
-      - lca
-    topic:
-      - chemicals
-    ml:
-      - tabular-ml
 - doi: 10.18280/ijei.070213
   title: Machine Learning and Deep Learning Analysis of Vehicle Carbon Footprint
   year: 2024
@@ -1871,6 +1497,154 @@
     - davisMachineLearningassistedIndustrial2022
     - haberlGlobalBuiltEnvironment2024
   hints: {}
+- doi: 10.1021/acs.est.6c09376
+  title: Near-Real-Time Mapping of Seamless All-Hour Aerosol Optical Depth in China
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: aerosol optical depth mapping for air quality, no IE question"
+- doi: 10.1021/acs.est.6c09725
+  title: "TP-Agent: An Auditable LLM Agent for Predicting Pollutant Transformation
+    Products in Oxidative Water Treatment"
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: transformation products of micropollutants in water treatment,
+    chemistry not IE"
+- doi: 10.3390/s26227106
+  title: A Data-Driven Inverse ARX Framework for Force Reconstruction in Dynamic
+    Systems from Vibration Measurements
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: force reconstruction from vibration signals; matched on signal
+    input-output pairs"
+- doi: 10.1021/acs.est.6c11406
+  title: Rapid Emission–Economy Decoupling alongside the Urbanization of Chinese
+    Counties
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 1: NOx emissions from satellite data by physics-based inversion, no ML"
+- doi: 10.1021/acs.est.6c07619
+  title: Global Analysis and Prediction of Bicarbonate in Groundwater under
+    Climate Change
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: global groundwater bicarbonate map, hydrogeology not IE"
+- doi: 10.1016/j.wasman.2026.115990
+  title: UAV-assisted downscaling of Sentinel-2 for spontaneous combustion
+    detection in reclaimed coal waste dumps
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: fire detection on coal waste dumps from UAV and Sentinel-2, a
+    hazard-monitoring question"
+- doi: 10.1021/acs.est.6c08722
+  title: "Maternal 6PPD-Quinone Exposure is Associated with Infant
+    Neurodevelopmental Delay: Epidemiological Evidence and Mechanistic Insights
+    from a Birth Cohort Study"
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: birth-cohort epidemiology of tyre-chemical exposure"
+- doi: 10.5281/zenodo.24275846
+  title: "Decoupling Attribution from Inference: Strengthening Legal-Geometric
+    Auditing (RFC-006) via Deterministic Gates, Cryptographic Seams, and
+    Anti-Conflation Provenance (RFC-007)"
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: AI auditing RFC on Zenodo, no IE question"
+- doi: 10.1021/acs.est.6c07329
+  title: Nonlinear Ozone-Phytoplankton-Sea-Ice Coupling Regulates Fine-Scale
+    Gaseous Elemental Mercury Enhancement in the Arctic Marginal Ice Zone
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: Arctic atmospheric mercury drivers"
+- doi: 10.1016/j.engappai.2026.116731
+  title: A bidirectional transformer framework for bearing capacity prediction and
+    embedment length determination of prebored and precast piles
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: pile bearing capacity in geotechnics"
+- doi: 10.1021/jasms.6c00239
+  title: "“Vibe-Coding” Process with AI in Analytical Chemistry: A Rapid
+    Development Method for Prototyping Instrumentation and Data Workflows"
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: LLM coding tutorial for analytical chemistry instruments"
+- doi: 10.31713/mcit.2026.037
+  title: ARCHITECTURE OF AN INFORMATION SYSTEM FOR GEOSPATIAL DATA INTEGRATION IN
+    CIRCULAR ORGANIC WASTE MANAGEMENT
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 1: information-system architecture for organic waste data; no ML
+    method yet"
+- doi: 10.5281/zenodo.24056130
+  title: "SŌRĪLŪN: Exact Inverse Updates, Sharp Coefficient-Dependency Bounds, and
+    Certified Recursive Self-Improvement - Theory, Compiler Optimization, and
+    Reproducible Experiments"
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: recursive self-improvement theory, no IE question"
+- doi: 10.48550/arxiv.2611.10798
+  title: "RTLREX: LLM-Guided Framework for Exact High-Level RTL Recovery"
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: LLM recovery of hardware RTL; matched on circuit input-output
+    descriptions"
+- doi: 10.1038/s41598-026-79334-z
+  title: Deep-learning surrogate modeling for rapid design of high-sensitivity
+    terahertz metasurface sensors
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: terahertz metasurface surrogate; matched on input-output samples"
+- doi: 10.48550/arxiv.2611.08437
+  title: Deep-learning surrogate model for rapid quantum-noise computation in
+    dual-pump fiber-optic phase-sensitive amplifiers
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: quantum-noise surrogate for optical amplifiers; matched on
+    input-output data"
+- doi: 10.1021/acs.est.6c06286
+  title: Patterns and Mitigation of Large Language Models’ Hallucinations on
+    Environmental Regulatory Facts
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: LLM hallucination on environmental regulatory facts, not an IE
+    question"
+- doi: 10.26437/wagbny69
+  title: "Engineering of the Future: Combining Big Data, Analytics and Artificial
+    Intelligence to Develop Sustainable Technological Solutions"
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 4: thematic review of 17 papers on big data and AI in engineering,
+    too general"
+- doi: 10.48550/arxiv.2611.17331
+  title: "TTB: Test-time Baking for Efficient Rendering of Decoder-only View
+    Synthesis Models"
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: view-synthesis rendering; matched on MLP input-output pairs"
+- doi: 10.1021/acs.est.6c10708
+  title: Cross-Domain Tracing of Rice Stem Stress under Soil Cadmium Pollution
+  year: 2026
+  found: 2026-11-19
+  status: rejected
+  why: "rule 2: spectral monitoring of cadmium stress in rice plants"
 - doi: 10.1021/acssusresmgt.6c00459
   title: "Ex-Ante Product Carbon Footprint Forecasting in Electric Arc Furnace
     Stainless Steel Production: A Probabilistic Machine Learning Framework for
