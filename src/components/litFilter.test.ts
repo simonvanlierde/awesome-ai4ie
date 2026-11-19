@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { emptyMessage, matchesFilter, parseView, sortEntries, toQuery } from "./litFilter";
+import {
+  emptyMessage,
+  hashTarget,
+  matchesFilter,
+  parseView,
+  sortEntries,
+  toQuery,
+} from "./litFilter";
 
 const entry = { ie: ["circular"], ml: ["cv", "segmentation"], type: ["method"] };
 
@@ -105,5 +112,16 @@ describe("emptyMessage", () => {
     expect(emptyMessage({ ...none, papers: ["gone"] }, label)).toBe(
       "The linked paper is not in this list.",
     );
+  });
+});
+
+describe("hashTarget", () => {
+  const ids = new Set(["zhaoDataScience2024", "a b"]);
+  it("names a listed entry, decoded, and nothing else", () => {
+    expect(hashTarget("#zhaoDataScience2024", ids)).toBe("zhaoDataScience2024");
+    expect(hashTarget("#a%20b", ids)).toBe("a b");
+    expect(hashTarget("#courses-videos-and-posts", ids)).toBeNull();
+    expect(hashTarget("", ids)).toBeNull();
+    expect(hashTarget("#%E0", ids)).toBeNull();
   });
 });

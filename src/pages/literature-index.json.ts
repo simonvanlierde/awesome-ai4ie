@@ -4,7 +4,7 @@
 import { getCollection } from "astro:content";
 import citations from "../data/citations.json";
 import { entryText, type IndexEntry } from "../lib/semantic";
-import { litUrl } from "../lib/urls";
+import { paperUrl } from "../lib/urls";
 import { loadVectors, textKey } from "../lib/vectors";
 
 export async function GET() {
@@ -24,7 +24,7 @@ export async function GET() {
     ml: e.ml,
     type: e.type,
     status: e.status,
-    href: litUrl({ papers: [id] }),
+    href: paperUrl(id),
     bibtex: bibtex[id]?.bibtex,
     vector: vectors[textKey(entryText(e))],
   }));

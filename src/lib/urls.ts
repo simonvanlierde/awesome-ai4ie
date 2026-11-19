@@ -22,6 +22,11 @@ export function litUrl(f: Partial<Filter> = {}): string {
   );
 }
 
+/** One paper on the reading list: the list opens with its card expanded. */
+export function paperUrl(id: string): string {
+  return siteUrl(`literature/#${id}`);
+}
+
 /** The issue forms in .github/ISSUE_TEMPLATE/; forms.test.ts checks each file exists. */
 export const ISSUE_FORMS = ["paper", "application", "tool", "resource", "other"] as const;
 export type IssueForm = (typeof ISSUE_FORMS)[number];

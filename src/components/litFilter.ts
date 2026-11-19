@@ -11,6 +11,7 @@ export type View = { filter: Filter; sort: SortKey };
 type Tagged = { id?: string } & Partial<Record<TagDim, string[]>>;
 
 const KEYS = [...TAG_DIMS, "papers"] as const;
+const HASH = /^#/;
 
 export const EMPTY_FILTER = Object.fromEntries(KEYS.map((k) => [k, []])) as unknown as Filter;
 export const DEFAULT_SORT: SortKey = "year";
@@ -41,6 +42,17 @@ export function emptyMessage(f: Filter, label: (dim: TagDim, tag: string) => str
   if (n > 1 && !tags) return `None of the ${n} linked papers is in this list.`;
   if (n > 1) return `None of the ${n} linked papers is tagged ${tags}. ${remove}`;
   return `No entry is tagged ${tags}. ${remove}`;
+}
+
+/** The entry a URL fragment names (`#zhao-2025`), or null when it names none of them. */
+export function hashTarget(hash: string, ids: ReadonlySet<string>): string | null {
+  let id: string;
+  try {
+    id = decodeURIComponent(hash.replace(HASH, ""));
+  } catch {
+    return null; // a malformed escape, like "#%E0"
+  }
+  return ids.has(id) ? id : null;
 }
 
 /** Read a view from a query string. Unknown keys and unknown sort values are ignored. */

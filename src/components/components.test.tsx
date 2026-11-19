@@ -115,6 +115,10 @@ describe("LiteratureBrowser", () => {
     expect(html).toContain("https://doi.org/10.1000/example");
     expect(html).toContain("https://arxiv.org/abs/2501.00001");
     expect(html).toContain("BibTeX");
+    // Each card is a link target with a closed Details disclosure; the panel is not rendered.
+    expect(html).toContain('id="preuss2024"');
+    expect(html).toContain('aria-expanded="false"');
+    expect(html).not.toContain('lit-details"');
   });
 
   it("renders the empty state and disables bulk export when no entries exist", () => {

@@ -1,11 +1,10 @@
 ---
-// Inline citation for a literature.yaml id, linked to the reading list filtered
-// to that paper (?papers=<id>, the link the applications map also uses). An
-// unknown id fails the build, and author and year come from the entry, so a
+// Inline citation for a literature.yaml id, linked to its card on the reading list
+// (/literature/#<id>, opened). An unknown id fails the build, and author and year come from the entry, so a
 // citation in the prose cannot drift from the data.
 import { getCollection } from "astro:content";
 import { citeAuthors, formatAuthors, paperLink } from "../lib/literature";
-import { litUrl } from "../lib/urls";
+import { paperUrl } from "../lib/urls";
 
 interface Props {
   id: string;
@@ -25,7 +24,7 @@ const title = `${formatAuthors(entry.data)} (${year}). ${paperLink(entry.data).l
 // instead of "(Author, Year)", so prose can name the thing and still link it.
 const labelled = Astro.slots.has("default");
 
-const href = litUrl({ papers: [id] });
+const href = paperUrl(id);
 ---
 
 <a class:list={["cite", { "cite-ref": !labelled }]} href={href} title={title}>{labelled ? <slot /> : `(${citeAuthors(entry.data)}, ${year})`}</a>

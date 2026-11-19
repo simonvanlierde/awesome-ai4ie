@@ -7,6 +7,7 @@ import {
   isPhrase,
   MAX_HITS,
   MIN_SCORE,
+  nearest,
   queryText,
   rank,
   unit,
@@ -79,5 +80,14 @@ describe("unit", () => {
   it("scales a vector to length 1 and leaves a zero vector alone", () => {
     expect(unit([3, 4])).toEqual([0.6, 0.8]);
     expect(unit([0, 0])).toEqual([0, 0]);
+  });
+});
+
+describe("nearest", () => {
+  it("gives each vector its closest others above the cut-off, best first, and skips gaps", () => {
+    // Not unit length on purpose: nearest() scales them, so [2, 0] and [1, 0] are one direction.
+    const v = [[2, 0], [0.8, 0.6], [0, 1], undefined, [1, 0]];
+    expect(nearest(v, 2, 0.5)).toEqual([[4, 1], [0, 4], [1], [], [0, 1]]);
+    expect(nearest(v, 1, 0.5)[0]).toEqual([4]);
   });
 });

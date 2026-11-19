@@ -107,6 +107,10 @@ the page: the favicon and the README.
   description, tags and papers link.
 - **Literature filter.** One disclosure button per dimension; its chips open in the page
   under the bar. Pressed chips and active filters are solid ink.
+- **Literature entry.** Closed, the authors, title, blurb, tags and a Cite row with a
+  Details disclosure (the map's chevron). Open, a two-column list of labels in Archivo
+  and links in the body face under a hairline, pushing the next entry down. The entry a
+  link names (`/literature/#<id>`) opens on load and carries a 2px cobalt rule on top.
 - **Asides and cards.** Asides are a light tint of their ink with a 1px border and no side
   bar. Starlight cards lose their box and icon and get a 3px ink rule on top.
 - **Buttons.** One filled (cobalt) action per page; the rest are text links or 1px outlines.

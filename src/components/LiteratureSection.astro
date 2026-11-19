@@ -1,12 +1,44 @@
 ---
 import { getCollection } from "astro:content";
-import LiteratureBrowser from "./LiteratureBrowser";
+import { decodeVector, entryText, MIN_SCORE, nearest } from "../lib/semantic";
+import { siteUrl } from "../lib/urls";
+import { loadVectors, textKey } from "../lib/vectors";
+import LiteratureBrowser, { type PaperExtras } from "./LiteratureBrowser";
 
 // No sorting here: LiteratureBrowser sorts what it renders, on the server too.
 const entries = (await getCollection("literature")).map((e) => ({ id: e.id, ...e.data }));
+const apps = await getCollection("applications");
+
+// What a card's details panel adds, worked out here so the browser does no ranking.
+// Similar papers use the meaning-search vectors; a build without them (`pnpm run embed`
+// skipped, as on a fork's pull request) shows none.
+const stored = loadVectors();
+const near = nearest(
+  entries.map((e) => {
+    const v = stored[textKey(entryText(e))];
+    return v ? decodeVector(v) : undefined;
+  }),
+  3,
+  MIN_SCORE,
+);
+const extras: Record<string, PaperExtras> = Object.fromEntries(
+  entries.map((e, i) => [
+    e.id,
+    {
+      // An application is described in full on its first field's page, under its own id.
+      apps: apps
+        .filter((a) => a.data.papers.includes(e.id))
+        .map((a) => ({
+          name: a.data.name,
+          href: siteUrl(`applications-map/${a.data.ie[0]}/#${a.id}`),
+        })),
+      similar: near[i].map((j) => entries[j].id),
+    },
+  ]),
+);
 ---
 
 <noscript>
   <p class="lit-noscript">Filtering and sorting need JavaScript. Every entry is listed below.</p>
 </noscript>
-<LiteratureBrowser client:load entries={entries} />
+<LiteratureBrowser client:load entries={entries} extras={extras} />

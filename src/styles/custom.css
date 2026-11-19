@@ -1242,13 +1242,168 @@ starlight-menu-button button {
 .lit-cite {
   margin-top: 0.4rem;
 }
+.lit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1.25rem;
+  margin-top: 0.4rem;
+}
+.lit-actions .lit-cite {
+  margin-top: 0;
+}
+/* Same chevron as the application disclosures on the map. */
+.lit-details-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--sl-color-text-accent);
+  cursor: pointer;
+}
+.lit-details-toggle::after {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  margin-top: -0.2rem;
+  border: solid currentColor;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+  transition: transform 0.15s ease-out;
+}
+.lit-details-toggle[aria-expanded="true"]::after {
+  margin-top: 0.15rem;
+  transform: rotate(-135deg);
+}
+.lit-details-toggle:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+/* The open card: a label column in Archivo, values read in the body face. Pushes the
+   next card down, ruled off from the card's own lines by a hairline. */
+.lit-details {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 0.45rem 1rem;
+  max-width: 44rem;
+  margin: 0.75rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--sl-color-hairline);
+  font-size: 0.9375rem;
+}
+.lit-details dt {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-stretch: 85%;
+  line-height: 1.6;
+  color: var(--sl-color-gray-3);
+}
+.lit-details dd {
+  margin: 0;
+  font-family: var(--font-read);
+  line-height: 1.5;
+  color: var(--sl-color-gray-1);
+  overflow-wrap: anywhere;
+}
+.lit-details .lit-clear {
+  padding: 0;
+  font-family: var(--font-read);
+}
+/* A panel of links: keep the underline (colour is not the only cue), but lighter. */
+.lit-details a,
+.lit-details .lit-clear {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+}
+.lit-details a:hover,
+.lit-details .lit-clear:hover {
+  text-decoration-color: currentColor;
+}
+.lit-details-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1rem;
+}
+.lit-details-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.lit-details-field::before {
+  content: "";
+  flex: none;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--field);
+}
+.lit-details-note {
+  color: var(--sl-color-gray-3);
+}
+.lit-similar {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lit-similar li + li {
+  margin-top: 0.3rem;
+}
+@media (max-width: 30rem) {
+  .lit-details {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+  .lit-details dd + dt {
+    margin-top: 0.5rem;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lit-details {
+    animation: lit-details-in 0.18s ease-out;
+  }
+}
+@keyframes lit-details-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+}
+/* A card opened from a link: the cobalt rule marks which one the link meant. */
+.lit-entry {
+  scroll-margin-top: calc(var(--sl-nav-height) + 1rem);
+}
+.lit-entry[data-target] {
+  box-shadow: inset 0 2px 0 var(--sl-color-accent);
+}
+.lit-entry:focus {
+  outline: none;
+}
+.lit-entry:focus-visible {
+  outline: 2px solid var(--sl-color-accent);
+  outline-offset: 4px;
+}
+.lit-hidden-target {
+  scroll-margin-top: calc(var(--sl-nav-height) + 1rem);
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--sl-color-hairline-light);
+  font-family: var(--font-read);
+  color: var(--sl-color-gray-1);
+}
 .lit-export .lit-clear:disabled {
   color: var(--sl-color-gray-4);
   cursor: default;
 }
 @media (pointer: coarse) {
   .lit-export .lit-clear,
-  .lit-cite .lit-clear {
+  .lit-cite .lit-clear,
+  .lit-details-toggle,
+  .lit-details .lit-clear {
     min-height: 44px;
     padding-inline: 0.4rem;
   }

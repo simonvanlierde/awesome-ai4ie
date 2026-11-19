@@ -1,9 +1,9 @@
 ---
-// A list of literature entries, newest first as given, each linked to the
-// reading list filtered to that paper, then one link that opens them all there.
+// A list of literature entries, newest first as given, each linked to its card on the
+// reading list, then one link that opens them all there.
 import type { LitEntry } from "../data/schemas";
 import { citeAuthors } from "../lib/literature";
-import { litUrl } from "../lib/urls";
+import { litUrl, paperUrl } from "../lib/urls";
 
 interface Props {
   papers: LitEntry[];
@@ -19,7 +19,7 @@ const { papers } = Astro.props;
           {citeAuthors(p)}, {p.year}
           {p.status === "proposal" && <span class="lit-proposal">proposal</span>}
         </span>
-        <a href={litUrl({ papers: [p.id] })} class="lit-title">
+        <a href={paperUrl(p.id)} class="lit-title">
           {p.title}
         </a>
         <p class="lit-blurb">{p.blurb}</p>

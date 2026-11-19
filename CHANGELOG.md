@@ -9,6 +9,11 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- A Details panel for each paper on the literature page: both the DOI and arXiv links,
+  field pages and filtered views for its tags, the applications that cite it, three
+  similar papers by meaning, a copyable link and an edit form. `/literature/#<id>` opens
+  that paper's panel, and citations, field pages, search results and the MCP tools now
+  link papers that way.
 - Resources in `src/data/resources.yaml`: the tools, datasets and models from the tools
   pages, plus 14 courses, videos, posts and communities proposed for review. The tools pages
   and the literature page list them with a `Resources` component, which explainer sections
