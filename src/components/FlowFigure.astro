@@ -58,7 +58,7 @@ const readout = (dim: "ie" | "ml", n: { tag: string; papers: number }) => {
       : `the ${ieNodes.length} IE fields shown`;
   return `${tagLabel(dim, n.tag)}: ${n.papers} ${n.papers === 1 ? "paper" : "papers"}, ${dim === "ie" ? "applying" : "in"} ${k} of ${of}`;
 };
-const idle = "Choose a label to browse its papers. On touch, tap twice.";
+const idle = "Select a label to list its papers. On touch, tap twice.";
 ---
 
 <figure class="flow not-content">
@@ -150,14 +150,14 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
   </svg>
   <p class="flow-readout" aria-live="polite">{idle}</p>
   <figcaption>
-    <span><b>Fig. 1</b> {papers} papers by industrial ecology field and AI technique.
-      Each paper can contribute to several bands ({total} pairings in all).
+    <span><b>Fig. 1</b> {papers} papers by IE field and AI technique. A paper can fall in several
+      bands ({total} pairings).
       <a href={`${repoUrl}/blob/main/src/data/literature.yaml`}>Source data</a>
     </span>
     {
       missing.length > 0 && (
         <span class="flow-gap">
-          No papers in this figure for {missing.join(", ")}.
+          No papers yet for {missing.join(", ")}.
         </span>
       )
     }
