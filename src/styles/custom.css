@@ -687,6 +687,65 @@ starlight-menu-button button {
   margin: 0;
   min-width: 0;
 }
+.flow-lenses {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.85rem;
+}
+.flow-lenses[hidden] {
+  display: none;
+}
+.flow-lenses-label {
+  font-family: var(--sl-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-stretch: 85%;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sl-color-gray-3);
+  margin-right: 0.2rem;
+}
+.flow-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--sl-font);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-stretch: 88%;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0;
+  background: transparent;
+  color: var(--sl-color-gray-1);
+  max-width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+.flow-chip:hover {
+  border-color: var(--sl-color-gray-3);
+  color: var(--sl-color-white);
+}
+.flow-chip-n {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--sl-color-gray-3);
+}
+.flow-chip[aria-pressed="true"] {
+  background: var(--sl-color-white);
+  border-color: var(--sl-color-white);
+  color: var(--sl-color-black);
+}
+.flow-chip[aria-pressed="true"] .flow-chip-n {
+  color: inherit;
+}
+@media (pointer: coarse) {
+  .flow-chip {
+    min-height: 44px;
+  }
+}
 .flow svg {
   display: block;
   width: 100%;
@@ -713,6 +772,10 @@ starlight-menu-button button {
 }
 .flow .node {
   fill: var(--field, var(--sl-color-white));
+  transition: fill-opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.flow svg.is-topic .flow-node:not(.in-topic) .node {
+  fill-opacity: 0.15;
 }
 .flow-bands:has(a:is(:hover, :focus-visible)) .band,
 .flow svg.is-lit .band {
@@ -1857,7 +1920,8 @@ starlight-menu-button button {
 @media (prefers-reduced-motion: reduce) {
   .apx-entry summary::after,
   .lit-facet-trigger::after,
-  .flow .band {
+  .flow .band,
+  .flow .node {
     transition: none;
   }
 }
@@ -1871,6 +1935,7 @@ starlight-menu-button button {
   }
   .lit-chip[aria-pressed="true"],
   .lit-pill,
+  .flow-chip[aria-pressed="true"],
   .apx-switch button[aria-pressed="true"] {
     forced-color-adjust: none;
     background: Highlight;
