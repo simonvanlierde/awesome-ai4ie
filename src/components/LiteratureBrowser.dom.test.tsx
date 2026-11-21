@@ -31,12 +31,12 @@ let host: HTMLElement;
 // React warns unless it knows the test drives updates through act().
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-async function mount(url: string) {
+async function mount(url: string, entries: LitEntry[] = ENTRIES) {
   history.replaceState(null, "", url);
   host = document.createElement("div");
   document.body.append(host);
   root = createRoot(host);
-  await act(async () => root.render(<LiteratureBrowser entries={ENTRIES} extras={EXTRAS} />));
+  await act(async () => root.render(<LiteratureBrowser entries={entries} extras={EXTRAS} />));
 }
 const toggle = (id: string) =>
   document.querySelector<HTMLButtonElement>(`[id="${id}"] .lit-details-toggle`);
@@ -159,5 +159,148 @@ describe("LiteratureBrowser in a page", () => {
     await mount("/literature/#overview");
     expect(document.querySelector(".lit-details")).toBeNull();
     expect(document.querySelector("[data-target]")).toBeNull();
+  });
+});
+
+describe("LiteratureBrowser FLIP animation", () => {
+  type AnimCall = {
+    id: string;
+    keyframes: Keyframe[];
+    options: KeyframeAnimationOptions;
+    cancel: ReturnType<typeof vi.fn>;
+  };
+
+  let origRect: typeof Element.prototype.getBoundingClientRect;
+  let origAnimate: typeof Element.prototype.animate;
+  let origMatchMedia: typeof window.matchMedia;
+
+  function mockLayoutAndMotion(reducedMotion: boolean): AnimCall[] {
+    const calls: AnimCall[] = [];
+    origRect = Element.prototype.getBoundingClientRect;
+    origAnimate = Element.prototype.animate;
+    origMatchMedia = window.matchMedia;
+
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches: reducedMotion && query === "(prefers-reduced-motion: reduce)",
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })) as unknown as typeof window.matchMedia;
+
+    Element.prototype.getBoundingClientRect = function (this: Element) {
+      const idx = this.parentElement ? [...this.parentElement.children].indexOf(this) : 0;
+      const top = Math.max(idx, 0) * 100;
+      return {
+        top,
+        left: 0,
+        right: 400,
+        bottom: top + 80,
+        width: 400,
+        height: 80,
+        x: 0,
+        y: top,
+        toJSON: () => ({}),
+      } as DOMRect;
+    };
+
+    Element.prototype.animate = function (
+      this: Element,
+      keyframes: Keyframe[] | PropertyIndexedKeyframes | null,
+      options?: number | KeyframeAnimationOptions,
+    ) {
+      const cancel = vi.fn();
+      calls.push({
+        id: this.id,
+        keyframes: (keyframes as Keyframe[]) ?? [],
+        options: (options as KeyframeAnimationOptions) ?? {},
+        cancel,
+      });
+      return { cancel } as unknown as Animation;
+    };
+
+    return calls;
+  }
+
+  afterEach(() => {
+    Element.prototype.getBoundingClientRect = origRect;
+    Element.prototype.animate = origAnimate;
+    window.matchMedia = origMatchMedia;
+  });
+
+  function pickSort(value: string) {
+    const select = document.querySelector<HTMLSelectElement>(".lit-sort select");
+    act(() => {
+      if (!select) return;
+      select.value = value;
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  }
+
+  it("animates remaining rows that move on filter and sort, under 300 ms, and not on hydration or details toggle", async () => {
+    const calls = mockLayoutAndMotion(false);
+    const entries = [
+      { ...entry("lcaPaper", ["lca"]), year: 2023 },
+      { ...entry("symPaper", ["symbiosis"]), year: 2025 },
+    ];
+    // Initial hydration (with URL query) must not animate.
+    await mount("/literature/?sort=year", entries);
+    expect(calls).toHaveLength(0);
+
+    // Expanding/collapsing Details must not animate.
+    await click(toggle("symPaper"));
+    await click(toggle("symPaper"));
+    expect(calls).toHaveLength(0);
+
+    // Filtering to "lca" removes symPaper (index 0); lcaPaper moves from index 1 (100) to 0 (0).
+    await pickField("lca");
+    expect(calls).toHaveLength(1);
+    expect(calls[0].id).toBe("lcaPaper");
+    expect(calls[0].keyframes).toEqual([
+      { transform: "translate(0px, 100px)" },
+      { transform: "none" },
+    ]);
+    expect(Number(calls[0].options.duration)).toBeGreaterThan(0);
+    expect(Number(calls[0].options.duration)).toBeLessThan(300);
+
+    // Clear all brings symPaper back at index 0; lcaPaper moves from 0 to 1 (dy = -100),
+    // cancelling its previous in-flight animation first.
+    await click(document.querySelector(".lit-clear"));
+    expect(calls[0].cancel).toHaveBeenCalledTimes(1);
+    expect(calls).toHaveLength(2);
+    expect(calls[1].id).toBe("lcaPaper");
+    expect(calls[1].keyframes).toEqual([
+      { transform: "translate(0px, -100px)" },
+      { transform: "none" },
+    ]);
+
+    // Switching sort from year (symPaper, lcaPaper) to title (lcaPaper, symPaper) moves both rows.
+    pickSort("title");
+    expect(calls).toHaveLength(4);
+    expect(calls.slice(2).map((c) => [c.id, c.keyframes[0]])).toEqual([
+      ["lcaPaper", { transform: "translate(0px, 100px)" }],
+      ["symPaper", { transform: "translate(0px, -100px)" }],
+    ]);
+  });
+
+  it("skips FLIP completely when prefers-reduced-motion: reduce is set", async () => {
+    const calls = mockLayoutAndMotion(true);
+    const entries = [
+      { ...entry("lcaPaper", ["lca"]), year: 2023 },
+      { ...entry("symPaper", ["symbiosis"]), year: 2025 },
+    ];
+    await mount("/literature/", entries);
+    await pickField("lca");
+    await click(document.querySelector(".lit-clear"));
+    pickSort("title");
+    expect(calls).toHaveLength(0);
+  });
+
+  it("does not animate rows whose position did not change", async () => {
+    const calls = mockLayoutAndMotion(false);
+    // Default order: lcaPaper at index 0, symPaper at index 1.
+    await mount("/literature/");
+    // Filtering to "lca" removes symPaper; lcaPaper stays at index 0 (delta 0).
+    await pickField("lca");
+    expect(calls).toHaveLength(0);
   });
 });

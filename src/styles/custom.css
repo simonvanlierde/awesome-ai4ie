@@ -687,6 +687,65 @@ starlight-menu-button button {
   margin: 0;
   min-width: 0;
 }
+.flow-lenses {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.85rem;
+}
+.flow-lenses[hidden] {
+  display: none;
+}
+.flow-lenses-label {
+  font-family: var(--sl-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-stretch: 85%;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sl-color-gray-3);
+  margin-right: 0.2rem;
+}
+.flow-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--sl-font);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-stretch: 88%;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0;
+  background: transparent;
+  color: var(--sl-color-gray-1);
+  max-width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+.flow-chip:hover {
+  border-color: var(--sl-color-gray-3);
+  color: var(--sl-color-white);
+}
+.flow-chip-n {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--sl-color-gray-3);
+}
+.flow-chip[aria-pressed="true"] {
+  background: var(--sl-color-white);
+  border-color: var(--sl-color-white);
+  color: var(--sl-color-black);
+}
+.flow-chip[aria-pressed="true"] .flow-chip-n {
+  color: inherit;
+}
+@media (pointer: coarse) {
+  .flow-chip {
+    min-height: 44px;
+  }
+}
 .flow svg {
   display: block;
   width: 100%;
@@ -713,6 +772,10 @@ starlight-menu-button button {
 }
 .flow .node {
   fill: var(--field, var(--sl-color-white));
+  transition: fill-opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.flow svg.is-topic .flow-node:not(.in-topic) .node {
+  fill-opacity: 0.15;
 }
 .flow-bands:has(a:is(:hover, :focus-visible)) .band,
 .flow svg.is-lit .band {
@@ -1719,16 +1782,64 @@ starlight-menu-button button {
 }
 
 /* ── Click-to-load Hugging Face Space ────────────────────────────────────── */
+.space-embed-figure {
+  margin: 1.25rem 0;
+  min-width: 0;
+}
 .space-embed {
   display: block; /* a custom element is inline until told otherwise */
   box-sizing: border-box;
   max-width: 100%;
-  border: 1px solid var(--sl-color-hairline);
-  padding: 1rem;
-  margin-block: 1rem;
+  border: 1px solid var(--sl-color-hairline-light);
+  border-top: 3px solid var(--ink-5);
+  background: var(--sl-color-gray-6);
+  padding: 0.75rem 1rem 1rem;
 }
-.space-embed p {
-  margin: 0 0 0.4rem;
+.space-embed-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.35rem 1rem;
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--sl-color-hairline-light);
+  font-family: var(--sl-font);
+}
+/* With JS off, the button stays hidden and status stays empty: drop the divider. */
+.space-embed:not(:has(> button:not([hidden]), > iframe, > .space-embed-status:not(:empty)))
+  .space-embed-bar {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+.space-embed-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  font-stretch: 82%;
+  word-spacing: 0.1em;
+  color: var(--sl-color-white);
+}
+.space-embed-link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-stretch: 88%;
+  overflow-wrap: anywhere;
+  color: var(--sl-color-text-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+.space-embed-link:hover {
+  text-decoration-thickness: 2px;
+}
+.space-embed-status {
+  font-family: var(--sl-font);
+  font-size: 0.875rem;
+  color: var(--sl-color-gray-1);
+}
+.space-embed-status:not(:empty) {
+  margin-bottom: 0.6rem;
 }
 .space-embed-load {
   max-width: 100%;
@@ -1738,16 +1849,51 @@ starlight-menu-button button {
   background: transparent;
   color: var(--sl-color-white);
 }
+.space-embed-load:hover {
+  border-color: var(--ink-5);
+  background: color-mix(in srgb, var(--ink-5) 16%, transparent);
+}
+/* Third-party Spaces render on a light canvas: mount the iframe as a ruled
+   specimen plate inside the tinted frame so it sits cleanly in dark mode. */
 .space-embed iframe {
   display: block;
   width: 100%;
   aspect-ratio: 3 / 4;
   max-height: 85vh;
-  border: 1px solid var(--sl-color-hairline);
+  border: 1px solid var(--sl-color-gray-4);
+  background: #fff;
+  color-scheme: light;
 }
 @media (min-width: 50rem) {
   .space-embed iframe {
     aspect-ratio: 1;
+  }
+}
+.space-embed-caption {
+  margin-top: 0.6rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--sl-color-hairline);
+  font-family: var(--font-read);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--sl-color-gray-1);
+}
+.space-embed-caption b {
+  font-family: var(--sl-font);
+  font-weight: 700;
+  font-stretch: 82%;
+  word-spacing: 0.1em;
+  margin-right: 0.35rem;
+  color: var(--sl-color-white);
+}
+@media (pointer: coarse) {
+  .space-embed-load,
+  .space-embed-link {
+    min-height: 2.75rem;
+  }
+  .space-embed-link {
+    display: inline-flex;
+    align-items: center;
   }
 }
 
@@ -1774,7 +1920,8 @@ starlight-menu-button button {
 @media (prefers-reduced-motion: reduce) {
   .apx-entry summary::after,
   .lit-facet-trigger::after,
-  .flow .band {
+  .flow .band,
+  .flow .node {
     transition: none;
   }
 }
@@ -1788,6 +1935,7 @@ starlight-menu-button button {
   }
   .lit-chip[aria-pressed="true"],
   .lit-pill,
+  .flow-chip[aria-pressed="true"],
   .apx-switch button[aria-pressed="true"] {
     forced-color-adjust: none;
     background: Highlight;

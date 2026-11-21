@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import type { AppEntry, LitEntry } from "../data/schemas";
@@ -282,5 +283,19 @@ describe("PaperDetails", () => {
     for (const row of ["More on", "Cited by", "Similar"]) expect(html).not.toContain(`<dt>${row}`);
     expect(html).toContain("<dt>Read</dt>");
     expect(html).not.toContain("arXiv");
+  });
+});
+
+describe("SpaceEmbed", () => {
+  it("frames each embed as a numbered figure with caption and lazy-load safeguards", () => {
+    const astro = readFileSync("src/components/SpaceEmbed.astro", "utf8");
+    const demos = readFileSync("src/content/docs/demos.mdx", "utf8");
+    expect(astro).toContain('<figure class="space-embed-figure not-content">');
+    expect(astro).toContain('<figcaption class="space-embed-caption">');
+    expect(astro).toContain('role="status"');
+    expect(astro).toContain('referrerPolicy = "no-referrer"');
+    expect(astro).toContain("iframe.sandbox.add(");
+    expect(demos).toContain('figure="Fig. 2"');
+    expect(demos).toContain('figure="Fig. 3"');
   });
 });

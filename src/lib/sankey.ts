@@ -1,6 +1,33 @@
 import { TAGS } from "../data/tags";
 
-type Tagged = { ie?: readonly string[]; ml?: readonly string[] };
+type Tagged = {
+  ie?: readonly string[];
+  ml?: readonly string[];
+  topic?: readonly string[];
+};
+
+export type TopicLens = {
+  tag: string;
+  /** Distinct papers in the flow that carry this topic. */
+  papers: number;
+  /** Distinct IE fields reached by this topic's papers in the flow. */
+  fields: number;
+  /** Distinct AI techniques reached by this topic's papers in the flow. */
+  techniques: number;
+  /** Matching `ie|ml` band keys, deduplicated. */
+  bands: string[];
+};
+
+function flowEntries(entries: readonly Tagged[]) {
+  // A tag listed twice on one entry still counts once, as the literature filter does.
+  return entries
+    .map((e) => ({
+      ie: [...new Set(e.ie ?? [])],
+      ml: [...new Set(e.ml ?? [])],
+      topic: [...new Set(e.topic ?? [])],
+    }))
+    .filter((e) => e.ie.length > 0 && e.ml.length > 0);
+}
 
 export type SankeyNode = {
   tag: string;
@@ -32,10 +59,7 @@ export type SankeyBand = {
  * within `height`.
  */
 export function sankeyLayout(entries: readonly Tagged[], height: number, gap: number) {
-  // A tag listed twice on one entry still counts once, as the literature filter does.
-  const flow = entries
-    .map((e) => ({ ie: [...new Set(e.ie ?? [])], ml: [...new Set(e.ml ?? [])] }))
-    .filter((e) => e.ie.length > 0 && e.ml.length > 0);
+  const flow = flowEntries(entries);
 
   const counts = new Map<string, number>();
   for (const e of flow)
@@ -99,6 +123,38 @@ export function sankeyLayout(entries: readonly Tagged[], height: number, gap: nu
 export function missingTechniques(mlNodes: readonly { tag: string }[]): string[] {
   const inFlow = new Set(mlNodes.map((n) => n.tag));
   return Object.keys(TAGS.ml).filter((t) => !inFlow.has(t));
+}
+
+/** Per-topic reach across Fig. 1, in vocabulary order, omitting topics with no
+ * paper in the flow. Only entries with both an IE field and an AI technique
+ * take part, matching sankeyLayout. */
+export function topicLenses(entries: readonly Tagged[]): TopicLens[] {
+  const flow = flowEntries(entries);
+  const lenses: TopicLens[] = [];
+  for (const tag of Object.keys(TAGS.topic)) {
+    const matched = flow.filter((e) => e.topic.includes(tag));
+    if (matched.length === 0) continue;
+    const fields = new Set<string>();
+    const techniques = new Set<string>();
+    const bands = new Set<string>();
+    for (const e of matched) {
+      for (const ie of e.ie) {
+        fields.add(ie);
+        for (const ml of e.ml) {
+          techniques.add(ml);
+          bands.add(`${ie}|${ml}`);
+        }
+      }
+    }
+    lenses.push({
+      tag,
+      papers: matched.length,
+      fields: fields.size,
+      techniques: techniques.size,
+      bands: [...bands],
+    });
+  }
+  return lenses;
 }
 
 type Ends = { y0: number; y1: number; h: number };

@@ -5,22 +5,34 @@
  * the plain link remains.
  */
 interface Props {
+  /** Numbered figure label (e.g. "Fig. 2"), continuing from Fig. 1 on the home page. */
+  figure: string;
   title: string;
+  /** Short caption set under the plate; defaults to the title and host. */
+  caption?: string;
   /** The Space page on huggingface.co. */
   href: string;
   /** The URL the iframe loads (the Space's *.hf.space app). */
   src: string;
 }
-const { title, href, src } = Astro.props;
+const { figure, title, caption, href, src } = Astro.props;
 ---
 
-<space-embed class="space-embed not-content" data-src={src} data-title={`Demo: ${title}`}>
-  <p><a href={href}>Open {title} on Hugging Face</a></p>
-  <div role="status"></div>
-  <button type="button" class="space-embed-load" aria-label={`Load demo for ${title}`} hidden>
-    Load demo
-  </button>
-</space-embed>
+<figure class="space-embed-figure not-content">
+  <space-embed class="space-embed" data-src={src} data-title={`Demo: ${title}`}>
+    <div class="space-embed-bar">
+      <span class="space-embed-title">{title}</span>
+      <a class="space-embed-link" href={href}>Open {title} on Hugging Face</a>
+    </div>
+    <div role="status" class="space-embed-status"></div>
+    <button type="button" class="space-embed-load" aria-label={`Load demo for ${title}`} hidden>
+      Load demo
+    </button>
+  </space-embed>
+  <figcaption class="space-embed-caption">
+    <b>{figure}</b> {caption ?? `${title}, hosted on Hugging Face Spaces.`}
+  </figcaption>
+</figure>
 
 <script>
   class SpaceEmbed extends HTMLElement {
