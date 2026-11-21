@@ -9,7 +9,11 @@ description: Checklists for AI-assisted coding and ML reproducibility, drawn fro
 - [ ] Are units, defaults, and thresholds still what I intended, not silently changed?
 - [ ] Does every imported package/function actually exist and do what the AI claims?
 - [ ] Did I run it on a case with a known answer, not just "it executed without error"?
+- [ ] If a coding agent ran the work, were golden tests protected so the agent could not edit them?
+- [ ] Did I verify cited claims against the primary source, not only that the DOI resolves?
 - [ ] If I didn't fully understand a change, did I ask the AI to explain it before accepting it?
+
+For setting up protected golden tests, a short `AGENTS.md`, a claim ledger, and a run log, see [Agentic harnesses & verification](/best-practices/agentic-harnesses/).
 
 ## Machine learning reproducibility
 
