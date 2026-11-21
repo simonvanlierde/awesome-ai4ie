@@ -1,0 +1,343 @@
+---
+import { repoUrl } from "../site";
+
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? "";
+const issuesUrl = `${repoUrl}/issues/new/choose`;
+const discordUrl = "https://discord.gg/zhHAZakXHX";
+---
+
+<contribute-form class="contribute-form not-content" data-turnstile-site-key={siteKey}>
+  <div class="cf-fallback" hidden={Boolean(siteKey)}>
+    <p>
+      On-site submissions are not active on this host right now. You can send suggestions,
+      candidate questions, or comments through <a href={issuesUrl}>GitHub Issues</a> or on{" "}
+      <a href={discordUrl}>Discord</a>.
+    </p>
+  </div>
+
+  <form class="cf-form" hidden={!siteKey} novalidate>
+    <div class="cf-field">
+      <label for="cf-type">Contribution type</label>
+      <select id="cf-type" name="type" required>
+        <option value="resource">Paper, tool, or dataset</option>
+        <option value="golden-question">Golden question (candidate)</option>
+        <option value="ai-mistake">AI mistake seen in IE work (anonymous)</option>
+        <option value="other">Other or comment on an open question</option>
+      </select>
+      <p class="cf-hint" data-type-hint>
+        Share a paper, software tool, dataset, or model relevant to industrial ecology.
+      </p>
+    </div>
+
+    <div class="cf-field">
+      <label for="cf-title">Short title</label>
+      <input
+        id="cf-title"
+        name="title"
+        type="text"
+        required
+        minlength="3"
+        maxlength="140"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="cf-field">
+      <label for="cf-details">Details</label>
+      <textarea
+        id="cf-details"
+        name="details"
+        rows="5"
+        required
+        minlength="10"
+        maxlength="4000"></textarea>
+    </div>
+
+    <div class="cf-field">
+      <label for="cf-url">Link or DOI URL (optional)</label>
+      <input
+        id="cf-url"
+        name="url"
+        type="url"
+        maxlength="500"
+        placeholder="https://doi.org/..."
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="cf-field">
+      <label for="cf-attribution">Name, handle, or affiliation (optional; leave blank to stay anonymous)</label>
+      <input
+        id="cf-attribution"
+        name="attribution"
+        type="text"
+        maxlength="120"
+        autocomplete="off"
+      />
+      <p class="cf-hint">
+        Do not enter an email address. Submissions open a public GitHub issue for community review.
+      </p>
+    </div>
+
+    <div class="cf-turnstile"></div>
+
+    <div class="cf-actions">
+      <button type="submit" class="cf-submit">Send submission</button>
+    </div>
+
+    <p class="cf-status" role="status"></p>
+  </form>
+
+  <noscript>
+    <p class="cf-noscript">
+      JavaScript is required to use the on-site form. Use <a href={issuesUrl}>GitHub Issues</a> or{" "}
+      <a href={discordUrl}>Discord</a> instead.
+    </p>
+  </noscript>
+</contribute-form>
+
+<script>
+  import { mountTurnstile, type TurnstileHandle } from "../lib/turnstile";
+  import { siteUrl } from "../lib/urls";
+
+  const UNAVAILABLE_STATUSES = [404, 405, 503];
+
+  const TYPE_HINTS: Record<string, string> = {
+    resource: "Share a paper, software tool, dataset, or model relevant to industrial ecology.",
+    "golden-question":
+      "Collected as candidate benchmark questions for review, not published as a benchmark.",
+    "ai-mistake":
+      "Anonymous by default. Describe what the AI got wrong and how you caught it.",
+    other: "Comment on an open question, suggest a correction, or raise another topic.",
+  };
+
+  class ContributeForm extends HTMLElement {
+    #ready = false;
+
+    connectedCallback() {
+      if (this.#ready) return;
+      this.#ready = true;
+
+      const form = this.querySelector<HTMLFormElement>(".cf-form");
+      const fallback = this.querySelector<HTMLElement>(".cf-fallback");
+      const status = this.querySelector<HTMLElement>(".cf-status");
+      const typeSelect = this.querySelector<HTMLSelectElement>("#cf-type");
+      const typeHint = this.querySelector<HTMLElement>("[data-type-hint]");
+      const turnstileBox = this.querySelector<HTMLElement>(".cf-turnstile");
+      const submitBtn = this.querySelector<HTMLButtonElement>(".cf-submit");
+      if (!form || !fallback || !status || !typeSelect || !typeHint || !turnstileBox || !submitBtn)
+        return;
+
+      const siteKey = this.dataset.turnstileSiteKey ?? "";
+      if (!siteKey) return;
+
+      let turnstile: TurnstileHandle | null = null;
+      void mountTurnstile(turnstileBox, siteKey).then((handle) => {
+        turnstile = handle;
+        if (!handle) {
+          form.hidden = true;
+          fallback.hidden = false;
+        }
+      });
+
+      const updateHint = () => {
+        typeHint.textContent = TYPE_HINTS[typeSelect.value] ?? TYPE_HINTS.other;
+      };
+      typeSelect.addEventListener("change", updateHint);
+      updateHint();
+
+      const setStatus = (msg: string, issueUrl?: string | null) => {
+        status.replaceChildren();
+        status.append(document.createTextNode(msg));
+        if (issueUrl) {
+          status.append(document.createTextNode(" "));
+          const link = document.createElement("a");
+          link.href = issueUrl;
+          link.textContent = "View the issue on GitHub";
+          status.append(link, document.createTextNode("."));
+        }
+      };
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const data = new FormData(form);
+        const type = String(data.get("type") ?? "");
+        const title = String(data.get("title") ?? "").trim();
+        const details = String(data.get("details") ?? "").trim();
+        const url = String(data.get("url") ?? "").trim();
+        const attribution = String(data.get("attribution") ?? "").trim();
+
+        if (title.length < 3) {
+          setStatus("Enter a short title (at least 3 characters).");
+          form.querySelector<HTMLInputElement>("#cf-title")?.focus();
+          return;
+        }
+        if (details.length < 10) {
+          setStatus("Add a bit more detail (at least 10 characters).");
+          form.querySelector<HTMLTextAreaElement>("#cf-details")?.focus();
+          return;
+        }
+        if (url && !/^https?:\/\//i.test(url)) {
+          setStatus("Link must start with http:// or https://.");
+          form.querySelector<HTMLInputElement>("#cf-url")?.focus();
+          return;
+        }
+
+        const token = turnstile?.getToken() ?? "";
+        if (!token) {
+          setStatus("Complete the verification check before submitting.");
+          return;
+        }
+
+        submitBtn.disabled = true;
+        setStatus("Sending submission…");
+
+        try {
+          const res = await fetch(siteUrl("api/contribute"), {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ type, title, details, url, attribution, token }),
+            signal: AbortSignal.timeout(10000),
+          });
+          if (UNAVAILABLE_STATUSES.includes(res.status)) {
+            form.hidden = true;
+            fallback.hidden = false;
+            return;
+          }
+          const payload = (await res.json().catch(() => ({}))) as {
+            ok?: boolean;
+            issueUrl?: string | null;
+            error?: string;
+          };
+          if (!res.ok) {
+            submitBtn.disabled = false;
+            turnstile?.reset();
+            setStatus(payload.error ?? "Submission failed. Please try again or use GitHub Issues.");
+            return;
+          }
+          form.reset();
+          updateHint();
+          turnstile?.reset();
+          submitBtn.disabled = false;
+          setStatus("Submission received for review.", payload.issueUrl);
+        } catch {
+          submitBtn.disabled = false;
+          setStatus("Could not reach the server. Check your connection or use GitHub Issues.");
+        }
+      });
+    }
+  }
+
+  if (!customElements.get("contribute-form")) {
+    customElements.define("contribute-form", ContributeForm);
+  }
+</script>
+
+<style is:global>
+  contribute-form {
+    display: block;
+    margin-block: 1.5rem 2rem;
+    padding: 1.25rem;
+    border: 1px solid var(--sl-color-hairline-light);
+    background: var(--sl-color-gray-6);
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  contribute-form[hidden],
+  contribute-form [hidden] {
+    display: none;
+  }
+  .cf-form {
+    display: grid;
+    gap: 1rem;
+  }
+  .cf-field {
+    display: grid;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+  .cf-field label {
+    font-family: var(--sl-font);
+    font-weight: 650;
+    font-stretch: 88%;
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-white);
+  }
+  .cf-field input,
+  .cf-field select,
+  .cf-field textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--sl-color-gray-4);
+    border-radius: 0;
+    background: var(--sl-color-bg);
+    color: var(--sl-color-white);
+    font-family: var(--font-read);
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+  .cf-field select,
+  .cf-field input {
+    min-height: 2.75rem;
+  }
+  .cf-field textarea {
+    resize: vertical;
+  }
+  .cf-hint {
+    margin: 0;
+    font-family: var(--font-read);
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-2);
+  }
+  .cf-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .cf-submit {
+    min-height: 2.75rem;
+    padding: 0.55rem 1.25rem;
+    border: 1px solid var(--sl-color-accent);
+    border-radius: 0;
+    background: var(--sl-color-accent);
+    color: var(--on-ink);
+    font-family: var(--sl-font);
+    font-weight: 700;
+    font-stretch: 85%;
+    font-size: var(--sl-text-sm);
+    cursor: pointer;
+  }
+  .cf-submit:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+  .cf-submit:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+  .cf-status {
+    margin: 0;
+    min-height: 1.25rem;
+    font-family: var(--font-read);
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-1);
+    overflow-wrap: anywhere;
+  }
+  .cf-status:empty {
+    display: none;
+  }
+  .cf-status a,
+  .cf-fallback a,
+  .cf-noscript a {
+    color: var(--sl-color-text-accent);
+    text-decoration: underline;
+  }
+  .cf-fallback,
+  .cf-noscript {
+    margin: 0;
+    font-family: var(--font-read);
+    color: var(--sl-color-gray-1);
+  }
+</style>

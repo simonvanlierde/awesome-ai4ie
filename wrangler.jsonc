@@ -17,6 +17,13 @@
   },
   // Workers AI always runs remotely, in `wrangler dev` too (needs `wrangler login`).
   "ai": { "binding": "AI", "remote": true },
+  "kv_namespaces": [
+    {
+      "binding": "POLL_KV",
+      // Placeholder id until `wrangler kv namespace create POLL_KV` is run (see MAINTAINING.md).
+      "id": "00000000000000000000000000000000"
+    }
+  ],
   "ratelimits": [
     {
       "name": "SEARCH_LIMIT",
@@ -32,18 +39,44 @@
       // spend when many IPs search at once, not a worldwide cap (Cloudflare counts per location,
       // eventually consistent). A flood from many IPs also blocks readers at that location.
       "simple": { "limit": 300, "period": 60 }
+    },
+    {
+      "name": "CONTRIBUTE_LIMIT",
+      "namespace_id": "1005",
+      "simple": { "limit": 10, "period": 60 }
+    },
+    {
+      "name": "CONTRIBUTE_LIMIT_GLOBAL",
+      "namespace_id": "1007",
+      "simple": { "limit": 60, "period": 60 }
     }
   ],
   // Settings for `wrangler preview`. Previews inherit no bindings, so they repeat them; their
   // own limiter namespace keeps Preview traffic off production's counter.
   "previews": {
     "ai": { "binding": "AI", "remote": true },
+    "kv_namespaces": [
+      {
+        "binding": "POLL_KV",
+        "id": "00000000000000000000000000000000"
+      }
+    ],
     "ratelimits": [
       { "name": "SEARCH_LIMIT", "namespace_id": "1002", "simple": { "limit": 30, "period": 60 } },
       {
         "name": "SEARCH_LIMIT_GLOBAL",
         "namespace_id": "1004",
         "simple": { "limit": 300, "period": 60 }
+      },
+      {
+        "name": "CONTRIBUTE_LIMIT",
+        "namespace_id": "1006",
+        "simple": { "limit": 10, "period": 60 }
+      },
+      {
+        "name": "CONTRIBUTE_LIMIT_GLOBAL",
+        "namespace_id": "1008",
+        "simple": { "limit": 60, "period": 60 }
       }
     ]
   },

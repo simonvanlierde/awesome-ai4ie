@@ -1,7 +1,8 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { POLL_OPTION_IDS } from "../src/lib/poll";
 import { EMBED_DIM, EMBED_MODEL, queryText } from "../src/lib/semantic";
 import worker from "./index";
-import { AI_TIMEOUT_MS, limitKey } from "./search";
+import { AI_TIMEOUT_MS, type Env, limitKey } from "./search";
 
 const paper = (title: string, v?: number[]) => ({
   id: title,
@@ -541,5 +542,306 @@ describe("/mcp", () => {
       localhost: await status("http://localhost:4321"),
       none: await status(),
     }).toEqual({ evil: 403, lookalike: 403, null: 403, self: 200, localhost: 200, none: 200 });
+  });
+});
+
+function memoryKv(initial: Record<string, string> = {}) {
+  const store = new Map<string, string>(Object.entries(initial));
+  return {
+    store,
+    get: async (key: string) => store.get(key) ?? null,
+    put: async (key: string, value: string) => {
+      store.set(key, value);
+    },
+  };
+}
+
+type ContributeEnvOpts = {
+  allowed?: boolean | "throws";
+  globalAllowed?: boolean;
+  withLimiter?: boolean;
+  turnstileSecret?: string;
+  githubToken?: string;
+  kv?: ReturnType<typeof memoryKv> | null;
+};
+
+function contributeEnv({
+  allowed = true,
+  globalAllowed = true,
+  withLimiter = true,
+  turnstileSecret = "test-turnstile-secret",
+  githubToken = "test-github-token",
+  kv = memoryKv(),
+}: ContributeEnvOpts = {}): Env & { kv: ReturnType<typeof memoryKv> | null } {
+  const base = env();
+  return {
+    ...base,
+    kv,
+    ...(withLimiter
+      ? {
+          CONTRIBUTE_LIMIT: {
+            limit: () =>
+              allowed === "throws"
+                ? Promise.reject(new Error("limiter down"))
+                : Promise.resolve({ success: allowed }),
+          },
+          CONTRIBUTE_LIMIT_GLOBAL: {
+            limit: () => Promise.resolve({ success: globalAllowed }),
+          },
+        }
+      : {}),
+    ...(kv ? { POLL_KV: kv } : {}),
+    ...(turnstileSecret ? { TURNSTILE_SECRET_KEY: turnstileSecret } : {}),
+    ...(githubToken ? { GITHUB_ISSUES_TOKEN: githubToken } : {}),
+  };
+}
+
+describe("/api/contribute", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const validBody = {
+    type: "resource",
+    title: "OpenLCA Python bridge",
+    details: "A small Python wrapper that exports LCI results with unit checks.",
+    url: "https://example.org/openlca-bridge",
+    attribution: "A. Researcher",
+    token: "valid-turnstile-token",
+  };
+
+  it("rejects non-POST methods and non-JSON content types", async () => {
+    const e = contributeEnv();
+    const getRes = await worker.fetch(new Request("https://ai4ie.org/api/contribute"), e);
+    expect(getRes.status).toBe(405);
+    expect(getRes.headers.get("allow")).toBe("POST");
+
+    const plainRes = await worker.fetch(
+      post(JSON.stringify(validBody), { path: "/api/contribute", type: "text/plain" }),
+      e,
+    );
+    expect(plainRes.status).toBe(415);
+  });
+
+  it("returns 503 when secrets or rate limiters are missing", async () => {
+    const noTurnstile = contributeEnv({ turnstileSecret: "" });
+    const noGithub = contributeEnv({ githubToken: "" });
+    const noLimiter = contributeEnv({ withLimiter: false });
+    const req = () => post(JSON.stringify(validBody), { path: "/api/contribute" });
+
+    expect((await worker.fetch(req(), noTurnstile)).status).toBe(503);
+    expect((await worker.fetch(req(), noGithub)).status).toBe(503);
+    expect((await worker.fetch(req(), noLimiter)).status).toBe(503);
+  });
+
+  it("enforces per-IP and global rate limits", async () => {
+    const req = () =>
+      post(JSON.stringify(validBody), { path: "/api/contribute", ip: "198.51.100.7" });
+    expect((await worker.fetch(req(), contributeEnv({ allowed: false }))).status).toBe(429);
+    expect((await worker.fetch(req(), contributeEnv({ globalAllowed: false }))).status).toBe(429);
+    expect((await worker.fetch(req(), contributeEnv({ allowed: "throws" }))).status).toBe(503);
+  });
+
+  it("validates payload fields and rejects any email field", async () => {
+    const e = contributeEnv();
+    const cases: unknown[] = [
+      { ...validBody, email: "person@example.org" },
+      { ...validBody, type: "unknown-type" },
+      { ...validBody, title: "ab" },
+      { ...validBody, title: "x".repeat(141) },
+      { ...validBody, details: "too short" },
+      { ...validBody, details: "x".repeat(4001) },
+      { ...validBody, url: "javascript:alert(1)" },
+      { ...validBody, url: "not-a-url" },
+      { ...validBody, attribution: "x".repeat(121) },
+      { ...validBody, token: "   " },
+    ];
+    for (const body of cases) {
+      // biome-ignore lint/performance/noAwaitInLoops: small sequential validation table
+      const r = await worker.fetch(post(JSON.stringify(body), { path: "/api/contribute" }), e);
+      expect(r.status).toBe(400);
+    }
+    const badJson = await worker.fetch(post("{bad", { path: "/api/contribute" }), e);
+    expect(badJson.status).toBe(400);
+  });
+
+  it("returns 403 when Turnstile rejects a token and 503 on Turnstile outage", async () => {
+    const e = contributeEnv();
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(Response.json({ success: false }));
+    const rejected = await worker.fetch(
+      post(JSON.stringify(validBody), { path: "/api/contribute" }),
+      e,
+    );
+    expect(rejected.status).toBe(403);
+
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(new Response("err", { status: 500 }));
+    const outage = await worker.fetch(
+      post(JSON.stringify(validBody), { path: "/api/contribute" }),
+      e,
+    );
+    expect(outage.status).toBe(503);
+  });
+
+  it("creates a labeled GitHub issue on success and adds candidate note for golden questions", async () => {
+    const e = contributeEnv();
+    const calls: { url: string; init?: RequestInit }[] = [];
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+      const url = String(input);
+      calls.push({ url, init });
+      if (url.includes("turnstile")) return Response.json({ success: true });
+      return Response.json(
+        { number: 42, html_url: "https://github.com/simonvanlierde/awesome-ai4ie/issues/42" },
+        { status: 201 },
+      );
+    });
+
+    const res = await worker.fetch(
+      post(
+        JSON.stringify({
+          type: "golden-question",
+          title: "Scope 3 double counting check",
+          details: "Check whether an LLM spots double counting across tier-1 and tier-2 suppliers.",
+          token: "ok-token",
+        }),
+        { path: "/api/contribute", ip: "198.51.100.7" },
+      ),
+      e,
+    );
+    expect(res.status).toBe(201);
+    expect(await res.json()).toEqual({
+      ok: true,
+      issueNumber: 42,
+      issueUrl: "https://github.com/simonvanlierde/awesome-ai4ie/issues/42",
+    });
+
+    expect(calls).toHaveLength(2);
+    expect(calls[1].url).toBe("https://api.github.com/repos/simonvanlierde/awesome-ai4ie/issues");
+    const ghBody = JSON.parse(String(calls[1].init?.body)) as {
+      title: string;
+      body: string;
+      labels: string[];
+    };
+    expect(ghBody.title).toBe("[Golden question] Scope 3 double counting check");
+    expect(ghBody.labels).toEqual(["community-submission", "golden-question"]);
+    expect(ghBody.body).toContain("Anonymous");
+    expect(ghBody.body).toContain("candidate benchmark question");
+  });
+
+  it("returns 502 without leaking tokens when GitHub API fails", async () => {
+    const e = contributeEnv({ githubToken: "secret-pat-value" });
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+      if (String(input).includes("turnstile")) return Response.json({ success: true });
+      return new Response("upstream error", { status: 500 });
+    });
+
+    const res = await worker.fetch(post(JSON.stringify(validBody), { path: "/api/contribute" }), e);
+    expect(res.status).toBe(502);
+    const text = await res.text();
+    expect(text).not.toContain("secret-pat-value");
+  });
+});
+
+describe("/api/poll", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("returns initial zero counts on GET and 503 when KV is missing", async () => {
+    const e = contributeEnv({ turnstileSecret: "" });
+    const res = await worker.fetch(new Request("https://ai4ie.org/api/poll"), e);
+    expect(res.status).toBe(200);
+    const data = (await res.json()) as {
+      counts: Record<string, number>;
+      voters: number;
+      turnstileRequired: boolean;
+    };
+    expect(data.voters).toBe(0);
+    expect(data.turnstileRequired).toBe(false);
+    for (const id of POLL_OPTION_IDS) expect(data.counts[id]).toBe(0);
+
+    const noKv = contributeEnv({ kv: null });
+    expect((await worker.fetch(new Request("https://ai4ie.org/api/poll"), noKv)).status).toBe(503);
+    expect(
+      (await worker.fetch(post('{"choices":["golden-test"]}', { path: "/api/poll" }), noKv)).status,
+    ).toBe(503);
+  });
+
+  it("records multi-select votes, deduplicates choices, and updates counts", async () => {
+    const e = contributeEnv({ turnstileSecret: "" });
+    const vote1 = await worker.fetch(
+      post(JSON.stringify({ choices: ["golden-test", "claim-ledger", "golden-test"] }), {
+        path: "/api/poll",
+      }),
+      e,
+    );
+    expect(vote1.status).toBe(200);
+    const data1 = (await vote1.json()) as { counts: Record<string, number>; voters: number };
+    expect(data1.voters).toBe(1);
+    expect(data1.counts["golden-test"]).toBe(1);
+    expect(data1.counts["claim-ledger"]).toBe(1);
+    expect(data1.counts["compute-receipt"]).toBe(0);
+
+    const vote2 = await worker.fetch(
+      post(JSON.stringify({ choices: ["golden-test", "lci-human-review"] }), { path: "/api/poll" }),
+      e,
+    );
+    expect(vote2.status).toBe(200);
+    const getRes = await worker.fetch(new Request("https://ai4ie.org/api/poll"), e);
+    const data2 = (await getRes.json()) as { counts: Record<string, number>; voters: number };
+    expect(data2.voters).toBe(2);
+    expect(data2.counts["golden-test"]).toBe(2);
+    expect(data2.counts["claim-ledger"]).toBe(1);
+    expect(data2.counts["lci-human-review"]).toBe(1);
+  });
+
+  it("rejects invalid methods, content types, choices, and rate-limited requests", async () => {
+    const e = contributeEnv({ turnstileSecret: "" });
+    expect(
+      (await worker.fetch(new Request("https://ai4ie.org/api/poll", { method: "DELETE" }), e))
+        .status,
+    ).toBe(405);
+    expect(
+      (
+        await worker.fetch(
+          post('{"choices":["golden-test"]}', { path: "/api/poll", type: "text/plain" }),
+          e,
+        )
+      ).status,
+    ).toBe(415);
+    expect((await worker.fetch(post('{"choices":[]}', { path: "/api/poll" }), e)).status).toBe(400);
+    expect(
+      (await worker.fetch(post('{"choices":["not-a-norm"]}', { path: "/api/poll" }), e)).status,
+    ).toBe(400);
+    expect(
+      (
+        await worker.fetch(
+          post('{"choices":["golden-test"]}', { path: "/api/poll" }),
+          contributeEnv({ allowed: false, turnstileSecret: "" }),
+        )
+      ).status,
+    ).toBe(429);
+  });
+
+  it("requires and verifies Turnstile on POST when TURNSTILE_SECRET_KEY is configured", async () => {
+    const e = contributeEnv({ turnstileSecret: "poll-secret" });
+    const missingToken = await worker.fetch(
+      post(JSON.stringify({ choices: ["golden-test"] }), { path: "/api/poll" }),
+      e,
+    );
+    expect(missingToken.status).toBe(400);
+
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(Response.json({ success: false }));
+    const failed = await worker.fetch(
+      post(JSON.stringify({ choices: ["golden-test"], token: "bad" }), { path: "/api/poll" }),
+      e,
+    );
+    expect(failed.status).toBe(403);
+
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(Response.json({ success: true }));
+    const ok = await worker.fetch(
+      post(JSON.stringify({ choices: ["golden-test"], token: "good" }), { path: "/api/poll" }),
+      e,
+    );
+    expect(ok.status).toBe(200);
   });
 });

@@ -160,3 +160,24 @@ go to the Worker instead, as a Workers custom domain (a zone on the same Cloudfl
    of `src/content/docs/literature.mdx`.
 
 To roll back, delete the Worker's custom domain and redo the Pages steps.
+
+### Contributions and poll setup
+
+The on-site contribution form (`POST /api/contribute`) and norms poll (`GET`/`POST /api/poll`)
+require one KV namespace, one build-time site key, and two Worker secrets. Without them, both
+endpoints return `503` and the page falls back to GitHub Issues and Discord links.
+
+1. **Create the KV namespace.** Run `pnpm exec wrangler kv namespace create POLL_KV` (and a
+   second namespace for previews if desired). Paste the returned 32-character hex id into
+   `kv_namespaces` and `previews.kv_namespaces` in [`wrangler.jsonc`](wrangler.jsonc), replacing
+   the placeholder zeros.
+2. **Create a Cloudflare Turnstile widget** (Cloudflare dashboard → Turnstile → Add widget,
+   hostname `ai4ie.org`, Managed or Non-interactive mode):
+   - Set the public site key as `PUBLIC_TURNSTILE_SITE_KEY` in the Astro build environment
+     (GitHub repository variable or local `.env`).
+   - Store the secret key on the Worker: `pnpm exec wrangler secret put TURNSTILE_SECRET_KEY`.
+3. **Create a fine-grained GitHub PAT** scoped only to `simonvanlierde/awesome-ai4ie` with
+   `Issues: Read and write` (no other permissions), and store it on the Worker:
+   `pnpm exec wrangler secret put GITHUB_ISSUES_TOKEN`.
+   Create the labels `community-submission`, `golden-question`, `ai-mistake`, and
+   `community-comment` in the repository if they do not exist yet (`entry` already exists).
