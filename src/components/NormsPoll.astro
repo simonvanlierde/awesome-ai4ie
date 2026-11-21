@@ -1,0 +1,395 @@
+---
+import { POLL_OPTIONS } from "../lib/poll";
+import { repoUrl } from "../site";
+
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? "";
+const issuesUrl = `${repoUrl}/issues/new/choose`;
+const discordUrl = "https://discord.gg/zhHAZakXHX";
+---
+
+<norms-poll class="norms-poll not-content" data-turnstile-site-key={siteKey}>
+  <form class="np-form" novalidate>
+    <fieldset class="np-fieldset">
+      <legend class="np-legend">Select the checks you think should be norms in IE work (pick any number)</legend>
+      <ul class="np-list">
+        {
+          POLL_OPTIONS.map((opt) => (
+            <li class="np-item" data-option={opt.id}>
+              <label class="np-label">
+                <input type="checkbox" name="choices" value={opt.id} class="np-checkbox" />
+                <span class="np-text">
+                  <span class="np-title">{opt.label}</span>
+                  <span class="np-summary">{opt.summary}</span>
+                </span>
+              </label>
+              <div class="np-meter" aria-hidden="true">
+                <span class="np-bar" data-bar={opt.id} />
+              </div>
+              <p class="np-count" data-count={opt.id}>
+                -
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </fieldset>
+
+    <div class="np-turnstile" hidden></div>
+
+    <div class="np-actions">
+      <button type="submit" class="np-submit">Record vote</button>
+      <span class="np-voters" data-voters></span>
+    </div>
+
+    <p class="np-status" role="status"></p>
+  </form>
+
+  <div class="np-fallback" hidden>
+    <p>
+      Live poll counts are unavailable on this host right now. You can still share which checks you
+      want as IE norms via <a href={issuesUrl}>GitHub Issues</a> or on{" "}
+      <a href={discordUrl}>Discord</a>.
+    </p>
+  </div>
+
+  <noscript>
+    <p class="np-noscript">
+      JavaScript is required to load live counts and vote. You can share your view on{" "}
+      <a href={issuesUrl}>GitHub Issues</a> or <a href={discordUrl}>Discord</a>.
+    </p>
+  </noscript>
+</norms-poll>
+
+<script>
+  import { POLL_OPTION_IDS, type PollResponse } from "../lib/poll";
+  import { mountTurnstile, type TurnstileHandle } from "../lib/turnstile";
+  import { siteUrl } from "../lib/urls";
+
+  const STORAGE_KEY = "ai4ie:norms-poll:v1";
+  const UNAVAILABLE_STATUSES = [404, 405, 503];
+
+  function readSavedChoices(): string[] {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      const parsed: unknown = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === "string") : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveChoices(choices: string[]): void {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(choices));
+    } catch {
+      // Ignore storage quota or private-mode errors.
+    }
+  }
+
+  class NormsPoll extends HTMLElement {
+    #ready = false;
+
+    connectedCallback() {
+      if (this.#ready) return;
+      this.#ready = true;
+
+      const form = this.querySelector<HTMLFormElement>(".np-form");
+      const status = this.querySelector<HTMLElement>(".np-status");
+      const votersEl = this.querySelector<HTMLElement>("[data-voters]");
+      const submitBtn = this.querySelector<HTMLButtonElement>(".np-submit");
+      const fallback = this.querySelector<HTMLElement>(".np-fallback");
+      const turnstileBox = this.querySelector<HTMLElement>(".np-turnstile");
+      if (!form || !status || !votersEl || !submitBtn || !fallback || !turnstileBox) return;
+
+      const checkboxes = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="choices"]'));
+      const siteKey = this.dataset.turnstileSiteKey ?? "";
+      let turnstile: TurnstileHandle | null = null;
+      let turnstileRequired = false;
+
+      const renderCounts = (data: PollResponse) => {
+        const total = data.voters;
+        votersEl.textContent = total === 1 ? "1 response" : `${total} responses`;
+        for (const id of POLL_OPTION_IDS) {
+          const count = data.counts[id] ?? 0;
+          const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+          const countEl = this.querySelector<HTMLElement>(`[data-count="${id}"]`);
+          const barEl = this.querySelector<HTMLElement>(`[data-bar="${id}"]`);
+          if (countEl) {
+            countEl.textContent =
+              total > 0 ? `${count} (${pct}%)` : `${count}`;
+          }
+          if (barEl) barEl.style.width = `${pct}%`;
+        }
+      };
+
+      const markVoted = (choices: string[]) => {
+        const chosen = new Set(choices);
+        for (const cb of checkboxes) {
+          cb.checked = chosen.has(cb.value);
+          cb.disabled = true;
+        }
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Vote recorded";
+        turnstileBox.hidden = true;
+      };
+
+      const showFallback = () => {
+        form.hidden = true;
+        fallback.hidden = false;
+      };
+
+      const saved = readSavedChoices();
+      if (saved.length > 0) {
+        markVoted(saved);
+        status.textContent = "Your vote is saved in this browser. Live counts are shown above.";
+      }
+
+      const init = async () => {
+        try {
+          const res = await fetch(siteUrl("api/poll"), {
+            headers: { accept: "application/json" },
+            signal: AbortSignal.timeout(8000),
+          });
+          if (UNAVAILABLE_STATUSES.includes(res.status) || !res.ok) {
+            showFallback();
+            return;
+          }
+          const data = (await res.json()) as PollResponse;
+          turnstileRequired = Boolean(data.turnstileRequired);
+          renderCounts(data);
+          if (saved.length === 0 && turnstileRequired && siteKey) {
+            turnstileBox.hidden = false;
+            turnstile = await mountTurnstile(turnstileBox, siteKey);
+          }
+        } catch {
+          showFallback();
+        }
+      };
+      void init();
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (readSavedChoices().length > 0) return;
+
+        const choices = checkboxes.filter((cb) => cb.checked).map((cb) => cb.value);
+        if (choices.length === 0) {
+          status.textContent = "Select at least one check before recording your vote.";
+          checkboxes[0]?.focus();
+          return;
+        }
+
+        const token = turnstile?.getToken() ?? "";
+        if (turnstileRequired && !token) {
+          status.textContent = "Complete the verification check before voting.";
+          return;
+        }
+
+        submitBtn.disabled = true;
+        status.textContent = "Recording vote…";
+
+        try {
+          const res = await fetch(siteUrl("api/poll"), {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(token ? { choices, token } : { choices }),
+            signal: AbortSignal.timeout(8000),
+          });
+          if (UNAVAILABLE_STATUSES.includes(res.status)) {
+            showFallback();
+            return;
+          }
+          const payload = (await res.json().catch(() => ({}))) as Partial<PollResponse> & {
+            error?: string;
+          };
+          if (!res.ok) {
+            submitBtn.disabled = false;
+            turnstile?.reset();
+            status.textContent = payload.error ?? "Could not record your vote. Please try again.";
+            return;
+          }
+          saveChoices(choices);
+          renderCounts(payload as PollResponse);
+          markVoted(choices);
+          status.textContent = "Vote recorded. Counts updated.";
+        } catch {
+          submitBtn.disabled = false;
+          status.textContent = "Could not reach the server. Check your connection and try again.";
+        }
+      });
+    }
+  }
+
+  if (!customElements.get("norms-poll")) {
+    customElements.define("norms-poll", NormsPoll);
+  }
+</script>
+
+<style is:global>
+  norms-poll {
+    display: block;
+    margin-block: 1.5rem 2rem;
+    padding: 1.25rem;
+    border: 1px solid var(--sl-color-hairline-light);
+    background: var(--sl-color-gray-6);
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  norms-poll[hidden],
+  norms-poll [hidden] {
+    display: none;
+  }
+  .np-fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  .np-legend {
+    font-family: var(--sl-font);
+    font-weight: 700;
+    font-stretch: 85%;
+    color: var(--sl-color-white);
+    margin-bottom: 0.75rem;
+    padding: 0;
+  }
+  .np-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.85rem;
+  }
+  .np-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.35rem 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--sl-color-hairline);
+    min-width: 0;
+  }
+  .np-item:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .np-label {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    cursor: pointer;
+    min-height: 2.75rem;
+    padding-block: 0.15rem;
+  }
+  .np-checkbox {
+    flex: 0 0 auto;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.2rem;
+    accent-color: var(--sl-color-accent);
+  }
+  .np-text {
+    display: grid;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+  .np-title {
+    font-family: var(--sl-font);
+    font-weight: 650;
+    font-stretch: 88%;
+    color: var(--sl-color-white);
+    overflow-wrap: anywhere;
+  }
+  .np-summary {
+    font-family: var(--font-read);
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-2);
+    overflow-wrap: anywhere;
+  }
+  .np-meter {
+    height: 0.5rem;
+    align-self: center;
+    background: var(--sl-color-bg);
+    border: 1px solid var(--sl-color-hairline);
+    overflow: hidden;
+    min-width: 0;
+  }
+  .np-bar {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: var(--sl-color-accent);
+    transition: width 0.2s ease;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .np-bar {
+      transition: none;
+    }
+  }
+  .np-count {
+    margin: 0;
+    font-family: var(--sl-font);
+    font-size: var(--sl-text-sm);
+    font-variant-numeric: tabular-nums;
+    color: var(--sl-color-gray-1);
+    white-space: nowrap;
+  }
+  .np-turnstile {
+    margin-top: 1rem;
+  }
+  .np-actions {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+  }
+  .np-submit {
+    min-height: 2.75rem;
+    padding: 0.5rem 1.1rem;
+    border: 1px solid var(--sl-color-white);
+    border-radius: 0;
+    background: transparent;
+    color: var(--sl-color-white);
+    font-family: var(--sl-font);
+    font-weight: 650;
+    font-stretch: 85%;
+    font-size: var(--sl-text-sm);
+    cursor: pointer;
+  }
+  .np-submit:hover:not(:disabled) {
+    border-color: var(--sl-color-accent);
+    color: var(--sl-color-text-accent);
+  }
+  .np-submit:disabled {
+    opacity: 0.65;
+    cursor: default;
+  }
+  .np-voters {
+    font-family: var(--sl-font);
+    font-size: var(--sl-text-sm);
+    font-variant-numeric: tabular-nums;
+    color: var(--sl-color-gray-2);
+  }
+  .np-status {
+    margin: 0.75rem 0 0;
+    min-height: 1.25rem;
+    font-family: var(--font-read);
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-1);
+  }
+  .np-status:empty {
+    display: none;
+  }
+  .np-fallback,
+  .np-noscript {
+    margin: 0;
+    font-family: var(--font-read);
+    color: var(--sl-color-gray-1);
+  }
+  .np-fallback a,
+  .np-noscript a {
+    color: var(--sl-color-text-accent);
+    text-decoration: underline;
+  }
+</style>

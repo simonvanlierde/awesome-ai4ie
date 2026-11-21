@@ -1,0 +1,68 @@
+---
+title: Open questions
+description: Six unsettled methodological and community questions for the AI4IE working group.
+---
+
+import Cite from '../../components/Cite.astro';
+
+The AI4IE working group has not settled these six questions. Treat them as a proposal for what the community should work out together: if you disagree with the framing, have evidence from a study, or want to suggest another question, add your view on the [contribute page](/contribute/) or in the [AI4IE Discord](https://discord.gg/zhHAZakXHX).
+
+## How should we validate an LCA assistant?
+
+Existing evaluations mostly test single prompts rather than multi-step workflows. In an expert-grounded benchmark of 11 general-purpose large language models (LLMs, text-predicting models) across 22 LCA tasks, experts found at least one inaccurate or misleading statement in 37.2% of responses, and citation fabrication reached 40% for some models <Cite id="donaldsonExpertGroundedBenchmark2025" />. We still lack an agreed passing standard for an assistant or agent (an LLM that calls tools and edits files across several steps) that suggests processes, writes Brightway or openLCA code, or interprets results.
+
+Useful evidence or proposals:
+
+- Worked validation protocols run on real Brightway or openLCA workflows, not isolated Q&A prompts.
+- Criteria separating minor drafting errors from disqualifying methodological mistakes.
+- Comparisons between single-prompt use, retrieval-augmented setups (where a model searches documents before answering), and tool-using agents on the same IE tasks.
+
+## How should papers disclose AI-assisted inventory and modelling work?
+
+Generic journal policies ask authors to declare AI use, but they rarely distinguish spell-checking from writing analysis code or mapping life cycle inventory (LCI) flows. Reviewers need enough detail in the methods section or supplementary material to judge what was checked by hand and where model errors could enter the results.
+
+Useful evidence or proposals:
+
+- A tiered disclosure scheme that separates prose editing, code generation, and AI-assisted LCI mapping or gap-filling.
+- Concrete methods paragraphs and supplementary logs from published or submitted IE studies.
+- Practical additions to the existing [verification checklists](/best-practices/checklists/) that reviewers can apply in under ten minutes.
+
+## Who maintains golden questions, and how do we keep them uncontaminated?
+
+We are collecting candidate IE test questions ("golden questions": vetted tasks with known answers or scoring rubrics) rather than publishing a fixed benchmark. If candidate questions sit in a public GitHub repository, future models can scrape and memorise them during training (benchmark contamination), which makes scores meaningless. Keeping a held-out set private avoids that, but creates a governance problem: someone has to curate, update, and run it fairly.
+
+Useful evidence or proposals:
+
+- Governance models for a rotating or institutional curator group within ISIE or the AI4IE working group.
+- A workable split between public candidate examples and a private, held-out evaluation set.
+- A renewal cadence so test tasks keep pace with new database versions and impact methods.
+
+## Should AI-assisted IE studies report their own compute footprint?
+
+Industrial ecology researchers are often asked whether the energy and emissions of running AI tools matter alongside the study itself. Fine-tuning a model or running thousands of agent loops has a very different footprint from a handful of prompts, yet there is no shared reporting threshold or minimal logging format.
+
+Useful evidence or proposals:
+
+- Order-of-magnitude bounds showing when model training or querying (inference) energy is material for typical IE workflows.
+- A minimal receipt researchers can actually record (model name, token counts, hardware, or measured energy).
+- Measurement tools that work for both hosted APIs and local setups listed under [local AI & hardware](/tools/local-ai/).
+
+## What shared evaluation datasets can the community publish without licensing blocks?
+
+Core background databases such as ecoinvent are proprietary, which stops researchers from publishing reproducible evaluation tasks that bundle real process data. As a result, most groups test their tools on private slices that nobody else can inspect or rerun.
+
+Useful evidence or proposals:
+
+- Open-licensed inventories or public datasets from [datasets & models](/tools/data-and-models/) that support realistic LCI and MFA tests.
+- Synthetic or anonymised inventories that keep real edge cases such as multi-output allocation and unit conversions.
+- Licence-compatible task templates that reference database identifiers without redistributing restricted tables.
+
+## Where should human review remain mandatory in AI-assisted IE pipelines?
+
+Deterministic checks can catch syntax errors, broken unit conversions, and mass-balance violations, so parts of a pipeline can run with automated tests. Methodological choices such as system boundaries, allocation rules, and life cycle impact assessment (LCIA) characterisation factors change study conclusions directly and cannot be verified by a script alone.
+
+Useful evidence or proposals:
+
+- A concrete split between steps verifiable by automated checks and judgements requiring a named human sign-off.
+- Documented failure cases where an AI tool silently changed a boundary, default parameter, or allocation choice.
+- Lightweight review habits that fit a PhD or consultancy workflow, alongside relevant studies in the [reading list](/literature/).

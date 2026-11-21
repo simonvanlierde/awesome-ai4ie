@@ -192,7 +192,7 @@ h1#_top,
 }
 
 /* ── Sidebar as a thumb index ────────────────────────────────────────────────
-   Top-level items 2-6 are chapters 1-5 in astro.config.mjs's sidebar order. */
+   Top-level items 2-7 are chapters 1-6 in astro.config.mjs's sidebar order. */
 .sidebar-content .top-level > li:nth-child(2) {
   --chapter-ink: var(--ink-1);
 }
@@ -207,6 +207,9 @@ h1#_top,
 }
 .sidebar-content .top-level > li:nth-child(6) {
   --chapter-ink: var(--ink-5);
+}
+.sidebar-content .top-level > li:nth-child(7) {
+  --chapter-ink: var(--ink-6);
 }
 .sidebar-content .top-level {
   counter-reset: chapter -1;
@@ -399,7 +402,50 @@ h1#_top,
   stroke: var(--tile-stem);
 }
 
+@media (max-width: 49.999rem) {
+  /* Collapse Starlight's second fixed control row ("On this page") into the
+     single header bar on phones, keeping the dropdown full-width below it. */
+  :root {
+    --sl-mobile-toc-height: 0rem;
+  }
+  mobile-starlight-toc nav {
+    top: 0;
+    z-index: calc(var(--sl-z-index-navbar) + 1);
+    height: var(--sl-nav-height);
+    inset-inline: 6.5rem 6rem;
+    border-top: none;
+    background: transparent;
+    pointer-events: none;
+  }
+  mobile-starlight-toc details {
+    height: 100%;
+  }
+  mobile-starlight-toc summary {
+    height: 100%;
+    padding: 0;
+    border-bottom: none;
+    align-items: center;
+  }
+  mobile-starlight-toc summary .toggle {
+    pointer-events: auto;
+    min-height: 2.25rem;
+    padding-block: 0.35rem;
+    white-space: nowrap;
+  }
+  mobile-starlight-toc .display-current {
+    display: none;
+  }
+  mobile-starlight-toc .dropdown {
+    pointer-events: auto;
+    position: fixed;
+    top: var(--sl-nav-height);
+    inset-inline: 0;
+  }
+}
 @media (max-width: 30rem) {
+  mobile-starlight-toc nav {
+    inset-inline: 3.75rem 6rem;
+  }
   .site-title {
     width: 1.9rem;
   }
@@ -428,6 +474,26 @@ h1#_top,
   }
   .brand-mark--wordmark :is(.bm-e .bm-stem, .bm-4-stem) {
     stroke: var(--tile-stem);
+  }
+}
+/* At 320px (especially at 200% text zoom), the header has no room between logo
+   and search: let the TOC bar flow below the header instead of overlapping it. */
+@media (max-width: 21.999rem) {
+  mobile-starlight-toc nav {
+    position: relative;
+    top: auto;
+    z-index: auto;
+    height: auto;
+    inset-inline: auto;
+    background: var(--sl-color-bg-nav);
+    pointer-events: auto;
+  }
+  mobile-starlight-toc summary {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--sl-color-hairline);
+  }
+  mobile-starlight-toc .dropdown {
+    position: static;
   }
 }
 

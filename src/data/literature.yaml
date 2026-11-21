@@ -177,7 +177,7 @@
   etAl: true
   year: 2025
   doi: "10.48550/arXiv.2510.19886"
-  blurb: "Experts judged 37% of responses inaccurate or misleading across 11 general-purpose models and 22 LCA tasks. Some models hallucinated citations at rates up to 40%."
+  blurb: "Experts found at least one inaccurate or misleading statement in 37.2% of responses across 11 general-purpose models and 22 LCA tasks. Some models hallucinated citations at rates up to 40%."
   ie: [lca]
   ml: [llm]
   type: [review]

@@ -116,8 +116,8 @@ export default defineConfig({
       directives: [
         "default-src 'self'",
         "img-src 'self' data: blob:",
-        "connect-src 'self' blob: data: https://cdn.jsdelivr.net/npm/onnxruntime-web@1.26.0-dev.20260416-b7804b056c/dist/ https://huggingface.co https://*.huggingface.co https://*.hf.co",
-        "frame-src https://*.hf.space",
+        "connect-src 'self' blob: data: https://challenges.cloudflare.com https://cdn.jsdelivr.net/npm/onnxruntime-web@1.26.0-dev.20260416-b7804b056c/dist/ https://huggingface.co https://*.huggingface.co https://*.hf.co",
+        "frame-src https://*.hf.space https://challenges.cloudflare.com",
         "worker-src 'self' blob:",
         "object-src 'none'",
         "base-uri 'self'",
@@ -126,6 +126,7 @@ export default defineConfig({
       scriptDirective: {
         resources: [
           "'self'",
+          "https://challenges.cloudflare.com",
           "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0",
           "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.26.0-dev.20260416-b7804b056c/dist/",
           "'wasm-unsafe-eval'",
@@ -240,6 +241,7 @@ export default defineConfig({
           items: [
             { label: "Getting started & pitfalls", slug: "best-practices" },
             { label: "Verification checklists", slug: "best-practices/checklists" },
+            { label: "Agentic harnesses", slug: "best-practices/agentic-harnesses" },
             { label: "Prompts & skills", slug: "best-practices/prompts-and-skills" },
           ],
         },
@@ -252,6 +254,13 @@ export default defineConfig({
           ],
         },
         { label: "Demos", slug: "demos" },
+        {
+          label: "Community & contribute",
+          items: [
+            { label: "Contribute & norms poll", slug: "contribute" },
+            { label: "Open questions", slug: "open-questions" },
+          ],
+        },
       ],
     }),
   ],

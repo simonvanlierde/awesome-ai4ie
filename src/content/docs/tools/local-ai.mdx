@@ -9,11 +9,11 @@ import Resources from '../../../components/Resources.astro';
 
 ## Choose where to run the model
 
-Check your data-management plan and institutional policy first. If an approved
-hosted service can receive the data, you can run the model there. If the data must
-stay within your institution, ask about an approved workstation or shared server.
-For data that must stay on one device, run the model there and check that the
-software uses a local model endpoint.
+Check your data-management plan and institutional policy first.
+
+- **Approved hosted service allowed:** run the model there.
+- **Data must stay inside your institution:** ask for an approved workstation or shared server.
+- **Data must stay on one device:** run the model locally and check that the tool uses a local endpoint.
 
 ## Local / self-hosted inference
 
@@ -23,10 +23,9 @@ software uses a local model endpoint.
 
 ## Hardware
 
-Start with GPU memory, or unified memory on Apple silicon. At 4 bits per parameter,
-the weights alone take about half a byte per parameter. Leave room for the
-conversation history and the software running the model. Check the specific
-model and settings with a
+Start with GPU memory (or unified memory on Apple silicon). At 4 bits per parameter,
+weights alone take about half a byte per parameter. Leave headroom for the context
+window and runtime. Check your target model with a
 [memory estimator](https://huggingface.co/docs/accelerate/usage_guides/model_size_estimator)
 before buying hardware.
 
@@ -39,10 +38,10 @@ before buying hardware.
 | 30 billion parameters | 15 GB |
 | 70 billion parameters | 35 GB |
 
-At 8 bits, the weights take about twice as much memory. At 16 bits, they take
-about four times as much. Actual model files can be larger.
+Weights take roughly twice the memory at 8 bits and four times at 16 bits. Actual
+model files can be larger.
 
 ### Per-institution notes
 
-[Suggest a note for your institution](repo:issues/new?template=other.yml) with
-instructions for requesting GPU access and a link to its data policy.
+[Add a note for your institution](repo:issues/new?template=other.yml) with how to
+request GPU access and a link to its data policy.
