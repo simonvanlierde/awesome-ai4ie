@@ -21,6 +21,49 @@ const typeTag = z.enum(Object.keys(TYPE_TAGS) as [TypeTag, ...TypeTag[]]);
 // Computed when the site builds, so a paper dated next year (online-first) passes.
 const MAX_YEAR = new Date().getFullYear() + 1;
 
+const evidenceLinkSchema = z.object({
+  label: z.string().min(1),
+  url: z.url(),
+});
+
+// OpenML-inspired evaluation evidence linked directly to a literature entry.
+// Paper metadata (id, doi, arxiv) lives on the parent entry and is not duplicated here.
+export const evidenceSchema = z.object({
+  dataset: z.object({
+    identifier: z.string().min(1),
+    url: z.url().optional(),
+    provenance: z.string().min(1),
+    modality: z.string().min(1),
+    access: z.string().min(1),
+    licence: z.string().min(1),
+  }),
+  task: z.object({
+    target: z.string().min(1),
+    scope: z.string().min(1),
+    split: z.string().min(1),
+    metric: z.string().min(1),
+    reference: z.string().min(1),
+  }),
+  method: z.object({
+    repositories: z.array(evidenceLinkSchema).default([]),
+    revision: z.string().min(1),
+    model: z.string().min(1),
+  }),
+  results: z
+    .array(
+      z.object({
+        source: z.enum(["author-reported", "reproduced"]),
+        metric: z.string().min(1),
+        value: z.string().min(1),
+        uncertainty: z.string().min(1),
+        locator: z.string().min(1),
+        setting: z.string().min(1),
+        limits: z.string().min(1),
+      }),
+    )
+    .min(1),
+});
+
 export const literatureSchema = z
   .object({
     title: z.string(),
@@ -45,6 +88,7 @@ export const literatureSchema = z
     added: z.string().regex(/^\d{4}-\d{2}$/), // YYYY-MM; drives the "new" marker
     // Proposed by a curator, not yet vetted by the group; shown with a "proposal" badge.
     status: z.literal("proposal").optional(),
+    evidence: evidenceSchema.optional(),
   })
   .refine((e) => e.doi || e.arxiv, { message: "set doi, arxiv or both" });
 

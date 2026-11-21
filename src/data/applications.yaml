@@ -140,6 +140,22 @@
   maturity: "Research prototypes, each tested on its own parks or firms. One recovers 24 of 45 known exchanges in one district; word vectors fail at some parks, Kalundborg among them."
   papers: [zhaoConstructionWastetoresourceKnowledge2025, davisMachineLearningassistedIndustrial2022, vancapelleveenBuildingRecommenderSystems2021, grimmelUrbanIndustrialSymbiosis2025, zhaoNovelMachineLearningbased2025]
 
+# ── Input-output ─────────────────────────────────────────────────────────────
+- id: io-table-gap-filling
+  name: "Input-output table gap-filling and emission factors"
+  ie: [eeio]
+  ml: [tabular-ml]
+  summary: "Estimate missing or next-year cells in input-output tables and publish ML-ready emission factors from multiregional databases."
+  maturity: "One US 71-sector study cut median error on hard cells from 37% to 11%, given the target year's marginal totals. Open emission-factor tables now exist for Exiobase 3.8.2."
+  papers: [zhaoUsingDeepLearning2022, guoGlobalEmissionFactor2026, maBPNNbasedEcologicallyExtended2023]
+- id: eeio-sector-matching
+  name: "Product and firm matching to input-output sectors"
+  ie: [eeio, lca]
+  ml: [nlp-extraction, llm, foundation]
+  summary: "Map product text or company descriptions to EIO-LCA or NAICS sectors to assign carbon intensity factors."
+  maturity: "Zero-shot sentence transformers cut product footprint error from 51% to 22% MAPE on 40K annotated products. Company-level NAICS matching still has 45.88% MAPE in a preprint."
+  papers: [balajiCaMLCarbonFootprinting2023, guoGroupReasoningEmission2025]
+
 # ── Uncertainty & Bayesian MFA ───────────────────────────────────────────
 - id: bayesian-mfa
   name: "Bayesian material flow analysis"

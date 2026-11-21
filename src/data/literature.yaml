@@ -68,6 +68,7 @@
   year: 2022
   doi: "10.1145/3485128"
   blurb: "Maps potential uses of machine learning for climate action, from power grids to heavy industry."
+  topic: [energy]
   type: [review]
   added: 2026-11
 
@@ -778,6 +779,7 @@
   doi: "10.1021/acs.est.5c01600"
   blurb: "Finds rooftop solar panels in satellite images and feeds a dynamic MFA of their recycling potential; CV and MFA in one pipeline."
   ie: [sem, circular]
+  topic: [energy]
   ml: [cv, remote-sensing]
   type: [method]
   added: 2026-07
@@ -930,6 +932,50 @@
   ml: [llm, nlp-extraction]
   type: [method, dataset]
   added: 2026-11
+  evidence:
+    dataset:
+      identifier: "Zenodo 10.5281/zenodo.17438819 (version not specified in source note)"
+      url: "https://doi.org/10.5281/zenodo.17438819"
+      provenance: "Full texts of 77 review papers (1,180 valid chunks) plus abstracts, fused into W2RKG (3,518 waste entities, 4,471 resource entities, 33,679 waste-to-resource relationships)."
+      modality: "Text corpus (review papers and abstracts) and extracted knowledge graph."
+      access: "Annotated data, intermediate files and final database released on Zenodo and GitHub; raw full texts withheld due to copyright (DOIs provided)."
+      licence: "Not stated in paper for repository or dataset (paper is CC BY-NC-ND 4.0)."
+    task:
+      target: "Waste-to-resource (W2R) knowledge graph extraction and industrial symbiosis identification."
+      scope: "Literature-derived W2R relationships evaluated against the Maestri database, the Taranto industrial symbiosis benchmark, and a 100-relationship manual sample."
+      split: "No fixed train/test split reported for downstream evaluations; evaluated by manual check against Maestri, cosine-similarity matching (threshold 0.75) on Taranto, and 3-evaluator audit of 100 sampled relationships."
+      metric: "Recall on known Taranto exchanges; coverage of unique Maestri W2R relationships; alignment rates and Cohen's Kappa across 3 evaluators."
+      reference: "45 known Taranto industrial symbiosis exchanges; unique W2R relationships in Maestri; manual labels from 3 evaluators on 100 sampled relationships."
+    method:
+      repositories:
+        - label: "W2RKG-construction-with-LLMs (GitHub)"
+          url: "https://github.com/nancycyzl/W2RKG-construction-with-LLMs"
+        - label: "W2RKG_application (GitHub)"
+          url: "https://github.com/nancycyzl/W2RKG_application"
+      revision: "Not verified in source note."
+      model: "LoRA weights released in W2RKG_application; base LLM name and checkpoint not verified in source note."
+    results:
+      - source: author-reported
+        metric: "Recall on Taranto industrial symbiosis benchmark"
+        value: "24 of 45 known exchanges (53%)"
+        uncertainty: "Not reported."
+        locator: "Results, 'W2RKG application and demonstration' (section heading; page numbers unreliable in extracted text)."
+        setting: "Offline case study using cosine similarity at threshold 0.75."
+        limits: "Company matching uses cosine similarity only; literature-derived links require further verification for accuracy and practical viability (Discussion)."
+      - source: author-reported
+        metric: "Coverage of unique Maestri W2R relationships"
+        value: "58%"
+        uncertainty: "Not reported."
+        locator: "Results, 'W2RKG construction and quality assessment'."
+        setting: "Manual check of each unique W2R relationship in Maestri against W2RKG."
+        limits: "Single reference database; literature-derived links remain unverified in practice (Discussion)."
+      - source: author-reported
+        metric: "Manual alignment on 100 sampled relationships"
+        value: "90% waste_aligned, 87% resource_aligned"
+        uncertainty: "Inter-rater agreement across 3 evaluators (Cohen's Kappa): 0.54 waste_aligned, 0.41 waste_valid, 0.44 resource_aligned, 0.44 resource_valid (moderate)."
+        locator: "Results, 'W2RKG construction and quality assessment'."
+        setting: "Three human evaluators reviewing 100 sampled relationships."
+        limits: "Moderate inter-rater agreement (Kappa 0.41 to 0.54) and 100-link sample out of 33,679 relationships."
 - id: davisMachineLearningassistedIndustrial2022
   title: "Machine learning-assisted industrial symbiosis: testing the ability of word vectors to estimate similarity for material substitutions"
   authors: ["Davis, C.", "Aid, G."]
