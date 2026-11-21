@@ -160,4 +160,74 @@ describe("LiteratureBrowser in a page", () => {
     expect(document.querySelector(".lit-details")).toBeNull();
     expect(document.querySelector("[data-target]")).toBeNull();
   });
+
+  it("renders linked evaluation evidence only when present, with links and source labels", async () => {
+    const evidenced: LitEntry = {
+      ...entry("evPaper", ["symbiosis"]),
+      evidence: {
+        dataset: {
+          identifier: "Zenodo 10.5281/zenodo.0000000",
+          url: "https://doi.org/10.5281/zenodo.0000000",
+          provenance: "Test corpus.",
+          modality: "Text.",
+          access: "Open.",
+          licence: "Not stated.",
+        },
+        task: {
+          target: "Relation extraction.",
+          scope: "Benchmark set.",
+          split: "No fixed split reported.",
+          metric: "Recall.",
+          reference: "45 known exchanges.",
+        },
+        method: {
+          repositories: [{ label: "Code repo", url: "https://example.org/repo" }],
+          revision: "Not verified.",
+          model: "Checkpoint not reported.",
+        },
+        results: [
+          {
+            source: "author-reported",
+            metric: "Recall",
+            value: "24 of 45 (53%)",
+            uncertainty: "Not reported.",
+            locator: "Results section.",
+            setting: "Offline case study.",
+            limits: "Unverified in practice.",
+          },
+          {
+            source: "reproduced",
+            metric: "Recall",
+            value: "23 of 45 (51%)",
+            uncertainty: "Not reported.",
+            locator: "Repro log.",
+            setting: "Clean environment.",
+            limits: "Single run.",
+          },
+        ],
+      },
+    };
+    history.replaceState(null, "", "/literature/#evPaper");
+    host = document.createElement("div");
+    document.body.append(host);
+    root = createRoot(host);
+    await act(async () =>
+      root.render(<LiteratureBrowser entries={[evidenced, ENTRIES[0]]} extras={{}} />),
+    );
+    const details = document.getElementById("evPaper-details");
+    expect(details?.textContent).toContain("Dataset");
+    expect(details?.textContent).toContain("Task and protocol");
+    expect(details?.textContent).toContain("Method and implementation");
+    expect(details?.textContent).toContain("Reported results");
+    expect(details?.textContent).toContain("Author-reported");
+    expect(details?.textContent).toContain("Reproduced");
+    expect(details?.textContent).toContain("Not reported.");
+    const hrefs = [...(details?.querySelectorAll("a") ?? [])].map((a) => a.getAttribute("href"));
+    expect(hrefs).toContain("https://doi.org/10.5281/zenodo.0000000");
+    expect(hrefs).toContain("https://example.org/repo");
+    expect(hrefs).toContain("https://doi.org/10.1000/evPaper");
+
+    await click(toggle("lcaPaper"));
+    expect(document.getElementById("lcaPaper-details")?.querySelector(".lit-evidence")).toBeNull();
+  });
 });

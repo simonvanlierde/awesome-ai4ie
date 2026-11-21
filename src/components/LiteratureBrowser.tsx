@@ -449,6 +449,14 @@ export function PaperDetails({
           </dd>
         </>
       )}
+      {e.evidence && (
+        <>
+          <dt>Evidence</dt>
+          <dd className="lit-evidence">
+            <EvidenceBlock entry={e} evidence={e.evidence} />
+          </dd>
+        </>
+      )}
       {similar.length > 0 && (
         <>
           <dt>Similar</dt>
@@ -487,6 +495,105 @@ export function PaperDetails({
         </a>
       </dd>
     </dl>
+  );
+}
+
+const SOURCE_LABELS = {
+  "author-reported": "Author-reported",
+  reproduced: "Reproduced",
+} as const;
+
+function EvidenceBlock({
+  entry: e,
+  evidence,
+}: {
+  entry: LitEntry;
+  evidence: NonNullable<LitEntry["evidence"]>;
+}) {
+  const { dataset, task, method, results } = evidence;
+  return (
+    <div className="lit-evidence-groups">
+      <section className="lit-evidence-group">
+        <p className="lit-evidence-heading">Dataset</p>
+        <dl className="lit-evidence-list">
+          <dt>Identifier</dt>
+          <dd>
+            {dataset.url ? <a href={dataset.url}>{dataset.identifier}</a> : dataset.identifier}
+          </dd>
+          <dt>Provenance</dt>
+          <dd>{dataset.provenance}</dd>
+          <dt>Modality</dt>
+          <dd>{dataset.modality}</dd>
+          <dt>Access</dt>
+          <dd>{dataset.access}</dd>
+          <dt>Licence</dt>
+          <dd>{dataset.licence}</dd>
+        </dl>
+      </section>
+      <section className="lit-evidence-group">
+        <p className="lit-evidence-heading">Task and protocol</p>
+        <dl className="lit-evidence-list">
+          <dt>Target</dt>
+          <dd>{task.target}</dd>
+          <dt>Scope</dt>
+          <dd>{task.scope}</dd>
+          <dt>Split / validation</dt>
+          <dd>{task.split}</dd>
+          <dt>Metric</dt>
+          <dd>{task.metric}</dd>
+          <dt>Reference labels</dt>
+          <dd>{task.reference}</dd>
+        </dl>
+      </section>
+      <section className="lit-evidence-group">
+        <p className="lit-evidence-heading">Method and implementation</p>
+        <dl className="lit-evidence-list">
+          <dt>Paper</dt>
+          <dd>
+            {e.doi && <a href={`https://doi.org/${e.doi}`}>DOI {e.doi}</a>}
+            {e.doi && e.arxiv && " · "}
+            {e.arxiv && <a href={`https://arxiv.org/abs/${e.arxiv}`}>arXiv {e.arxiv}</a>}
+          </dd>
+          <dt>Repository</dt>
+          <dd className={method.repositories.length > 0 ? "lit-details-links" : undefined}>
+            {method.repositories.length > 0
+              ? method.repositories.map((repo) => (
+                  <a key={repo.url} href={repo.url}>
+                    {repo.label}
+                  </a>
+                ))
+              : "Not reported."}
+          </dd>
+          <dt>Revision</dt>
+          <dd>{method.revision}</dd>
+          <dt>Model / checkpoint</dt>
+          <dd>{method.model}</dd>
+        </dl>
+      </section>
+      <section className="lit-evidence-group">
+        <p className="lit-evidence-heading">Reported results</p>
+        <ul className="lit-evidence-results">
+          {results.map((r) => (
+            <li key={`${r.source}:${r.metric}:${r.value}`} className="lit-evidence-result">
+              <p className="lit-evidence-result-head">
+                <span className="lit-evidence-source">{SOURCE_LABELS[r.source]}</span>{" "}
+                <strong>{r.metric}:</strong> {r.value}
+              </p>
+              <dl className="lit-evidence-list">
+                <dt>Uncertainty</dt>
+                <dd>{r.uncertainty}</dd>
+                <dt>Source</dt>
+                <dd>{r.locator}</dd>
+                <dt>Setting</dt>
+                <dd>{r.setting}</dd>
+                <dt>Limits</dt>
+                <dd>{r.limits}</dd>
+              </dl>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
   );
 }
 
