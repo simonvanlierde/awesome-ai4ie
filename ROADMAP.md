@@ -18,7 +18,7 @@ Last reviewed: 2026-11-19
 
 ## Not planned
 
-- User accounts, logins, server-side storage or analytics.
+- User accounts, logins, personal data storage or analytics.
 - Entries without a primary source that a person has read.
 - Turning the site into a general machine learning textbook outside industrial ecology.
 

@@ -5,4 +5,5 @@ export const CHAPTERS = [
   { slug: "best-practices", title: "Best practices & guides" },
   { slug: "tools", title: "Tools & hardware" },
   { slug: "demos", title: "Demos" },
+  { slug: "contribute", title: "Community & contribute" },
 ] as const;

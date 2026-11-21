@@ -13,6 +13,7 @@ body:
         - Best practices & guides
         - Tools & hardware
         - Demos
+        - Community & contribute
         - The site as a whole
     validations:
       required: true
