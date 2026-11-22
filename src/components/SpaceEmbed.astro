@@ -8,14 +8,12 @@ interface Props {
   /** Numbered figure label (e.g. "Fig. 2"), continuing from Fig. 1 on the home page. */
   figure: string;
   title: string;
-  /** Short caption set under the plate; defaults to the title and host. */
-  caption?: string;
   /** The Space page on huggingface.co. */
   href: string;
   /** The URL the iframe loads (the Space's *.hf.space app). */
   src: string;
 }
-const { figure, title, caption, href, src } = Astro.props;
+const { figure, title, href, src } = Astro.props;
 ---
 
 <figure class="space-embed-figure not-content">
@@ -30,7 +28,7 @@ const { figure, title, caption, href, src } = Astro.props;
     </button>
   </space-embed>
   <figcaption class="space-embed-caption">
-    <b>{figure}</b> {caption ?? `${title}, hosted on Hugging Face Spaces.`}
+    <b>{figure}</b> {title} on Hugging Face Spaces.
   </figcaption>
 </figure>
 

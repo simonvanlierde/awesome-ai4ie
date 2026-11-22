@@ -93,7 +93,6 @@ describe("topicLenses", () => {
       tag: "buildings",
       papers: 2,
       fields: 2,
-      techniques: 2,
       bands: ["lca|cv", "sem|cv", "lca|llm"],
     });
   });
@@ -102,8 +101,6 @@ describe("topicLenses", () => {
     const lenses = topicLenses([
       { ie: ["lca", "lca"], ml: ["cv", "cv"], topic: ["buildings", "buildings"] },
     ]);
-    expect(lenses).toEqual([
-      { tag: "buildings", papers: 1, fields: 1, techniques: 1, bands: ["lca|cv"] },
-    ]);
+    expect(lenses).toEqual([{ tag: "buildings", papers: 1, fields: 1, bands: ["lca|cv"] }]);
   });
 });

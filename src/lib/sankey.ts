@@ -12,8 +12,6 @@ export type TopicLens = {
   papers: number;
   /** Distinct IE fields reached by this topic's papers in the flow. */
   fields: number;
-  /** Distinct AI techniques reached by this topic's papers in the flow. */
-  techniques: number;
   /** Matching `ie|ml` band keys, deduplicated. */
   bands: string[];
 };
@@ -135,13 +133,11 @@ export function topicLenses(entries: readonly Tagged[]): TopicLens[] {
     const matched = flow.filter((e) => e.topic.includes(tag));
     if (matched.length === 0) continue;
     const fields = new Set<string>();
-    const techniques = new Set<string>();
     const bands = new Set<string>();
     for (const e of matched) {
       for (const ie of e.ie) {
         fields.add(ie);
         for (const ml of e.ml) {
-          techniques.add(ml);
           bands.add(`${ie}|${ml}`);
         }
       }
@@ -150,7 +146,6 @@ export function topicLenses(entries: readonly Tagged[]): TopicLens[] {
       tag,
       papers: matched.length,
       fields: fields.size,
-      techniques: techniques.size,
       bands: [...bands],
     });
   }
