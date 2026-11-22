@@ -2,11 +2,9 @@
 
 Last reviewed: 2026-11-21
 
-Astro and Starlight build the static site at <https://ai4ie.org/>. GitHub Pages hosts it.
-A Cloudflare Worker at `awesome-ai4ie.simonvanlierde.workers.dev` serves the same build,
-plus `POST /api/search` for meaning search, `/mcp` for AI assistants, `POST /api/contribute`
-to create public issues for review, and `GET`/`POST /api/poll` for aggregate norms poll
-counts in a Durable Object. The Worker is set to take over ai4ie.org when hosting moves.
+Astro and Starlight build the static site. Cloudflare Workers serves it at <https://ai4ie.org/>
+and handles `/api/search`, `/mcp`, `/api/contribute` and `/api/poll`. GitHub Pages
+serves a static mirror.
 The site has no accounts or analytics. See the [privacy page](src/content/docs/privacy.md) for
 request logs, browser storage, and public submissions.
 
@@ -19,9 +17,9 @@ flowchart TD
     Schemas --> Astro
     Plugins["Remark/Rehype + csp-inline-scripts"] --> Astro
     Astro --> Dist["Static HTML, CSS and JS (dist/)"]
-    Dist --> Pages["GitHub Pages (ai4ie.org, HTTPS)"]
-    Pages --> Browser["Visitor browser"]
-    Dist --> Worker["Cloudflare Worker (worker/)"]
+    Dist --> Pages["GitHub Pages (static mirror)"]
+    Dist --> Worker["Cloudflare Worker (ai4ie.org)"]
+    Worker -->|static pages| Browser["Visitor browser"]
     Worker -->|/api/search, /mcp search_papers| AI["Workers AI (question embedding)"]
     Browser -->|3+ words in search| Worker
     Client["MCP client"] -->|/mcp| Worker
@@ -51,7 +49,7 @@ in one transaction.
    - *Countermeasures:* Zod schemas and Vitest check every entry and module, while Biome, `astro check` and CodeQL check the code. `zizmor`, `actionlint`, `betterleaks` and GitHub secret scanning guard workflows and commits. `pnpm-lock.yaml` pins package hashes, workflows pin Actions by commit SHA, and jobs run with minimal permissions.
 2. **Static site to visitor browser (`ai4ie.org -> browser`).**
    - *Threats:* cross-site scripting (XSS), script injection and man-in-the-middle tampering.
-   - *Countermeasures:* GitHub Pages and `ai4ie.org` enforce HTTPS. Astro writes a Content Security Policy meta tag, and `src/plugins/csp-inline-scripts.mjs` adds SHA-256 hashes for inline scripts. None of the React islands render raw HTML.
+   - *Countermeasures:* Cloudflare Workers serves `ai4ie.org` over HTTPS and sets HSTS on static pages. Astro writes a Content Security Policy meta tag, and `src/plugins/csp-inline-scripts.mjs` adds SHA-256 hashes for inline scripts. None of the React islands render raw HTML.
 3. **Optional in-browser CLIP demo (`ZeroShotDemo.tsx -> external hosts`).**
    - *Threats:* unexpected network traffic, leaking a visitor's photo and upstream model tampering.
    - *Countermeasures:* the demo loads external code and weights only after you pick a photo and click Classify. Your photo stays in browser memory (`URL.createObjectURL`) and never leaves the device. The code pins `@huggingface/transformers@4.2.0` in the CSP and pins `Xenova/clip-vit-base-patch32` to one commit SHA.
@@ -62,5 +60,5 @@ in one transaction.
 
 ### Residual risks and non-goals
 
-- GitHub Pages does not allow custom HTTP response headers, so the site does not send `Strict-Transport-Security` (see [.github/SECURITY.md](.github/SECURITY.md#scope)).
+- GitHub Pages controls the response headers on the static mirror.
 - Embedded Hugging Face Spaces on demo pages run in third-party iframes under Hugging Face's own origin.

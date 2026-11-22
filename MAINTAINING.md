@@ -7,39 +7,19 @@ advisory.
 
 ## Turning a form into an entry
 
-Find suggestions under the `entry` label. The forms also label papers, applications, tools
-and resources by type.
+Find suggestions under the `entry` label and other on-site submissions under
+`community-submission`.
 
-1. Open each link and check the claims against the source. For papers, read the full text.
-   Follow the [ground rules](CONTRIBUTING.md#ground-rules).
-2. For a paper, look up the title, authors and year from the DOI or arXiv id. For a DOI,
-   `curl -s https://api.crossref.org/works/<doi> | jq '.message | {title, author, issued}'`
-   prints them.
-3. Write the entry. A paper goes in [`src/data/literature.yaml`](src/data/literature.yaml):
-   - `id` is the citation key: the first author's surname, the first three title words with
-     capitals, and the year, such as `donatiFutureArtificialIntelligence2022`. Zotero with
-     Better BibTeX makes the same key.
-   - Write a `blurb` that explains what the paper shows.
-   - Map the dropdown labels back to tag ids in [`src/data/vocabulary.yaml`](src/data/vocabulary.yaml). An
-     answer under "Does it fill a gap on the map?" may ask for a new tag. Add it with this first
-     entry, as CONTRIBUTING.md describes.
-   - Set `type`, and set `added` to this month (`YYYY-MM`).
-
-   An application goes in [`src/data/applications.yaml`](src/data/applications.yaml), with the
-   same tags. A tool, dataset, model or other resource goes in
-   [`src/data/resources.yaml`](src/data/resources.yaml): set `kind`, and for a tool its `group`
-   (the list it sits in on the tools pages), `cost` and `data`. Set `checked` to the month you
-   opened the link, or the month the issue was opened if it gives no date.
-4. For a paper, run `pnpm run citations` if the contributor hasn't fetched its records.
-   The command saves BibTeX and RIS from Crossref or arXiv in
-   [`src/data/citations.json`](src/data/citations.json). Include the updated cache with the
-   entry when available. If the fetch fails, check the message and retry later. The export
-   uses the YAML entry until the full record is available.
-5. Run `pnpm test`. It checks every field, tag and reference.
-6. Open a pull request with `Closes #<issue>` in its description, and thank the person who
-   suggested it.
-
-If a suggestion doesn't hold up, say why in the issue and close it.
+1. Check the claim against its source. For papers, read the full text. Apply the
+   [ground rules](CONTRIBUTING.md#ground-rules).
+2. Put an accepted suggestion in the corresponding [data file](src/data/). Follow the
+   [entry requirements](CONTRIBUTING.md#adding-a-paper-an-application-or-a-resource) and
+   [tag vocabulary](CONTRIBUTING.md#the-tag-vocabulary). For papers, use the Better BibTeX
+   citation key, such as `donatiFutureArtificialIntelligence2022`.
+3. For a new paper, run `pnpm run citations` and include the updated cache if the record
+   is available. Run `pnpm test` before opening the pull request.
+4. Add `Closes #<issue>` to the pull request and thank the person who suggested the entry.
+   If you decline a suggestion, explain why on the issue before closing it.
 
 ## Routine
 
@@ -91,15 +71,15 @@ If a suggestion doesn't hold up, say why in the issue and close it.
 
 ## What's tied to the owner's account
 
-GitHub moves the issues, pull requests, history and secrets with the repo, and redirects the
-repo's old URLs. It does not redirect the GitHub Pages site
+GitHub moves the issues, pull requests, history and secrets with the repo and redirects the
+old repository URLs. The GitHub Pages mirror URL needs its own check
 ([GitHub's transfer guide](https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository)).
 Check the rest after a move.
 
 | What | Where | After a move |
 | --- | --- | --- |
-| GitHub Pages | Settings → Pages, source "GitHub Actions" and the custom domain | Check both came across. |
-| Domain verification | The owner's Settings → Pages (an account or an organization) | Verification belongs to the account. Verify the domain under the new owner before the move. |
+| Cloudflare Worker | Cloudflare dashboard, Worker bindings, secrets, and custom domain | Check the deploy credentials and domain. Keep the poll's Durable Object storage. |
+| GitHub Pages mirror | Settings → Pages, source "GitHub Actions" | Check the static mirror URL. |
 | Branch rules (`protect-main`) | Settings → Rules | Check they came across. They require the `check` and `build` jobs and block force pushes and deletion. Admins can bypass them. |
 | Code scanning (CodeQL) | Settings → Code security | Check it's still on. |
 | Renovate | The Renovate GitHub app, installed per account | Install the app on the new owner and give it this repo. Keep Dependabot alerts on: Renovate reads them. |
@@ -111,73 +91,29 @@ the repo's "Website" field.
 
 ## Setting up a custom domain
 
-[`src/site.ts`](src/site.ts) holds the custom domain. The site address, the base path, the
-social card, the edit links and the accessibility check all follow it. The steps follow
-[GitHub's custom domain guide](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site),
-with the DNS at Cloudflare.
+Cloudflare Workers serves `ai4ie.org`, including `/api/*` and `/mcp`. CI also deploys a
+static mirror to GitHub Pages.
 
-1. **Verify the domain** for the account that owns the repo: Settings → Pages → Add a domain.
-   GitHub shows a TXT record. Add it in Cloudflare, then click Verify. No other GitHub user can
-   publish a site on a verified domain, so the DNS records can go in before the repo uses it.
-2. **Add the DNS records** in Cloudflare, each set to "DNS only" (a grey cloud). Cloudflare's
-   proxy gets in the way of GitHub's certificate. Never add a wildcard record (`*`).
-
-   | Type | Name | Content |
-   | --- | --- | --- |
-   | A | `@` | `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` (one record each) |
-   | AAAA | `@` | `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153` (one record each) |
-   | CNAME | `www` | `<owner>.github.io`, without the repo name |
-
-3. Wait until `dig +short <domain>` prints GitHub's four addresses. It can take up to a day.
-4. **Switch.** From the next two actions until the deploy finishes, a few minutes, the site
-   shows unstyled. Open a pull request that sets `domain` in `src/site.ts` and changes the
-   live-site links in README.md and CONTRIBUTING.md. Once its CI passes, enter the domain under
-   the repo's Settings → Pages → Custom domain. Then merge straight away. No `CNAME` file is
-   needed: the Actions deploy ignores one.
-5. Wait for GitHub's certificate, then turn on "Enforce HTTPS". The certificate can take a while.
-6. Check the live site, an old address, and the link preview of the address pasted into a
-   chat. GitHub forwards `<owner>.github.io/<repo>/tools/` to `<domain>/tools/`, so old links
-   keep working while the repo stays with the same owner.
-
-To roll back, revert the pull request from step 4. Once the revert has deployed, clear the custom
-domain. Keep the DNS records until the old address works again. If the Pages site is ever
-switched off or the repo deleted, remove the DNS records too. Another GitHub user can take over
-a domain that points at GitHub Pages with no site behind it.
-
-### Moving the domain to the Worker
-
-The steps above point the domain at GitHub Pages. To serve `/api/*` and `/mcp`, the domain has to
-go to the Worker instead, as a Workers custom domain (a zone on the same Cloudflare account).
-
-1. Remove the GitHub Pages custom domain (Settings → Pages) and the four `A`, four `AAAA` and
-   `www` records from the table above. A custom domain cannot be added over existing records.
-2. Add the domain to the Worker: Cloudflare dashboard → Workers & Pages → `awesome-ai4ie` →
-   Settings → Domains & Routes → Add → Custom domain. Cloudflare creates the DNS record and the
-   certificate.
-3. Check that `curl -sI https://<domain>/` no longer says `server: GitHub.com`, and that a `POST` to
-   `https://<domain>/mcp` with `Accept: application/json, text/event-stream` returns 200, not 405.
-4. Change the Worker address to the domain in README.md and in the "Ask an AI assistant" section
-   of `src/content/docs/literature.mdx`.
-
-To roll back, delete the Worker's custom domain and redo the Pages steps.
+For a domain change, update the Worker custom domain under **Settings → Domains & Routes** and
+set `domain` in [`src/site.ts`](src/site.ts). Use the
+[Cloudflare custom-domain guide](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/).
+After deploy, check the home page, `/mcp`, and `/api/poll` on the new host.
 
 ### Contributions and poll setup
 
-The public site needs to run on the Worker for the form and poll to work. Both features
-use Cloudflare Turnstile and share per-IP and location-wide write limits. The first Worker
-deploy creates the poll's `POLL` Durable Object. Each Worker Preview has its own poll storage.
+Keep these values in sync when rotating credentials or moving the Worker.
 
-1. Create a Turnstile widget for the public Worker hostname in the Cloudflare dashboard.
-   Choose Managed or Non-interactive mode.
-2. Set the public widget key in the GitHub repository variable `PUBLIC_TURNSTILE_SITE_KEY`.
-   CI includes this key in the Astro build. Put it in local `.env` for local builds.
-3. Set the matching Worker secret with `pnpm exec wrangler secret put TURNSTILE_SECRET_KEY`.
-   Both endpoints return `503` without it. For local development, use Cloudflare's
-   [test keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/).
-4. For contributions, create a fine-grained GitHub token with `Issues: Read and write` scoped
-   to `simonvanlierde/awesome-ai4ie`. Store it with
-   `pnpm exec wrangler secret put GITHUB_ISSUES_TOKEN`. Create the labels
-   `community-submission`, `golden-question`, `ai-mistake`, and `community-comment` if needed.
-   The `entry` label already exists. Only the contribution form needs this token.
-5. Open `/contribute/` on the Worker. Check that the poll shows counts and that the contribution
-   form shows its verification widget. Check both fallback links with JavaScript disabled.
+| Setting | Where |
+| --- | --- |
+| `PUBLIC_TURNSTILE_SITE_KEY` | GitHub repository variable. CI puts it in the browser build. |
+| `TURNSTILE_SECRET_KEY` | Worker secret. Use the secret for the same widget and allow the public hostname in its settings. |
+| `GITHUB_ISSUES_TOKEN` | Worker secret. Use a fine-grained token with **Issues: Read and write** on this repository. |
+
+Set Worker secrets with `pnpm exec wrangler secret put <NAME>`. Use Cloudflare's
+[Turnstile test keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/)
+for local builds. The deploy provisions poll storage. Each preview has its own poll.
+
+After a change, open `/contribute/` and check that the poll shows counts and the form starts
+verification. With JavaScript disabled, check that both sections offer GitHub Issues and Discord
+links. If submitted issues lose their labels, check `entry`, `community-submission`,
+`golden-question`, `ai-mistake`, and `community-comment` in GitHub.

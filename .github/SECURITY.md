@@ -21,15 +21,15 @@ expect a fix.
 
 ## Fixes and disclosure
 
-The site deploys from `main`, so a fix is live once it is merged. Then I publish the GitHub
+The site deploys from `main`. A fix goes live when the deployment succeeds. Then I publish the GitHub
 security advisory for it, with a CVE where one applies, and credit you unless you'd rather not
 be named.
 
 ## Scope
 
-This is a static site with no accounts or stored user data. A Cloudflare Worker (`worker/`) adds
-two read-only endpoints, `/api/search` and the MCP server at `/mcp`. One page runs a model in the
-visitor's browser, loaded from jsDelivr and Hugging Face.
+Cloudflare Workers serves the site and handles search, MCP, contributions and poll votes.
+Contributions become public GitHub issues, and the poll stores aggregate counts. One demo
+runs a model in the visitor's browser, loaded from jsDelivr and Hugging Face.
 
 In scope:
 
@@ -40,4 +40,4 @@ In scope:
 Out of scope:
 
 - A problem in a dependency that doesn't affect this project. Report it upstream.
-- A missing HTTP header that GitHub Pages cannot send, such as `Strict-Transport-Security`.
+- A response header that GitHub Pages controls on the static mirror.
