@@ -38,20 +38,16 @@ prefill the gap name; the search dialog does not include your query.
 
 The [Contribute](/contribute/) page uses two endpoints on the same Cloudflare Worker:
 
-- **Norms poll (`/api/poll`).** Loading the page fetches aggregate vote counts from Cloudflare KV.
-  Voting increments only the counts for your selected checks and the total response count; no IP
-  address, browser fingerprint, or personal identifier is written to KV. Your browser saves your
-  selection in `localStorage` (`ai4ie:norms-poll:v1`) to prevent accidental repeat votes on the
-  same device.
-- **On-site contribution form (`/api/contribute`).** The form does not ask for or accept an email
-  address. Your submission (type, title, details, optional link, and optional attribution) goes to
-  the Worker and is posted as a public issue on
-  [GitHub](https://github.com/simonvanlierde/awesome-ai4ie/issues) under GitHub's privacy terms.
-- **Spam protection and rate limits.** When Turnstile is configured, the form (and optionally the
-  poll) loads Cloudflare Turnstile (`challenges.cloudflare.com`) to verify browser submissions
-  under Cloudflare's privacy terms. The Worker applies per-IP and location-wide rate limits. As
-  with Search, Cloudflare Workers Logs retain request metadata (time, IP address, user agent) for
-  up to 7 days.
+- **Norms poll.** The Worker stores counts for each check and the total number of votes. It keeps
+  no voter records in the poll store. Your browser remembers the checks you selected so you
+  do not vote twice by accident. Clear the site's browser storage to remove that selection.
+- **Contribution form.** The Worker sends your title, details, optional link and optional
+  attribution to GitHub. They appear in a public issue under GitHub's privacy terms. Leave out
+  any details you want to keep private.
+- **Spam protection.** When the form or poll needs verification, your browser loads Cloudflare
+  Turnstile. The Worker sends the verification token and your IP address to Cloudflare to
+  check the result. Both features use per-IP and location-wide rate limits. The Workers Logs
+  retention described above also applies to these requests.
 
 ## Questions
 

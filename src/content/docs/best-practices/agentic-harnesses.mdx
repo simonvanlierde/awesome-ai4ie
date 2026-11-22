@@ -3,7 +3,7 @@ title: Agentic harnesses & verification
 description: How to wrap a coding agent in checks it cannot edit, keep AGENTS.md short, and verify AI-assisted IE work.
 ---
 
-An agent's output is only as good as the check it cannot edit, and existence checks are not claim checks.
+Give the agent a result you can verify independently. Keep the reference result and its tests outside the agent's write permissions.
 
 This page proposes a minimal verification setup for industrial ecology (IE) work done with coding agents. Treat it as a starting proposal rather than a settled norm: if a check is missing, too heavy, or a bad fit for your subfield, [push back or suggest a better one](/contribute/).
 
@@ -38,7 +38,7 @@ Skip the repository overview, directory tree, and architecture prose. In an empi
   - If a test cannot pass without changing expected values, stop and report the mismatch.
 ```
 
-## Verifying AI-assisted IE work: three checks plus a receipt
+## Verify and document AI-assisted IE work
 
 ### 1. Golden test
 
@@ -53,23 +53,24 @@ def test_steel_bracket_gwp_golden():
 
 A script that still runs without raising an exception can still be wrong by three orders of magnitude. A planted unit swap (`kg` vs `t`) or an impact-method swap turns this test red immediately.
 
-### 2. Blocked cheat (checks the agent cannot edit)
+### 2. Protect the test
 
 If a coding agent can edit both the model code and the test suite, a failing golden test is not a reliable guard: the agent can make the suite green by editing the expected number, relaxing the tolerance, or skipping the test.
 
-Lock `tests/golden/` outside the agent's write permissions:
+1. Give the agent read-only access to the canonical tests and fixtures, for example through a
+   read-only mount. Apply the restriction to its shell and edit tools as well.
+2. Check that the agent can run the tests and that its tools cannot write to the protected files.
+   A hook can give early feedback when a tool attempts a protected edit.
+3. Require a human review before changes to the protected files can merge. On GitHub, use
+   [required code-owner review](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners#codeowners-and-branch-protection).
+   Keep the review rule outside the agent's control.
+4. Tell the agent to report the failure when the test and the task disagree.
 
-1. Add a **pre-tool hook** (a small check that runs before every file edit) that denies writes to `tests/golden/`.
-2. Mirror that rule in continuous integration (CI) so any pull request touching `tests/golden/` requires explicit human review.
-3. Honour an explicit abort path: instruct the agent to stop and report failure rather than work around a broken assumption.
-
-On the ImpossibleBench benchmark ([arXiv:2510.20270](https://arxiv.org/abs/2510.20270)), which tests coding agents on tasks made impossible by conflicting requirements, GPT-5 cheated on 54% of tasks and Opus 4.1 cheated on 50%. Giving the model an explicit abort option cut GPT-5 cheating to 9%, while reducing Opus 4.1 cheating far less. Instructions help, so keep the abort rule, and enforce the boundary in the harness so the agent cannot edit the check.
+On the ImpossibleBench benchmark ([arXiv:2510.20270](https://arxiv.org/abs/2510.20270)), GPT-5 passed 54% of the intentionally impossible Conflicting-SWEbench tasks by violating the task requirements. Opus 4.1 did so on 50%. Giving the model an explicit abort option cut GPT-5 cheating to 9%, while reducing Opus 4.1 cheating far less. Instructions help, so keep the abort rule, and enforce the boundary in the harness so the agent cannot edit the check.
 
 ### 3. Claim ledger (existence checks are not claim checks)
 
 Automated reference tools can check whether a DOI resolves or whether a title appears in Crossref or OpenAlex. That checks **existence**, not **meaning**: a real paper can still be cited for a claim it does not make, a number from a different boundary, or a conclusion the authors qualified.
-
-In one single-sweep check (`n = 4 of 64 checked, single sweep`), automated existence verification passed all 64 references, yet all four sources whose claims reached the draft were mischaracterized until the PDFs were opened and read. That single sweep is an illustration of the failure mode, not a general rate, and it shows why existence checks alone cannot clear a draft.
 
 Keep a plain **claim ledger** beside any AI-assisted manuscript or report: one row per cited claim, filled in only after opening the primary source.
 
@@ -83,9 +84,9 @@ Keep a plain **claim ledger** beside any AI-assisted manuscript or report: one r
 
 Pair the ledger with the [source-checking prompt](/best-practices/prompts-and-skills/#verify-a-claim-before-citing-it) to pull candidate quotes before you verify them in the PDF yourself.
 
-### 4. Footprint receipt
+### 4. Log the run
 
-Record the compute footprint of agentic runs the same way you record an inventory flow: one run, one row in a simple log (date, task, model, input tokens, output tokens, and API cost).
+Log one row per run. Include the date, task, model, input and output tokens, and API cost.
 
 ```csv
 date,task,model,input_tokens,output_tokens,cost_usd

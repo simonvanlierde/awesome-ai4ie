@@ -4,8 +4,10 @@
 import type { IndexEntry } from "../src/lib/semantic.ts";
 import { handleContribute } from "./contribute.ts";
 import { handleMcp } from "./mcp.ts";
-import { handlePoll } from "./poll.ts";
+import { handlePoll, Poll } from "./poll.ts";
 import { type Env, MAX_QUERY, searchPapers, withinLimit } from "./search.ts";
+
+export { Poll };
 
 /** What the dialog shows for one paper. */
 export type Hit = Pick<IndexEntry, "title" | "year" | "blurb" | "href">;

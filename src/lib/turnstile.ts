@@ -9,6 +9,7 @@ interface TurnstileApi {
     opts: {
       sitekey: string;
       theme?: "light" | "dark" | "auto";
+      size?: "normal" | "compact";
       callback?: (token: string) => void;
       "expired-callback"?: () => void;
       "error-callback"?: () => void;
@@ -29,24 +30,24 @@ function loadTurnstile(): Promise<TurnstileApi | null> {
   if (window.turnstile) return Promise.resolve(window.turnstile);
   if (loading) return loading;
   loading = new Promise((resolve) => {
-    const existing = document.querySelector<HTMLScriptElement>(`script[src="${SCRIPT_SRC}"]`);
-    if (existing) {
-      existing.addEventListener("load", () => resolve(window.turnstile ?? null), { once: true });
-      existing.addEventListener("error", () => resolve(null), { once: true });
-      return;
-    }
     const s = document.createElement("script");
     s.src = SCRIPT_SRC;
     s.async = true;
     s.defer = true;
-    s.addEventListener("load", () => resolve(window.turnstile ?? null), { once: true });
-    s.addEventListener("error", () => resolve(null), { once: true });
+    const timeout = window.setTimeout(() => resolve(null), 8000);
+    const finish = (api: TurnstileApi | null) => {
+      window.clearTimeout(timeout);
+      resolve(api);
+    };
+    s.addEventListener("load", () => finish(window.turnstile ?? null), { once: true });
+    s.addEventListener("error", () => finish(null), { once: true });
     document.head.append(s);
   });
   return loading;
 }
 
 export interface TurnstileHandle {
+  readonly available: boolean;
   getToken(): string;
   reset(): void;
 }
@@ -54,35 +55,42 @@ export interface TurnstileHandle {
 export async function mountTurnstile(
   container: HTMLElement,
   sitekey: string,
-  onChange?: (token: string) => void,
+  onError: () => void,
 ): Promise<TurnstileHandle | null> {
   if (!sitekey) return null;
   const api = await loadTurnstile();
   if (!api) return null;
   let token = "";
   const theme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
-  const widgetId = api.render(container, {
-    sitekey,
-    theme,
-    callback: (t) => {
-      token = t;
-      onChange?.(t);
-    },
-    "expired-callback": () => {
-      token = "";
-      onChange?.("");
-    },
-    "error-callback": () => {
-      token = "";
-      onChange?.("");
-    },
-  });
-  return {
-    getToken: () => token,
-    reset: () => {
-      token = "";
-      api.reset(widgetId);
-      onChange?.("");
-    },
-  };
+  let failed = false;
+  try {
+    const widgetId = api.render(container, {
+      sitekey,
+      theme,
+      size: "compact",
+      callback: (value) => {
+        token = value;
+      },
+      "expired-callback": () => {
+        token = "";
+      },
+      "error-callback": () => {
+        failed = true;
+        token = "";
+        onError();
+      },
+    });
+    return {
+      get available() {
+        return !failed;
+      },
+      getToken: () => token,
+      reset: () => {
+        token = "";
+        api.reset(widgetId);
+      },
+    };
+  } catch {
+    return null;
+  }
 }

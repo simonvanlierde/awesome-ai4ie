@@ -17,9 +17,8 @@
   },
   // Workers AI always runs remotely, in `wrangler dev` too (needs `wrangler login`).
   "ai": { "binding": "AI", "remote": true },
-  // Uncomment after running `wrangler kv namespace create POLL_KV` (see MAINTAINING.md);
-  // Cloudflare rejects deploys referencing a non-existent namespace id (code 10041).
-  // "kv_namespaces": [{ "binding": "POLL_KV", "id": "<namespace-id>" }],
+  "durable_objects": { "bindings": [{ "name": "POLL", "class_name": "Poll" }] },
+  "migrations": [{ "tag": "poll-v1", "new_sqlite_classes": ["Poll"] }],
   "ratelimits": [
     {
       "name": "SEARCH_LIMIT",
@@ -51,7 +50,7 @@
   // own limiter namespace keeps Preview traffic off production's counter.
   "previews": {
     "ai": { "binding": "AI", "remote": true },
-    // "kv_namespaces": [{ "binding": "POLL_KV", "id": "<preview-namespace-id>" }],
+    "durable_objects": { "bindings": [{ "name": "POLL", "class_name": "Poll" }] },
     "ratelimits": [
       { "name": "SEARCH_LIMIT", "namespace_id": "1002", "simple": { "limit": 30, "period": 60 } },
       {

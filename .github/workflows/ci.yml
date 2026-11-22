@@ -76,9 +76,15 @@ jobs:
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
         with:
           node-version: ${{ steps.node.outputs.version }}
           build-cmd: ${{ env.EMBED == 'true' && 'pnpm run embed && pnpm run build' || 'pnpm run build' }}
+      - name: Configured Turnstile key is present in the build
+        if: vars.PUBLIC_TURNSTILE_SITE_KEY != ''
+        env:
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
+        run: grep -Fq "data-turnstile-site-key=\"$PUBLIC_TURNSTILE_SITE_KEY\"" dist/contribute/index.html
       # Rows 0 to n-1, each named once, and 4096 bytes a row: the embedding model gives
       # 1024 float32 values.
       - name: Every entry has a vector

@@ -20,7 +20,7 @@ export const CONTRIBUTION_TYPES = {
   },
   "ai-mistake": {
     label: "ai-mistake",
-    heading: "AI mistake in IE work (anonymous)",
+    heading: "AI mistake in IE work",
     prefix: "AI mistake",
   },
   other: {

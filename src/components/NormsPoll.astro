@@ -8,7 +8,7 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
 ---
 
 <norms-poll class="norms-poll not-content" data-turnstile-site-key={siteKey}>
-  <form class="np-form" novalidate>
+  <form class="np-form" hidden novalidate>
     <fieldset class="np-fieldset">
       <legend class="np-legend">Select the checks you think should be norms in IE work (pick any number)</legend>
       <ul class="np-list">
@@ -37,27 +37,19 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
     <div class="np-turnstile" hidden></div>
 
     <div class="np-actions">
-      <button type="submit" class="np-submit">Record vote</button>
+      <button type="submit" class="np-submit" disabled>Record vote</button>
       <span class="np-voters" data-voters></span>
     </div>
 
     <p class="np-status" role="status"></p>
   </form>
 
-  <div class="np-fallback" hidden>
+  <div class="np-fallback">
     <p>
-      Live poll counts are unavailable on this host right now. You can still share which checks you
-      want as IE norms via <a href={issuesUrl}>GitHub Issues</a> or on{" "}
+      If you can’t vote here, share which checks you want as IE norms via <a href={issuesUrl}>GitHub Issues</a> or on{" "}
       <a href={discordUrl}>Discord</a>.
     </p>
   </div>
-
-  <noscript>
-    <p class="np-noscript">
-      JavaScript is required to load live counts and vote. You can share your view on{" "}
-      <a href={issuesUrl}>GitHub Issues</a> or <a href={discordUrl}>Discord</a>.
-    </p>
-  </noscript>
 </norms-poll>
 
 <script>
@@ -66,7 +58,6 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
   import { siteUrl } from "../lib/urls";
 
   const STORAGE_KEY = "ai4ie:norms-poll:v1";
-  const UNAVAILABLE_STATUSES = [404, 405, 503];
 
   function readSavedChoices(): string[] {
     try {
@@ -105,7 +96,6 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
       const checkboxes = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="choices"]'));
       const siteKey = this.dataset.turnstileSiteKey ?? "";
       let turnstile: TurnstileHandle | null = null;
-      let turnstileRequired = false;
 
       const renderCounts = (data: PollResponse) => {
         const total = data.voters;
@@ -135,6 +125,7 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
       };
 
       const showFallback = () => {
+        submitBtn.disabled = true;
         form.hidden = true;
         fallback.hidden = false;
       };
@@ -151,17 +142,17 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
             headers: { accept: "application/json" },
             signal: AbortSignal.timeout(8000),
           });
-          if (UNAVAILABLE_STATUSES.includes(res.status) || !res.ok) {
-            showFallback();
-            return;
-          }
+          if (!res.ok) return;
           const data = (await res.json()) as PollResponse;
-          turnstileRequired = Boolean(data.turnstileRequired);
           renderCounts(data);
-          if (saved.length === 0 && turnstileRequired && siteKey) {
+          if (saved.length === 0) {
+            turnstile = await mountTurnstile(turnstileBox, siteKey, showFallback);
+            if (!turnstile?.available) return;
             turnstileBox.hidden = false;
-            turnstile = await mountTurnstile(turnstileBox, siteKey);
+            submitBtn.disabled = false;
           }
+          fallback.hidden = true;
+          form.hidden = false;
         } catch {
           showFallback();
         }
@@ -170,7 +161,7 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
-        if (readSavedChoices().length > 0) return;
+        if (submitBtn.disabled || readSavedChoices().length > 0) return;
 
         const choices = checkboxes.filter((cb) => cb.checked).map((cb) => cb.value);
         if (choices.length === 0) {
@@ -180,7 +171,7 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
         }
 
         const token = turnstile?.getToken() ?? "";
-        if (turnstileRequired && !token) {
+        if (!token) {
           status.textContent = "Complete the verification check before voting.";
           return;
         }
@@ -192,13 +183,9 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
           const res = await fetch(siteUrl("api/poll"), {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify(token ? { choices, token } : { choices }),
+            body: JSON.stringify({ choices, token }),
             signal: AbortSignal.timeout(8000),
           });
-          if (UNAVAILABLE_STATUSES.includes(res.status)) {
-            showFallback();
-            return;
-          }
           const payload = (await res.json().catch(() => ({}))) as Partial<PollResponse> & {
             error?: string;
           };
@@ -214,6 +201,7 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
           status.textContent = "Vote recorded. Counts updated.";
         } catch {
           submitBtn.disabled = false;
+          turnstile?.reset();
           status.textContent = "Could not reach the server. Check your connection and try again.";
         }
       });
@@ -381,14 +369,12 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
   .np-status:empty {
     display: none;
   }
-  .np-fallback,
-  .np-noscript {
+  .np-fallback {
     margin: 0;
     font-family: var(--font-read);
     color: var(--sl-color-gray-1);
   }
-  .np-fallback a,
-  .np-noscript a {
+  .np-fallback a {
     color: var(--sl-color-text-accent);
     text-decoration: underline;
   }

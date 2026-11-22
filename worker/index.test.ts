@@ -1,7 +1,7 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { POLL_OPTION_IDS } from "../src/lib/poll";
 import { EMBED_DIM, EMBED_MODEL, queryText } from "../src/lib/semantic";
-import worker from "./index";
+import worker, { Poll } from "./index";
 import { AI_TIMEOUT_MS, type Env, limitKey } from "./search";
 
 const paper = (title: string, v?: number[]) => ({
@@ -545,13 +545,42 @@ describe("/mcp", () => {
   });
 });
 
-function memoryKv(initial: Record<string, string> = {}) {
-  const store = new Map<string, string>(Object.entries(initial));
+function memoryPoll() {
+  let committed: unknown;
+  let pending = Promise.resolve();
+  let fail = false;
+  const object = new Poll({
+    storage: {
+      get: async <T>() => structuredClone(committed) as T | undefined,
+      transaction: (callback) => {
+        const result = pending.then(async () => {
+          let next = structuredClone(committed);
+          const response = await callback({
+            get: async <Value>() => structuredClone(next) as Value | undefined,
+            put: (_key, value) => {
+              next = structuredClone(value);
+              return Promise.resolve();
+            },
+          });
+          if (fail) {
+            fail = false;
+            throw new Error("Commit failed");
+          }
+          committed = next;
+          return response;
+        });
+        pending = result.then(
+          () => undefined,
+          () => undefined,
+        );
+        return result;
+      },
+    },
+  });
   return {
-    store,
-    get: async (key: string) => store.get(key) ?? null,
-    put: async (key: string, value: string) => {
-      store.set(key, value);
+    getByName: () => object,
+    failNextCommit: () => {
+      fail = true;
     },
   };
 }
@@ -562,7 +591,7 @@ type ContributeEnvOpts = {
   withLimiter?: boolean;
   turnstileSecret?: string;
   githubToken?: string;
-  kv?: ReturnType<typeof memoryKv> | null;
+  poll?: ReturnType<typeof memoryPoll> | null;
 };
 
 function contributeEnv({
@@ -571,12 +600,11 @@ function contributeEnv({
   withLimiter = true,
   turnstileSecret = "test-turnstile-secret",
   githubToken = "test-github-token",
-  kv = memoryKv(),
-}: ContributeEnvOpts = {}): Env & { kv: ReturnType<typeof memoryKv> | null } {
+  poll = memoryPoll(),
+}: ContributeEnvOpts = {}): Env {
   const base = env();
   return {
     ...base,
-    kv,
     ...(withLimiter
       ? {
           CONTRIBUTE_LIMIT: {
@@ -590,7 +618,7 @@ function contributeEnv({
           },
         }
       : {}),
-    ...(kv ? { POLL_KV: kv } : {}),
+    ...(poll ? { POLL: poll } : {}),
     ...(turnstileSecret ? { TURNSTILE_SECRET_KEY: turnstileSecret } : {}),
     ...(githubToken ? { GITHUB_ISSUES_TOKEN: githubToken } : {}),
   };
@@ -742,12 +770,20 @@ describe("/api/contribute", () => {
 });
 
 describe("/api/poll", () => {
+  function vote(choices: string[]) {
+    return post(JSON.stringify({ choices, token: "ok" }), { path: "/api/poll" });
+  }
+
+  beforeEach(() => {
+    vi.spyOn(globalThis, "fetch").mockImplementation(async () => Response.json({ success: true }));
+  });
+
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  it("returns initial zero counts on GET and 503 when KV is missing", async () => {
-    const e = contributeEnv({ turnstileSecret: "" });
+  it("returns zero counts on GET and requires storage and the Turnstile secret", async () => {
+    const e = contributeEnv();
     const res = await worker.fetch(new Request("https://ai4ie.org/api/poll"), e);
     expect(res.status).toBe(200);
     const data = (await res.json()) as {
@@ -756,22 +792,30 @@ describe("/api/poll", () => {
       turnstileRequired: boolean;
     };
     expect(data.voters).toBe(0);
-    expect(data.turnstileRequired).toBe(false);
+    expect(data.turnstileRequired).toBe(true);
     for (const id of POLL_OPTION_IDS) expect(data.counts[id]).toBe(0);
 
-    const noKv = contributeEnv({ kv: null });
-    expect((await worker.fetch(new Request("https://ai4ie.org/api/poll"), noKv)).status).toBe(503);
-    expect(
-      (await worker.fetch(post('{"choices":["golden-test"]}', { path: "/api/poll" }), noKv)).status,
-    ).toBe(503);
+    const noPoll = contributeEnv({ poll: null });
+    const noSecret = contributeEnv({ turnstileSecret: "" });
+    expect((await worker.fetch(new Request("https://ai4ie.org/api/poll"), noPoll)).status).toBe(
+      503,
+    );
+    expect((await worker.fetch(new Request("https://ai4ie.org/api/poll"), noSecret)).status).toBe(
+      503,
+    );
+    expect((await worker.fetch(vote(["golden-test"]), noPoll)).status).toBe(503);
+    expect((await worker.fetch(vote(["golden-test"]), noSecret)).status).toBe(503);
   });
 
   it("records multi-select votes, deduplicates choices, and updates counts", async () => {
-    const e = contributeEnv({ turnstileSecret: "" });
+    const e = contributeEnv();
     const vote1 = await worker.fetch(
-      post(JSON.stringify({ choices: ["golden-test", "claim-ledger", "golden-test"] }), {
-        path: "/api/poll",
-      }),
+      post(
+        JSON.stringify({ choices: ["golden-test", "claim-ledger", "golden-test"], token: "ok" }),
+        {
+          path: "/api/poll",
+        },
+      ),
       e,
     );
     expect(vote1.status).toBe(200);
@@ -782,7 +826,9 @@ describe("/api/poll", () => {
     expect(data1.counts["compute-receipt"]).toBe(0);
 
     const vote2 = await worker.fetch(
-      post(JSON.stringify({ choices: ["golden-test", "lci-human-review"] }), { path: "/api/poll" }),
+      post(JSON.stringify({ choices: ["golden-test", "lci-human-review"], token: "ok" }), {
+        path: "/api/poll",
+      }),
       e,
     );
     expect(vote2.status).toBe(200);
@@ -794,8 +840,32 @@ describe("/api/poll", () => {
     expect(data2.counts["lci-human-review"]).toBe(1);
   });
 
+  it("records concurrent votes and leaves totals intact after a failed commit", async () => {
+    const poll = memoryPoll();
+    const e = contributeEnv({ poll });
+    const read = async () =>
+      (await worker.fetch(new Request("https://ai4ie.org/api/poll"), e)).json();
+    const [first, second] = await Promise.all([
+      worker.fetch(vote(["golden-test", "claim-ledger"]), e),
+      worker.fetch(vote(["golden-test"]), e),
+    ]);
+    expect([first.status, second.status]).toEqual([200, 200]);
+    const before = await read();
+    expect(before).toMatchObject({ voters: 2, counts: { "golden-test": 2, "claim-ledger": 1 } });
+
+    poll.failNextCommit();
+    expect((await worker.fetch(vote(["claim-ledger"]), e)).status).toBe(503);
+    expect(await read()).toEqual(before);
+
+    expect((await worker.fetch(vote(["claim-ledger"]), e)).status).toBe(200);
+    expect(await read()).toMatchObject({
+      voters: 3,
+      counts: { "golden-test": 2, "claim-ledger": 2 },
+    });
+  });
+
   it("rejects invalid methods, content types, choices, and rate-limited requests", async () => {
-    const e = contributeEnv({ turnstileSecret: "" });
+    const e = contributeEnv();
     expect(
       (await worker.fetch(new Request("https://ai4ie.org/api/poll", { method: "DELETE" }), e))
         .status,
@@ -816,13 +886,13 @@ describe("/api/poll", () => {
       (
         await worker.fetch(
           post('{"choices":["golden-test"]}', { path: "/api/poll" }),
-          contributeEnv({ allowed: false, turnstileSecret: "" }),
+          contributeEnv({ allowed: false }),
         )
       ).status,
     ).toBe(429);
   });
 
-  it("requires and verifies Turnstile on POST when TURNSTILE_SECRET_KEY is configured", async () => {
+  it("requires and verifies Turnstile on POST", async () => {
     const e = contributeEnv({ turnstileSecret: "poll-secret" });
     const missingToken = await worker.fetch(
       post(JSON.stringify({ choices: ["golden-test"] }), { path: "/api/poll" }),

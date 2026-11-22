@@ -1,4 +1,5 @@
 ---
+import { siteUrl } from "../lib/urls";
 import { repoUrl } from "../site";
 
 const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? "";
@@ -7,21 +8,20 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
 ---
 
 <contribute-form class="contribute-form not-content" data-turnstile-site-key={siteKey}>
-  <div class="cf-fallback" hidden={Boolean(siteKey)}>
+  <div class="cf-fallback">
     <p>
-      On-site submissions are not active on this host right now. You can send suggestions,
-      candidate questions, or comments through <a href={issuesUrl}>GitHub Issues</a> or on{" "}
+      If the form is unavailable, share your contribution through <a href={issuesUrl}>GitHub Issues</a> or on{" "}
       <a href={discordUrl}>Discord</a>.
     </p>
   </div>
 
-  <form class="cf-form" hidden={!siteKey} novalidate>
+  <form class="cf-form" method="post" action={siteUrl("api/contribute")} hidden novalidate>
     <div class="cf-field">
       <label for="cf-type">Contribution type</label>
       <select id="cf-type" name="type" required>
         <option value="resource">Paper, tool, or dataset</option>
         <option value="golden-question">Golden question (candidate)</option>
-        <option value="ai-mistake">AI mistake seen in IE work (anonymous)</option>
+        <option value="ai-mistake">AI mistake seen in IE work</option>
         <option value="other">Other or comment on an open question</option>
       </select>
       <p class="cf-hint" data-type-hint>
@@ -66,48 +66,39 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
     </div>
 
     <div class="cf-field">
-      <label for="cf-attribution">Name, handle, or affiliation (optional; leave blank to stay anonymous)</label>
+      <label for="cf-attribution">Attribution (optional)</label>
       <input
         id="cf-attribution"
+        aria-describedby="cf-attribution-hint"
         name="attribution"
         type="text"
         maxlength="120"
         autocomplete="off"
       />
-      <p class="cf-hint">
-        Do not enter an email address. Submissions open a public GitHub issue for community review.
+      <p id="cf-attribution-hint" class="cf-hint">
+        Add your name, handle, or affiliation if you want it shown on the public issue. Keep email addresses and private details out of your submission.
       </p>
     </div>
 
     <div class="cf-turnstile"></div>
 
     <div class="cf-actions">
-      <button type="submit" class="cf-submit">Send submission</button>
+      <button type="submit" class="cf-submit" disabled>Send submission</button>
     </div>
 
     <p class="cf-status" role="status"></p>
   </form>
-
-  <noscript>
-    <p class="cf-noscript">
-      JavaScript is required to use the on-site form. Use <a href={issuesUrl}>GitHub Issues</a> or{" "}
-      <a href={discordUrl}>Discord</a> instead.
-    </p>
-  </noscript>
 </contribute-form>
 
 <script>
   import { mountTurnstile, type TurnstileHandle } from "../lib/turnstile";
-  import { siteUrl } from "../lib/urls";
-
-  const UNAVAILABLE_STATUSES = [404, 405, 503];
 
   const TYPE_HINTS: Record<string, string> = {
     resource: "Share a paper, software tool, dataset, or model relevant to industrial ecology.",
     "golden-question":
       "Collected as candidate benchmark questions for review, not published as a benchmark.",
     "ai-mistake":
-      "Anonymous by default. Describe what the AI got wrong and how you caught it.",
+      "Describe what the AI got wrong and how you caught it.",
     other: "Comment on an open question, suggest a correction, or raise another topic.",
   };
 
@@ -132,13 +123,11 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
       if (!siteKey) return;
 
       let turnstile: TurnstileHandle | null = null;
-      void mountTurnstile(turnstileBox, siteKey).then((handle) => {
-        turnstile = handle;
-        if (!handle) {
-          form.hidden = true;
-          fallback.hidden = false;
-        }
-      });
+      const showFallback = () => {
+        submitBtn.disabled = true;
+        form.hidden = true;
+        fallback.hidden = false;
+      };
 
       const updateHint = () => {
         typeHint.textContent = TYPE_HINTS[typeSelect.value] ?? TYPE_HINTS.other;
@@ -193,23 +182,19 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
         setStatus("Sending submission…");
 
         try {
-          const res = await fetch(siteUrl("api/contribute"), {
+          const res = await fetch(form.action, {
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({ type, title, details, url, attribution, token }),
             signal: AbortSignal.timeout(10000),
           });
-          if (UNAVAILABLE_STATUSES.includes(res.status)) {
-            form.hidden = true;
-            fallback.hidden = false;
-            return;
-          }
           const payload = (await res.json().catch(() => ({}))) as {
             ok?: boolean;
             issueUrl?: string | null;
             error?: string;
           };
           if (!res.ok) {
+            if (res.status === 503 || res.status === 404) fallback.hidden = false;
             submitBtn.disabled = false;
             turnstile?.reset();
             setStatus(payload.error ?? "Submission failed. Please try again or use GitHub Issues.");
@@ -222,8 +207,17 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
           setStatus("Submission received for review.", payload.issueUrl);
         } catch {
           submitBtn.disabled = false;
+          turnstile?.reset();
           setStatus("Could not reach the server. Check your connection or use GitHub Issues.");
         }
+      });
+
+      void mountTurnstile(turnstileBox, siteKey, showFallback).then((handle) => {
+        if (!handle?.available) return;
+        turnstile = handle;
+        submitBtn.disabled = false;
+        fallback.hidden = true;
+        form.hidden = false;
       });
     }
   }
@@ -329,13 +323,11 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
     display: none;
   }
   .cf-status a,
-  .cf-fallback a,
-  .cf-noscript a {
+  .cf-fallback a {
     color: var(--sl-color-text-accent);
     text-decoration: underline;
   }
-  .cf-fallback,
-  .cf-noscript {
+  .cf-fallback {
     margin: 0;
     font-family: var(--font-read);
     color: var(--sl-color-gray-1);

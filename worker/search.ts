@@ -11,10 +11,6 @@ import {
 } from "../src/lib/semantic.ts";
 
 export type RateLimiter = { limit(opts: { key: string }): Promise<{ success: boolean }> };
-export type KVStore = {
-  get(key: string): Promise<string | null>;
-  put(key: string, value: string): Promise<void>;
-};
 
 export type Env = {
   AI: { run(model: string, input: object): Promise<{ data: number[][] }> };
@@ -23,7 +19,7 @@ export type Env = {
   SEARCH_LIMIT_GLOBAL: RateLimiter;
   CONTRIBUTE_LIMIT?: RateLimiter;
   CONTRIBUTE_LIMIT_GLOBAL?: RateLimiter;
-  POLL_KV?: KVStore;
+  POLL?: { getByName(name: string): { fetch(request: Request): Promise<Response> } };
   TURNSTILE_SECRET_KEY?: string;
   GITHUB_ISSUES_TOKEN?: string;
 };
