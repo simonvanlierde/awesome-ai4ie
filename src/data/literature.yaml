@@ -934,7 +934,7 @@
   added: 2026-11
   evidence:
     dataset:
-      identifier: "Zenodo 10.5281/zenodo.17438819 (version not specified in source note)"
+      identifier: "Zenodo 10.5281/zenodo.17438819"
       url: "https://doi.org/10.5281/zenodo.17438819"
       provenance: "Full texts of 77 review papers (1,180 valid chunks) plus abstracts, fused into W2RKG (3,518 waste entities, 4,471 resource entities, 33,679 waste-to-resource relationships)."
       modality: "Text corpus (review papers and abstracts) and extracted knowledge graph."
@@ -948,18 +948,18 @@
       reference: "45 known Taranto industrial symbiosis exchanges; unique W2R relationships in Maestri; manual labels from 3 evaluators on 100 sampled relationships."
     method:
       repositories:
-        - label: "W2RKG-construction-with-LLMs (GitHub)"
+        - label: "W2RKG-construction-with-LLMs (code and LoRA weights)"
           url: "https://github.com/nancycyzl/W2RKG-construction-with-LLMs"
-        - label: "W2RKG_application (GitHub)"
+        - label: "W2RKG_application (case study and interface)"
           url: "https://github.com/nancycyzl/W2RKG_application"
-      revision: "Not verified in source note."
-      model: "LoRA weights released in W2RKG_application; base LLM name and checkpoint not verified in source note."
+      revision: "Repository commit unverified."
+      model: "The authors built the graph with GPT-4o-mini. In a separate evaluation, they fine-tuned Llama-3.1-8B-Instruct with LoRA."
     results:
       - source: author-reported
         metric: "Recall on Taranto industrial symbiosis benchmark"
         value: "24 of 45 known exchanges (53%)"
         uncertainty: "Not reported."
-        locator: "Results, 'W2RKG application and demonstration' (section heading; page numbers unreliable in extracted text)."
+        locator: "Results, 'W2RKG application and demonstration'."
         setting: "Offline case study using cosine similarity at threshold 0.75."
         limits: "Company matching uses cosine similarity only; literature-derived links require further verification for accuracy and practical viability (Discussion)."
       - source: author-reported

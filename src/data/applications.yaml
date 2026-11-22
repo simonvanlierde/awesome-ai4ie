@@ -153,7 +153,7 @@
   ie: [eeio, lca]
   ml: [nlp-extraction, llm, foundation]
   summary: "Map product text or company descriptions to EIO-LCA or NAICS sectors to assign carbon intensity factors."
-  maturity: "Zero-shot sentence transformers cut product footprint error from 51% to 22% MAPE on 40K annotated products. Company-level NAICS matching still has 45.88% MAPE in a preprint."
+  maturity: "On 27,708 products, mean absolute percentage error in sector-based kg CO₂e per dollar fell from 51% to 22% with zero-shot matching. A firm-level NAICS matching preprint reports 45.88%."
   papers: [balajiCaMLCarbonFootprinting2023, guoGroupReasoningEmission2025]
 
 # ── Uncertainty & Bayesian MFA ───────────────────────────────────────────
