@@ -123,12 +123,16 @@ function Grid({ entries }: { entries: AppEntry[] }) {
                 return (
                   <td key={ie} data-n={Math.min(apps.length, 3)}>
                     {papers.length > 0 ? (
-                      <a href={litUrl({ papers })} title={names} aria-label={`Papers for ${name}`}>
+                      <a
+                        href={litUrl({ papers })}
+                        title={`${names} (${STAGES[stage]})`}
+                        aria-label={`Papers for ${name}`}
+                      >
                         {apps.length}
                         {pips}
                       </a>
                     ) : (
-                      <span title={names}>
+                      <span title={`${names} (${STAGES[stage]})`}>
                         <span aria-hidden="true">{apps.length}</span>
                         {pips}
                         <span className="sr-only">{name}</span>
@@ -143,8 +147,14 @@ function Grid({ entries }: { entries: AppEntry[] }) {
       </table>
       <p className="apx-grid-src">
         Numbers count applications. Links open their papers. A dashed cell has no entry. Squares
-        show the most mature stage in a cell: {stagePips("early")} {STAGES.early},{" "}
-        {stagePips("tested")} {STAGES.tested}, {stagePips("applied")} {STAGES.applied}.
+        show the most mature stage in a cell:{" "}
+        {(["early", "tested", "applied"] as const).map((s, i) => (
+          <span key={s}>
+            {i > 0 && ", "}
+            <span aria-hidden="true">{stagePips(s)}</span> {STAGES[s]}
+          </span>
+        ))}
+        .
       </p>
     </section>
   );
