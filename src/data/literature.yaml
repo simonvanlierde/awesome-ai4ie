@@ -145,7 +145,7 @@
   etAl: true
   year: 2025
   doi: "10.1021/acs.est.5c05955"
-  blurb: "A retrieval-augmented language model answers questions about LCA papers. It scored 0.823 F1 for methanol production and 0.855 for plastic packaging at end-of-life."
+  blurb: "A retrieval-augmented language model answers questions about LCA papers. Its answers scored a BERTScore F1 of 0.823 for methanol production and 0.855 for plastic packaging at end-of-life, a wording-similarity score that does not check numbers or units."
   ie: [lca]
   ml: [llm, nlp-extraction]
   type: [method]
@@ -610,7 +610,7 @@
   etAl: true
   year: 2021
   doi: "10.1021/acs.est.0c05642"
-  blurb: "National material stock maps at 10 m from free satellite data and OSM, no cadastre needed; ~5 Gt Austria, ~38 Gt Germany."
+  blurb: "National material stock maps at 10 m from free satellite data and OSM, without cadastral data as input; ~5 Gt Austria, ~38 Gt Germany."
   ie: [sem]
   topic: [buildings]
   ml: [remote-sensing, tabular-ml]

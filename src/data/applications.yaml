@@ -23,7 +23,7 @@
   ie: [lca]
   ml: [llm, nlp-extraction]
   summary: "Use a language model to retrieve reported inventory and impact values from papers and reports."
-  maturity: "One study reported F1 of 0.82 for methanol and 0.86 for plastic packaging at end-of-life. Verify extracted values against the source."
+  maturity: "One study reported a BERTScore F1 of 0.82 for methanol and 0.86 for plastic packaging at end-of-life; the score measures wording, not numbers or units. Verify extracted values against the source."
   papers: [kumarLargeLanguageModelbased2025, preussLargeLanguageModels2024, tuMitigatingGrandChallenges2024]
 - id: automated-carbon-footprinting
   name: "Automated product carbon footprinting"
