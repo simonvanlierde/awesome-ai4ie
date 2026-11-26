@@ -104,5 +104,24 @@ check the database and method names, then rerun a case with a known answer.
 <Code code={lcaSanityCheck} lang="md" title="skills/lca-data-sanity-check/SKILL.md" />
 </details>
 
-[Add an Agent Skill](repo:blob/main/CONTRIBUTING.md#adding-an-agent-skill)
-using the [skill template](repo:blob/main/skills/SKILL-template.md).
+## Add your own skill
+
+A skill is worth writing when you give an assistant the same instructions for the
+same task more than twice.
+
+1. Copy the [skill template](repo:blob/main/skills/SKILL-template.md) to
+   `skills/<your-skill-name>/SKILL.md`. The `name` field must match the folder name:
+   lowercase letters, numbers, and hyphens
+   ([specification](https://agentskills.io/specification)).
+2. Write the `description` so the assistant knows when to load the skill: the task,
+   the inputs, and what the skill checks. The assistant reads only this line until
+   the task comes up.
+3. Write the steps. End each check with a result you can verify, such as a known
+   answer or a balance that must close.
+4. Try it on a real task in a fresh session. Keep it generic enough that someone
+   else can use it without editing.
+
+To submit it, open a pull request on GitHub
+([contributing guide](repo:blob/main/CONTRIBUTING.md#adding-an-agent-skill)).
+Without a GitHub account, paste the skill into the
+[contribution form](/contribute/#send-a-contribution) as "Other".

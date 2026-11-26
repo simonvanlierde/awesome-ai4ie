@@ -9,6 +9,10 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- An Evals & agent benchmarks page: how to score an AI step on known answers, and five
+  benchmarks that test agents and models on research and LCA tasks. The agentic harnesses
+  page gains the lab-member frame, plan-first, worktree and hook tips with a pre-edit hook
+  example, and the skills page an "Add your own skill" section.
 - A Details panel for each paper on the literature page: both the DOI and arXiv links,
   field pages and filtered views for its tags, the applications that cite it, three
   similar papers by meaning, a copyable link and an edit form. `/literature/#<id>` opens
