@@ -156,6 +156,14 @@ describe("worker", () => {
     ]);
   });
 
+  it("answers an off-list question with no papers, not an error", async () => {
+    // Orthogonal to every fixture vector: each scores 0, below MIN_SCORE.
+    const e = env({ ai: () => Promise.resolve({ data: [full([0, 0, 1])] }) });
+    const r = await worker.fetch(post('{"q": "reinforcement learning for supply chains"}'), e);
+    expect(r.status).toBe(200);
+    expect(await r.json()).toEqual({ hits: [] });
+  });
+
   it("rejects a missing, empty or overlong question", async () => {
     const bodies = ["not json", "{}", '{"q": "  "}', JSON.stringify({ q: "x".repeat(301) })];
     const statuses = await Promise.all(
@@ -336,6 +344,17 @@ describe("/mcp", () => {
       blurb: "B.",
       url: "https://ai4ie.org/literature/#nearer",
     });
+  });
+
+  it("answers an off-list question with an empty list, not a tool error", async () => {
+    const e = env({ ai: () => Promise.resolve({ data: [full([0, 0, 1])] }) });
+    const r = await call(
+      "search_papers",
+      { question: "reinforcement learning for supply chains" },
+      { e },
+    );
+    expect(r.isError).toBeFalsy();
+    expect(payload(r)).toEqual({ papers: [] });
   });
 
   it("answers coded tool errors when search is unavailable or limited", async () => {
