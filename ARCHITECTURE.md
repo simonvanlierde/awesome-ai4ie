@@ -30,13 +30,13 @@ flowchart TD
 ## Code layout
 
 - `src/data/`: curated YAML data (`literature.yaml`, `applications.yaml`, `resources.yaml`), citation cache (`citations.json`), tag vocabulary (`vocabulary.yaml`, with the labels the code imports in `vocabulary.gen.ts` and `tags.ts`) and Zod schemas (`schemas.ts`).
-- `src/lib/`: `skos.ts` (the vocabulary as SKOS) and pure helpers for citations, RSS feed, URLs, resource lists, Sankey geometry, chapter checks and stall detection.
+- `src/lib/`: `skos.ts` (the vocabulary as SKOS) and `footprint.mjs` (the footprint page's numbers), and pure helpers for citations, RSS feed, URLs, resource lists, Sankey geometry, chapter checks and stall detection.
 - `src/components/`: static components (`AppList.tsx`, `TagChips.tsx`, `Resources.astro`), three React islands (`LiteratureBrowser.tsx`, `ApplicationsExplorer.tsx`, `ZeroShotDemo.tsx`) and their filter and pivot helpers.
-- `src/plugins/`: Markdown and HTML build plugins, plus `csp-inline-scripts.mjs`.
+- `src/plugins/`: Markdown and HTML build plugins, plus `csp-inline-scripts.mjs` and `footprint.mjs` (fills the footprint page at `astro:build:done`).
 - `src/content/docs/`: guide pages in Markdown and MDX.
 - `worker/`: the Cloudflare Worker: `/api/search`, `/api/contribute` (`contribute.ts`), `/api/poll` (`poll.ts`), the MCP server (`mcp.ts`) and the shared search and rate-limit code (`search.ts`).
 - `vocabulary/`: `context.jsonld`, the JSON-LD context; the build serves the vocabulary at `/vocabulary.ttl` and `/vocabulary.jsonld` from it.
-- `scripts/`: `vocabulary.mjs` (writes `src/data/vocabulary.gen.ts`), and build-time and CI checks (accessibility, licences, citations, page weight and social card).
+- `scripts/`: `vocabulary.mjs` (writes `src/data/vocabulary.gen.ts`), and build-time and CI checks (accessibility, licences, citations, page weight, which also feeds the footprint page, and social card).
 
 ## Security architecture and assurance case
 

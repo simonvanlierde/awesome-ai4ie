@@ -88,11 +88,11 @@ async function gzipped(file) {
   return gzipSync(await readFile(file)).length;
 }
 
-async function weigh(page) {
-  const html = await readFile(`dist/${page}`, "utf8");
+async function weigh(page, root) {
+  const html = await readFile(`${root}/${page}`, "utf8");
   const seen = new Set(extractAssets(html));
   const queue = [...seen];
-  let bytes = await gzipped(`dist/${page}`);
+  let bytes = await gzipped(`${root}/${page}`);
   while (queue.length) {
     const url = queue.shift();
     const file = toDist(url);
@@ -107,15 +107,22 @@ async function weigh(page) {
   return { page, kb: bytes / 1024 };
 }
 
-/** Every built page as {page, kb}, heaviest first. Reads dist/ under the working directory. */
-export async function weighAll() {
-  const files = await readdir("dist", { recursive: true });
-  const pages = files.filter((f) => f.endsWith(".html"));
-  return (await Promise.all(pages.map(weigh))).sort((a, b) => b.kb - a.kb);
+/**
+ * Every built page as {page, kb}, heaviest first. Meta-refresh redirect stubs and 404.html
+ * are left out: they are not pages a reader views.
+ */
+export async function weighAll(root = "dist") {
+  const files = await readdir(root, { recursive: true });
+  const pages = [];
+  for (const f of files.filter((f) => f.endsWith(".html") && f !== "404.html")) {
+    if (!(await readFile(`${root}/${f}`, "utf8")).includes('http-equiv="refresh"')) pages.push(f);
+  }
+  return (await Promise.all(pages.map((f) => weigh(f, root)))).sort((a, b) => b.kb - a.kb);
 }
 
 async function main() {
-  const rows = await weighAll().catch(() => {
+  const rows = await weighAll().catch((e) => {
+    if (e.code !== "ENOENT") throw e;
     console.error("No dist/ folder: run `pnpm run build` first.");
     process.exit(2);
   });

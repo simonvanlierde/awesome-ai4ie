@@ -1,4 +1,8 @@
+import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { expect, test } from "vitest";
+import { weighAll } from "../../scripts/page-weight.mjs";
 import { DEMO_DOWNLOAD, fillTokens, footprint, footprintTokens } from "./footprint.mjs";
 
 const rows = [
@@ -23,14 +27,36 @@ test("a demo run is the sum of its downloads, and views per demo is the byte rat
   expect(f.viewsPerDemo).toBeCloseTo(bytes / (200 * 1024), 6);
 });
 
-test("the verdict follows the ratio", () => {
-  const verdict = (kb: number) => footprintTokens(footprint([{ page: "a", kb }])).verdict;
-  expect(verdict(10)).toMatch(/thousands/);
-  expect(verdict(200)).toMatch(/about a thousand/);
-  expect(verdict(2000)).toMatch(/does not hold/);
+test("every token for fixed rows", () => {
+  expect(footprintTokens(footprint(rows))).toEqual({
+    pages: "2",
+    viewKb: "200",
+    minKb: "100",
+    maxKb: "300",
+    demoMb: "182",
+    onnxMb: "154",
+    view: "25 mg to 30 mg",
+    thousandViews: "25 g to 30 g",
+    demo: "22 g to 27 g",
+    viewsPerDemo: "890",
+    verdict: "One demo run weighs as much as about 890 page views.",
+  });
+});
+
+test("footprint throws without rows", () => {
+  expect(() => footprint([])).toThrow(/no page-weight rows/);
 });
 
 test("fillTokens fills every token and throws on an unknown one", () => {
   expect(fillTokens("a %%fp:x%% b %%fp:x%%", { x: "1" })).toBe("a 1 b 1");
   expect(() => fillTokens("%%fp:nope%%", {})).toThrow(/nope/);
+});
+
+test("weighAll skips redirect stubs and 404.html", async () => {
+  const root = mkdtempSync(join(tmpdir(), "dist-"));
+  mkdirSync(join(root, "a"));
+  writeFileSync(join(root, "a/index.html"), "<html>page</html>");
+  writeFileSync(join(root, "stub.html"), '<meta http-equiv="refresh" content="0; url=/a/">');
+  writeFileSync(join(root, "404.html"), "<html>missing</html>");
+  expect((await weighAll(root)).map((r) => r.page)).toEqual(["a/index.html"]);
 });

@@ -24,6 +24,14 @@ describe("sourcesFor", () => {
     expect(sourcesFor("")).toEqual(["src/content/docs/index.mdx", "src/data/literature.yaml"]);
   });
 
+  it("adds the footprint page's code and dependency files", () => {
+    expect(sourcesFor("footprint")).toEqual([
+      "src/content/docs/footprint.md",
+      "src/lib/footprint.mjs",
+      "package.json",
+    ]);
+  });
+
   it("finds a section's index page and leaves plain pages without data", () => {
     expect(sourcesFor("tools")).toEqual(["src/content/docs/tools/index.mdx"]);
   });

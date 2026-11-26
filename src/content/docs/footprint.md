@@ -1,22 +1,16 @@
 ---
 title: Footprint of this site
-description: Draft. The carbon footprint of one page view of this site, and of one demo run, as a small life cycle assessment.
-pagefind: false
-head:
-  - tag: meta
-    attrs: { name: robots, content: noindex }
+description: The carbon footprint of one page view of this site and of one demo run, as a small life cycle assessment.
 ---
 
-**Draft.** The group has not seen this page yet, and nothing links to it. Every number below is
-computed from this build, not typed by hand.
+Every number below is computed from this build, not typed by hand.
 
 ## Result
 
-One page view of this site transfers about %%fp:viewKb%% KB and emits **%%fp:view%%** CO2e.
+One page view of this site transfers about %%fp:viewKb%% KB and emits **%%fp:view%%** CO₂e.
 A thousand page views emit %%fp:thousandViews%%.
 
-One zero-shot demo run downloads about %%fp:demoMb%% MB and emits **%%fp:demo%%** CO2e.
-That equals about %%fp:viewsPerDemo%% page views.
+One zero-shot demo run downloads about %%fp:demoMb%% MB (uncompressed, an upper bound) and emits **%%fp:demo%%** CO₂e.
 
 %%fp:verdict%%
 
@@ -28,7 +22,7 @@ The first number of each pair is for a green host, the second for a host that is
 I estimate emissions from data transferred, with the Sustainable Web Design model, version 4
 ([model docs](https://sustainablewebdesign.org/estimating-digital-emissions/)). It splits
 each gigabyte into the energy of data centres, networks and the reader's device, each with
-its embodied part, and multiplies by the global average grid intensity (494 g CO2e/kWh). The
+its embodied part, and multiplies by the global average grid intensity (494 g CO₂e/kWh). The
 [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview/) library from the Green
 Web Foundation (`@tgwf/co2`, version 0.19.0, Apache-2.0) implements it. The code is in
 [`src/lib/footprint.mjs`](repo:blob/main/src/lib/footprint.mjs).

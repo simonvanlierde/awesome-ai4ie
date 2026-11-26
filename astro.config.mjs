@@ -156,8 +156,6 @@ export default defineConfig({
     // Starlight adds a plain sitemap unless one is configured here. This one dates
     // each URL by its last commit (src/lib/lastmod.ts).
     sitemap({
-      // Draft: unlinked until the group has seen it.
-      filter: (page) => !page.endsWith("/footprint/"),
       serialize: (item) => {
         const path = new URL(item.url).pathname.slice(base.length).replace(/^\/|\/$/g, "");
         const date = lastmod(path);
@@ -274,6 +272,7 @@ export default defineConfig({
           items: [
             { label: "Contribute & norms poll", slug: "contribute" },
             { label: "Open questions", slug: "open-questions" },
+            { label: "Footprint of this site", slug: "footprint" },
           ],
         },
       ],

@@ -63,6 +63,9 @@ Find suggestions under the `entry` label and other on-site submissions under
 - **Page weight.** CI fails a page that goes over its budget in
   [`scripts/page-weight.mjs`](scripts/page-weight.mjs). Raise `DEFAULT_BUDGET_KB` or a page's
   `OVERRIDES` entry only for a reason you can name in the pull request.
+- **Demo download sizes.** `DEMO_DOWNLOAD` in [`src/lib/footprint.mjs`](src/lib/footprint.mjs) holds
+  hand-copied file sizes. Refresh them when the demo model or the transformers.js or
+  onnxruntime-web version changes.
 - **Citation files.** `CITATION.cff` is the source for `codemeta.json` and `.zenodo.json`. After
   a change of author, edit it and run `pnpm exec prek run citesync-write --stage manual --all-files`.
 - **Social card.** `public/og.png` is a picture of the logo, the title, the site description and Fig. 1, so it goes stale when

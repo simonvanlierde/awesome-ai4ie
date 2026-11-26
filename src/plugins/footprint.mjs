@@ -15,10 +15,14 @@ export function footprintNumbers() {
     name: "footprint-numbers",
     hooks: {
       "astro:build:done": async ({ dir }) => {
-        const file = `${fileURLToPath(dir)}/${PAGE}`;
-        const html = await readFile(file, "utf8");
-        const tokens = footprintTokens(footprint(await weighAll()));
-        await writeFile(file, fillTokens(html, tokens));
+        const root = fileURLToPath(dir);
+        try {
+          const html = await readFile(`${root}/${PAGE}`, "utf8");
+          const tokens = footprintTokens(footprint(await weighAll(root)));
+          await writeFile(`${root}/${PAGE}`, fillTokens(html, tokens));
+        } catch (e) {
+          throw new Error(`footprint page: ${e.message}`, { cause: e });
+        }
       },
     },
   };

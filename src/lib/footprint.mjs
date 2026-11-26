@@ -30,9 +30,10 @@ const mean = (xs) => xs.reduce((a, b) => a + b, 0) / xs.length;
 
 /**
  * Numbers for the footprint page from page-weight rows ({page, kb}, gzipped first visit).
- * Grams CO2e are for the `hosting` case: a green host (low) or not (high).
+ * Grams CO₂e are for the `hosting` case: a green host (low) or not (high).
  */
 export function footprint(rows) {
+  if (rows.length === 0) throw new Error("footprint: no page-weight rows");
   const bytes = rows.map((r) => r.kb * 1024);
   const view = (b, green) => swd.perByte(b, green);
   const viewBytes = mean(bytes);
@@ -71,12 +72,7 @@ export function footprintTokens(f) {
     ),
     demo: range(f.demo, (g) => `${g.toFixed(0)} g`),
     viewsPerDemo: rounded(f.viewsPerDemo).toLocaleString("en"),
-    verdict:
-      f.viewsPerDemo >= 2000
-        ? "The finding holds: one demo run outweighs thousands of page views."
-        : f.viewsPerDemo >= 500
-          ? "The finding holds, but the count is about a thousand page views, not several thousand."
-          : "The finding does not hold: one demo run outweighs fewer than 500 page views.",
+    verdict: `One demo run weighs as much as about ${rounded(f.viewsPerDemo).toLocaleString("en")} page views.`,
   };
 }
 

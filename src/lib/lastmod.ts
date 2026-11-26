@@ -14,6 +14,7 @@ const DATA: Record<string, string[]> = {
   literature: [LIT],
   "applications-map": [APPS, LIT],
   ...Object.fromEntries(Object.keys(IE_TAGS).map((t) => [`applications-map/${t}`, [APPS, LIT]])),
+  footprint: ["src/lib/footprint.mjs", "package.json"],
   vocabulary: ["src/data/vocabulary.yaml", "src/components/Vocabulary.astro"],
 };
 
