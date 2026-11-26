@@ -4,12 +4,12 @@ Planned work for the next year. Issues and pull requests can change the order.
 [Governance](GOVERNANCE.md), [released changes](CHANGELOG.md) and
 [routine upkeep](MAINTAINING.md#routine).
 
-Last reviewed: 2026-11-19
+Last reviewed: 2026-11-26
 
 ## Now
 
 - **Working-group adoption and a second maintainer.** Review the guide with the AI4IE working group, decide whether to move the repository into a shared organisation, and add a second maintainer ([MAINTAINING.md](MAINTAINING.md)).
-- **Fill open gaps on the applications map.** Add vetted entries for the fields and techniques under "Not mapped yet" as papers and suggestions arrive.
+- **Fill open gaps on the applications map.** Add vetted entries for the fields and techniques under "Not mapped yet" as papers and suggestions arrive, and give each a maturity stage.
 
 ## Next
 
