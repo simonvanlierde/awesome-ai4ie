@@ -165,14 +165,18 @@ split between them is larger than chance. To detect a 20-point
 
 For example, the [RaMa-Scene explorer eval](https://github.com/simonvanlierde/ramascene-explorer/tree/main/evals/ask)
 scores how well a model turns a question into an EXIOBASE scenario, a what-if change to
-products, regions or industries. In its 2026-11-19 run, Gemma-4-26B-A4B got 151 of 153
-questions phrased like published scenarios right, but only 3 of 8 reworded ones. Qwen3.8-27B
-got 151 and 6. Qwen's 6 of 8 has a Wilson 95% interval of 0.41 to 0.93, and Gemma's 3 of 8
-one of 0.14 to 0.69. Even if Qwen got right every item Gemma did, the exact McNemar p on
-these 8 items is at best 0.25. So eight questions can't rank the two models, and most misses
-are readings the question allows. The label scores sit at the ceiling and can't rank them
-either, but alone they would have hidden the weak spot. The eval is being extended along the
-steps above.
+products, regions or industries. In its 2026-11-19 run (vLLM, 4-bit weights, temperature 0),
+Qwen3.8-27B answered 151 of 153 label questions correctly and Gemma-4-26B-A4B 135. Item by
+item, 16 labels went to Qwen and none to Gemma, so the exact McNemar p is about 0.00003: on
+labels, Qwen is better. But 15 of Gemma's 18 misses are one mistake repeated: on the
+electrical-machinery scenarios it named the industry where the product was asked for. Related
+items like these aren't independent evidence, so count them as one finding, and fix the prompt
+or the gold answer before you rank models on them.
+
+The reworded questions show the opposite problem. Qwen got 6 of 8 (Wilson 95% interval 0.41
+to 0.93) and Gemma 3 of 8 (0.14 to 0.69). All 3 differing items went to Qwen, and the exact
+McNemar p is still 0.25. Eight items can't rank the two models, and most misses are readings
+the question allows.
 
 ## Claim ledger
 
