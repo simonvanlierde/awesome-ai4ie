@@ -9,6 +9,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- The contribute page links the AI4IE community survey, and `/qr/contribute.svg` and
+  `/qr/contribute.png` hold a QR code for `https://ai4ie.org/contribute/`.
 - An Evals & agent benchmarks page: how to score an AI step on known answers, and five
   benchmarks that test agents and models on research, coding and LCA tasks.
 - The agentic harnesses page explains a harness by comparing the agent to a new lab member,
