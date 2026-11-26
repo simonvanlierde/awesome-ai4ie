@@ -572,7 +572,7 @@
   etAl: true
   year: 2020
   doi: "10.1016/j.jclepro.2019.119661"
-  blurb: "Scores US food sectors with input-output sustainability assessment, then clusters them with k-means and models the clusters with logistic regression (91.67% accuracy); animal slaughtering dominates most impacts."
+  blurb: "Scores US food sectors with input-output sustainability assessment, then clusters them with k-means and models the clusters with logistic regression (91.67% accuracy, checked on ten sectors); animal slaughtering dominates most impacts."
   ie: [eeio]
   topic: [food]
   ml: [tabular-ml]
@@ -584,7 +584,7 @@
   authors: ["Hao, H.", "Guo, X.", "Wang, C.", "Yang, J."]
   year: 2025
   doi: "10.1016/j.jenvman.2025.127436"
-  blurb: "Environmental input-output footprints for 283,529 household records in 208 Chinese cities (2002-2020); random forests with SHAP rank the drivers, led by GDP per capita, population density and extreme weather."
+  blurb: "Household carbon footprints from input-output models for 283,529 records in 208 Chinese cities (2002-2020); random forests with SHAP rank the drivers, led by GDP per capita, population density and extreme weather."
   ie: [eeio]
   ml: [tabular-ml]
   type: [method]
