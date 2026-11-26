@@ -94,6 +94,15 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Six more cited figures, checked against the papers:
+  - The CaML 51% to 22% error drop is on 27,708 products, not 40K.
+  - The NAICS-matching preprint's 45.88% error is on 20 companies with disclosed emissions,
+    not the whole dataset.
+  - The leakage survey covers 329 papers, not 294.
+  - The interior-stock study is from England and Wales, and facade photos added little.
+  - Window and door counts from street-level photos are a one-neighbourhood prototype.
+  - The China building-stock model forecasts material, energy and waste intensities with
+    four ML models, XGBoost among them.
 - The LLM inventory-extraction scores (0.82 and 0.86) are BERTScore F1, which scores
   wording, not values or units. The applications map, the paper's blurb and the
   application line had called them plain F1.

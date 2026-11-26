@@ -549,7 +549,7 @@
   authors: ["Balaji, B.", "Vunnava, V. S. G.", "Guest, G.", "Kramer, J."]
   year: 2023
   doi: "10.1145/3543507.3583882"
-  blurb: "A pretrained sentence transformer ranks EIO-LCA industry sectors for a product's text, zero-shot; on 40K annotated products the kgCO2e/$ error falls from 51% MAPE with category mapping to 22%."
+  blurb: "A pretrained sentence transformer ranks EIO-LCA industry sectors for a product's text, zero-shot; on 27,708 annotated products the kgCO2e/$ error falls from 51% MAPE with category mapping to 22%."
   ie: [eeio, lca]
   ml: [nlp-extraction, foundation]
   type: [method]
@@ -560,7 +560,7 @@
   authors: ["Guo, Y.", "Qian, X.", "Credit, K.", "Ma, J."]
   year: 2025
   arxiv: "2502.06874"
-  blurb: "Fine-tuned Sentence-BERT and grouped LLM classifiers map 20,850 company descriptions to 1,114 NAICS sectors tied to carbon intensity factors (83.68% top-1); company-level MAPE is 45.88%. Preprint."
+  blurb: "Fine-tuned Sentence-BERT and grouped LLM classifiers map 20,850 company descriptions to 1,114 NAICS sectors tied to carbon intensity factors (83.68% top-1). Against the self-disclosed emissions of 20 companies, the mean absolute percentage error is 45.88%. Preprint."
   ie: [eeio]
   ml: [llm, nlp-extraction]
   type: [method, dataset]
@@ -707,7 +707,7 @@
   etAl: true
   year: 2026
   doi: "10.1021/acs.est.6c06129"
-  blurb: "A province-level dynamic stock and LCA model of China's buildings to 2060, with each intensity parameter forecast by the best of four ML models (random forest to GA-BiLSTM) under expanding-window validation."
+  blurb: "A province-level dynamic stock and LCA model of China's buildings to 2060, with each material, energy and waste intensity forecast by the best of four ML models (XGBoost, random forest, LSTM, GA-BiLSTM) under expanding-window validation."
   ie: [sem, lca]
   topic: [buildings]
   ml: [tabular-ml]
@@ -1265,7 +1265,7 @@
   authors: ["Kapoor, S.", "Narayanan, A."]
   year: 2023
   doi: "10.1016/j.patter.2023.100804"
-  blurb: "Identifies eight ways data can leak into model evaluation, with examples from 294 papers across 17 fields."
+  blurb: "Identifies eight ways data can leak into model evaluation, from a survey of 20 papers across 17 fields that together affect 329 studies."
   ml: [tabular-ml]
   type: [meta]
   added: 2026-07

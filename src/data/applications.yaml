@@ -66,15 +66,15 @@
   name: "Building attributes from street-level imagery"
   ie: [sem]
   ml: [cv, segmentation]
-  summary: "Predict floor area, age, and component counts (windows, doors) from street-view photos to feed urban stock models."
+  summary: "Predict floor area, age, and component counts (windows, doors) from street-level photos to feed urban stock models. Component counts have only been shown in a prototype, on van-mounted photos of one Sheffield neighbourhood."
   maturity: "In Toronto, the model had about 19% mean absolute percentage error for floor area and classified age correctly about 70% of the time. Age prediction was worse in all five other cities tested."
   papers: [huangImageBasedPrediction2024, arbabiScalableDataCollection2021]
 - id: interior-stock-prediction
   name: "Interior component stocks from exterior features"
   ie: [sem]
   ml: [tabular-ml, cv]
-  summary: "Estimate interior wall lengths and room counts from exterior features and photos."
-  maturity: "One study, 2,000 UK houses; useful priors, wide uncertainty per building."
+  summary: "Estimate interior wall lengths and room counts from exterior features."
+  maturity: "One study of 2,000 houses in England and Wales predicted wall length well (R² 0.84) and total room count less well (0.66). Adding facade photos did not improve the predictions much."
   papers: [daiModelingInteriorComponent2025]
 
 # ── Circular economy ─────────────────────────────────────────────────────────
@@ -153,7 +153,7 @@
   ie: [eeio, lca]
   ml: [nlp-extraction, llm, foundation]
   summary: "Map product text or company descriptions to EIO-LCA or NAICS sectors to assign carbon intensity factors."
-  maturity: "On 27,708 products, mean absolute percentage error in sector-based kg CO₂e per dollar fell from 51% to 22% with zero-shot matching. A firm-level NAICS matching preprint reports 45.88%."
+  maturity: "On 27,708 products, zero-shot matching cut the error in kg CO₂e per dollar from 51% to 22% MAPE. A NAICS matching preprint reports 45.88% MAPE on 20 companies with disclosed emissions."
   papers: [balajiCaMLCarbonFootprinting2023, guoGroupReasoningEmission2025]
 
 # ── Uncertainty & Bayesian MFA ───────────────────────────────────────────
