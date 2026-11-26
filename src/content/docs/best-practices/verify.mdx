@@ -169,7 +169,7 @@ For example, the [RaMa-Scene explorer eval](https://github.com/simonvanlierde/ra
 scores how well a model turns a question into an EXIOBASE scenario, a what-if change to
 products, regions or industries. Its first version had 8 reworded questions. Qwen3.8-27B got 6
 and Gemma-4-26B-A4B 3, with Wilson 95% intervals (the range the true rate likely lies in) of 0.41 to 0.93 and 0.14 to 0.69, and an exact
-McNemar p of 0.25 (a 25% chance of a split this lopsided from luck alone): eight items can't rank two models. It also seemed to show Gemma missing 18 of
+McNemar p of 0.25 (if the two models were equally good, a split at least this lopsided would turn up one time in four): eight items can't rank two models. It also seemed to show Gemma missing 18 of
 153 label questions, 15 of them on one scenario family. They weren't misses. The scorer had
 changed since the run, from comparing names to comparing EXIOBASE products, and the logs still
 held the old verdicts. Scored again from the raw answers, Gemma got 151, the same as Qwen. Keep each raw answer, and score the logs
@@ -177,7 +177,7 @@ again whenever the gold set or the scorer changes.
 
 With 60 reworded questions (2026-11-26, vLLM, temperature 0), Qwen3.8-27B got
 55, Gemma 50 and Qwen3.5-9B 42. The 27B model beats the 9B (14 items to 1; Holm-adjusted
-McNemar p 0.003, so luck alone would rarely give a split this lopsided). Gemma against the 27B is 1 item to 6, p 0.125: too likely to be luck to call them different. Most
+McNemar p 0.003: equally good models would rarely split this unevenly). Gemma against the 27B is 1 item to 6, p 0.125: equally good models could easily split like that, so they are not separated. Most
 misses were the origin region, and four of them, in every model, came from one reading of
 "African producers". Count those as one finding, and fix the question or the gold answer
 before you rank models on them.
