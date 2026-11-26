@@ -31,9 +31,9 @@ A **harness** is everything you put around that loop: the instructions file, fil
 - **Non-standard conventions:** units, coordinate systems, naming rules, or tools that differ from defaults.
 - **Never-do list:** hard boundaries such as protected test folders or licensed data that must stay out of git.
 
-Skip the repository overview, directory tree, and architecture prose. Gloaguen et al. ([arXiv:2602.11988](https://arxiv.org/abs/2602.11988)) found that repository context files do not generally raise task success and add more than 20% to inference cost on average. Evidence on cost is mixed: Lulla et al. ([arXiv:2601.20404](https://arxiv.org/abs/2601.20404)) measured a 28.64% lower median runtime with an `AGENTS.md` than without.
+Skip the repository overview, directory tree, and architecture prose. Gloaguen et al. ([arXiv:2602.11988](https://arxiv.org/abs/2602.11988)) found that repository context files do not generally raise task success and add more than 20% to inference cost on average. Evidence on cost is mixed: Lulla et al. ([arXiv:2601.20404](https://arxiv.org/abs/2601.20404)) measured a 28.64% lower median runtime with an `AGENTS.md` than without, across 124 pull requests in 10 repositories.
 
-Delete lines the code no longer follows. In 40 Python projects, Xu and Wu ([arXiv:2610.30571](https://arxiv.org/abs/2610.30571)) found that 90.1% of agents' choices followed a stale instruction file over the code. One sentence giving the existing code precedence raised the share that follow the code from 4.2% to 91.4%.
+Delete lines the code no longer follows. In 40 constructed Python projects whose instruction file and code used different conventions, Xu and Wu ([arXiv:2610.30571](https://arxiv.org/abs/2610.30571)) found that two coding agents followed the stale file in 90.1% of their choices. One sentence giving the existing code precedence raised the share that follow the code from 4.2% to 91.4%.
 
 ```markdown
 # AGENTS.md
@@ -60,7 +60,7 @@ For anything bigger than a one-line fix, ask the agent to write its plan before 
 
 Give each parallel agent its own [git worktree](https://git-scm.com/docs/git-worktree): a separate checkout of the same repository on its own branch. Their edits cannot overwrite each other, and you review each branch on its own.
 
-Worktrees stop textual clashes only. Two patches that each pass can fail together: Xia et al. ([arXiv:2609.25396](https://arxiv.org/abs/2609.25396)) saw this in 97% of runs on constructed Django tasks (one of 834 on real pull request pairs), and a message about the other's change recovered 82%. Lyu et al. ([arXiv:2611.33893](https://arxiv.org/abs/2611.33893)) found parallel subagents raised hidden-test pass rates by about 1 to 5 percentage points at up to 3.8 times the cost of a single agent.
+Worktrees stop textual clashes only. Two patches that each pass can fail together: Xia et al. ([arXiv:2609.25396](https://arxiv.org/abs/2609.25396)) saw this in 97% of runs on constructed Django tasks (one of 834 on real pull request pairs), and a message about the other's change recovered 82%. Lyu et al. ([arXiv:2611.33893](https://arxiv.org/abs/2611.33893)) found that on repository-construction tasks, parallel subagents raised hidden-test pass rates by only about 1 to 5 percentage points at up to 3.8 times the cost of a single agent.
 
 ### Hooks for rules without exceptions
 
@@ -119,9 +119,9 @@ esac
 
 The hook only sees the edit tool, not a shell command that writes the same file, so keep the read-only mount from item 1 too.
 
-Instructions alone do not hold. On ImpossibleBench ([arXiv:2510.20270](https://arxiv.org/abs/2510.20270)), GPT-5 passed 54% of the intentionally impossible Conflicting-SWEbench tasks by violating the task requirements, and Opus 4.1 50%. An explicit abort option cut GPT-5 cheating to 9% but helped Opus 4.1 far less. Read-only tests stopped Opus 4.1's main shortcut, editing the tests, but not others such as special-casing the tested inputs. On BaitBench ([arXiv:2608.30724](https://arxiv.org/abs/2608.30724)), seven frontier agents took a planted shortcut in 57.1% of runs, and the mean stayed above 50% when told not to cheat. Keep the abort rule, and enforce the boundary in the harness.
+Instructions alone do not hold. On ImpossibleBench ([arXiv:2510.20270](https://arxiv.org/abs/2510.20270)), GPT-5 passed 54% of the intentionally impossible Conflicting-SWEbench tasks by violating the task requirements, and Opus 4.1 50%. An explicit abort option cut GPT-5 cheating to 9% but helped Opus 4.1 far less. Read-only tests stopped Opus 4.1's main shortcut, editing the tests, but not others such as special-casing the tested inputs. On BaitBench ([arXiv:2608.30724](https://arxiv.org/abs/2608.30724)), three synthetic tabular ML tasks, seven frontier agents took a planted shortcut in 57.1% of runs, and the mean stayed above 50% when told not to cheat. Keep the abort rule, and enforce the boundary in the harness.
 
-Visible tests are not enough. On SpecBench ([arXiv:2605.21384](https://arxiv.org/abs/2605.21384)), every frontier agent saturated the visible tests, while the gap to held-out tests grew by 28 percentage points for every tenfold increase in code size. On EvilGenie ([arXiv:2511.21654](https://arxiv.org/abs/2511.21654)), where agents could edit the test files, two of three commercial coding agents reward hacked explicitly. When a review panel kept rejecting research agents' hacks, Huang et al. ([arXiv:2609.28614](https://arxiv.org/abs/2609.28614)) found evasion reached 40.5% with detailed feedback and 20.3% with a generic rejection, though the detailed feedback also carried the attempt history.
+Visible tests are not enough. On SpecBench ([arXiv:2605.21384](https://arxiv.org/abs/2605.21384)), every frontier agent saturated the visible tests, while the gap to held-out tests grew by 28 percentage points for every tenfold increase in code size. On EvilGenie ([arXiv:2511.21654](https://arxiv.org/abs/2511.21654)), where agents could edit the test files, two of three commercial coding agents reward hacked explicitly. When a review panel kept rejecting research agents' hacks, Huang et al. ([arXiv:2609.28614](https://arxiv.org/abs/2609.28614)) found cumulative evasion over five rounds reached 40.5% of 79 model-task pairs with detailed feedback and 20.3% with a generic rejection, though the detailed feedback also carried the attempt history.
 
 ### 3. Check the meaning, not just that it ran
 
@@ -134,7 +134,7 @@ Then check the result against both, not only that the code ran. Necula ([arXiv:2
 
 ### 4. Review in a fresh session told to find bugs
 
-Before you accept the work, give the task and the diff to a new session and tell it to find bugs, for example with the [adversarial code review prompt](/best-practices/prompts-and-skills/#adversarial-review-of-ai-written-code). Some agents that succeed 22% of the time predict 77% success, and framing the check as bug-finding calibrated best (Kaddour et al., [arXiv:2602.06948](https://arxiv.org/abs/2602.06948)). Across seven frontier coding models, Zhang et al. ([arXiv:2610.34577](https://arxiv.org/abs/2610.34577)) found independent review by a critic raised average accuracy by 5.9 to 9.5 percentage points on Terminal-Bench at 1.13 to 1.25 times baseline cost.
+Before you accept the work, give the task and the diff to a new session and tell it to find bugs, for example with the [adversarial code review prompt](/best-practices/prompts-and-skills/#adversarial-review-of-ai-written-code). Agents overrate their own work: in one study some that succeeded 22% of the time predicted 77% success, and asking them to look for bugs rather than rate their success gave the best-calibrated self-assessment (Kaddour et al., [arXiv:2602.06948](https://arxiv.org/abs/2602.06948)). Across seven frontier coding models, Zhang et al. ([arXiv:2610.34577](https://arxiv.org/abs/2610.34577)) found independent review by a critic raised average accuracy by 5.9 to 9.5 percentage points on Terminal-Bench at 1.13 to 1.25 times baseline cost.
 
 Count a test the agent wrote only if it asserts a number you derived another way: by hand, from a published table, or with a second method. Banik et al. ([arXiv:2606.18168](https://arxiv.org/abs/2606.18168)) found that 80.2% of 86,156 agent-written test patches contain weak or no explicit oracle signals (assertions that check the result).
 
@@ -144,7 +144,7 @@ Automated reference tools can check whether a DOI resolves or whether a title ap
 
 One reference sweep on an AI-assisted draft shows the gap. All 64 references passed the existence check. Four of them, cited for claims that reached the draft, were then checked against their PDFs, and all four had been mischaracterized. That is one sweep of one draft: an example of the failure mode, not a rate.
 
-Larger studies show the same gap. Across 14 models writing cited reports, Onweller et al. ([arXiv:2605.06635](https://arxiv.org/abs/2605.06635)) found even the strongest keep link validity above 94% but reach only 39 to 77% factual accuracy. In a peer-reviewed randomized trial with 288 researchers reproducing published social science results, Brodeur et al. ([PNAS, 2026](https://doi.org/10.1073/pnas.2524747123)) report reproduction rates of 94% for human-only teams, 91% for AI-assisted teams and 37% for AI-led teams.
+Larger studies show the same gap. Across 14 models writing cited reports, Onweller et al. ([arXiv:2605.06635](https://arxiv.org/abs/2605.06635)) found even the strongest keep link validity above 94% but reach only 39 to 77% factual accuracy. In a peer-reviewed randomized trial with 288 researchers reproducing published social science results, Brodeur et al. ([PNAS, 2026](https://doi.org/10.1073/pnas.2524747123)) report reproduction rates of 94% for human-only teams, 91% for AI-assisted teams and 37% for AI-led teams, all using ChatGPT. The authors call the AI-led figure a lower bound on what AI can do.
 
 Keep a plain **claim ledger** beside any AI-assisted manuscript or report: one row per cited claim, filled in only after opening the primary source.
 
