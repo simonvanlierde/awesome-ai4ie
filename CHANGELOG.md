@@ -9,6 +9,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- `pnpm run cited-figures` lists every number the site attributes to a paper. With
+  `--notes <dir>` it lists only the numbers no reading note records yet.
 - An Evals & agent benchmarks page: how to score an AI step on known answers, and five
   benchmarks that test agents and models on research, coding and LCA tasks.
 - The agentic harnesses page explains a harness by comparing the agent to a new lab member,
@@ -89,5 +91,15 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Git hooks run with prek in place of lefthook.
 - Commit messages and pull request titles follow `type(scope): summary`, checked by a
   commit-msg hook and the pr-title workflow.
+
+### Fixed
+
+- The LLM inventory-extraction scores (0.82 and 0.86) are BERTScore F1, which scores
+  wording, not values or units. The applications map, the paper's blurb and the
+  application line had called them plain F1.
+- The laptop-segmentation figure (98.8% mAP50) is from a 56-image test set drawn from 560
+  photos, not "a benchmark of 1,456 annotated images", which counted augmented copies.
+- The Austria and Germany stock-map blurb said "no cadastre needed". The method avoids
+  cadastral data as input, but its building heights were trained on cadaster data.
 
 [Unreleased]: https://github.com/simonvanlierde/awesome-ai4ie/commits/HEAD
