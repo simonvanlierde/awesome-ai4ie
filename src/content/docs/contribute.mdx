@@ -1,49 +1,58 @@
 ---
 title: Contribute
-description: Vote on candidate verification norms for industrial ecology, or submit a paper, tool, candidate golden question, or AI mistake without a GitHub account.
+description: Vote on candidate verification norms for industrial ecology, or send a paper, tool, golden question or AI mistake without a GitHub account.
 ---
 
 import ContributeForm from '../../components/ContributeForm.astro';
 import NormsPoll from '../../components/NormsPoll.astro';
+import Resources from '../../components/Resources.astro';
 
-This site is a proposal to the AI4IE working group. Here is what I'd like from you:
+This site is my proposal to the AI4IE working group. The group hasn't adopted it, and
+nothing here speaks for the group. [Governance](repo:blob/main/GOVERNANCE.md) says what
+adoption would mean and who decides, and [Maintaining](repo:blob/main/MAINTAINING.md) what
+the upkeep involves. Here is what I'd like from you:
 
-- [Vote](#which-checks-should-be-ie-norms) on which checks should become IE norms.
-- [Send](/contribute/?type=golden-question#send-a-contribution) a candidate golden question for your subfield.
-- [Send](/contribute/?type=resource#send-a-contribution) one paper, tool, or dataset you use.
-- [Send](/contribute/?type=ai-mistake#send-a-contribution) one AI mistake you have seen in IE work. Leave the attribution
-  field blank to send it without your name.
-- Join the working group on [Discord](https://discord.gg/zhHAZakXHX).
+- [Vote](#which-checks-should-be-ie-norms) on which checks you'd support as IE norms.
+- [Send](/contribute/?type=golden-question#send-a-contribution) a candidate golden question for your
+  subfield: an IE question with a known answer, for testing AI tools.
+- [Send](/contribute/?type=resource#send-a-contribution) one paper, tool or dataset you use.
+- [Send](/contribute/?type=ai-mistake#send-a-contribution) one AI mistake you have seen in IE work.
+- Tell me what would stop the group adopting the site, on [Discord](https://discord.gg/zhHAZakXHX)
+  or through the [form](/contribute/?type=other#send-a-contribution).
 {/* TODO: add the AI4IE community survey link here once its URL is known. */}
 
 ## Which checks should be IE norms?
 
-Vote for the verification checks you think should become routine practice in AI-assisted industrial
-ecology work. Pick as many as you want. The poll keeps totals for each check. See [Privacy](/privacy/)
-for what your browser and Cloudflare keep.
+Vote for the checks you'd like to see as routine practice in AI-assisted industrial ecology
+work. Pick as many as you want. This is a straw poll to inform the group's discussion, not a
+group decision. It keeps only a total per check: [Privacy](/privacy/) has the details. The
+checks themselves are on [Verify AI-assisted work](/best-practices/verify/).
 
 <NormsPoll />
 
 ## Send a contribution
 
-Use this form without a GitHub account. Your submission becomes a public issue on GitHub.
-A maintainer reviews it before including it on the site. Leave the attribution field blank to
-omit it from the issue. Keep identifying details out of the text if you want to stay unnamed.
+You don't need a GitHub account. Your submission becomes a public issue on GitHub, and I
+review it before anything goes on the site.
 
-- **Paper, tool, or dataset:** a link and a short note on why it belongs in the guide.
-- **Golden question (candidate):** a concrete IE question with a known answer or check. These are
-  collected as candidates for group review, not published as a benchmark.
-- **AI mistake seen in IE work:** describe what went wrong and how you caught it.
-- **Other or comment on an open question:** a correction, a missing topic, or a view on an open
-  question.
+- **Paper, tool or dataset:** a link and a short note on why it belongs here.
+- **Golden question:** an IE question with a known answer or check.
+- **AI mistake seen in IE work:** what went wrong and how you caught it.
+- **Other:** a correction, a missing topic, or your view on an [open question](/open-questions/).
 
 <ContributeForm />
 
 ## Other ways to take part
 
-- **GitHub Issues:** [open an issue directly](repo:issues/new/choose) if you have a GitHub account
-  and want notifications when it is reviewed.
-- **Pull requests:** edit the YAML data files or pages directly; see
-  [CONTRIBUTING.md](repo:blob/main/CONTRIBUTING.md) for the schema and style rules.
-- **Discord:** join the working-group channel on [Discord](https://discord.gg/zhHAZakXHX) for
-  informal discussion.
+- **GitHub issues:** [open an issue](repo:issues/new/choose) to get notified when it's reviewed.
+- **Pull requests:** edit the YAML data files or pages. [CONTRIBUTING.md](repo:blob/main/CONTRIBUTING.md)
+  has the schema and style rules.
+- **Discord:** discuss it in the working group's [Discord](https://discord.gg/zhHAZakXHX).
+
+## Related communities and reports
+
+<Resources kind="community" />
+
+- [Climate Change AI wiki: Industry](https://wiki.climatechange.ai/wiki/Industry): the community wiki's page on ML for industrial processes, supply chains and materials. There is no industrial ecology page yet.
+- [Climate change and AI: recommendations for government action](https://oecd.ai/en/wonk/documents/climate-change-and-ai-recommendations-for-government-action) (GPAI, 2021): what governments can do to support AI for climate action, and to limit the climate risks of AI itself.
+- [Grand challenge initiatives in AI for climate and nature](https://ccai-reports.s3.us-east-2.amazonaws.com/grand-challenge-initiatives-ai-climate-nature.pdf) (Climate Change AI for the Bezos Earth Fund, 2024): lessons from 200+ challenges and open-innovation programmes on how to set up benchmarks and evaluation rules.

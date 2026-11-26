@@ -1,0 +1,171 @@
+---
+title: Verify AI-assisted work
+description: Checklists, golden tests, evals, a claim ledger and a run log for checking AI-assisted IE work before you rely on it.
+---
+
+Before you rely on code, numbers or citations that an AI produced, check them against
+something the AI could not change: a known answer, a primary source, or a test it cannot
+edit. This page gives the checks in the order you need them.
+
+These checks are my proposal, not a settled norm. If one is missing, too heavy, or a
+poor fit for your subfield, [say so](/contribute/).
+
+## Checklists
+
+### AI-assisted coding
+
+- [ ] Did I read the actual diff, not only the chat summary of what changed?
+- [ ] Are units, defaults and thresholds still what I intended?
+- [ ] Does every imported package and function exist, and do what the AI claims?
+- [ ] Did I run it on a case with a known answer, not only check that it ran without errors?
+- [ ] If a coding agent did the work, could it edit the [golden tests](#golden-tests)? It shouldn't.
+- [ ] Have I seen the golden test fail on a planted error, such as a mass in tonnes instead of kg?
+- [ ] Did I read the agent's plan before it edited any file?
+- [ ] Did the full test suite run after the agent's last edit?
+- [ ] Did I check each cited claim against the primary source, not only that the DOI resolves?
+- [ ] If I didn't understand a change, did I ask for an explanation before accepting it?
+- [ ] Did I [log](#log-the-run) the run's model, tokens (the text units a provider bills by) and cost?
+- [ ] If an AI step runs inside the analysis, did I [score it on known answers](#score-an-ai-step) first?
+
+### Machine learning reproducibility
+
+A preprint review of 50 ML studies in industrial ecology found reproducibility problems
+in 42 and clear data leakage in 14 ([Rankin et al.](https://doi.org/10.21203/rs.3.rs-9270723/v1)).
+Leakage means the model saw information from the test data during training, so its
+test score looks better than it is.
+
+- [ ] Did you set the test set aside before any scaling, normalization or gap-filling?
+- [ ] If the data is ordered in time, did you split by time (for example with time-series cross-validation), not at random?
+- [ ] Does the write-up give the pipeline steps in order ("we split the data, then normalized, then trained"), not only the model?
+- [ ] Do you report a simple baseline, such as linear regression, next to any complex model?
+- [ ] Is ML needed here, or could you test the hypothesis on empirical data directly?
+- [ ] If you withhold data, code or a model, do you say why, and how someone could get similar data?
+- [ ] If an LLM is part of the model itself, not only a coding aid, do you discuss whether its training data could include your test set?
+
+:::note[For reviewers]
+Look for a missing held-out test set, leakage across time, and preprocessing before the
+split. If the authors withheld data, look for the reason and for what you can still check.
+:::
+
+The [`ml-reproducibility` skill](/best-practices/prompts-and-skills/#ml-reproducibility)
+lets a supported assistant run this checklist on a pipeline.
+
+## Golden tests
+
+A **golden test** pins one result you know exactly. Use open or synthetic factors, never
+licensed database values. For example, build a small life cycle assessment (LCA) whose total
+you can calculate by hand, and assert the result to a tight tolerance:
+
+```python
+def test_steel_bracket_gwp_golden():
+    # Synthetic factors: 2.0 kg steel * 1.85 kg CO2e/kg + 0.5 kWh * 0.40 kg CO2e/kWh
+    result = run_bracket_lca(mass_kg=2.0, electricity_kwh=0.5)
+    assert abs(result["gwp100_kg_co2e"] - 3.90) < 1e-6
+```
+
+A script can run without errors and still be wrong by three orders of magnitude. A planted
+unit swap (`kg` for `t`) or a swapped impact method turns this test red at once.
+
+### Keep the agent away from the test
+
+If a coding agent can edit both the model code and the tests, it can make a failing golden
+test pass by changing the expected number, loosening the tolerance, or skipping the test.
+
+1. Give the agent read-only access to the golden tests and their fixtures, for example
+   through a read-only mount. Apply this to its shell as well as its edit tool.
+2. Check that the agent can run the tests but can't write to them.
+3. Require a human review for changes to those files. On GitHub, use
+   [required code-owner review](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners#codeowners-and-branch-protection).
+4. Tell the agent to stop and report when the test and the task disagree.
+
+This matters in practice. On ImpossibleBench ([arXiv:2510.20270](https://arxiv.org/abs/2510.20270)),
+coding tasks whose tests contradict the specification, GPT-5 cheated on 54% and Opus 4.1 on
+50%. An explicit "stop and report" option cut GPT-5 to 9% but helped Opus 4.1 less.
+Read-only tests stopped Opus 4.1 from editing tests, but not from special-casing the tested
+inputs. So keep the instruction, and also enforce the boundary.
+
+## Score an AI step
+
+An **eval** is a fixed set of questions with known answers that a script scores. Run one
+against an AI step, such as a prompt that pulls a value out of a paper, before the step goes
+into your workflow. Run it again when the model, prompt or data change.
+
+1. **Collect gold questions from real use.** Write the known correct answer, or a check the
+   answer must pass, next to each question.
+2. **Add questions unlike your examples.** Include reworded questions, and off-topic ones the
+   step must refuse. A set that looks like the prompt's examples tests copying.
+3. **Score with code.** Have a script compare each answer with the gold answer.
+4. **Report correct out of _n_ for each kind of question,** with the model, its version and
+   the date. A score on 8 questions is a rough signal. Miller
+   ([arXiv:2411.00640](https://arxiv.org/abs/2411.00640)) gives the formulas for error bars.
+5. **Keep the eval out of the agent's reach,** like a [golden test](#keep-the-agent-away-from-the-test).
+
+For example, the [RaMa-Scene explorer eval](https://github.com/simonvanlierde/ramascene-explorer/tree/main/evals/ask)
+scores how well a model turns a question into an EXIOBASE scenario, a what-if change to
+products, regions or industries. In its 2026-11-19 run, Gemma-4-26B-A4B got 151 of 153
+questions phrased like published scenarios right, but only 3 of 8 reworded ones. Qwen3.8-27B
+got 151 and 6. Eight questions are too few to rank the two models, but the label score alone
+would have hidden the weak spot.
+
+## Claim ledger
+
+A reference checker can tell you that a DOI resolves. It can't tell you that the paper says
+what your draft claims. In one of my AI-assisted drafts, all 64 references passed the
+existence check. I then opened four of them: all four were cited for something the paper
+doesn't say. That is one draft, so it shows the failure, not a rate.
+
+Keep a **claim ledger** next to any AI-assisted manuscript or report: one row per cited
+claim, filled in only after you open the source.
+
+<p class="table-title"><b>Table 3.2</b> A minimal claim ledger</p>
+
+| Claim | Identifier | Locator | Supporting passage | Status |
+|---|---|---|---|---|
+| The claim as your draft states it | DOI or arXiv ID | Page, table or section | Exact quote or checked paraphrase | `verified`, `revised` or `removed` |
+
+The [source-checking prompt](/best-practices/prompts-and-skills/#verify-a-claim-before-citing-it)
+finds candidate quotes. Check them in the PDF yourself.
+
+## Log the run
+
+Log one row per run, so the cost of AI-assisted work sits next to the result:
+
+```csv
+date,task,model,input_tokens,output_tokens,cost_usd
+2026-11-18,refactor-matrix-solver,example-model,42100,6800,0.23
+```
+
+Take tokens and cost from the provider's logs. Report energy or emissions only from a primary
+source you have read, such as a measurement study. Don't multiply tokens by a rule of thumb.
+
+## If a coding agent does the work
+
+In a **chat**, you send a message, get a reply, and run the code yourself. A **coding agent**
+runs a language model in a loop with tools: it reads files, edits code, runs commands and
+keeps going until it decides it is done. The **harness** is what you put around that loop:
+an instructions file, permissions, tests, and hooks.
+
+- **Keep `AGENTS.md` short.** Agents read this file at the start of a session. List only what
+  they can't work out from the code: the check and test commands, unusual conventions such as
+  units, and what they must never do. Long context files don't raise task success on average
+  and add more than 20% to cost ([Gloaguen et al.](https://arxiv.org/abs/2602.11988)).
+- **Ask for a plan first.** A wrong emission factor or system boundary is easier to catch in
+  a short plan than in a long diff.
+- **Give each agent its own [git worktree](https://git-scm.com/docs/git-worktree)** when you
+  run two at once, so their edits can't overwrite each other.
+- **Use hooks for rules without exceptions.** An `AGENTS.md` line is a request. A hook is a
+  script the harness runs at a fixed point, such as before each edit, so it holds whatever the
+  agent decides. For example: refuse writes under `tests/golden/`, or run the tests when the
+  agent says it is done.
+
+```markdown
+# AGENTS.md
+
+- Lint: `uv run ruff check .`
+- Fast tests: `uv run pytest -q`
+- Conventions: all mass flows are in kg; impact factors come from open or synthetic fixtures only.
+- Never do:
+  - Do not edit files under `tests/golden/`.
+  - Do not commit licensed inventory data (such as ecoinvent values) to fixtures or notebooks.
+  - If a test cannot pass without changing expected values, stop and report the mismatch.
+```

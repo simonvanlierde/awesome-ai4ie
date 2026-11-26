@@ -1,13 +1,16 @@
 ---
-title: Literature & resources
-description: Find papers, courses and guides on AI and research practice in industrial ecology.
+title: Literature
+description: Search and filter papers on AI in industrial ecology by field, technique and topic.
 ---
 
 import LiteratureSection from '../../components/LiteratureSection.astro';
-import Resources from '../../components/Resources.astro';
 
-A proposal for the AI4IE working group. [Suggest a paper](/contribute/?type=resource#send-a-contribution)
+Papers on AI in industrial ecology, each with a one-line summary of what it found. Filter by
+IE field, AI technique or topic, or export the list as BibTeX or RIS. The list is part of a
+proposal to the AI4IE working group: [suggest a paper](/contribute/?type=resource#send-a-contribution)
 or [report a correction](/contribute/?type=other#send-a-contribution).
+
+## Papers
 
 <LiteratureSection />
 
@@ -15,31 +18,6 @@ or [report a correction](/contribute/?type=other#send-a-contribution).
 
 ## Ask an AI assistant
 
-The site runs a read-only [MCP](https://modelcontextprotocol.io) server, so an AI assistant can look things up in this reading list. It needs no account. The address is `https://ai4ie.org/mcp`.
+The site runs a read-only [MCP](https://modelcontextprotocol.io) server (a standard way for an AI assistant to call outside tools), so an AI assistant can look things up in this reading list. It needs no account. The address is `https://ai4ie.org/mcp`.
 
 Its tools are `search_papers`, `get_paper`, `list_applications`, `list_resources` and `get_skill`. In Claude Code, add it with `claude mcp add --transport http ai4ie https://ai4ie.org/mcp`. Other clients take the same address as a remote server. [Privacy](/privacy/) says what the server sends on.
-
-## Courses, videos and posts
-
-[Suggest a resource](/contribute/?type=resource#send-a-contribution) or browse
-[tools, datasets and models](/tools/).
-
-### Courses
-
-<Resources kind="course" />
-
-### Videos
-
-<Resources kind="video" />
-
-### Posts
-
-<Resources kind="post" />
-
-## Community and governance
-
-<Resources kind="community" />
-
-- [Climate Change AI wiki: Industry](https://wiki.climatechange.ai/wiki/Industry): the community wiki's page on ML for industrial processes, supply chains and materials. There is no industrial ecology page yet.
-- [Climate change and AI: recommendations for government action](https://oecd.ai/en/wonk/documents/climate-change-and-ai-recommendations-for-government-action) (GPAI, 2021): what governments can do to support AI for climate action, and to limit the climate risks of AI itself.
-- [Grand challenge initiatives in AI for climate and nature](https://ccai-reports.s3.us-east-2.amazonaws.com/grand-challenge-initiatives-ai-climate-nature.pdf) (Climate Change AI for the Bezos Earth Fund, 2024): lessons from 200+ challenges and open-innovation programmes on how to set up benchmarks and evaluation rules.

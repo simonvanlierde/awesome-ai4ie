@@ -1,7 +1,8 @@
 ---
 // The topic half of "Not mapped yet" on the map page, built from the reading
 // list so it never goes stale: each topic with fewer than THIN_TOPIC entries,
-// with its count, what it still lacks, and the paper form. A field page passes
+// with its count, what it still lacks, and the paper form. It renders nothing when
+// no topic is thin. A field page passes
 // `ie` to list only the thin topics that already have an entry in that field.
 import { getCollection } from "astro:content";
 import { type IeTag, TOPIC_WANTED, tagLabel } from "../data/tags";
@@ -17,7 +18,9 @@ const thin = thinTopics(entries, Astro.props.ie);
 ---
 
 {
-  thin.length > 0 ? (
+  thin.length > 0 && (
+    <>
+    {!Astro.props.ie && <p>Topics with fewer than three papers:</p>}
     <ul>
       {thin.map(({ topic, count }) => (
         <li>
@@ -33,7 +36,6 @@ const thin = thinTopics(entries, Astro.props.ie);
         </li>
       ))}
     </ul>
-  ) : (
-    !Astro.props.ie && <p>Every topic in the vocabulary currently has at least three papers.</p>
+    </>
   )
 }

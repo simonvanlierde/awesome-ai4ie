@@ -25,8 +25,9 @@ These tools run a model on your own computer or server.
 
 ## Hardware
 
-The first limit is GPU memory, or unified memory on Apple silicon. At 4 bits per
-parameter, the weights alone take about half a byte per parameter. Leave room for the
+The first limit is GPU memory, or unified memory on Apple silicon. A model's size is its
+number of parameters (the numbers it learned). Local models are usually stored at reduced
+precision: at 4 bits per parameter, the weights take about half a byte per parameter. Leave room for the
 context window (the text the model reads at once) and for the runtime. Before you buy
 hardware, check your target model with a
 [memory estimator](https://huggingface.co/docs/accelerate/usage_guides/model_size_estimator).
@@ -43,7 +44,5 @@ hardware, check your target model with a
 At 8 bits the weights take about twice this memory, and at 16 bits about four times.
 Actual model files can be larger.
 
-### Per-institution notes
-
-[Add a note for your institution](/contribute/?type=other#send-a-contribution): say how to
-request GPU access there, and link its data policy.
+Wanted: how to request GPU access at your institution, with a link to its data policy.
+[Add a note](/contribute/?type=other#send-a-contribution).

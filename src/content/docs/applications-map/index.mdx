@@ -7,17 +7,15 @@ import ApplicationsSection from '../../../components/ApplicationsSection.astro';
 import SuggestPaper from '../../../components/SuggestPaper.astro';
 import TopicGaps from '../../../components/TopicGaps.astro';
 
-A proposal for the AI4IE working group. [Suggest a correction](/contribute/?type=other#send-a-contribution).
-
-## Explore by technique
-
-<ApplicationsSection />
+What AI already does in each industrial ecology (IE) field, how mature each application is,
+and where nobody has tried yet. Start with your field below. The map is part of a proposal to
+the AI4IE working group: [suggest a correction](/contribute/?type=other#send-a-contribution).
 
 <span id="what-works-today-per-field"></span>
 
 ## Applications by field
 
-Each field has its own page with what works today, every mapped application and its papers.
+Each field page says what works today, how far the evidence goes, and which papers it rests on.
 
 - <span id="life-cycle-assessment"></span>[Life cycle assessment](/applications-map/lca/): screening impacts, estimating missing inventory values and extracting data from papers.
 - <span id="socio-economic-metabolism"></span>[Socio-economic metabolism](/applications-map/sem/): mapping building stocks from imagery and estimating material flows.
@@ -25,35 +23,44 @@ Each field has its own page with what works today, every mapped application and 
 - <span id="circular-economy"></span>[Circular economy](/applications-map/circular/): computer vision for waste, products and components.
 - <span id="industrial-symbiosis"></span>[Industrial symbiosis](/applications-map/symbiosis/): matching one firm's waste to another firm's inputs.
 
+## Explore by technique
+
+The same applications as a grid: AI techniques down the side, IE fields across the top.
+
+<ApplicationsSection />
+
 ## Not mapped yet
 
 [Map an application](/contribute/?type=other&title=Application%3A+#send-a-contribution) or suggest a paper for any gap below.
 
 ### ISIE sections with no field
 
-- **Sustainable urban systems.** The collection covers building stocks, but has no field for the ISIE's work on cities.
-  <SuggestPaper gap="Sustainable urban systems" />
+The five fields follow the sections of the International Society for Industrial Ecology (ISIE).
 
-### Topics with fewer than three papers
+- **Sustainable urban systems.** The collection covers building stocks, but has no field for the ISIE section on cities.
+  <SuggestPaper gap="Sustainable urban systems" />
 
 <TopicGaps />
 
-### AI techniques with no tag
+### AI techniques with no tag yet
+
+These techniques have no tag in the [vocabulary](/vocabulary/) yet. Some papers already use them
+under another tag.
 
 - **Graph neural networks & network analysis.** Examples to add include supply-chain,
   input-output and material-flow networks.
   <SuggestPaper gap="Graph neural networks & network analysis" />
-- **Surrogate models & emulators.** Faster approximations for running scenarios.
+- **Surrogate models & emulators.** Fast models trained to mimic a slow simulation, so you can run many scenarios.
   <SuggestPaper gap="Surrogate models & emulators" />
 - **Causal inference.** Estimating effects such as rebound or policy impacts.
   <SuggestPaper gap="Causal inference" />
 - **Reinforcement learning.** Examples to add include disassembly sequencing and process control.
   <SuggestPaper gap="Reinforcement learning" />
-- **Knowledge graphs & ontologies.** Connecting inventory terms and matching flows across datasets.
+- **Knowledge graphs & ontologies.** Connecting inventory terms and matching flows across datasets. One [symbiosis](/applications-map/symbiosis/) paper builds a waste-to-resource knowledge graph.
   <SuggestPaper gap="Knowledge graphs & ontologies" />
-- **Recommender & matching systems.** Matching plants to waste streams or products to emission factors.
+- **Recommender & matching systems.** Matching plants to waste streams or products to emission factors. The [symbiosis](/applications-map/symbiosis/) and [carbon footprinting](/applications-map/lca/) papers do this, tagged by their text methods.
   <SuggestPaper gap="Recommender & matching systems" />
-- **Time-series & forecasting.**
+- **Time-series & forecasting.** Forecasting waste generation, demand or stock growth from past data.
   <SuggestPaper gap="Time-series & forecasting" />
 - **Federated & privacy-preserving learning.** Training across institutions without pooling their data.
   <SuggestPaper gap="Federated & privacy-preserving learning" />
@@ -62,7 +69,8 @@ Each field has its own page with what works today, every mapped application and 
 
 ### Pairs worth trying
 
+Pairs with no paper in the list yet.
+
 - Chemicals × graph neural networks
 - Scenarios × surrogates
-- Symbiosis × matching
 - Circular economy × reinforcement learning

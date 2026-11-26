@@ -178,7 +178,12 @@ See [two ways to add a demo](https://ai4ie.org/demos/#two-ways-to-add-a-demo) on
 
 ### Adding an Agent Skill
 
-One folder per skill under `skills/`, with a `SKILL.md` and any supporting files. Start from [`skills/SKILL-template.md`](skills/SKILL-template.md), or use [`skills/ml-reproducibility/SKILL.md`](skills/ml-reproducibility/SKILL.md) as an example. Keep it generic enough that someone else can use it without editing.
+One folder per skill under `skills/`, with a `SKILL.md` and any supporting files.
+
+1. Copy [`skills/SKILL-template.md`](skills/SKILL-template.md) to `skills/<your-skill-name>/SKILL.md`, or use [`skills/ml-reproducibility/SKILL.md`](skills/ml-reproducibility/SKILL.md) as an example. The `name` field in the front matter must match the folder name: lowercase letters, numbers and single hyphens, at most 64 characters, not starting or ending with a hyphen ([specification](https://agentskills.io/specification)).
+2. Write the `description` so the assistant knows when to load the skill: the task, the inputs, and what the skill checks. Until the task comes up, the assistant reads only the `name` and this line.
+3. Write the steps. End each check with a result you can verify, such as a known answer or a balance that must close.
+4. Try it on a real task in a fresh session. Keep it generic enough that someone else can use it without editing.
 
 ## Changing code
 

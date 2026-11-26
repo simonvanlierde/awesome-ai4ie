@@ -9,9 +9,9 @@ body:
       label: Which part of the site?
       options:
         - Map of AI applications
-        - Literature & resources
+        - Literature
         - Best practices & guides
-        - Tools & hardware
+        - Tools & courses
         - Demos
         - Community & contribute
         - The site as a whole

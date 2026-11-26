@@ -1,16 +1,20 @@
 ---
-title: "Worked example: CV for product-scale data collection"
-description: A draft of what computer vision can measure in discarded products, components and materials.
+title: "Computer vision for products at end of life"
+description: What computer vision can measure in discarded products, components and materials.
 ---
 
 import Cite from '../../../components/Cite.astro';
 import Resources from '../../../components/Resources.astro';
 
-This draft covers what computer vision can tell us about products after use.
+This page grades what computer vision can measure in discarded products, components and
+materials, and how well each method has been tested. It is a draft.
 
 ## Taxonomy at a glance
 
 Structure means the bill of components (BoC), which lists a product's parts and how they join.
+Other abbreviations: BoM (bill of materials), OCR (optical character recognition: reading text
+from images), VLM (vision-language model: answers questions about images), WEEE (waste
+electrical and electronic equipment) and mAP50 (detection accuracy, from 0 to 1 or as a percentage).
 
 | Scale ↓ / Info type → | Identity | Quantity | Structure (BoC) | Condition |
 | --- | --- | --- | --- | --- |
@@ -28,23 +32,23 @@ Structure means the bill of components (BoC), which lists a product's parts and 
 
 ## Product-level tasks
 
-- **Identity (partial).** OCR metadata extraction from labels (text detection, recognition,
-  then fuzzy match to a reference database), with retrieval-based classification and VLM
-  scene-text reading as complements. Field-tested on washing machines: the pipeline read
-  model numbers from 95.7% of label photos taken in professional repair, but only 39.7% of
-  those taken at a recycler <Cite id="sterkensProductLabelIdentification2023" />.
-  Failure mode: label degradation at EoL, plus a database-coverage limit downstream.
-- **Quantity (partial, approximate).** Monocular metric depth (<Cite id="huMetric3DV22024">Metric3D v2</Cite>, <Cite id="bochkovskiiDepthProSharp2024">Depth Pro</Cite>,
+- **Identity (partial).** Software reads the label text, then matches it to a reference
+  database. Image retrieval and VLMs can help. On washing machines, it read model numbers in
+  95.7% of repair photos but 39.7% of recycler photos
+  <Cite id="sterkensProductLabelIdentification2023" />. Labels wear out at end of life, and
+  the database may not list the model.
+- **Quantity (partial, approximate).** Three families of method recover geometry with
+  error bounds: metric depth from one photo (<Cite id="huMetric3DV22024">Metric3D v2</Cite>, <Cite id="bochkovskiiDepthProSharp2024">Depth Pro</Cite>,
   <Cite id="yangDepthAnythingV22024">Depth Anything v2</Cite>), feed-forward multi-view geometry (<Cite id="wangVGGTVisualGeometry2025">VGGT</Cite>, <Cite id="keethaMapAnythingUniversalFeedForward2025">MapAnything</Cite>), and
-  photogrammetry / <Cite id="mildenhallNeRFRepresentingScenes2020">NeRF</Cite> / <Cite id="kerbl3DGaussianSplatting2023">3D Gaussian splatting</Cite> recover error-bounded geometry. Single-image
-  mass estimation exists but is coarse. Visible surfaces only; reflective, transparent, and
-  thin parts are the limiting cases.
+  photogrammetry / <Cite id="mildenhallNeRFRepresentingScenes2020">NeRF</Cite> / <Cite id="kerbl3DGaussianSplatting2023">3D Gaussian splatting</Cite>.
+  Mass estimation from a single image exists but is coarse. All of them see visible surfaces
+  only. Reflective, transparent and thin parts are the hardest cases.
 - **Condition (emerging but narrow).** Wear, damage, and corrosion recognition feeding
   repair / reuse / recycle triage. Per-unit grading works for single product classes on
   fixed camera rigs, such as phone buyback kiosks and laptop-cover inspection. None is
   validated across product classes or on field photos. Zero-shot anomaly detection
-  (<Cite id="jeongWinCLIPZeroFewShot2023">WinCLIP</Cite>, <Cite id="zhouAnomalyCLIPObjectAgnostic2023">AnomalyCLIP</Cite>) is more general, but it flags that
-  something is wrong, not how worn a unit is.
+  (<Cite id="jeongWinCLIPZeroFewShot2023">WinCLIP</Cite>, <Cite id="zhouAnomalyCLIPObjectAgnostic2023">AnomalyCLIP</Cite>) needs no training images of the product
+  and is more general. But it flags that something is wrong, not how worn a unit is.
 
 **Demo:** the [zero-shot identification demo](/demos/#in-this-browser-zero-shot-identification-clip)
 runs the open-vocabulary part of this cell in your browser.
@@ -71,14 +75,15 @@ runs the open-vocabulary part of this cell in your browser.
 
 ## Material-level tasks
 
-- **Identity / BoM (partial on visible surfaces, open gap for full BoM).** Surface material
-  classification and segmentation of *visible* regions (<Cite id="bellMaterialRecognitionWild2015">MINC</Cite>'s 23-class in-the-wild baseline;
-  one/few-shot similarity given a region mask; <Cite id="radfordLearningTransferableVisual2021">CLIP</Cite>-based recognition, fragile under domain
-  shift and multi-material compositeness). One setting delivers image-based
-  composition: an industrial sorter tested at pilot scale on shredded WEEE, using
-  <Cite id="redmonYouOnlyLook2015">YOLO</Cite> (mAP50 ≈ 0.99 on recorded data) <Cite id="vogelgesangAutomatedMaterialFlow2025" />. But it
-  characterizes an aggregate flow at a central plant, not the per-component composition of an
-  intact product. Occluded interior composition is an open gap.
+- **Identity / BoM (partial on visible surfaces, open gap for full BoM).** Methods classify
+  and segment the material of *visible* surfaces. Examples are <Cite id="bellMaterialRecognitionWild2015">MINC</Cite>'s
+  23-class in-the-wild baseline, one- or few-shot similarity given a region mask, and
+  <Cite id="radfordLearningTransferableVisual2021">CLIP</Cite>-based recognition. CLIP is
+  fragile when photos differ from its training data and when a part mixes materials. Only
+  one study measures composition from images: a pilot-scale sorter for shredded WEEE, using
+  <Cite id="redmonYouOnlyLook2015">YOLO</Cite> (mAP50 ≈ 0.99 on recorded data)
+  <Cite id="vogelgesangAutomatedMaterialFlow2025" />. It measures a mixed flow at a plant, not
+  one intact product. The composition of hidden interior parts is an open gap.
 - **Quantity (derived, not sensed).** Per-material mass or volume would come from component
   geometry × material class × a density prior. No dedicated method exists, and the estimate
   compounds the uncertainty of both inputs.

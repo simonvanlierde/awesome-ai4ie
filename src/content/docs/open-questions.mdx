@@ -5,13 +5,14 @@ description: Six unsettled methodological and community questions for the AI4IE 
 
 import Cite from '../../components/Cite.astro';
 
-I'd like the AI4IE working group to discuss these six questions. If you have evidence, disagree
-with the framing, or have another question, share it on the [Contribute page](/contribute/) or in
-the [AI4IE Discord](https://discord.gg/zhHAZakXHX).
+These are six questions I'd like the AI4IE working group to discuss. They're my list, not
+the group's agenda. If you have evidence, disagree with the framing, or have another question,
+[send your view](/contribute/?type=other#send-a-contribution) or raise it in the
+[AI4IE Discord](https://discord.gg/zhHAZakXHX).
 
-## How should we validate an LCA assistant?
+## How should an LCA assistant be validated?
 
-Existing evaluations mostly test single prompts rather than multi-step workflows. In an expert-grounded benchmark of 11 general-purpose large language models (LLMs, text-predicting models) across 22 LCA tasks, experts found at least one inaccurate or misleading statement in 37.2% of responses, and citation fabrication reached 40% for some models <Cite id="donaldsonExpertGroundedBenchmark2025" />. We still lack an agreed passing standard for an assistant or agent (an LLM that calls tools and edits files across several steps) that suggests processes, writes Brightway or openLCA code, or interprets results.
+Benchmarks show that large language models (LLMs) make frequent errors on LCA tasks: experts found errors in 37.2% of answers in one test <Cite id="donaldsonExpertGroundedBenchmark2025" /> ([more benchmarks](/best-practices/#how-reliable-is-ai-today)). But there is no agreed passing standard for an assistant or agent (an LLM that calls tools and edits files over several steps) that suggests processes, writes Brightway or openLCA code, or interprets results.
 
 Useful evidence or proposals:
 
@@ -21,17 +22,17 @@ Useful evidence or proposals:
 
 ## How should papers disclose AI-assisted inventory and modelling work?
 
-Generic journal policies ask authors to declare AI use, but they rarely distinguish spell-checking from writing analysis code or mapping life cycle inventory (LCI) flows. Reviewers need enough detail in the methods section or supplementary material to judge what was checked by hand and where model errors could enter the results.
+Journal policies ask authors to declare AI use. The policies I have read don't separate spell-checking from writing analysis code or mapping life cycle inventory (LCI) flows. Reviewers need enough detail in the methods or supplementary material to judge what was checked by hand and where model errors could enter the results.
 
 Useful evidence or proposals:
 
 - A tiered disclosure scheme that separates prose editing, code generation, and AI-assisted LCI mapping or gap-filling.
 - Concrete methods paragraphs and supplementary logs from published or submitted IE studies.
-- Practical additions to the existing [verification checklists](/best-practices/checklists/) that reviewers can apply in under ten minutes.
+- Practical additions to the existing [verification checklists](/best-practices/verify/) that reviewers can apply in under ten minutes.
 
-## Who maintains golden questions, and how do we keep them uncontaminated?
+## Who maintains golden questions, and how are they kept out of training data?
 
-We are collecting candidate IE test questions ("golden questions": vetted tasks with known answers or scoring rubrics) rather than publishing a fixed benchmark. If candidate questions sit in a public GitHub repository, future models can scrape and memorise them during training (benchmark contamination), which makes scores meaningless. Keeping a held-out set private avoids that, but creates a governance problem: someone has to curate, update, and run it fairly.
+I collect candidate golden questions: IE tasks with known answers or scoring rubrics. I don't publish them as a fixed benchmark. Questions in a public repository can end up in future models' training data, and then a model can score well by memory. Keeping a test set private avoids that, but someone then has to curate, update and run it fairly.
 
 Useful evidence or proposals:
 
@@ -41,17 +42,17 @@ Useful evidence or proposals:
 
 ## Should AI-assisted IE studies report their own compute footprint?
 
-Industrial ecology researchers are often asked whether the energy and emissions of running AI tools matter alongside the study itself. Fine-tuning a model or running thousands of agent loops has a very different footprint from a handful of prompts, yet there is no shared reporting threshold or minimal logging format.
+Do the energy and emissions of running AI tools matter next to the study's own footprint? Fine-tuning a model or running thousands of agent loops uses far more than a few prompts, and there is no shared reporting threshold or log format.
 
 Useful evidence or proposals:
 
-- Order-of-magnitude bounds showing when model training or querying (inference) energy is material for typical IE workflows.
-- A minimal receipt researchers can actually record (model name, token counts, hardware, or measured energy).
+- Order-of-magnitude bounds showing when the energy for training or querying a model is large enough to report in a typical IE study.
+- A minimal log researchers can actually keep (model name, token counts, hardware, or measured energy).
 - Measurement tools that work for both hosted APIs and local setups listed under [local AI & hardware](/tools/local-ai/).
 
 ## What shared evaluation datasets can the community publish without licensing blocks?
 
-Core background databases such as ecoinvent are proprietary, which stops researchers from publishing reproducible evaluation tasks that bundle real process data. As a result, most groups test their tools on private slices that nobody else can inspect or rerun.
+Background databases such as ecoinvent are proprietary, so researchers can't publish evaluation tasks that bundle real process data. Tools then get tested on data that nobody else can inspect or rerun.
 
 Useful evidence or proposals:
 
@@ -61,7 +62,7 @@ Useful evidence or proposals:
 
 ## Where should human review remain mandatory in AI-assisted IE pipelines?
 
-Deterministic checks can catch syntax errors, broken unit conversions, and mass-balance violations, so parts of a pipeline can run with automated tests. Methodological choices such as system boundaries, allocation rules, and life cycle impact assessment (LCIA) characterisation factors change study conclusions directly and cannot be verified by a script alone.
+Automated checks catch syntax errors, broken unit conversions and mass-balance violations, so parts of a pipeline can run on tests alone. Methodological choices such as system boundaries, allocation rules and life cycle impact assessment (LCIA) characterisation factors change a study's conclusions directly, and a script alone can't check them.
 
 Useful evidence or proposals:
 

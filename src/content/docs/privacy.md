@@ -3,16 +3,17 @@ title: Privacy
 description: What the AI4IE site sends where, what it keeps, and how to ask about it.
 ---
 
-This page covers [ai4ie.org](https://ai4ie.org), built and maintained by Simon van Lierde.
-
 No cookies, no analytics, no accounts. Your browser stores your theme choice and caches a
 demo model after you run it. The web server sees your IP address and browser.
+
+This page covers [ai4ie.org](https://ai4ie.org), built and maintained by Simon van Lierde.
 
 ## Search
 
 Keyword search runs in your browser against a downloaded index.
 
-Queries of three or more words go to a Cloudflare Worker and then to Cloudflare Workers AI
+Queries of three or more words go to a small program the site runs on Cloudflare (a
+Worker) and then to Cloudflare Workers AI
 to find related papers. The site's code does not store your query.
 
 The [MCP server](/literature/#ask-an-ai-assistant) works the same way: `search_papers`
@@ -46,7 +47,7 @@ The [Contribute](/contribute/) page uses two endpoints on the same Cloudflare Wo
   any details you want to keep private.
 - **Spam protection.** When the form or poll needs verification, your browser loads Cloudflare
   Turnstile. The Worker sends the verification token and your IP address to Cloudflare to
-  check the result. Both features use per-IP and location-wide rate limits. The Workers Logs
+  check the result. Both limit how often one IP address or one location can send. The Workers Logs
   retention described above also applies to these requests.
 
 ## Questions

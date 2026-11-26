@@ -11,14 +11,19 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - `pnpm run cited-figures` lists every number the site attributes to a paper. With
   `--notes <dir>` it lists only the numbers no reading note records yet.
-- An Evals & agent benchmarks page: how to score an AI step on known answers, and five
-  benchmarks that test agents and models on research, coding and LCA tasks.
-- The agentic harnesses page explains a harness by comparing the agent to a new lab member,
-  and gains tips on asking for a plan first, one git worktree per agent, and hooks, with an
-  example hook that blocks edits to the golden tests.
-- The prompts & skills page gains an "Add your own skill" section.
+- A Verify AI-assisted work page: the coding and ML reproducibility checklists, golden
+  tests kept out of an agent's reach, scoring an AI step on known answers, a claim ledger,
+  a run log, and short tips for working with a coding agent (`AGENTS.md`, a plan first, one
+  git worktree per agent, hooks). `/best-practices/checklists/`, `/agentic-harnesses/` and
+  `/evals/` redirect to it.
+- Getting started & pitfalls opens with "How reliable is AI today?", a table of the two
+  benchmarks that test language models on IE tasks.
 - The verification checklist gains items on a test seen failing, reading the agent's plan,
   a full test run after the last edit, a run log, and scoring an AI step on known answers.
+- A Courses, videos & posts page under Tools & courses.
+- The home page says who the site is for and where to start: your field on the map, or
+  Getting started if you're new to machine learning. The footer links to the governance
+  document.
 - A Details panel for each paper on the literature page: both the DOI and arXiv links,
   field pages and filtered views for its tags, the applications that cite it, three
   similar papers by meaning, a copyable link and an edit form. `/literature/#<id>` opens
@@ -75,6 +80,22 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Plainer copy across the site: ML terms are explained where a reader first meets them,
+  long sentences are split, and each field page's intro no longer repeats the maturity
+  calls listed below it.
+- The literature page holds only papers and the MCP server. Courses, videos and posts
+  moved to Tools & courses, and related communities to the Contribute page. The chapters
+  are now "Literature" and "Tools & courses".
+- The computer vision taxonomy moved from the map to Demos, at `/demos/cv-taxonomy/`
+  (the old URL redirects).
+- The map page lists the fields before the technique grid, hides the thin-topics list when
+  it is empty, and no longer lists matching or knowledge graphs as untried: symbiosis
+  papers use them under other tags.
+- Maturity calls name their source and drop claims the cited papers don't make: the
+  carbon-footprinting error figures are Flamingo's, impact screening and night-light
+  stock mapping say what the studies show, and robotic disassembly rests on one preprint.
+- The Contribute page says the site is a proposal and the norms poll a
+  straw poll, not a group decision.
 - Each IE field's evidence summary moved from the map page to the field's own page, and
   the map page lists the fields instead of repeating their applications. Old anchors such
   as `/applications-map/#life-cycle-assessment` still land on the field list.
