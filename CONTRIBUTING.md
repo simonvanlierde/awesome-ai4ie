@@ -174,7 +174,7 @@ Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUC
 2. Run `pnpm run build`, then `pnpm exec astro preview` in one terminal.
 3. Run `pnpm run test:a11y` in another.
 
-The check runs axe on every page (and the 404 page) in light and dark, at desktop and phone width. It fails on a page wider than the screen, also at 320px with text at 200%, and it checks the literature filter's keyboard behaviour. Lines starting "not decided by axe" are listed but don't fail.
+The check runs axe on every page (and the 404 page) in light and dark, at desktop and phone width. It fails on a page wider than the screen, also at 320px with text at 200%, and it checks the literature filter's keyboard behaviour. Lines starting "not decided by axe" are listed but don't fail. One rule, `label-content-name-mismatch`, is skipped for Starlight's search button; see `scripts/a11y.mjs`.
 
 ### Adding an interactive demo
 

@@ -72,7 +72,7 @@ jobs:
       # literature-index.json then ships. A fork's pull request gets no secrets, so it
       # builds without vectors; on this repo's pull requests and on main a failed embed
       # fails the build.
-      - uses: withastro/action@3eafd002e65cc31b4f0eae0bb05450d521562247 # v6.1.3
+      - uses: withastro/action@a8b97df764791eb61fbf3338ef713b0e61ae05c5 # v6.1.4
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -108,7 +108,7 @@ jobs:
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           enable-cache: false
-          version: "0.13.6"
+          version: "0.13.9"
       - name: Vocabulary is valid SKOS
         run: |
           curl -fsSL -o "$RUNNER_TEMP/skohub.shacl.ttl" https://raw.githubusercontent.com/skohub-io/skohub-shapes/ce46984871b93cb129ce5b71c12e25dc0876de90/skohub.shacl.ttl

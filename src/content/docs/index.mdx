@@ -12,11 +12,13 @@ hero:
 ---
 
 import { getCollection } from 'astro:content';
+import { sankeyLayout } from '../../lib/sankey';
 
 export const papers = (await getCollection('literature')).length;
+export const linked = sankeyLayout((await getCollection('literature')).map((e) => e.data), 380, 18).papers;
 export const apps = (await getCollection('applications')).length;
 
-It lists {papers} papers, {apps} applications by field, verification checks and browser demos.
+It lists {papers} papers, {apps} applications by field, verification checks and browser demos. Fig. 1 shows the {linked} papers that have both an IE field and an AI technique.
 
 ## Contributing
 
