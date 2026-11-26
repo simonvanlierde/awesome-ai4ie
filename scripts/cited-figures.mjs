@@ -2,12 +2,13 @@
 /**
  * Lists every figure the site attributes to a paper: each stretch of page text that
  * carries a number and ends in a `<Cite>`, each numbered blurb in literature.yaml, and
- * each numbered summary or maturity line in applications.yaml (checked against its papers). These are the claims to check against the
- * paper itself, since a source can exist and still not say what the page says. A
- * claim is the text between two Cites, so a row can carry a neighbour's number.
+ * each numbered summary or maturity line in applications.yaml (checked against its
+ * papers). These are the claims to check against the paper itself, since a source can
+ * exist and still not say what the page says. A claim is the text between two Cites,
+ * so a row can carry a neighbour's number.
  *
- * With --notes <dir>, a folder of reading notes (`@<citekey>.md`, found by the entry's DOI or arXiv
- * id, else by its id), it lists only the numbers that the note's
+ * With --notes <dir>, a folder of reading notes (`@<citekey>.md`, found by the entry's
+ * DOI or arXiv id, else by its id), it lists only the numbers that the note's
  * `%% begin obsidian notes %%` block never mentions, exactly or rounded: the figures
  * nobody has checked yet. Prints one tab-separated row per claim: id, file, unchecked
  * numbers, claim.
@@ -30,7 +31,7 @@ const TAG = /<[^>]+>/g;
 const ANGLE = /[<>]/g;
 const SPACE = /\s+/g;
 const LEADING = /^[\s.,;)]+/;
-const DOI = /^doi: "?([^"\n]+)"?$/im; // zotsync writes "DOI:"
+const DOI = /^doi: "?(?:https?:\/\/(?:dx\.)?doi\.org\/)?([^"\n]+)"?$/im; // zotsync writes "DOI:", a few as URLs
 const ARXIV = /^url: \S*arxiv\.org\/abs\/(\d{4}\.\d{4,5})/im;
 const PAGE = /\.mdx?$/;
 
@@ -74,7 +75,7 @@ function roundsTo(value, shown) {
   if (value === shown) return true;
   const decimals = shown.split(".")[1]?.length ?? 0;
   const scale = 10 ** decimals;
-  // The epsilon undoes binary float error: 0.855 * 100 is 85.4999…
+  // The epsilon undoes binary float error: 1.005 * 100 is 100.4999…
   return (Math.round(Number(value) * scale + 1e-9) / scale).toFixed(decimals) === shown;
 }
 
@@ -85,7 +86,7 @@ export function unchecked(numbers, notes) {
 }
 
 /** Reading notes keyed by citekey and by lower-case DOI: site ids are not always Zotero's citekeys. */
-async function readNotes(dir) {
+export async function readNotes(dir) {
   const notes = new Map();
   for (const file of await readdir(dir)) {
     if (!file.startsWith("@") || !file.endsWith(".md")) continue;
@@ -124,7 +125,7 @@ async function main() {
   const dois = new Map(
     parse(await readFile("src/data/literature.yaml", "utf8")).map((e) => [
       e.id,
-      e.doi?.toLowerCase(),
+      (e.doi ?? (e.arxiv && `10.48550/arxiv.${e.arxiv}`))?.toLowerCase(),
     ]),
   );
   const claims = [];
