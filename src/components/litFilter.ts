@@ -28,13 +28,15 @@ export function matchesFilter(entry: Tagged, f: Filter): boolean {
   return TAG_DIMS.every((d) => f[d].length === 0 || (entry[d] ?? []).some((t) => f[d].includes(t)));
 }
 
+const WHITESPACE = /\s+/;
+
 /** The text filter: every word of `q` must appear, in any order and case, in the title,
  * authors or blurb. It ANDs with the tag filters. */
 export function matchesText(
   entry: { title: string; authors: readonly string[]; blurb: string },
   q: string,
 ): boolean {
-  const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+  const words = q.toLowerCase().split(WHITESPACE).filter(Boolean);
   if (words.length === 0) return true;
   const hay = `${entry.title} ${entry.authors.join(" ")} ${entry.blurb}`.toLowerCase();
   return words.every((w) => hay.includes(w));

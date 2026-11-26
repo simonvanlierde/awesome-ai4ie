@@ -384,7 +384,7 @@ describe("LiteratureBrowser pagination and text filter", () => {
   const listed = () => document.querySelectorAll(".lit-entry").length;
   const more = () => document.querySelector<HTMLButtonElement>(".lit-more");
   const type = (value: string) =>
-    act(async () => {
+    act(() => {
       const input = document.querySelector<HTMLInputElement>(".lit-search input");
       if (!input) return;
       Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set?.call(input, value);
