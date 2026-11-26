@@ -128,7 +128,6 @@ const idle =
           <a
             href={litUrl({ ie: [b.ie], ml: [b.ml] })}
             tabindex="-1"
-            aria-label={`${tagLabel("ie", b.ie)} with ${tagLabel("ml", b.ml)}: ${b.count} ${b.count === 1 ? "paper" : "papers"}`}
           >
             <path
               class={`band field-${b.ie}`}
@@ -138,7 +137,7 @@ const idle =
               d={band(b)}
               mask={`url(#pour-${i})`}
             >
-              <title>{`${tagLabel("ie", b.ie)} → ${tagLabel("ml", b.ml)}: ${b.count}`}</title>
+              <title>{`${tagLabel("ie", b.ie)} with ${tagLabel("ml", b.ml)}: ${b.count} ${b.count === 1 ? "paper" : "papers"}`}</title>
             </path>
           </a>
         ))

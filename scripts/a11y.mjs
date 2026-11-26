@@ -22,6 +22,21 @@ import { basePath } from "../src/site.ts";
 
 const root = process.argv[2] ?? `http://localhost:4321${basePath}/`;
 const INDEX_HTML = /index\.html$/;
+// Starlight's search button is labelled "Search" with a "Ctrl K" hint that
+// aria-keyshortcuts conveys. Upstream closed it as intended (the hint is a
+// symbolic supplement, not a label): https://github.com/withastro/starlight/issues/4260
+// An axe `exclude` would skip every rule, so drop only this rule's node.
+const STARLIGHT_SEARCH = 'button[data-open-modal=""]';
+function withoutSearchHint(violations) {
+  return violations
+    .map((v) => ({
+      ...v,
+      nodes: v.nodes.filter(
+        (n) => v.id !== "label-content-name-mismatch" || n.target.join(" ") !== STARLIGHT_SEARCH,
+      ),
+    }))
+    .filter((v) => v.nodes.length > 0);
+}
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
 // Every built page, as a path relative to the site root ('' is the home page),
@@ -56,13 +71,13 @@ for (const colorScheme of ["light", "dark"]) {
       where = `${colorScheme} ${name} /${path}`;
       await page.goto(new URL(path, root).href);
       const result = await new AxeBuilder({ page }).withTags(TAGS).exclude("iframe").analyze();
-      for (const v of result.violations) {
+      for (const v of withoutSearchHint(result.violations)) {
         console.log(
           `${where}: ${v.id} (${v.impact}) at ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`,
         );
         console.log(`  ${v.nodes[0].failureSummary?.split("\n").slice(1).join(" ").trim()}`);
       }
-      violations += result.violations.length;
+      violations += withoutSearchHint(result.violations).length;
       for (const v of result.incomplete)
         incomplete.set(
           `/${path} ${v.id}`,
@@ -112,7 +127,8 @@ for (const [name, viewport] of Object.entries(VIEWPORTS)) {
   if ((await trigger.getAttribute("aria-expanded")) !== "true")
     fail(`${name}: filter button not expanded`);
   const open = await new AxeBuilder({ page }).withTags(TAGS).analyze();
-  for (const v of open.violations) fail(`${name}: with the filter panel open, ${v.id}`);
+  for (const v of withoutSearchHint(open.violations))
+    fail(`${name}: with the filter panel open, ${v.id}`);
   await trigger.focus();
   await page.keyboard.press("Escape");
   if ((await trigger.getAttribute("aria-expanded")) !== "false")
