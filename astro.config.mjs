@@ -242,6 +242,7 @@ export default defineConfig({
             { label: "Getting started & pitfalls", slug: "best-practices" },
             { label: "Verification checklists", slug: "best-practices/checklists" },
             { label: "Agentic harnesses", slug: "best-practices/agentic-harnesses" },
+            { label: "Evals & agent benchmarks", slug: "best-practices/evals" },
             { label: "Prompts & skills", slug: "best-practices/prompts-and-skills" },
           ],
         },
