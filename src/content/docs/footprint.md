@@ -5,7 +5,7 @@ description: The carbon footprint of one page view of this site and of one demo 
 
 This site is about AI in industrial ecology, so it applies one of the field's methods to
 itself: a small life cycle assessment (LCA) of what it costs the climate to read it and to run
-its demo. Each build computes the numbers, tables and figures from its own pages; only the
+its demo. Each build computes the numbers, tables and figures from its own pages. Only the
 demo's file sizes are typed in. To run the same check on your own site, see
 [Check your own site](#check-your-own-site).
 
@@ -16,9 +16,9 @@ One page view of this site transfers about %%fp:viewKb%% kB and emits **%%fp:vie
 
 One run of the [CLIP demo](/demos/#classify-a-photo-with-clip), which labels a photo with an
 image model that runs in your browser, downloads about %%fp:demoMb%% MB and emits
-**%%fp:demo%%** CO₂e. That is as many bytes as about %%fp:viewsPerDemo%% page views. So if more
-than one reader in about %%fp:viewsPerDemo%% runs the demo, in this model the demo's downloads outweigh all page
-views, and a lighter demo model would save more than a lighter page.
+**%%fp:demo%%** CO₂e. That is as many bytes as about %%fp:viewsPerDemo%% page views. If more than one
+reader in %%fp:viewsPerDemo%% runs the demo, the demo's downloads outweigh all page views in this
+model. A lighter demo model would then save more than a lighter page.
 
 Each pair of numbers is the same estimate with and without the model's adjustment for a green
 host, not an error range. The model's own uncertainty is larger (see [Uncertainty](#uncertainty)).
@@ -131,15 +131,14 @@ a reader presses Classify.
   It is made for comparing and for rough totals. It cannot say which part of this site
   causes the emissions, and I give no error bar for the model itself. Read the figures as
   orders of magnitude.
-- **Hosting.** The site runs on Cloudflare. The ranges show the two ends: with the
-  green-host adjustment for the data centre, and without it.
+- **Hosting.** The site runs on Cloudflare. The page shows both green-host cases rather than
+  pick one.
 - **Grid intensity.** The model uses a world average. Readers on cleaner or dirtier grids
   get less or more.
 - **Gzip.** Page weight is the gzipped size, a proxy for bytes on the wire. Cloudflare may
   send Brotli, which is smaller.
 - **Demo files.** The sizes are typed into the code, and I update them when the demo's
-  model or library version changes ([MAINTAINING.md](repo:blob/main/MAINTAINING.md)). Everything
-  else on this page updates with each build. The sizes are uncompressed and the wasm runtime is the
+  model or library version changes ([MAINTAINING.md](repo:blob/main/MAINTAINING.md)). The sizes are uncompressed and the wasm runtime is the
   largest variant, so the demo total is an upper bound.
 - **Embodied emissions.** These come from the model's constants. I did not check them.
 
@@ -147,7 +146,8 @@ a reader presses Classify.
 
 You can run the same estimate on your own site. For one page, open your browser's developer
 tools, turn off the cache, reload, and read the bytes transferred from the Network tab. Then
-install CO2.js (`npm install @tgwf/co2`, Node 22 or later) and run:
+install CO2.js with `npm install @tgwf/co2`, save this as `one-page.mjs` with your byte count,
+and run `node one-page.mjs`:
 
 ```js
 import { co2 } from "@tgwf/co2";
@@ -157,11 +157,15 @@ const bytes = 180_000; // the bytes transferred
 console.log(swd.perByte(bytes, false), "g CO2e per view"); // true for a green host
 ```
 
-For every page of a built static site, copy
-[`scripts/page-weight.mjs`](repo:blob/main/scripts/page-weight.mjs) into your repo's `scripts/`
-folder. Replace its line `import { basePath } from "../src/site.ts";` with
-`const basePath = "";` (or your site's path, such as `"/docs"`), and set its budgets in
-`DEFAULT_BUDGET_KB` and `OVERRIDES`. It weighs the pages in `dist/`. Then add a script next to it:
+For every page of a built static site, use this repo's page-weight script. It needs Node 22
+or later, and it reads the built pages from `dist/`.
+
+1. Copy [`scripts/page-weight.mjs`](repo:blob/main/scripts/page-weight.mjs) into your repo's
+   `scripts/` folder.
+2. Replace its line `import { basePath } from "../src/site.ts";` with `const basePath = "";`.
+   If your site is served under a path, put that path in the quotes, such as `"/docs"`.
+3. Set your budgets in `DEFAULT_BUDGET_KB` and `OVERRIDES`.
+4. Save this script next to it as `scripts/carbon.mjs`:
 
 ```js
 // carbon.mjs: the weight and CO2e of each page in dist/
@@ -176,7 +180,7 @@ for (const { page, kb } of await weighAll("dist")) {
 ```
 
 In GitHub Actions, run both after your build step. `page-weight.mjs` fails the job when a page
-goes over its budget:
+goes over its budget. `carbon.mjs` prints each page's weight and CO₂e:
 
 ```yaml
 - run: node scripts/page-weight.mjs

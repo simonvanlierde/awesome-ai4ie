@@ -120,7 +120,7 @@ const INDEX_HTML = /index\.html$/;
 const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" };
 const esc = (s) => String(s).replace(SPECIAL, (c) => ESC[c]);
 const pct = (x, max) => `${((x / max) * 100).toFixed(2)}%`;
-const urlOf = (page) => `/${page.replace(INDEX_HTML, "")}`;
+const urlOf = (page) => (page === "index.html" ? "/ (home)" : `/${page.replace(INDEX_HTML, "")}`);
 
 /** One bar row: the name and value as text, the bar hidden from screen readers. */
 const row = (name, value, track, cls = "") =>

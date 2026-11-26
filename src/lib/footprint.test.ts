@@ -89,6 +89,10 @@ test("the comparison figure splits each bar into the green-host part and the res
   expect(html).toMatch(/0\.024 to 0\.030 g/);
 });
 
+test("the home page is named, not shown as a bare slash", () => {
+  expect(pageFigure(footprint([{ page: "index.html", kb: 1 }]), "")).toContain(">/ (home)<");
+});
+
 test("a page name with markup is escaped", () => {
   const html = pageFigure(footprint([{ page: "<b>/index.html", kb: 1 }]), "");
   expect(html).toContain("/&lt;b&gt;/");
