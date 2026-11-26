@@ -3,7 +3,7 @@ name: advisories
 # The stack workflows audit dependencies on push and pull request, and zizmor
 # audits workflows. A new advisory can land against a lockfile or action with no commit here, so
 # this audits again every Monday. A failed scheduled run opens one issue, or comments on the
-# open one.
+# open one; a clean scheduled run closes it.
 on:
   schedule:
     - cron: "23 5 * * 1" # Mondays, 05:23 UTC
@@ -59,3 +59,25 @@ jobs:
     uses: $/.github/workflows/report-failure.yml
     with:
       title: Weekly advisory audit failed
+
+  resolved:
+    # A clean scheduled run closes the failure issue, so it never goes stale.
+    name: "advisories: close the failure issue"
+    needs: ['actions', 'ts']
+    if: github.event_name == 'schedule' && needs.actions.result == 'success' && needs.ts.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write # closes the failure issue
+    steps:
+      - name: close the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TITLE: Weekly advisory audit failed # the notify job's title
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |-
+          issue=$(gh issue list --state open --author app/github-actions --search "in:title \"$TITLE\"" --json number -q '.[0].number')
+          if [ -n "$issue" ]; then
+            gh issue close "$issue" --comment "A clean scheduled run: $RUN_URL"
+          fi
