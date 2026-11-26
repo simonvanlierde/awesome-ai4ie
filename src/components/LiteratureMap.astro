@@ -83,20 +83,26 @@ const clusters = [...new Set(labels)]
       byField,
       none: m.filter((p) => !p.field).length,
       thin: m.length < THIN_CLUSTER,
+      lx: 0, // label and leader-line anchor, set below
+      ly: 0,
+      ax: 0,
+      ay: 0,
     };
   })
   .sort((a, b) => a.c - b.c);
-// Labels sit above their cluster; one that would land on an earlier label moves up.
+// Labels sit just above their cluster's topmost point; one that would land on an earlier label
+// moves up, and a leader line ties it back to that point.
 const LINE = 15;
 const placedLabels: { x: number; y: number }[] = [];
 for (const k of [...clusters].sort((a, b) => b.cy - a.cy)) {
+  const top = k.members.reduce((a, p) => (p.y < a.y ? p : a));
   const clash = (at: number) =>
-    placedLabels.some((l) => Math.abs(l.y - at) < LINE && Math.abs(l.x - k.cx) < 170);
-  let y = k.cy - k.r - 6;
+    placedLabels.some((l) => Math.abs(l.y - at) < LINE && Math.abs(l.x - top.x) < 170);
+  let y = top.y - 12;
   while (clash(y)) y -= LINE; // up, away from the cluster's own points
-  y = Math.max(y, LINE); // a wide cluster keeps its label on the plate
-  placedLabels.push({ x: k.cx, y });
-  Object.assign(k, { ly: y });
+  y = Math.max(y, LINE); // keeps the label on the plate
+  placedLabels.push({ x: top.x, y });
+  Object.assign(k, { lx: top.x, ly: y, ax: top.x, ay: top.y });
 }
 const unplaced = all.length - placed.length;
 const thin = clusters.filter((c) => c.thin);
@@ -155,9 +161,12 @@ const none = points.filter((p) => !p.field).length;
             }
             {
               clusters.map((k) => (
-                <text class="lm-label" x={k.cx} y={(k as typeof k & { ly: number }).ly} text-anchor="middle" aria-hidden="true">
-                  {k.name} <tspan class="flow-n">{k.members.length}{k.thin ? ", thin" : ""}</tspan>
-                </text>
+                <g aria-hidden="true">
+                  {k.ay - k.ly > 20 && <line class="lm-leader" x1={k.lx} y1={k.ly + 3} x2={k.ax} y2={k.ay - 6} />}
+                  <text class="lm-label" x={k.lx} y={k.ly} text-anchor="middle">
+                    {k.name} <tspan class="flow-n">{k.members.length}{k.thin ? ", thin" : ""}</tspan>
+                  </text>
+                </g>
               ))
             }
           </svg>

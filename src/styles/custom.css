@@ -2225,6 +2225,11 @@ starlight-menu-button button {
   stroke: var(--sl-color-bg);
   stroke-width: 3px;
 }
+.litmap .lm-leader {
+  stroke: var(--sl-color-gray-4);
+  stroke-width: 1;
+}
+
 .litmap .lm-label {
   font-weight: 650;
 }
