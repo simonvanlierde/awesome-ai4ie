@@ -107,13 +107,18 @@ async function weigh(page) {
   return { page, kb: bytes / 1024 };
 }
 
+/** Every built page as {page, kb}, heaviest first. Reads dist/ under the working directory. */
+export async function weighAll() {
+  const files = await readdir("dist", { recursive: true });
+  const pages = files.filter((f) => f.endsWith(".html"));
+  return (await Promise.all(pages.map(weigh))).sort((a, b) => b.kb - a.kb);
+}
+
 async function main() {
-  const files = await readdir("dist", { recursive: true }).catch(() => {
+  const rows = await weighAll().catch(() => {
     console.error("No dist/ folder: run `pnpm run build` first.");
     process.exit(2);
   });
-  const pages = files.filter((f) => f.endsWith(".html"));
-  const rows = (await Promise.all(pages.map(weigh))).sort((a, b) => b.kb - a.kb);
   console.log(`${"page".padEnd(46)}${"KB (gzip)".padStart(10)}${"budget".padStart(8)}`);
   for (const r of rows) {
     const kb = r.kb.toFixed(1).padStart(10);

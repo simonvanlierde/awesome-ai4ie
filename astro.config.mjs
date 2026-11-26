@@ -11,6 +11,7 @@ import starlightLinksValidator from "starlight-links-validator";
 import { IE_TAGS } from "./src/data/tags.ts";
 import { lastmod } from "./src/lib/lastmod.ts";
 import { cspInlineScripts } from "./src/plugins/csp-inline-scripts.mjs";
+import { footprintNumbers } from "./src/plugins/footprint.mjs";
 import { rehypeFocusableTables } from "./src/plugins/rehype-focusable-tables.mjs";
 import { rehypeTaskListLabels } from "./src/plugins/rehype-task-list-labels.mjs";
 import { remarkBaseLinks } from "./src/plugins/remark-base-links.mjs";
@@ -149,11 +150,14 @@ export default defineConfig({
   },
 
   integrations: [
+    footprintNumbers(), // fills the footprint page from this build, before Pagefind
     cspInlineScripts(), // after Astro writes the policy: hashes the scripts Starlight inlines
     react(), // islands: the literature list, the map explorer and the demos
     // Starlight adds a plain sitemap unless one is configured here. This one dates
     // each URL by its last commit (src/lib/lastmod.ts).
     sitemap({
+      // Draft: unlinked until the group has seen it.
+      filter: (page) => !page.endsWith("/footprint/"),
       serialize: (item) => {
         const path = new URL(item.url).pathname.slice(base.length).replace(/^\/|\/$/g, "");
         const date = lastmod(path);
