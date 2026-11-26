@@ -18,8 +18,14 @@ export function footprintNumbers() {
         const root = fileURLToPath(dir);
         try {
           const html = await readFile(`${root}/${PAGE}`, "utf8");
-          const tokens = footprintTokens(footprint(await weighAll(root)));
-          await writeFile(`${root}/${PAGE}`, fillTokens(html, tokens));
+          const fill = async () => {
+            const tokens = footprintTokens(footprint(await weighAll(root)), PAGE);
+            await writeFile(`${root}/${PAGE}`, fillTokens(html, tokens));
+          };
+          // Twice: the figures make this page heavier, and the second pass weighs it with
+          // them. Only digits change after that, a few bytes at most.
+          await fill();
+          await fill();
         } catch (e) {
           throw new Error(`footprint page: ${e.message}`, { cause: e });
         }
