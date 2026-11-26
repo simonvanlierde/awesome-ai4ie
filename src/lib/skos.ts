@@ -10,7 +10,7 @@ const CONTEXT_FILE = "vocabulary/context.jsonld";
 const SKOS = "http://www.w3.org/2004/02/skos/core#";
 const DCT = "http://purl.org/dc/terms/";
 
-/** The vocabulary as a JSON-LD document that uses the shared context. */
+/** The vocabulary as a JSON-LD document that uses vocabulary/context.jsonld. */
 export function skosDocument(concepts: Concept[]) {
   const { "@context": context } = JSON.parse(readFileSync(CONTEXT_FILE, "utf8"));
   const top = (s: Scheme) =>
@@ -29,7 +29,7 @@ export function skosDocument(concepts: Concept[]) {
     [`${SKOS}hasTopConcept`]: top(s as Scheme),
   }));
   const graph = concepts.map((c) => ({ ...c, id: `#${c.id}`, "@type": `${SKOS}Concept` }));
-  // The shared context holds no base: each site adds its own namespace here.
+  // The context file holds no base, so it stays reusable: the namespace is added here.
   return {
     "@context": [context, { "@base": NAMESPACE, "@vocab": NAMESPACE }],
     "@graph": [...schemes, ...graph],

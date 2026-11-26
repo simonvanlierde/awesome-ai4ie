@@ -35,7 +35,7 @@ flowchart TD
 - `src/plugins/`: Markdown and HTML build plugins, plus `csp-inline-scripts.mjs`.
 - `src/content/docs/`: guide pages in Markdown and MDX.
 - `worker/`: the Cloudflare Worker: `/api/search`, `/api/contribute` (`contribute.ts`), `/api/poll` (`poll.ts`), the MCP server (`mcp.ts`) and the shared search and rate-limit code (`search.ts`).
-- `vocabulary/`: `context.jsonld`, the JSON-LD context shared byte for byte with the author's other site; the build serves the vocabulary at `/vocabulary.ttl` and `/vocabulary.jsonld` from it.
+- `vocabulary/`: `context.jsonld`, the JSON-LD context; the build serves the vocabulary at `/vocabulary.ttl` and `/vocabulary.jsonld` from it.
 - `scripts/`: `vocabulary.mjs` (writes `src/data/vocabulary.gen.ts`), and build-time and CI checks (accessibility, licences, citations, page weight and social card).
 
 ## Security architecture and assurance case
