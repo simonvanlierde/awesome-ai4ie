@@ -17,6 +17,8 @@ Other abbreviations: BoM (bill of materials), OCR (optical character recognition
 from images), VLM (vision-language model: answers questions about images), WEEE (waste
 electrical and electronic equipment) and mAP50 (detection accuracy, from 0 to 1 or as a percentage).
 
+P = partial, E = emerging but narrow, U = plausible but unvalidated (details below the table).
+
 | Scale ↓ / Info type → | Identity | Quantity | Structure (BoC) | Condition |
 | --- | --- | --- | --- | --- |
 | **Product** | Label OCR + retrieval (**P**) | Depth / multi-view geometry (**P**) | Not sensed | Wear / damage grading (**E**) |
@@ -25,7 +27,7 @@ electrical and electronic equipment) and mAP50 (detection accuracy, from 0 to 1 
 
 **Maturity grades,** from highest to lowest:
 
-- **Strong:** works across many kinds of product on a benchmark, works on field photos, and is used in practice. No cell is here yet.
+- **Strong:** works across many kinds of product on a benchmark, works on field photos, and is used in practice. No cell reaches this yet.
 - **P, partial:** works across many kinds of product on a benchmark, but fails on field photos or is not yet used in practice.
 - **E, emerging-but-narrow:** works only for one narrow kind of product.
 - **U, plausible-but-unvalidated:** shown only in principle or in a neighbouring field.
@@ -35,7 +37,7 @@ electrical and electronic equipment) and mAP50 (detection accuracy, from 0 to 1 
 
 - **Identity (partial).** Software reads the label text, then matches it to a reference
   database. Image retrieval and VLMs can help. On washing machines, it read model numbers in
-  95.7% of repair photos but 39.7% of recycler photos
+  95.7% of usable repair photos but 39.7% of usable recycler photos
   <Cite id="sterkensProductLabelIdentification2023" />. Labels wear out at end of life, and
   the database may not list the model.
 - **Quantity (partial, approximate).** Three families of method recover geometry with
