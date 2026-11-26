@@ -1,0 +1,1026 @@
+{
+  "abdellaSustainabilityAssessmentModeling2020": {
+    "openalex": "W2995045082",
+    "topic": {
+      "id": "T11259",
+      "name": "Agriculture Sustainability and Environmental Impact"
+    },
+    "abstract": null
+  },
+  "aboagyeLeveragingMachineLearning2025": {
+    "openalex": "W4410928201",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "0cba77a9ec48f7775a190e3341b898fb917de3b54e34be8f46cd89664068caca"
+  },
+  "abubakarNaturallanguageInterfaceParameterlevel2026": {
+    "openalex": "W7214126917",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "ae25f6ca3f376b5542caa73b39714a1e25312e3b2479172a5fa400d71069e2c5"
+  },
+  "akramiAddressingUncertaintyMachine2025": {
+    "openalex": "W4411406831",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": null
+  },
+  "aljamaanReferenceHallucinationScore2024": {
+    "openalex": "W4400270729",
+    "topic": {
+      "id": "T11636",
+      "name": "Artificial Intelligence in Healthcare and Education"
+    },
+    "abstract": "e4d8b8cefc81815e47ebd981f121081acc04350ee749f4da08da8ecfacb501f7"
+  },
+  "ameurFutureRoboticDisassembly2025": {
+    "openalex": "W4414984956",
+    "topic": {
+      "id": "T10653",
+      "name": "Robot Manipulation and Learning"
+    },
+    "abstract": "44d5d0ad4f6a3ab8808a82d5b53e812daa02f6e5ca2280865538062ddcd69084"
+  },
+  "arbabiScalableDataCollection2021": {
+    "openalex": "W3197596851",
+    "topic": {
+      "id": "T12698",
+      "name": "3D Modeling in Geospatial Applications"
+    },
+    "abstract": "1fb7054a197d8c11823f76975ede5d6115eab22baad428df6fd1d0f3b43d0e2b"
+  },
+  "babbittDisassemblybasedBillMaterials2020": {
+    "openalex": "W3046262883",
+    "topic": {
+      "id": "T12017",
+      "name": "Recycling and Waste Management Techniques"
+    },
+    "abstract": "3c8258313cc15bcd0b60a62e2313cff1239cf2f729707e5a245961dd6e022c21"
+  },
+  "baehrPredictingProductLife2024": {
+    "openalex": "W4404197757",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "d9fe3f7d58bd339bc477d2c9f45e24f7297ccfd9b6e29aea96fb6844aa85a45b"
+  },
+  "balajiCaMLCarbonFootprinting2023": {
+    "openalex": "W4367047326",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "176445b6a35ca4d4a8a7ee6efc85ae7b718d85017faf015fd9da44a1ea43e896"
+  },
+  "balajiFlamingoEnvironmentalImpact2023": {
+    "openalex": "W4386547214",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "d1553956d7d2f90740388ac1f273052da39b029294c0986781739701f4909190"
+  },
+  "baoDeepLearningFusion2023": {
+    "openalex": "W4313524269",
+    "topic": {
+      "id": "T11963",
+      "name": "Impact of Light on Environment and Health"
+    },
+    "abstract": "e70a676e53f059805df9b5eef94667c02e2d40e7842aa39bcae5116566a9238e"
+  },
+  "bellMaterialRecognitionWild2015": {
+    "openalex": "W1953465585",
+    "topic": {
+      "id": "T10036",
+      "name": "Advanced Neural Network Applications"
+    },
+    "abstract": "f84b606ed4413287de9b0350942b890b18ab8ab6b30e3169bb8e57506f22b74b"
+  },
+  "bochkovskiiDepthProSharp2024": {
+    "openalex": "W4403882324",
+    "topic": {
+      "id": "T10531",
+      "name": "Advanced Vision and Imaging"
+    },
+    "abstract": "52f7f5e0bf671c42b6182d280904963f84fa46f2cd10d65d50a4ce038caeb613"
+  },
+  "brownLanguageModelsAre2020": {
+    "openalex": "W3030163527",
+    "topic": {
+      "id": "T10028",
+      "name": "Topic Modeling"
+    },
+    "abstract": "f58a1d0d7ec0f2dee132faa85c3f041ac29b01fa439f46a6f80a5724f06367ef"
+  },
+  "buechelerIndustrialProductDocumentation2026": {
+    "openalex": "W7237189521",
+    "topic": {
+      "id": "T10028",
+      "name": "Topic Modeling"
+    },
+    "abstract": "eb1560f8d192c7f961c8bdc3ff1563875eef740c4880b17f6677faae9ff35665"
+  },
+  "carionSAM3Segment2025": {
+    "openalex": "W4417095222",
+    "topic": {
+      "id": "T10036",
+      "name": "Advanced Neural Network Applications"
+    },
+    "abstract": "d570a88d8fd6cfea7ab5bc9ae726a2db231ae08bca97cfa3487a7f0361bb16db"
+  },
+  "chenDetectingInterpretingPotential2026": {
+    "openalex": "W7237030081",
+    "topic": {
+      "id": "T10689",
+      "name": "Remote-Sensing Image Classification"
+    },
+    "abstract": "d59580c9b2390f8ec1d21da9b629af77b1aaee57f89ee5538162816d38355650"
+  },
+  "chenScaleEffectsSymbiotic2024": {
+    "openalex": "W4404279860",
+    "topic": {
+      "id": "T12746",
+      "name": "Sustainable Industrial Ecology"
+    },
+    "abstract": null
+  },
+  "daiGaussianProcessRegression2022": {
+    "openalex": "W4214524079",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "a1849f3a1158156758088202d20628dfffa61cb086f1746d03d8cd86095629fd"
+  },
+  "daiModelingInteriorComponent2025": {
+    "openalex": "W4411226298",
+    "topic": {
+      "id": "T12698",
+      "name": "3D Modeling in Geospatial Applications"
+    },
+    "abstract": null
+  },
+  "davisMachineLearningassistedIndustrial2022": {
+    "openalex": "W4212984208",
+    "topic": {
+      "id": "T12746",
+      "name": "Sustainable Industrial Ecology"
+    },
+    "abstract": "9fd51aafdf4240601766e00a1426d062b426bef205da9fa1927596bd16f16d6b"
+  },
+  "dengAutoPCFEfficientProduct2023": {
+    "openalex": "W4385714119",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "d6b18caf25ad2937963b46900b23ef27b0044c56551bf1952c9660b9796260d4"
+  },
+  "dengImageNetLargescaleHierarchical2009": {
+    "openalex": "W2108598243",
+    "topic": {
+      "id": "T10824",
+      "name": "Image Retrieval and Classification Techniques"
+    },
+    "abstract": "8a7b7243cdfa80287641e395ba8cc42ad80a3827d014bd71db7971d3ed5ee69c"
+  },
+  "dingCharacterizingChemicalToxicity2026": {
+    "openalex": "W7163647112",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "68e93769e4d135244a28fed3936aefaa4b205a5e29efe101c427c4d4996120d0"
+  },
+  "donaldsonExpertGroundedBenchmark2025": {
+    "openalex": "W4415958513",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "c5d43d026d33a32a991a88ad7bac4699218b6d0ecab958b150eed5fbbafe2f8f"
+  },
+  "donatiFutureArtificialIntelligence2022": {
+    "openalex": "W4288084713",
+    "topic": {
+      "id": "T12746",
+      "name": "Sustainable Industrial Ecology"
+    },
+    "abstract": "fca9b6d7db213e6b9d2b72132a69f495bddc83b4fde58b0f16fc4ebe30bcd2a2"
+  },
+  "dongExpertElicitationData2023": {
+    "openalex": "W4377044010",
+    "topic": {
+      "id": "T12643",
+      "name": "Sustainability and Ecological Systems Analysis"
+    },
+    "abstract": "b27fb5fa3b18a5335e3bde41bc6b288318d31ddb1e88dd3f81ae75924768ebd8"
+  },
+  "dosovitskiyImageWorth2020": {
+    "openalex": "W3094502228",
+    "topic": {
+      "id": "T10036",
+      "name": "Advanced Neural Network Applications"
+    },
+    "abstract": "2519d883b5c415a860f3921bd2e19d3c98574a7df1d05aee93ee254ad3597cba"
+  },
+  "ebrahimiMachineLearningbasedStocks2022": {
+    "openalex": "W4206038937",
+    "topic": {
+      "id": "T12643",
+      "name": "Sustainability and Ecological Systems Analysis"
+    },
+    "abstract": "df342d824b5058f3b7d1465ea2db4692f84553ea34f843f38bcaa363e9c90582"
+  },
+  "engbergForecastingFutureStates2026": {
+    "openalex": "W7171384559",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "99adc057d64418e0c9602d292299aa469a59948d2e0a329da4bba9efe0a428db"
+  },
+  "fangStudyRecyclingMaterials2025": {
+    "openalex": "W4415515334",
+    "topic": {
+      "id": "T12746",
+      "name": "Sustainable Industrial Ecology"
+    },
+    "abstract": "b1a0c9d755fce1ab25333b04093dd6f4cb888442cd05dfdb2493b9d80af19a25"
+  },
+  "forsterExtractingSustainabilityIndicators2026": {
+    "openalex": "W4412570064",
+    "topic": {
+      "id": "T10115",
+      "name": "Corporate Social Responsibility Reporting"
+    },
+    "abstract": "d23d6b24cbad1db68a86928093a0cd7f66b168f2ec872c84c892bb2778773a93"
+  },
+  "froemeltMachineLearningBased2020": {
+    "openalex": "W2990142655",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "de66531c035da7978149643505fc16d1de519b8eae7e612ded6bc2b12ddd580c"
+  },
+  "funkEvaluationVisionLanguage2026": {
+    "openalex": "W7125418443",
+    "topic": {
+      "id": "T11307",
+      "name": "Domain Adaptation and Few-Shot Learning"
+    },
+    "abstract": "ee09ebc4854dae3d3eb92d6ad666f5633533dd409bd2ab4d31052900a3514b0d"
+  },
+  "gaoSpatiotemporalMachineLearning2026": {
+    "openalex": "W7164810443",
+    "topic": {
+      "id": "T13920",
+      "name": "Urban Planning and Valuation"
+    },
+    "abstract": "e7f3c37841a03891b19dbd7cafc5147617c3fcda3cb6d1bd29da8702167ce43e"
+  },
+  "ghoroghiAdvancesApplicationMachine2022": {
+    "openalex": "W4220824860",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "f8c22ff6b242fd43dfbc18f5247c856698ea99256a2947154b13d644f355649f"
+  },
+  "gkousisMachineLearningLarge2026": {
+    "openalex": "W7114905682",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "3747e83a0cf0f26a7de587cd6523c96dc2282f885374cdf00b72d72240444c77"
+  },
+  "gongEvolutionResearchIntersection2025": {
+    "openalex": "W4406181213",
+    "topic": {
+      "id": "T12746",
+      "name": "Sustainable Industrial Ecology"
+    },
+    "abstract": "631e99ede5aa1ccc95763245405b571703999a6de19129645b759b916953afa8"
+  },
+  "grimmelUrbanIndustrialSymbiosis2025": {
+    "openalex": "W4409369782",
+    "topic": {
+      "id": "T12746",
+      "name": "Sustainable Industrial Ecology"
+    },
+    "abstract": "ed052901bfc5b373d182cd0c929fab3ccf6899e2b8ee88b9ad46fd01cdeec84e"
+  },
+  "guoGlobalEmissionFactor2026": {
+    "openalex": "W7127593423",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "05930d21d4fffeb668c2c59773ebb294c9780bfd9ac535105b582f3a7de2abce"
+  },
+  "guoGroupReasoningEmission2025": {
+    "openalex": "W4407423005",
+    "topic": {
+      "id": "T10028",
+      "name": "Topic Modeling"
+    },
+    "abstract": "eec64ae9c2b640b979a231d73f1fb7489ba31ec94b891371a6f91b67364fa5bd"
+  },
+  "haberlGlobalBuiltEnvironment2024": {
+    "openalex": "W4405212331",
+    "topic": {
+      "id": "T12643",
+      "name": "Sustainability and Ecological Systems Analysis"
+    },
+    "abstract": "058992c6cd7499bcdaa89dc6bb9e1ad3592a97dbc8b5d192f4bac6c1f48cc74d"
+  },
+  "haberlHighResolutionMaps2021": {
+    "openalex": "W3130276205",
+    "topic": {
+      "id": "T12643",
+      "name": "Sustainability and Ecological Systems Analysis"
+    },
+    "abstract": "1445da79c7e00c5d62521a1f47edf2884f6bf4badde72bff21bd089d15fe41f6"
+  },
+  "haoPatternsDriversProjections2025": {
+    "openalex": "W4414579170",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": null
+  },
+  "heDeepResidualLearning2015": {
+    "openalex": "W2949650786",
+    "topic": {
+      "id": "T10036",
+      "name": "Advanced Neural Network Applications"
+    },
+    "abstract": "37cc294d52ef0292a0955214d189cb62b98a5073ae213897a00dcf94c132cbfc"
+  },
+  "hoDenoisingDiffusionProbabilistic2020": {
+    "openalex": "W3036167779",
+    "topic": {
+      "id": "T10269",
+      "name": "Epigenetics and DNA Methylation"
+    },
+    "abstract": "32321d7b1a4e3cac46cbc2845090e9dc00c14650ec92679e2c74e7ee08a3e19b"
+  },
+  "houEstimateEcotoxicityCharacterization2020": {
+    "openalex": "W2995744115",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "06f48eb10ba6122f255b09cd4349fcab73b480878e9799553e32adb95d348c4f"
+  },
+  "huMetric3DV22024": {
+    "openalex": "W4395481595",
+    "topic": {
+      "id": "T10531",
+      "name": "Advanced Vision and Imaging"
+    },
+    "abstract": "1bef4319c814c7f19f52cc8f2eb7fe348859805ad675fa170264a7c3f00ae931"
+  },
+  "huangImageBasedPrediction2024": {
+    "openalex": "W4404506775",
+    "topic": {
+      "id": "T12325",
+      "name": "Urban Design and Spatial Analysis"
+    },
+    "abstract": "c299d0dc705412b9bf8f73f2f0d2de98d49ad8b4b4d576f65b0a5720fc991978"
+  },
+  "huangNovelMachineLearning2025": {
+    "openalex": "W4416811779",
+    "topic": {
+      "id": "T11259",
+      "name": "Agriculture Sustainability and Environmental Impact"
+    },
+    "abstract": "f0056af82311c3bc2d6ab46ebf8c72d668192b7dc3e4b05ed949afe6dfc0eb0b"
+  },
+  "hubnerMachinelearningbasedDemandForecasting2024": {
+    "openalex": "W4400548904",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "d058309d4b7004b019d54e5beff61774b0a58ce01714ccf1132522d9375faefb"
+  },
+  "jiangBottomUpApproachIntegrating2025": {
+    "openalex": "W4413424719",
+    "topic": {
+      "id": "T12838",
+      "name": "Photovoltaic Systems and Sustainability"
+    },
+    "abstract": "ae496a0d60113f7983c1d417cabe37b7b06c5e2400376ec1ace8a95ba0c38d50"
+  },
+  "jumperHighlyAccurateProtein2021": {
+    "openalex": "W3177828909",
+    "topic": {
+      "id": "T10044",
+      "name": "Protein Structure and Dynamics"
+    },
+    "abstract": "66908053ebf9f1b3d4462ff88a25777b5d12ed3842a63a6a495c753bcfc9798e"
+  },
+  "kallitsisAutomatingLifeCycle2026": {
+    "openalex": "W7162879693",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "30b80ce59b7d8304d79ac3d7aa91b1ce8febf70120468e21422a0244845a8ab9"
+  },
+  "kaplanScalingLawsNeural2020": {
+    "openalex": "W3001279689",
+    "topic": {
+      "id": "T10028",
+      "name": "Topic Modeling"
+    },
+    "abstract": "a10c5cdebc266f7c85a1b2a06f97aa3495c26137b049842656678dc3d6087770"
+  },
+  "kapoorLeakageReproducibilityCrisis2023": {
+    "openalex": "W4385576721",
+    "topic": {
+      "id": "T11986",
+      "name": "Scientific Computing and Data Management"
+    },
+    "abstract": "f264b06758b0e2c0c20a13e776efb35ba0345a370971be4349a67c412c156df4"
+  },
+  "kapoorREFORMSConsensus2024": {
+    "openalex": "W4396541948",
+    "topic": {
+      "id": "T11986",
+      "name": "Scientific Computing and Data Management"
+    },
+    "abstract": "7c527a2525ad0f2291476fbafe63d66f3d49feb67422bb5e88416b00ff9c0d54"
+  },
+  "kimUnlockingPotentialRemanufacturing2024": {
+    "openalex": "W4405185994",
+    "topic": {
+      "id": "T10539",
+      "name": "Sustainable Supply Chain Management"
+    },
+    "abstract": "96bc8468e1e52816ab90b7d0e16ea7b1ce2059b64301ffe0509029a8131ea0b9"
+  },
+  "koyanakaIndividualModelIdentification2024": {
+    "openalex": "W4395004546",
+    "topic": {
+      "id": "T12017",
+      "name": "Recycling and Waste Management Techniques"
+    },
+    "abstract": null
+  },
+  "kuCapabilitiesLimitationsAI2024": {
+    "openalex": "W4403775157",
+    "topic": {
+      "id": "T11948",
+      "name": "Machine Learning in Materials Science"
+    },
+    "abstract": null
+  },
+  "kumarArtificialIntelligenceMeets2026": {
+    "openalex": "W7164486337",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "61b3229c46ad5ccf84bd0cda0ec755ead59dc2bf843b7cdb96b24b9983473448"
+  },
+  "kumarLargeLanguageModelbased2025": {
+    "openalex": "W4415249626",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "835a9176c84a4406880cca947d39e82076e5abbf4ccff0bc5c841e367bf029d3"
+  },
+  "lacosteQuantifyingCarbonEmissions2019": {
+    "openalex": "W2981540061",
+    "topic": {
+      "id": "T12238",
+      "name": "Green IT and Sustainability"
+    },
+    "abstract": "8a224c95ba73d9222bbb79ea47ceccfd2acac5fa86141926a70579b5b2a21c12"
+  },
+  "lawleyGeospatialDataDeep2024": {
+    "openalex": "W4400328941",
+    "topic": {
+      "id": "T11933",
+      "name": "Mining and Resource Management"
+    },
+    "abstract": "2ea3f66be5a4cfd7d39ff51fd2635330e3b15750042375664d817f921edc646d"
+  },
+  "lazarYouSpeakLCA2026": {
+    "openalex": "W7135203858",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "460d9d1589d4ad3879720615a9a442822cfb79a2bbde6d0ec47ed446cdf0b81b"
+  },
+  "liArtificialIntelligencedrivenSustainable2026": {
+    "openalex": "W7237080400",
+    "topic": {
+      "id": "T11948",
+      "name": "Machine Learning in Materials Science"
+    },
+    "abstract": "5fe5987cb017f3f2230d2311e136199bde7104a6b0cf25c5eb377e87c9991013"
+  },
+  "liMachineLearningModeling2023": {
+    "openalex": "W4386629515",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": null
+  },
+  "liUsingMachineLearning2026": {
+    "openalex": "W7170039177",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": null
+  },
+  "liaoIntelligentDataCollection2025": {
+    "openalex": "W4415219348",
+    "topic": {
+      "id": "T12643",
+      "name": "Sustainability and Ecological Systems Analysis"
+    },
+    "abstract": "d09f7c562ffe62509a177f4ffe8a15c774cc676d40cc6775d2bb25005ee06141"
+  },
+  "liuGroundingDINOMarrying2024": {
+    "openalex": "W4404612908",
+    "topic": {
+      "id": "T11714",
+      "name": "Multimodal Machine Learning Applications"
+    },
+    "abstract": null
+  },
+  "liuSINGAPOSingleImage2025": {
+    "openalex": "W4404342056",
+    "topic": {
+      "id": "T10719",
+      "name": "3D Shape Modeling and Analysis"
+    },
+    "abstract": "dd9cdaef6952fc1590896a028ae63a5ee2d0f424894bed98c55c19acc5c06fd5"
+  },
+  "longBuildingStockTurnoverReshapes2026": {
+    "openalex": "W7225323608",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "7c0df22885181757c0fb477ec8512e05b52b16d062f4b766adcc043c920c7f94"
+  },
+  "luComputerVisionSolid2022": {
+    "openalex": "W4213000285",
+    "topic": {
+      "id": "T11108",
+      "name": "Municipal Solid Waste Management"
+    },
+    "abstract": null
+  },
+  "maBPNNbasedEcologicallyExtended2023": {
+    "openalex": "W4317542717",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": null
+  },
+  "majchrowskaDeepLearningbasedWaste2022": {
+    "openalex": "W4200580899",
+    "topic": {
+      "id": "T10036",
+      "name": "Advanced Neural Network Applications"
+    },
+    "abstract": "c94cee655716187819c4362f47490a8646434507db1c1f68503826029b70b054"
+  },
+  "masonBayesianMaterialFlow2025": {
+    "openalex": "W4406819770",
+    "topic": {
+      "id": "T12643",
+      "name": "Sustainability and Ecological Systems Analysis"
+    },
+    "abstract": "974cad83545c28ea65c638b1018f2e6ce4729f2722a41bd8606f2f9674baaeea"
+  },
+  "mastioAdaptiveAgentsSpatial2026": {
+    "openalex": "W7129306783",
+    "topic": {
+      "id": "T12746",
+      "name": "Sustainable Industrial Ecology"
+    },
+    "abstract": "5318952794505bec685ae5dd2d653dd582a705df3b0c3024addcceacf852b418"
+  },
+  "mildenhallNeRFRepresentingScenes2020": {
+    "openalex": "W3011537551",
+    "topic": {
+      "id": "T10719",
+      "name": "3D Shape Modeling and Analysis"
+    },
+    "abstract": "bf1a8b4103fc8dc59f6a2931aceddb58ddcf25e040978654663d0c42e69cd3c0"
+  },
+  "neoDeepLearningbasedHyperspectral2027": {
+    "openalex": "W7225462489",
+    "topic": {
+      "id": "T10640",
+      "name": "Spectroscopy and Chemometric Analyses"
+    },
+    "abstract": "2986f3373a3f809fb994b947179dc9f352296338b2a1893d8cf16059c23152df"
+  },
+  "nikkhahMachineLearningbasedLife2024": {
+    "openalex": "W4399694674",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "438d121da79bf840d7ed0cc61e9da8e54d456c53a4a4380191ec0ce2d6f97bd8"
+  },
+  "nouriConversationalAIRealtime2026": {
+    "openalex": "W7165778564",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "c373e0ac4ebf30ce9fbef19c35ce1dcc7c167c5b8b90c19f151a419934de834e"
+  },
+  "ouyangTrainingLanguageModels2022": {
+    "openalex": "W4226278401",
+    "topic": {
+      "id": "T10028",
+      "name": "Topic Modeling"
+    },
+    "abstract": "dbcc67d80c15bda582d165a0999157c0a975cc1fd173669e756ed8b3c381aa35"
+  },
+  "peledSpatialMaterialStock2021": {
+    "openalex": "W3135618609",
+    "topic": {
+      "id": "T12643",
+      "name": "Sustainability and Ecological Systems Analysis"
+    },
+    "abstract": null
+  },
+  "preussAutomatingLifeCycle2026": {
+    "openalex": "W4417479176",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "f1a722ad76a541e50b28c4e4d9a554d724bf158641b25fd39f5f3298de71f05a"
+  },
+  "preussLargeLanguageModels2024": {
+    "openalex": "W4399507014",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": null
+  },
+  "radfordLearningTransferableVisual2021": {
+    "openalex": "W3135367836",
+    "topic": {
+      "id": "T11714",
+      "name": "Multimodal Machine Learning Applications"
+    },
+    "abstract": "f57ced1b7f2be5f0911d6e6dd5cd70629c794e5bd533811813cdb59fae0e0f92"
+  },
+  "rankinCallEnsureReproducibility2026": {
+    "openalex": "W7154077305",
+    "topic": {
+      "id": "T11986",
+      "name": "Scientific Computing and Data Management"
+    },
+    "abstract": "317268cee8e14b1c366719a38002275ae41018e6fa912640c53df5ecb6ec6757"
+  },
+  "raoPCFBenchDiagnosticBenchmark2026": {
+    "openalex": "W7204812698",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "d17f68a17c0fe1bbbe62d50299f4c921eb49bba15dd3b12696df394007974f7d"
+  },
+  "raviSAM2Segment2024": {
+    "openalex": "W4401307635",
+    "topic": {
+      "id": "T10036",
+      "name": "Advanced Neural Network Applications"
+    },
+    "abstract": "fe0f9b8189b5f74b6771f5139342c6d7d79d38e953d99c06dd5be77d1c5e283e"
+  },
+  "renGroundedSAMAssembling2024": {
+    "openalex": "W4391272787",
+    "topic": {
+      "id": "T10036",
+      "name": "Advanced Neural Network Applications"
+    },
+    "abstract": "42ae255c6768af3488992fe2633a878291f7246ee713cde6f64f9451e62d3b65"
+  },
+  "rolnickTacklingClimateChange2022": {
+    "openalex": "W2950398529",
+    "topic": {
+      "id": "T13530",
+      "name": "Climate Change and Environmental Impact"
+    },
+    "abstract": "c224d4515281c4c64ff5a130a1df6bce8231877230acd2d75f27e0c4c0524ec3"
+  },
+  "romeikoReviewMachineLearning2024": {
+    "openalex": "W4389092649",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": null
+  },
+  "schluterAIenhancedIdentificationInspection2021": {
+    "openalex": "W3139411728",
+    "topic": {
+      "id": "T10539",
+      "name": "Sustainable Supply Chain Management"
+    },
+    "abstract": "67098b6c305d2ff195c5109402ef20ca7ee44589c79f96021c20f1dbac3a0f81"
+  },
+  "schweidtmannChemEasCodeOpenSourcePlatform2026": {
+    "openalex": "W7225391860",
+    "topic": {
+      "id": "T13904",
+      "name": "Artificial Intelligence Applications"
+    },
+    "abstract": "8f37d613d0719d7e1be86c7cd2d20e60a2da2a082b383afa75cfc5d5d0e7fb42"
+  },
+  "semmelrockReproducibilityMachineLearningDriven2023": {
+    "openalex": "W4385018165",
+    "topic": {
+      "id": "T11986",
+      "name": "Scientific Computing and Data Management"
+    },
+    "abstract": "9eb9e378751ecbbfb039f39152c4f6fe790a1b0423b0431582e0f77dca07894e"
+  },
+  "songRapidLifeCycleImpact2017": {
+    "openalex": "W2745754530",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "08f82d802cc2f55ebd700bb3057b610ceed6b1eab6254f850a545c513a2512be"
+  },
+  "sterkensProductLabelIdentification2023": {
+    "openalex": "W4224225337",
+    "topic": {
+      "id": "T12017",
+      "name": "Recycling and Waste Management Techniques"
+    },
+    "abstract": null
+  },
+  "sunImprovedMachineLearningModels2022": {
+    "openalex": "W4312018736",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "79f7a79fdd28c3aa8d4ecb6863e35371af5f0b92bd4781c29daf27d7c47a62fd"
+  },
+  "tautoratDirectionsInnovationDecarbonization2023": {
+    "openalex": "W4362697463",
+    "topic": {
+      "id": "T11837",
+      "name": "Iron and Steelmaking Processes"
+    },
+    "abstract": "fb42861a51ff4fa7345e32818cbb1e652fcc042f73bce5b8db4b829eb041675a"
+  },
+  "testiniExAnteProductCarbon2026": {
+    "openalex": "W7226020099",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "511f9bd251a335addf183500e36e01cb29f354194d1a9d02cb52f29268699c22"
+  },
+  "tsironisLCAiLifeCycle2026": {
+    "openalex": "W7166178609",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "e1b8cb2c22ae5d3fc01112fc33340d2d9382e762c3cc1ab3c8b374632bc0481e"
+  },
+  "tuMitigatingGrandChallenges2024": {
+    "openalex": "W4403606691",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "4a650757961f0d1cd9b0b8563594e9f271e068f7161f6c04e701685a9bb37e20"
+  },
+  "ulissiEvaluationCriteriaAIassisted2026": {
+    "openalex": "W7130553665",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "3ab028236472ccba8df3f1fcc6a37b821c6cc179b4fa85e39c94c788f69ea304"
+  },
+  "vancapelleveenBuildingRecommenderSystems2021": {
+    "openalex": "W3093407476",
+    "topic": {
+      "id": "T10203",
+      "name": "Recommender Systems and Techniques"
+    },
+    "abstract": "f908839d7acc81b7c888142af3d5283d4b8a3d46878aeb5367e40bf74314cddb"
+  },
+  "vancapelleveenInfluenceKnowledgeDesign2018": {
+    "openalex": "W2802200645",
+    "topic": {
+      "id": "T12746",
+      "name": "Sustainable Industrial Ecology"
+    },
+    "abstract": "da7cefa6678ae8eae03c9b7cb0385654379ae3b97bf9e7ef5d6fb7da8d2c0d45"
+  },
+  "vaswaniAttentionAllYou2017": {
+    "openalex": "W2626778328",
+    "topic": {
+      "id": "T10181",
+      "name": "Natural Language Processing Techniques"
+    },
+    "abstract": "062c384a940b00416e76c513973d595aeb1fbc6e0e09a433c18fddc5bdf529eb"
+  },
+  "verdecchiaSystematicReviewGreen2023": {
+    "openalex": "W4379743664",
+    "topic": {
+      "id": "T12238",
+      "name": "Green IT and Sustainability"
+    },
+    "abstract": "e7d66818539debe733391fb2e07dfccc34a321a132367a720277bfefaa0fbbca"
+  },
+  "vogelgesangAutomatedMaterialFlow2025": {
+    "openalex": "W4410734055",
+    "topic": {
+      "id": "T12017",
+      "name": "Recycling and Waste Management Techniques"
+    },
+    "abstract": "ba839aba3ece10c945795099001139a9f3becd0a285c6214e3a2643610c82867"
+  },
+  "waltersFabricationErrorsBibliographic2023": {
+    "openalex": "W4386510404",
+    "topic": {
+      "id": "T11492",
+      "name": "Academic integrity and plagiarism"
+    },
+    "abstract": "efae75b23b9710d8f89b00e2917394dd3e866c36a377f7a18c9f64c15c911f59"
+  },
+  "wangBayesianMaterialFlow2024": {
+    "openalex": "W4402985730",
+    "topic": {
+      "id": "T12643",
+      "name": "Sustainability and Ecological Systems Analysis"
+    },
+    "abstract": "e3e858ce3f18174058f52f665a490a0948323655f4a9c267d7482205b3fa5323"
+  },
+  "wangExploringMultidimensionalFactors2022": {
+    "openalex": "W4309567801",
+    "topic": {
+      "id": "T12746",
+      "name": "Sustainable Industrial Ecology"
+    },
+    "abstract": null
+  },
+  "wuApplicationsConvolutionalNeural2023": {
+    "openalex": "W4311322509",
+    "topic": {
+      "id": "T10036",
+      "name": "Advanced Neural Network Applications"
+    },
+    "abstract": null
+  },
+  "wuEnhancingElectronicsGrading2025": {
+    "openalex": "W4413097372",
+    "topic": {
+      "id": "T12111",
+      "name": "Industrial Vision Systems and Defect Detection"
+    },
+    "abstract": "9e509a1eeef9a6087fca196bc3430fd74bee232961273bc1f4c990281c5c2819"
+  },
+  "xuBigDataIndustrial2015": {
+    "openalex": "W1948468981",
+    "topic": {
+      "id": "T12746",
+      "name": "Sustainable Industrial Ecology"
+    },
+    "abstract": null
+  },
+  "yeoCollaborationPlatformEnabling2019": {
+    "openalex": "W2943833233",
+    "topic": {
+      "id": "T12746",
+      "name": "Sustainable Industrial Ecology"
+    },
+    "abstract": "43d2e0c46528a345a68efc535ba0ee97a96a7f9527d7a51b1f10dec3aa8910bb"
+  },
+  "yuPredictingEnvironmentalImpacts2024": {
+    "openalex": "W4391999424",
+    "topic": {
+      "id": "T12896",
+      "name": "Sustainable Agricultural Systems Analysis"
+    },
+    "abstract": null
+  },
+  "zargarReviewInventoryModeling2022": {
+    "openalex": "W4289202356",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": null
+  },
+  "zhangLargeLanguageModeldriven2026": {
+    "openalex": "W7128165364",
+    "topic": {
+      "id": "T11864",
+      "name": "Supply Chain Resilience and Risk Management"
+    },
+    "abstract": null
+  },
+  "zhangSustainabilityAssessmentUsing2026": {
+    "openalex": "W7164505325",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "6eaff47ea384faaa33675cea073514d1737db8bb79af50221b74da439f93f55b"
+  },
+  "zhaoConstructionWastetoresourceKnowledge2025": {
+    "openalex": "W4416868733",
+    "topic": {
+      "id": "T12746",
+      "name": "Sustainable Industrial Ecology"
+    },
+    "abstract": "42929d087730103e08ff4d38323be6a7ff1b60d4f7e66f6520fef0509c19b67a"
+  },
+  "zhaoDataScienceApplications2024": {
+    "openalex": "W4393853861",
+    "topic": {
+      "id": "T10539",
+      "name": "Sustainable Supply Chain Management"
+    },
+    "abstract": "e4284cf9525b67b89ed2747309c230058eaf4df818b5a524ff94e866f79bef7f"
+  },
+  "zhaoDatacentricInvestigationChallenges2025": {
+    "openalex": "W4409894134",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "fa9cc15f29ae13df90b4a8747c3584cb9d5c0b5a766fe7c0ed29305478da3d45"
+  },
+  "zhaoMachineLearningModels2025": {
+    "openalex": "W4413401891",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "dfb75274fd28db3a278a0de3165690371fca4ba5d96feb93f8da342c20667454"
+  },
+  "zhaoNovelMachineLearningbased2025": {
+    "openalex": "W4410382756",
+    "topic": {
+      "id": "T12746",
+      "name": "Sustainable Industrial Ecology"
+    },
+    "abstract": "4aab239b5e7ca427a541a8df9d4a66981a2aa7f4fad868b61a3f784427e1daba"
+  },
+  "zhaoUsingDeepLearning2022": {
+    "openalex": "W4288435149",
+    "topic": {
+      "id": "T10435",
+      "name": "Environmental Impact and Sustainability"
+    },
+    "abstract": "716a9efdc5e4bee8547f41eb543b1124cbdf91e321de406a6cf66bbe31435593"
+  },
+  "zhouAnomalyCLIPObjectAgnostic2023": {
+    "openalex": "W4388093086",
+    "topic": {
+      "id": "T11512",
+      "name": "Anomaly Detection Techniques and Applications"
+    },
+    "abstract": "a26836247f25ee8d1124bb5b3a81a704bfcef3530242b8eb9c9c097ebd08c6fd"
+  },
+  "zhuMappingAluminumFlows2026": {
+    "openalex": "W7130515343",
+    "topic": {
+      "id": "T12643",
+      "name": "Sustainability and Ecological Systems Analysis"
+    },
+    "abstract": "10a2fdb76bb42636629b8735afac2fb530c56bcab452561a9114f211ebcce757"
+  }
+}

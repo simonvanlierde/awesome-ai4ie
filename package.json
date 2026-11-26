@@ -25,6 +25,7 @@
     "page-weight": "node scripts/page-weight.mjs",
     "search-eval": "node scripts/search-eval.mjs",
     "embed": "node scripts/embed-literature.mjs",
+    "literature-meta": "node scripts/literature-meta.mjs",
     "vocabulary": "node scripts/vocabulary.mjs",
     "cited-figures": "node scripts/cited-figures.mjs",
     "vocabulary-links": "node scripts/vocabulary-links.mjs"
