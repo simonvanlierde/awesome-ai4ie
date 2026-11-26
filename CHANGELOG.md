@@ -91,5 +91,7 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   application line had called them plain F1.
 - The laptop-segmentation figure (98.8% mAP50) is from a 56-image test set drawn from 560
   photos, not "a benchmark of 1,456 annotated images", which counted augmented copies.
+- The Austria and Germany stock-map blurb said "no cadastre needed". The method avoids
+  cadastral data as input, but its building heights were trained on cadaster data.
 
 [Unreleased]: https://github.com/simonvanlierde/awesome-ai4ie/commits/HEAD

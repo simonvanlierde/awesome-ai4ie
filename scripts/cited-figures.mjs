@@ -30,8 +30,8 @@ const TAG = /<[^>]+>/g;
 const ANGLE = /[<>]/g;
 const SPACE = /\s+/g;
 const LEADING = /^[\s.,;)]+/;
-const DOI = /^doi: "?([^"\n]+)"?$/m;
-const ARXIV = /^url: \S*arxiv\.org\/abs\/(\d{4}\.\d{4,5})/m;
+const DOI = /^doi: "?([^"\n]+)"?$/im; // zotsync writes "DOI:"
+const ARXIV = /^url: \S*arxiv\.org\/abs\/(\d{4}\.\d{4,5})/im;
 const PAGE = /\.mdx?$/;
 
 /** The numbers in `text`, with thousands separators dropped: "1,456" and "1456" are one figure. */
@@ -91,11 +91,13 @@ async function readNotes(dir) {
     if (!file.startsWith("@") || !file.endsWith(".md")) continue;
     const text = await readFile(join(dir, file), "utf8");
     notes.set(file.slice(1, -3), text);
-    const doi = text.match(DOI)?.[1];
-    if (doi) notes.set(doi.toLowerCase(), text);
+    const doi = text.match(DOI)?.[1]?.toLowerCase();
     // Zotero keeps an arXiv preprint's id in its URL; the site cites it by DataCite DOI.
     const arxiv = text.match(ARXIV)?.[1];
-    if (arxiv) notes.set(`10.48550/arxiv.${arxiv}`, text);
+    for (const key of [doi, arxiv && `10.48550/arxiv.${arxiv}`]) {
+      // A duplicated Zotero item gives two notes one DOI: keep both, so either can hold the check.
+      if (key) notes.set(key, `${notes.get(key) ?? ""}\n${text}`);
+    }
   }
   return notes;
 }

@@ -610,7 +610,7 @@
   etAl: true
   year: 2021
   doi: "10.1021/acs.est.0c05642"
-  blurb: "National material stock maps at 10 m from free satellite data and OSM, no cadastre needed; ~5 Gt Austria, ~38 Gt Germany."
+  blurb: "National material stock maps at 10 m from free satellite data and OSM, without cadastral data as input; ~5 Gt Austria, ~38 Gt Germany."
   ie: [sem]
   topic: [buildings]
   ml: [remote-sensing, tabular-ml]
