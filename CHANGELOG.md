@@ -76,6 +76,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   large gap above the first heading.
 - The colophon (licences and page links) sits below the previous and next page links, in
   larger text.
+- An `@name` in a form submission no longer notifies that GitHub account from the public
+  issue, and the 404 page's report link fills in the missing address and the linking page.
 - Git hooks run with prek in place of lefthook.
 - Commit messages and pull request titles follow `type(scope): summary`, checked by a
   commit-msg hook and the pr-title workflow.

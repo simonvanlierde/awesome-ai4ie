@@ -18,7 +18,7 @@ const is404 = id === "404";
 let { title = data.title, tagline } = data.hero ?? {};
 if (is404) {
   title = "Page not found";
-  tagline = `Search the site, choose a chapter, or <a href="${contributeUrl("other", { title: "Broken link" })}">report a broken link</a>.`;
+  tagline = `Search the site, choose a chapter, or <a data-broken-link href="${contributeUrl("other", { title: "Broken link" })}">report a broken link</a>.`;
 }
 ---
 
@@ -65,3 +65,17 @@ if (is404) {
   </nav>
   {isHome && <FlowFigure />}
 </div>
+
+<script>
+  // The 404 page is static, so the missing address and the page that linked to it
+  // are added to the report link in the browser.
+  const link = document.querySelector<HTMLAnchorElement>("a[data-broken-link]");
+  if (link) {
+    const url = new URL(link.href);
+    url.searchParams.set(
+      "details",
+      `Missing page: ${location.href}\nLinked from: ${document.referrer || "unknown"}\n\n`,
+    );
+    link.href = url.href;
+  }
+</script>
