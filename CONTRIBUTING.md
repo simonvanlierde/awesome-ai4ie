@@ -81,7 +81,9 @@ foundation segmenters (<Cite id="kirillovSegmentAnything2023">SAM</Cite>, …)
 ```
 
 - **A claim with a number in it needs a citation.** If the paper behind it isn't in `literature.yaml` yet, add it in the same PR.
+- **Check a number in the paper's body, not its abstract.** Name the metric and the test set behind it. "F1" can be BERTScore F1, which scores wording, not values. An abstract's dataset size can count augmented copies of a much smaller test set.
 - **If you can't find the source, don't guess.** Leave the claim uncited and mark it `TODO`.
+- `pnpm run cited-figures` lists every number the site attributes to a paper, from the pages, the blurbs and the application lines. With `--notes <dir>`, a folder of reading notes named `@<citekey>.md`, it lists only the numbers no note records yet.
 
 ## Ground rules
 

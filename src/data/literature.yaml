@@ -144,7 +144,7 @@
   etAl: true
   year: 2025
   doi: "10.1021/acs.est.5c05955"
-  blurb: "A retrieval-augmented language model answers questions about LCA papers. It scored 0.823 F1 for methanol production and 0.855 for plastic packaging at end-of-life."
+  blurb: "A retrieval-augmented language model answers questions about LCA papers. Its answers scored a BERTScore F1 of 0.823 for methanol production and 0.855 for plastic packaging at end-of-life, a wording-similarity score that does not check numbers or units."
   ie: [lca]
   ml: [llm, nlp-extraction]
   type: [method]

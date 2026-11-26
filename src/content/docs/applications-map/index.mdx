@@ -30,10 +30,11 @@ This map is part of a proposal for the AI4IE working group. [Suggest a correctio
 ### Life cycle assessment
 
 Researchers use machine learning to screen impacts and estimate missing inventory values.
-In two case studies, a large language model retrieved data from papers with F1 scores of
-0.82 for methanol and 0.86 for plastic packaging at end-of-life. F1 combines how many
-answers were right with how many expected answers the model found
-<Cite id="kumarLargeLanguageModelbased2025" />. Check retrieved values against the papers.
+In two case studies, a fine-tuned large language model answered questions about inventory
+data in papers. Its answers scored 0.82 (methanol) and 0.86 (plastic packaging at end of
+life) on BERTScore F1, which measures how close the wording is to an expert's answer, not
+whether the numbers or units are right <Cite id="kumarLargeLanguageModelbased2025" />.
+Check retrieved values against the papers.
 In a separate benchmark of 11 general-purpose language models on 22 LCA tasks, experts
 judged 37% of responses inaccurate or misleading
 <Cite id="donaldsonExpertGroundedBenchmark2025" />.

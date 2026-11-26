@@ -25,7 +25,8 @@
     "page-weight": "node scripts/page-weight.mjs",
     "search-eval": "node scripts/search-eval.mjs",
     "embed": "node scripts/embed-literature.mjs",
-    "vocabulary": "node scripts/vocabulary.mjs"
+    "vocabulary": "node scripts/vocabulary.mjs",
+    "cited-figures": "node scripts/cited-figures.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.2",
