@@ -146,7 +146,7 @@ into your workflow. Run it again when the model, prompt or data change.
    you aren't testing write the rewordings, and check by hand that each has one reading.
 3. **Score with code.** Have a script compare each answer with the gold answer.
 4. **Report correct out of _n_ for each kind of question, with a Wilson 95% interval** (the
-   range the true rate likely lies in), plus the model, its version and the date. At small
+   range of true rates the result is consistent with), plus the model, its version and the date. At small
    _n_, the usual error bar is too narrow: only Wilson and Bayesian intervals keep their
    stated coverage (Bowyer et al., [arXiv:2503.01747](https://arxiv.org/abs/2503.01747)).
    Miller ([arXiv:2411.00640](https://arxiv.org/abs/2411.00640)) gives the formulas for
@@ -168,7 +168,7 @@ split between them is larger than chance. To detect a 20-point
 For example, the [RaMa-Scene explorer eval](https://github.com/simonvanlierde/ramascene-explorer/tree/main/evals/ask)
 scores how well a model turns a question into an EXIOBASE scenario, a what-if change to
 products, regions or industries. Its first version had 8 reworded questions. Qwen3.8-27B got 6
-and Gemma-4-26B-A4B 3, with Wilson 95% intervals (the range the true rate likely lies in) of 0.41 to 0.93 and 0.14 to 0.69, and an exact
+and Gemma-4-26B-A4B 3, with Wilson 95% intervals (the range of true rates the result is consistent with) of 0.41 to 0.93 and 0.14 to 0.69, and an exact
 McNemar p of 0.25 (if the two models were equally good, a split at least this lopsided would turn up one time in four): eight items can't rank two models. It also seemed to show Gemma missing 18 of
 153 label questions, 15 of them on one scenario family. They weren't misses. The scorer had
 changed since the run, from comparing names to comparing EXIOBASE products, and the logs still
