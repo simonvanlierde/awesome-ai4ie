@@ -70,9 +70,9 @@ export function staticImports(js, url) {
   return out;
 }
 
-/** The dist/ file for a built URL: hrefs carry the base path, dist/ does not. */
-export function toDist(url, base = basePath) {
-  return `dist${decodeURIComponent(url.slice(base && url.startsWith(`${base}/`) ? base.length : 0))}`;
+/** The file under `root` for a built URL: hrefs carry the base path, the build folder does not. */
+export function toDist(url, base = basePath, root = "dist") {
+  return `${root}${decodeURIComponent(url.slice(base && url.startsWith(`${base}/`) ? base.length : 0))}`;
 }
 
 function budgetOf(page, defaultKb = DEFAULT_BUDGET_KB, overrides = OVERRIDES) {
@@ -95,7 +95,7 @@ async function weigh(page, root) {
   let bytes = await gzipped(`${root}/${page}`);
   while (queue.length) {
     const url = queue.shift();
-    const file = toDist(url);
+    const file = toDist(url, basePath, root);
     bytes += await gzipped(file);
     if (!url.endsWith(".js")) continue;
     for (const dep of staticImports(await readFile(file, "utf8"), url)) {
@@ -104,17 +104,17 @@ async function weigh(page, root) {
       queue.push(dep);
     }
   }
-  return { page, kb: bytes / 1024 };
+  return { page, kb: bytes / 1024, budget: budgetOf(page) };
 }
 
 /**
- * Every built page as {page, kb}, heaviest first. Meta-refresh redirect stubs and 404.html
+ * Every built page as {page, kb, budget}, heaviest first. Meta-refresh redirect stubs and 404.html
  * are left out: they are not pages a reader views.
  */
 export async function weighAll(root = "dist") {
   const files = await readdir(root, { recursive: true });
   const pages = [];
-  for (const f of files.filter((f) => f.endsWith(".html") && f !== "404.html")) {
+  for (const f of files.filter((name) => name.endsWith(".html") && name !== "404.html")) {
     if (!(await readFile(`${root}/${f}`, "utf8")).includes('http-equiv="refresh"')) pages.push(f);
   }
   return (await Promise.all(pages.map((f) => weigh(f, root)))).sort((a, b) => b.kb - a.kb);
@@ -129,11 +129,11 @@ async function main() {
   console.log(`${"page".padEnd(46)}${"KB (gzip)".padStart(10)}${"budget".padStart(8)}`);
   for (const r of rows) {
     const kb = r.kb.toFixed(1).padStart(10);
-    console.log(`${r.page.padEnd(46)}${kb}${String(budgetOf(r.page)).padStart(8)}`);
+    console.log(`${r.page.padEnd(46)}${kb}${String(r.budget).padStart(8)}`);
   }
   const over = overBudget(rows);
   for (const r of over) {
-    console.error(`over budget: ${r.page} ${r.kb.toFixed(1)} KB > ${budgetOf(r.page)} KB`);
+    console.error(`over budget: ${r.page} ${r.kb.toFixed(1)} KB > ${r.budget} KB`);
   }
   if (over.length) {
     console.error(
