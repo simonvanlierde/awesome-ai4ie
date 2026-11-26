@@ -33,7 +33,7 @@ These checks run on every proposed change:
   desktop and phone width, for WCAG 2.0, 2.1 and 2.2 level A and AA problems.
 - Every page is loaded at phone width and at 320 px with text at 200%, and the check fails if
   it scrolls sideways.
-- [Biome's accessibility rules](https://biomejs.dev/linter/rules/#a11y) check the code for
+- [Biome's accessibility rules](https://biomejs.dev/linter/html/rules/#a11y) check the code for
   problems such as missing alt text and invalid ARIA.
 
 You can read the pages with JavaScript off. Turn it on to use the filters, map
