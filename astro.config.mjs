@@ -184,7 +184,7 @@ export default defineConfig({
       favicon: "/favicon.svg",
       title: "Awesome AI for Industrial Ecology",
       description:
-        "A community-curated guide to using AI in industrial ecology, open to contributions from anyone.",
+        "What AI already does in industrial ecology research, how far to trust it, and the papers behind each claim.",
       // Social preview card (public/og.png). Starlight ships no og:image by
       // default, so shared links would otherwise preview as bare text.
       head: [

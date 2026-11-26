@@ -49,7 +49,7 @@ jobs:
 
   notify:
     # Scheduled runs only. Opens one issue, or comments on the open one, when an audit fails.
-    # The only job that may write issues.
+    # The only job that opens or comments on issues.
     name: "advisories: report failure"
     needs: ['actions', 'ts']
     # A job that runs past timeout-minutes ends cancelled, not failed.
