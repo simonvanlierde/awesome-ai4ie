@@ -22,6 +22,10 @@ One model scored 0.82 on methanol <Cite id="a2025" />. Another study of
   ]);
 });
 
+test("citedFigures leaves no angle bracket from nested tags", () => {
+  expect(citedFigures(`<<b>i>3 sites <Cite id="a" />`)[0].claim).toBe("i3 sites");
+});
+
 test("unchecked reads only the reading-notes block", () => {
   const note = `abstract says 0.86
 %% begin obsidian notes %%

@@ -27,6 +27,7 @@ const BLOCK = /%% begin obsidian notes %%([\s\S]*?)%% end obsidian notes %%/g;
 const PARAGRAPH = /\n\s*\n/;
 const LINK_TARGET = /\]\([^)]*\)/g;
 const TAG = /<[^>]+>/g;
+const ANGLE = /[<>]/g;
 const SPACE = /\s+/g;
 const LEADING = /^[\s.,;)]+/;
 const DOI = /^doi: "?([^"\n]+)"?$/m;
@@ -48,6 +49,7 @@ export function citedFigures(text) {
         .slice(start, m.index)
         .replace(LINK_TARGET, "]") // link targets: DOIs carry digits
         .replace(TAG, "")
+        .replace(ANGLE, "") // a bracket left by nested tags, such as "<<b>x>"
         .replace(SPACE, " ")
         .replace(LEADING, "")
         .trim();
