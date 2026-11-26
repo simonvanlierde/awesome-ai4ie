@@ -389,20 +389,26 @@ const idle =
     };
     const light = (node: SVGAElement | null) => {
       if (node === litNode) return;
-      if (!node?.classList.contains("armed")) settle();
+      // Lighting any other node drops a touch-armed one, so the button never names a node that is not lit.
+      if (!node?.classList.contains("armed")) disarm();
       litNode = node;
       render();
     };
     const setTopic = (chip: HTMLButtonElement | null) => {
       activeTopic = chip === activeTopic ? null : chip;
       for (const c of chips) c.setAttribute("aria-pressed", String(c === activeTopic));
+      // A node still under the pointer or focus stays lit: no pointerenter or focus would re-light it.
       disarm();
-      litNode = null;
       render();
     };
     for (const c of chips) c.addEventListener("click", () => setTopic(c));
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && activeTopic) setTopic(null);
+      if (e.key !== "Escape") return;
+      if (activeTopic) setTopic(null);
+      else if (nodes.some((m) => m.classList.contains("armed"))) {
+        disarm();
+        light(null);
+      }
     });
     for (const n of nodes) {
       n.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && light(n));
