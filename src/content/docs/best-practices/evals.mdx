@@ -8,16 +8,20 @@ An **eval** is a fixed set of questions with known answers, run against one AI s
 ## Score an AI step before you trust it
 
 1. **Collect gold questions from real use.** Write the gold answer (the known correct one), or a check the answer must pass, next to each question.
-2. **Add questions that differ from your examples.** Include reworded questions and off-topic ones the step must refuse. A set that looks like the prompt's examples tests copying, not understanding.
+2. **Add questions that differ from your examples.** Include reworded questions and off-topic ones the step must refuse. A set that looks like the prompt's examples tests copying, not understanding. Have a model you are not testing write the rewordings, and check by hand that each has one reading.
 3. **Score with code.** Have a script compare each answer with the gold answer. Do not judge answers by reading them.
-4. **Report correct out of _n_ for each kind of question,** with the model, its version, and the date. A score on 8 questions is a rough signal. Miller ([arXiv:2411.00640](https://arxiv.org/abs/2411.00640)) treats evals as experiments and gives the formulas for their error bars.
-5. **Keep the eval outside the agent's write access,** like a [golden test](/best-practices/agentic-harnesses/#2-protect-the-test).
+4. **Report correct out of _n_ for each kind of question, with a Wilson 95% confidence interval** (the range the true rate likely lies in), plus the model, its version, and the date. At small _n_ the usual error bar from the normal approximation is too narrow. Bowyer et al. ([arXiv:2503.01747](https://arxiv.org/abs/2503.01747)) found that only Wilson and Bayesian intervals keep their stated coverage there, and Miller ([arXiv:2411.00640](https://arxiv.org/abs/2411.00640)) gives the formulas for treating an eval as an experiment.
+5. **Compare two models on the same items with a paired test.** Count the items only one model got right, and run an exact McNemar test on those two counts. To detect a 20-point gap (75% vs 55%) at 80% power, plan for about 60 items per kind (exact McNemar, 5% level): from about 40 if the weaker model's misses include all the stronger one's, to about 100 if the two miss items independently. Kotawala ([arXiv:2605.30315](https://arxiv.org/abs/2605.30315)) found 11 of 40 pairwise comparisons on the Open LLM Leaderboard v1 unresolved at a 5% level and 80% power.
+6. **Run each item more than once.** Temperature 0 does not guarantee repeatable output: for model graders, Tamba ([arXiv:2606.26185](https://arxiv.org/abs/2606.26185)) found it "necessary and not sufficient", and some providers now reject the setting. Report how often an item's answer changes between runs.
+7. **Keep the eval outside the agent's write access,** like a [golden test](/best-practices/agentic-harnesses/#2-protect-the-test). Keep a held-out split outside the public repository, and run it only on a frozen prompt.
+
+The studies cited in these steps are arXiv preprints.
 
 ### Worked example
 
 The [RaMa-Scene explorer Ask eval](https://github.com/simonvanlierde/ramascene-explorer/tree/main/evals/ask) scores how well a model turns a question into a scenario (a what-if change to EXIOBASE products, regions or industries) for an EXIOBASE footprint engine. The gold set has four kinds: the labels of published scenarios, reworded questions, view questions, and off-topic questions that must get no action.
 
-In its 2026-11-19 run (vLLM, 4-bit weights, temperature 0), Gemma-4-26B-A4B answered 151 of 153 label questions correctly, but only 3 of 8 reworded ones. Qwen3.8-27B got 151 and 6. Eight reworded questions are too few to rank the two models, and most misses are readings the question allows. The label score alone would not have shown where to look.
+In its 2026-11-19 run (vLLM, 4-bit weights, temperature 0), Gemma-4-26B-A4B answered 151 of 153 label questions correctly, but only 3 of 8 reworded ones. Qwen3.8-27B got 151 and 6. On the reworded questions, Qwen's 6 of 8 has a Wilson 95% interval of 0.41 to 0.93 and Gemma's 3 of 8 one of 0.14 to 0.69. Even if Qwen got right every item Gemma did, the exact McNemar p on these 8 items is at best 0.25. Eight items cannot rank the two models, and most misses are readings the question allows. The label scores, 151 of 153 for both, sit at the ceiling: they cannot rank the models, and alone they would not have shown where to look. The eval is being extended along the steps above.
 
 ## Benchmarks for agents and models on research tasks
 

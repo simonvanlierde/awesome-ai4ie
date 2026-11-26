@@ -14,6 +14,13 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - The agentic harnesses page explains a harness by comparing the agent to a new lab member,
   and gains tips on asking for a plan first, one git worktree per agent, and hooks, with an
   example hook that blocks edits to the golden tests.
+- The agentic harnesses page gains two verification steps, checking a data result's meaning
+  against a frozen metadata card and output contract, and a bug-finding review in a fresh
+  session. It also adds recent studies on test protection, citation accuracy, stale
+  instruction files, skills and parallel agents.
+- The evals page asks for a Wilson interval per question kind, a paired exact McNemar test
+  between models, about 60 items per kind, repeat runs and a held-out split, and its worked
+  example now states the intervals and the best possible p on its 8 reworded questions.
 - The prompts & skills page gains an "Add your own skill" section.
 - The verification checklist gains items on a test seen failing, reading the agent's plan,
   a full test run after the last edit, a run log, and scoring an AI step on known answers.
