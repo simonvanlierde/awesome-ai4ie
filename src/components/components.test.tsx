@@ -268,7 +268,7 @@ describe("PaperDetails", () => {
     expect(html).toContain('href="#preuss2024"');
     expect(html).not.toContain("#gone");
     expect(html).toContain("Copy link");
-    expect(html).toContain("template=other.yml");
+    expect(html).toContain("/contribute/?type=other&amp;title=%5BEdit%5D");
   });
 
   it("leaves out rows with nothing to say", () => {

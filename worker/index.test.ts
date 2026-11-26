@@ -728,7 +728,8 @@ describe("/api/contribute", () => {
         JSON.stringify({
           type: "golden-question",
           title: "Scope 3 double counting check",
-          details: "Check whether an LLM spots double counting across tier-1 and tier-2 suppliers.",
+          details:
+            "Check whether an LLM spots double counting across tier-1 and tier-2 suppliers. cc @octocat",
           token: "ok-token",
         }),
         { path: "/api/contribute", ip: "198.51.100.7" },
@@ -753,6 +754,7 @@ describe("/api/contribute", () => {
     expect(ghBody.labels).toEqual(["community-submission", "golden-question"]);
     expect(ghBody.body).toContain("Anonymous");
     expect(ghBody.body).toContain("candidate benchmark question");
+    expect(ghBody.body).toContain("cc @\u200boctocat");
   });
 
   it("returns 502 without leaking tokens when GitHub API fails", async () => {

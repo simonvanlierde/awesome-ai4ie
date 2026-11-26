@@ -4,6 +4,7 @@ description: Papers on AI in input-output analysis, including table values and e
 tableOfContents: false
 ---
 
+import Cite from '../../../components/Cite.astro';
 import FieldPage from '../../../components/FieldPage.astro';
 import SuggestPaper from '../../../components/SuggestPaper.astro';
 import TopicGaps from '../../../components/TopicGaps.astro';
@@ -11,6 +12,12 @@ import TopicGaps from '../../../components/TopicGaps.astro';
 Environmentally extended input-output analysis links trade between sectors to emissions and
 resource use. Papers here estimate missing table values, derive emission factors and match
 products or firms to sectors.
+
+One study estimates values in next year's input-output tables with deep learning.
+It needs that year's row and column totals <Cite id="zhaoUsingDeepLearning2022" />.
+Another publishes emission factors
+derived from EXIOBASE for use in machine learning <Cite id="guoGlobalEmissionFactor2026" />.
+<SuggestPaper gap="Input-output" />
 
 <FieldPage ie="eeio" />
 
