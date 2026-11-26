@@ -273,25 +273,6 @@
     - ghoroghiAdvancesApplicationMachine2022
     - gkousisMachineLearningLarge2026
     - zhaoDatacentricInvestigationChallenges2025
-- doi: 10.1016/j.resconrec.2026.109243
-  title: "Detecting and interpreting potential illegal construction and demolition
-    waste landfills using remote sensing and machine learning: evidence from
-    Scotland"
-  year: 2026
-  venue: Resources Conservation and Recycling
-  oa: https://www.sciencedirect.com/science/article/pii/S0921344926004659/pdf
-  found: 2026-11-23
-  status: new
-  score: 0.061
-  near:
-    - gaoSpatiotemporalMachineLearning2026
-    - majchrowskaDeepLearningbasedWaste2022
-    - baoDeepLearningFusion2023
-  hints:
-    ie:
-      - sem
-    topic:
-      - buildings
 - doi: 10.1016/j.jclepro.2025.145613
   title: "Automated machine learning-assisted enhanced product carbon footprint
     tracking and analysis in refinery industry: A graph-based life cycle
@@ -329,25 +310,6 @@
     - gkousisMachineLearningLarge2026
     - ulissiEvaluationCriteriaAIassisted2026
     - dengAutoPCFEfficientProduct2023
-- doi: 10.21203/rs.3.rs-11059454/v1
-  title: "AI-Driven Textile Waste Classification and Circular Recovery: A Survey
-    of Computer Vision, Recycling and Policy Literature and a Proposed Platform
-    Architecture"
-  year: 2026
-  venue: Research Square
-  oa: https://www.researchsquare.com/article/rs-11059454/latest.pdf
-  found: 2026-11-23
-  status: new
-  score: 0.051
-  near:
-    - vogelgesangAutomatedMaterialFlow2025
-    - funkEvaluationVisionLanguage2026
-    - fangStudyRecyclingMaterials2025
-  hints:
-    ie:
-      - circular
-    ml:
-      - cv
 - doi: 10.1002/ijfe.70330
   title: "Beyond Reported Emissions: Uncovering Hidden Corporate Carbon Footprints"
   year: 2026
@@ -797,24 +759,6 @@
       - lca
     ml:
       - tabular-ml
-- doi: 10.1177/10591478261511699
-  title: "EXPRESS: A Framework Addressing Supply Chain Carbon Emissions:
-    Measurement, Reporting, and Reduction"
-  year: 2026
-  venue: Production and Operations Management
-  oa: https://doi.org/10.2139/ssrn.5237069
-  found: 2026-11-23
-  status: new
-  score: 0.025
-  near:
-    - ulissiEvaluationCriteriaAIassisted2026
-    - dengAutoPCFEfficientProduct2023
-    - balajiCaMLCarbonFootprinting2023
-  hints:
-    ie:
-      - lca
-    ml:
-      - llm
 - doi: 10.1016/j.conbuildmat.2024.136280
   title: "Life cycle assessment of urban road networks: Quantifying carbon
     footprints and forecasting future material stocks"
@@ -851,25 +795,6 @@
     - gongEvolutionResearchIntersection2025
     - aboagyeLeveragingMachineLearning2025
     - preussAutomatingLifeCycle2026
-- doi: 10.71317/kjard.2.11.2026.1065
-  title: An Integrated Computer Vision–Digital Twin Framework for Structural
-    Health Monitoring and Comparative Environmental Risk Assessment of
-    Reinforced Concrete Bridges Toward Sustainable Urban Development
-  year: 2026
-  venue: Kashmir Journal of Academic Research and Development
-  oa: https://rjsaonline.org/index.php/KJARD/article/download/1065/1500
-  found: 2026-11-23
-  status: new
-  score: 0.024
-  near:
-    - huangImageBasedPrediction2024
-    - haberlGlobalBuiltEnvironment2024
-    - gaoSpatiotemporalMachineLearning2026
-  hints:
-    ie:
-      - sem
-    topic:
-      - buildings
 - doi: 10.3390/en17122997
   title: "Artificial Intelligence and Digital Tools for Assisting Low-Carbon
     Architectural Design: Merging the Use of Machine Learning, Large Language
@@ -1068,26 +993,6 @@
     - gongEvolutionResearchIntersection2025
     - zhaoDataScienceApplications2024
     - grimmelUrbanIndustrialSymbiosis2025
-- doi: 10.1039/d6mh01944g
-  title: "Artificial intelligence-driven sustainable polymers research: a
-    lifecycle-integrated perspective"
-  year: 2026
-  venue: Materials Horizons
-  oa: null
-  found: 2026-11-23
-  status: new
-  score: 0.013
-  near:
-    - aboagyeLeveragingMachineLearning2025
-    - zhaoMachineLearningModels2025
-    - zhangSustainabilityAssessmentUsing2026
-  hints:
-    ie:
-      - lca
-    topic:
-      - chemicals
-    ml:
-      - tabular-ml
 - doi: 10.63371/ic.v5.n1.a686
   title: "Inteligencia Artificial y Economía Circular: Problemas Éticos y Futuras
     Perspectivas con Enfoque Sostenible"
@@ -1105,24 +1010,6 @@
     - gongEvolutionResearchIntersection2025
     - zhaoDataScienceApplications2024
     - preussAutomatingLifeCycle2026
-- doi: 10.48550/arxiv.2611.24998
-  title: "From Industrial Product Documentation to Automated Digital Product
-    Passport Generation: An Experimental Study of Large Language Models"
-  year: 2026
-  venue: arXiv (Cornell University)
-  oa: https://arxiv.org/pdf/2611.24998
-  found: 2026-11-23
-  status: new
-  score: 0.012
-  near:
-    - tuMitigatingGrandChallenges2024
-    - ulissiEvaluationCriteriaAIassisted2026
-    - balajiCaMLCarbonFootprinting2023
-  hints:
-    ie:
-      - lca
-    ml:
-      - llm
 - doi: 10.1002/bse.4291
   title: "Utilising Artificial Intelligence to Enhance Firm Circular Economy
     Maturity: A Thematic Review via Machine Learning"
@@ -1210,25 +1097,6 @@
     - zhaoUsingDeepLearning2022
     - froemeltMachineLearningBased2020
     - rolnickTacklingClimateChange2022
-- doi: 10.1021/acs.est.6c15710
-  title: Source Attribution, Driving Force Interpretation, and Nature-Based
-    Mitigation of Anthropogenic Water Pollution
-  year: 2026
-  venue: Environmental Science & Technology
-  oa: null
-  found: 2026-11-23
-  status: new
-  score: 0.005
-  near:
-    - engbergForecastingFutureStates2026
-    - daiGaussianProcessRegression2022
-    - wangBayesianMaterialFlow2024
-  hints:
-    ie:
-      - lca
-    ml:
-      - tabular-ml
-      - uncertainty
 - doi: 10.1016/j.seta.2025.104436
   title: "Life Cycle Assessment and Circular Economy in Emerging Green and
     Sustainable Energy Sectors: A Critical Review"
@@ -1317,44 +1185,6 @@
     - gongEvolutionResearchIntersection2025
     - fangStudyRecyclingMaterials2025
     - zhaoDataScienceApplications2024
-- doi: 10.1016/j.cemconcomp.2026.106902
-  title: "Cement-based supercapacitors for structural energy storage: Materials,
-    design, sustainability, and computational modelling"
-  year: 2026
-  venue: Cement and Concrete Composites
-  oa: null
-  found: 2026-11-23
-  status: new
-  score: -0.001
-  near:
-    - tautoratDirectionsInnovationDecarbonization2023
-    - longBuildingStockTurnoverReshapes2026
-    - haberlGlobalBuiltEnvironment2024
-  hints:
-    ie:
-      - sem
-    topic:
-      - buildings
-- doi: 10.1016/j.tifs.2026.106240
-  title: "From trial-and-error to data-driven process optimization: Artificial
-    Intelligence in plant essential oil extraction"
-  year: 2026
-  venue: Trends in Food Science & Technology
-  oa: null
-  found: 2026-11-23
-  status: new
-  score: -0.002
-  near:
-    - hubnerMachinelearningbasedDemandForecasting2024
-    - yuPredictingEnvironmentalImpacts2024
-    - wangExploringMultidimensionalFactors2022
-  hints:
-    ie:
-      - lca
-    topic:
-      - food
-    ml:
-      - tabular-ml
 - doi: 10.67620/sai.510a0012
   title: VECTOR APPROACHES TO THE AUTOMATIC GENERATION OF GRAPHIC DESIGN ELEMENTS
     USING ARTIFICIAL INTELLIGENCE
@@ -1376,23 +1206,6 @@
     ml:
       - cv
       - segmentation
-- doi: 10.1016/j.hybadv.2026.100778
-  title: "Hybrid xanthan gum–nano-silica stabilization of expansive clay: A
-    metaheuristic-optimized machine learning framework for strength and swelling
-    prediction"
-  year: 2026
-  venue: Hybrid Advances
-  oa: https://www.sciencedirect.com/science/article/pii/S2773207X26001806/pdf
-  found: 2026-11-23
-  status: new
-  score: -0.006
-  near:
-    - davisMachineLearningassistedIndustrial2022
-    - masonBayesianMaterialFlow2025
-    - aboagyeLeveragingMachineLearning2025
-  hints:
-    ml:
-      - tabular-ml
 - doi: 10.1108/ijlm-03-2023-0102
   title: "Artificial intelligence-based reverse logistics for improving circular
     economy performance: a developing country perspective"
@@ -1409,26 +1222,6 @@
     - fangStudyRecyclingMaterials2025
     - gongEvolutionResearchIntersection2025
     - grimmelUrbanIndustrialSymbiosis2025
-- doi: 10.1021/acs.est.6c06501
-  title: Abnormal Event Monitoring of Drainage Pipelines Based on Distributed
-    Optical Fiber Vibration Sensing
-  year: 2026
-  venue: Environmental Science & Technology
-  oa: null
-  found: 2026-11-23
-  status: new
-  score: -0.008
-  near:
-    - ebrahimiMachineLearningbasedStocks2022
-    - gaoSpatiotemporalMachineLearning2026
-    - majchrowskaDeepLearningbasedWaste2022
-  hints:
-    ie:
-      - sem
-    topic:
-      - lifetime
-    ml:
-      - tabular-ml
 - doi: 10.1007/978-3-031-51601-6_14
   title: "Role of Artificial Intelligence in Minimizing Carbon Footprint: A
     Systematic Review of Recent Insights"
@@ -2507,3 +2300,85 @@
   why: "rule 4: same group and LLM extraction method as
     zhaoConstructionWastetoresourceKnowledge2025, already listed, which extends
     it to a full knowledge graph"
+- doi: 10.1016/j.resconrec.2026.109243
+  title: "Detecting and interpreting potential illegal construction and demolition
+    waste landfills using remote sensing and machine learning: evidence from
+    Scotland"
+  year: 2026
+  found: 2026-11-23
+  status: listed
+- doi: 10.21203/rs.3.rs-11059454/v1
+  title: "AI-Driven Textile Waste Classification and Circular Recovery: A Survey
+    of Computer Vision, Recycling and Policy Literature and a Proposed Platform
+    Architecture"
+  year: 2026
+  found: 2026-11-23
+  status: rejected
+  why: "rule 4: narrative survey of 24 studies plus a proposed platform that is
+    not built or tested"
+- doi: 10.1177/10591478261511699
+  title: "EXPRESS: A Framework Addressing Supply Chain Carbon Emissions:
+    Measurement, Reporting, and Reduction"
+  year: 2026
+  found: 2026-11-23
+  status: rejected
+  why: "rule 1: Scope 3 carbon management framework; machine learning is one of
+    several measurement methods it lists"
+- doi: 10.71317/kjard.2.11.2026.1065
+  title: An Integrated Computer Vision–Digital Twin Framework for Structural
+    Health Monitoring and Comparative Environmental Risk Assessment of
+    Reinforced Concrete Bridges Toward Sustainable Urban Development
+  year: 2026
+  found: 2026-11-23
+  status: rejected
+  why: "rule 2: defect segmentation for bridge structural health monitoring, not IE"
+- doi: 10.1039/d6mh01944g
+  title: "Artificial intelligence-driven sustainable polymers research: a
+    lifecycle-integrated perspective"
+  year: 2026
+  found: 2026-11-23
+  status: listed
+- doi: 10.48550/arxiv.2611.24998
+  title: "From Industrial Product Documentation to Automated Digital Product
+    Passport Generation: An Experimental Study of Large Language Models"
+  year: 2026
+  found: 2026-11-23
+  status: listed
+- doi: 10.1021/acs.est.6c15710
+  title: Source Attribution, Driving Force Interpretation, and Nature-Based
+    Mitigation of Anthropogenic Water Pollution
+  year: 2026
+  found: 2026-11-23
+  status: rejected
+  why: "rule 2: sources of combined sewer overflow pollution, urban water quality
+    not IE"
+- doi: 10.1016/j.cemconcomp.2026.106902
+  title: "Cement-based supercapacitors for structural energy storage: Materials,
+    design, sustainability, and computational modelling"
+  year: 2026
+  found: 2026-11-23
+  status: rejected
+  why: "rule 2: materials review of cement-based supercapacitors, no IE question"
+- doi: 10.1016/j.tifs.2026.106240
+  title: "From trial-and-error to data-driven process optimization: Artificial
+    Intelligence in plant essential oil extraction"
+  year: 2026
+  found: 2026-11-23
+  status: rejected
+  why: "rule 2: process optimisation of essential oil extraction, no IE method"
+- doi: 10.1016/j.hybadv.2026.100778
+  title: "Hybrid xanthan gum–nano-silica stabilization of expansive clay: A
+    metaheuristic-optimized machine learning framework for strength and swelling
+    prediction"
+  year: 2026
+  found: 2026-11-23
+  status: rejected
+  why: "rule 2: strength and swelling of stabilised clay, geotechnics not IE"
+- doi: 10.1021/acs.est.6c06501
+  title: Abnormal Event Monitoring of Drainage Pipelines Based on Distributed
+    Optical Fiber Vibration Sensing
+  year: 2026
+  found: 2026-11-23
+  status: rejected
+  why: "rule 2: event detection in drainage pipes from fibre vibration signals,
+    not IE"

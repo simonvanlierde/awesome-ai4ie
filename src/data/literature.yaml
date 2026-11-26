@@ -530,6 +530,18 @@
   ml: [tabular-ml, uncertainty]
   type: [method]
   added: 2026-11
+- id: liArtificialIntelligencedrivenSustainable2026
+  title: "Artificial intelligence-driven sustainable polymers research: a lifecycle-integrated perspective"
+  authors: ["Li, H."]
+  etAl: true
+  year: 2026
+  doi: "10.1039/d6mh01944g"
+  blurb: "Reviews AI for polymers across feedstock, processing, use and end of life, from single-stage property prediction to optimisation that includes LCA and techno-economic analysis."
+  ie: [lca, circular]
+  topic: [chemicals]
+  ml: [tabular-ml]
+  type: [review]
+  added: 2026-11
 
 # ── Input-output ─────────────────────────────────────────────────────────────
 - id: balajiCaMLCarbonFootprinting2023
@@ -918,6 +930,28 @@
   ie: [circular]
   ml: [cv]
   type: [method, dataset]
+  added: 2026-11
+- id: chenDetectingInterpretingPotential2026
+  title: "Detecting and interpreting potential illegal construction and demolition waste landfills using remote sensing and machine learning: evidence from Scotland"
+  authors: ["Chen, Y."]
+  etAl: true
+  year: 2026
+  doi: "10.1016/j.resconrec.2026.109243"
+  blurb: "A U-Net++ and DeepLabV3+ ensemble finds landfill-like ground disturbance in satellite images (IoU 0.67) and keeps 43 potential illegal C&D waste sites in three Scottish cities; XGBoost with SHAP links them mostly to low building density."
+  ie: [circular]
+  topic: [buildings]
+  ml: [remote-sensing, segmentation, tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: buechelerIndustrialProductDocumentation2026
+  title: "From industrial product documentation to automated digital product passport generation: an experimental study of large language models"
+  authors: ["Buecheler, M.", "Richards, G.", "Hartman, N."]
+  year: 2026
+  arxiv: "2611.24998"
+  blurb: "Five LLMs with retrieval fill asset administration shell submodels for EU digital product passports from manufacturer documents; over 4,560 runs only 44.9% pass validation and 30.8% of fields are correct, against 60.4% by an LLM judge."
+  ie: [circular]
+  ml: [llm, nlp-extraction]
+  type: [method]
   added: 2026-11
 
 # ── Industrial symbiosis ─────────────────────────────────────────────────────
