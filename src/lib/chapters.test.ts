@@ -43,11 +43,11 @@ describe("chapters", () => {
     for (const tag of Object.keys(IE_TAGS)) expect(css).toContain(`.field-${tag} {`);
   });
 
-  it("give every IE field a section on the map page", () => {
+  it("link every IE field's page from the map page", () => {
     const map = readFileSync("src/content/docs/applications-map/index.mdx", "utf8");
     for (const tag of Object.keys(IE_TAGS))
-      expect(map, `no <FieldApplications ie="${tag}" /> on the map`).toContain(
-        `<FieldApplications ie="${tag}" />`,
+      expect(map, `no link to /applications-map/${tag}/ on the map`).toContain(
+        `](/applications-map/${tag}/)`,
       );
   });
 

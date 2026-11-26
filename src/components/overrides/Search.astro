@@ -4,7 +4,7 @@
 // closest literature entries above the keyword results, from the site's /api/search
 // Worker (worker/index.ts).
 import Default from "@astrojs/starlight/components/Search.astro";
-import { issueUrl, siteUrl } from "../../lib/urls";
+import { contributeUrl, siteUrl } from "../../lib/urls";
 ---
 
 <Default />
@@ -18,7 +18,7 @@ import { issueUrl, siteUrl } from "../../lib/urls";
   <p class="ss-status" role="status"></p>
   <ol class="ss-results" aria-label="Related papers"></ol>
   <p class="ss-gap" hidden>
-    <a href={issueUrl("paper")}>Suggest a paper on GitHub</a>
+    <a href={contributeUrl("resource")}>Suggest a paper</a>
   </p>
 </semantic-search>
 

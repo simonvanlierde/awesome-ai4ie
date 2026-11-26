@@ -4,12 +4,10 @@ description: Browse AI applications in industrial ecology by field and technique
 ---
 
 import ApplicationsSection from '../../../components/ApplicationsSection.astro';
-import FieldApplications from '../../../components/FieldApplications.astro';
-import Cite from '../../../components/Cite.astro';
 import SuggestPaper from '../../../components/SuggestPaper.astro';
 import TopicGaps from '../../../components/TopicGaps.astro';
 
-A proposal for the AI4IE working group. [Suggest a correction](repo:issues/new?template=other.yml).
+A proposal for the AI4IE working group. [Suggest a correction](/contribute/?type=other#send-a-contribution).
 
 ## Explore by technique
 
@@ -19,70 +17,17 @@ A proposal for the AI4IE working group. [Suggest a correction](repo:issues/new?t
 
 ## Applications by field
 
-### Life cycle assessment
+Each field has its own page with what works today, every mapped application and its papers.
 
-Researchers use machine learning to screen impacts and estimate missing inventory values.
-In two case studies, a large language model retrieved data from papers with F1 scores of
-0.82 for methanol and 0.86 for plastic packaging at end-of-life. F1 combines how many
-answers were right with how many expected answers the model found
-<Cite id="kumarLargeLanguageModelbased2025" />. Check retrieved values against the papers.
-In a benchmark of 11 general-purpose language models on 22 LCA tasks, experts found at
-least one inaccurate or misleading statement in 37.2% of responses
-<Cite id="donaldsonExpertGroundedBenchmark2025" />.
-
-<FieldApplications ie="lca" />
-
-### Socio-economic metabolism
-
-This field includes material flow analysis (MFA) and stock modelling
-([Pauliuk & Hertwich, 2015](https://doi.org/10.1016/j.ecolecon.2015.08.012)).
-Researchers mapped building and infrastructure stocks in Austria and Germany at 10 m
-<Cite id="haberlHighResolutionMaps2021" />. A separate study mapped building stocks
-globally at 90 m and estimated 547 Gt in 2019 (391–672 Gt). Independent local estimates
-ranged from 53% to 200% of the corresponding mapped values
-<Cite id="haberlGlobalBuiltEnvironment2024" />.
-For material flows, Bayesian models combine expert estimates with reported data.
-One study estimated 146 flows and stock changes for England's construction aggregates from
-reported data covering 20% of the system plus expert priors <Cite id="masonBayesianMaterialFlow2025" />.
-
-<FieldApplications ie="sem" />
-
-### Input-output
-
-One study estimates values in next year's input-output tables with deep learning.
-It needs that year's row and column totals <Cite id="zhaoUsingDeepLearning2022" />.
-Another publishes emission factors
-derived from EXIOBASE for use in machine learning <Cite id="guoGlobalEmissionFactor2026" />.
-<SuggestPaper gap="Input-output" />
-
-<FieldApplications ie="eeio" />
-
-### Circular economy
-
-Most mapped applications here use computer vision. One study estimated the composition of
-shredded e-waste from images recorded on a pilot sorting line, with a mean error of 4.94%.
-The machine did not sort during the study, so the models ran offline
-<Cite id="vogelgesangAutomatedMaterialFlow2025" />. In a washing machine study, software
-read the model number in 96% of repair photos and 40% of recycler photos in which a label
-was visible <Cite id="sterkensProductLabelIdentification2023" />. The
-[computer vision worked example](/applications-map/cv-taxonomy/) gives the test conditions.
-
-<FieldApplications ie="circular" />
-
-### Industrial symbiosis
-
-Researchers look for firms that could use another firm's waste. In one study, a
-language model built a network of waste-to-resource links from papers and found 24 of
-45 known exchanges in Italy's Taranto district
-<Cite id="zhaoConstructionWastetoresourceKnowledge2025" />. Another model scored above
-0.82 F1 on its ecoinvent test set and 0.63–0.73 on 40 real exchanges
-<Cite id="zhaoNovelMachineLearningbased2025" />.
-
-<FieldApplications ie="symbiosis" />
+- <span id="life-cycle-assessment"></span>[Life cycle assessment](/applications-map/lca/): screening impacts, estimating missing inventory values and extracting data from papers.
+- <span id="socio-economic-metabolism"></span>[Socio-economic metabolism](/applications-map/sem/): mapping building stocks from imagery and estimating material flows.
+- <span id="input-output"></span>[Input-output](/applications-map/eeio/): estimating table values and emission factors.
+- <span id="circular-economy"></span>[Circular economy](/applications-map/circular/): computer vision for waste, products and components.
+- <span id="industrial-symbiosis"></span>[Industrial symbiosis](/applications-map/symbiosis/): matching one firm's waste to another firm's inputs.
 
 ## Not mapped yet
 
-[Map an application](repo:issues/new?template=application.yml) or suggest a paper for any gap below.
+[Map an application](/contribute/?type=other&title=Application%3A+#send-a-contribution) or suggest a paper for any gap below.
 
 ### ISIE sections with no field
 

@@ -114,6 +114,10 @@ function parseUrl(raw: unknown): { ok: true; value: string } | { ok: false; erro
   }
 }
 
+// A zero-width space after `@` keeps an @user or @org/team in submitted text
+// from notifying that account when the public issue is created.
+const unmention = (s: string) => s.replace(/@(?=[\w-])/g, "@\u200b");
+
 function buildIssueBody(input: {
   type: ContributionType;
   details: string;
@@ -123,10 +127,10 @@ function buildIssueBody(input: {
   const meta = CONTRIBUTION_TYPES[input.type];
   const lines = [
     `**Type:** ${meta.heading}`,
-    `**Attribution:** ${input.attribution || "Anonymous"}`,
+    `**Attribution:** ${unmention(input.attribution) || "Anonymous"}`,
   ];
   if (input.url) lines.push(`**Link:** ${input.url}`);
-  lines.push("", "### Details", "", input.details);
+  lines.push("", "### Details", "", unmention(input.details));
   if (input.type === "golden-question") {
     lines.push(
       "",

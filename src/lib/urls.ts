@@ -1,3 +1,4 @@
+import type { ContributionType } from "../../worker/contribute";
 import { DEFAULT_SORT, EMPTY_FILTER, type Filter, toQuery } from "../components/litFilter";
 import { repoUrl } from "../site";
 
@@ -32,15 +33,14 @@ export function appUrl(a: { id: string; ie: readonly string[] }): string {
   return siteUrl(`applications-map/${a.ie[0]}/#${a.id}`);
 }
 
-/** The issue forms in .github/ISSUE_TEMPLATE/; forms.test.ts checks each file exists. */
-export const ISSUE_FORMS = ["paper", "application", "tool", "resource", "other"] as const;
-export type IssueForm = (typeof ISSUE_FORMS)[number];
-
-/** A new issue on the given form, with text fields prefilled by their form id.
- * GitHub prefills text inputs and textareas this way, not dropdowns. */
-export function issueUrl(form: IssueForm, fields: Record<string, string> = {}): string {
-  const query = new URLSearchParams({ template: `${form}.yml`, ...fields });
-  return `${repoUrl}/issues/new?${query}`;
+/** The on-site contribution form with its type picked and text fields
+ * prefilled; ContributeForm reads these query keys. Needs no GitHub account. */
+export function contributeUrl(
+  type: ContributionType,
+  fields: { title?: string; details?: string } = {},
+): string {
+  const query = new URLSearchParams({ type, ...fields });
+  return siteUrl(`contribute/?${query}#send-a-contribution`);
 }
 
 /** A `repo:` link from page front matter or Markdown as a full GitHub URL;

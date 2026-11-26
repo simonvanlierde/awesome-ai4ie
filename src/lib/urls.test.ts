@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { repoUrl } from "../site";
-import { BASE, contentUrl, issueUrl, litUrl, paperUrl, siteUrl } from "./urls";
+import { BASE, contentUrl, contributeUrl, litUrl, paperUrl, siteUrl } from "./urls";
 
 describe("litUrl", () => {
   it("uses the literature page with optional filters", () => {
@@ -18,11 +18,11 @@ describe("siteUrl", () => {
   });
 });
 
-describe("issueUrl", () => {
-  it("opens the named form and encodes prefilled fields", () => {
-    expect(issueUrl("paper")).toBe(`${repoUrl}/issues/new?template=paper.yml`);
-    expect(issueUrl("paper", { gap: "Chemicals, toxicity & QSAR" })).toBe(
-      `${repoUrl}/issues/new?template=paper.yml&gap=Chemicals%2C+toxicity+%26+QSAR`,
+describe("contributeUrl", () => {
+  it("opens the form on the given type and encodes prefilled fields", () => {
+    expect(contributeUrl("other")).toBe(`${BASE}contribute/?type=other#send-a-contribution`);
+    expect(contributeUrl("resource", { details: "Gap: Chemicals, toxicity & QSAR" })).toBe(
+      `${BASE}contribute/?type=resource&details=Gap%3A+Chemicals%2C+toxicity+%26+QSAR#send-a-contribution`,
     );
   });
 });
