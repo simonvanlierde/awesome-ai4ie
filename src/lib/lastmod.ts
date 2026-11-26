@@ -12,6 +12,7 @@ const APPS = "src/data/applications.yaml";
 const DATA: Record<string, string[]> = {
   "": [LIT], // Fig. 1 on the home page
   literature: [LIT],
+  "literature-map": [LIT, "src/components/LiteratureMap.astro", "src/lib/litmap.ts"],
   "applications-map": [APPS, LIT],
   ...Object.fromEntries(Object.keys(IE_TAGS).map((t) => [`applications-map/${t}`, [APPS, LIT]])),
   vocabulary: ["src/data/vocabulary.yaml", "src/components/Vocabulary.astro"],

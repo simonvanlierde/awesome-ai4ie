@@ -1,20 +1,11 @@
 ---
-title: Map of the literature (draft)
-description: A draft 2D map of the reading list, laid out by the meaning of each paper's text.
-pagefind: false
-head:
-  - tag: meta
-    attrs:
-      name: robots
-      content: noindex
+title: Map of the literature
+description: "A 2D map of the reading list: papers laid out by the meaning of their title, summary and tags, grouped by IE field, with a table of the same data."
 ---
 
 import LiteratureMap from '../../components/LiteratureMap.astro';
 
-**Draft for the working group.** This page is not linked from the site yet. I would like your
-view on whether it helps before it is.
-
-Each point is a paper from the [reading list](/literature/). Papers whose title and summary
+Each point is a paper from the [reading list](/literature/). Papers whose title, summary and tags
 read alike sit close together, and the colour and shape of a point give its IE field.
 Where a region is empty or a cluster is small, the list is thin. Select a point to open the
 paper.
@@ -23,5 +14,5 @@ paper.
 
 The layout comes from the same text embeddings that power meaning search, reduced to two
 dimensions by principal component analysis (PCA) and grouped by k-means. Both are
-deterministic, so the same list gives the same map. Closeness in the plane is approximate:
-PCA keeps the largest differences and flattens the rest.
+deterministic, so the same vectors give the same map. Closeness in the plane is approximate:
+PCA keeps the largest differences and flattens the rest, and each axis is stretched to fill the plate on its own.

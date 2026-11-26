@@ -24,6 +24,15 @@ describe("sourcesFor", () => {
     expect(sourcesFor("")).toEqual(["src/content/docs/index.mdx", "src/data/literature.yaml"]);
   });
 
+  it("adds the map's component and projection to its data", () => {
+    expect(sourcesFor("literature-map")).toEqual([
+      "src/content/docs/literature-map.mdx",
+      "src/data/literature.yaml",
+      "src/components/LiteratureMap.astro",
+      "src/lib/litmap.ts",
+    ]);
+  });
+
   it("finds a section's index page and leaves plain pages without data", () => {
     expect(sourcesFor("tools")).toEqual(["src/content/docs/tools/index.mdx"]);
   });
