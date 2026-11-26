@@ -154,6 +154,8 @@ export default defineConfig({
     // Starlight adds a plain sitemap unless one is configured here. This one dates
     // each URL by its last commit (src/lib/lastmod.ts).
     sitemap({
+      // The literature map is a draft the group reviews before it is linked.
+      filter: (page) => !page.includes("/literature-map/"),
       serialize: (item) => {
         const path = new URL(item.url).pathname.slice(base.length).replace(/^\/|\/$/g, "");
         const date = lastmod(path);

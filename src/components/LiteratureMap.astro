@@ -1,0 +1,230 @@
+---
+// Fig. 2.1: the reading list as a 2D map, built at build time from the entry vectors
+// `pnpm run embed` writes (src/lib/vectors.ts). Nearby points are papers whose text is
+// close in meaning; the axes have no unit. See src/lib/litmap.ts for the projection.
+import { getCollection } from "astro:content";
+import { IE_TAGS, type IeTag, shortLabel, tagLabel } from "../data/tags";
+import { cluster, project, THIN_CLUSTER } from "../lib/litmap";
+import { decodeVector, entryText } from "../lib/semantic";
+import { litUrl, paperUrl } from "../lib/urls";
+import { loadVectors, textKey } from "../lib/vectors";
+
+const K = 9;
+const W = 760;
+const H = 520;
+const PAD = 40;
+const FIELDS = Object.keys(IE_TAGS) as IeTag[];
+// One shape per field, so colour is not the only cue; each is drawn about (0, 0).
+const SHAPES: Record<IeTag, string> = {
+  lca: "M-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0",
+  circular: "M-4.5 -4.5h9v9h-9z",
+  sem: "M0 -6.5L6.5 0L0 6.5L-6.5 0z",
+  eeio: "M0 -6L6 4.5H-6z",
+  symbiosis: "M-2 -6h4v4h4v4h-4v4h-4v-4h-4v-4h4z",
+};
+const NONE = "M-4 -4L4 4M-4 4L4 -4"; // no IE field: a method or landmark paper
+
+const stored = loadVectors();
+const all = (await getCollection("literature")).map(({ id, data }) => ({ id, ...data }));
+const placed = all.flatMap((e) => {
+  const v = stored[textKey(entryText(e))];
+  return v ? [{ ...e, vec: decodeVector(v) }] : [];
+});
+const vecs = placed.map((p) => p.vec);
+const xy = project(vecs);
+const labels = cluster(vecs, K);
+// Each axis fills the plate on its own: the axes have no unit, and a few far points would
+// otherwise squeeze the rest into the middle.
+const span = (i: 0 | 1) => {
+  const v = xy.map((p) => p[i]);
+  return [Math.min(...v), Math.max(...v) || 1] as const;
+};
+const [x0, x1] = span(0);
+const [y0, y1] = span(1);
+const sx = (x: number) => PAD + ((x - x0) / (x1 - x0 || 1)) * (W - 2 * PAD);
+const sy = (y: number) => PAD + ((y1 - y) / (y1 - y0 || 1)) * (H - 2 * PAD);
+const points = placed.map((p, i) => ({
+  ...p,
+  x: sx(xy[i][0]),
+  y: sy(xy[i][1]),
+  c: labels[i],
+  field: p.ie[0] as IeTag | undefined,
+}));
+
+// A cluster is named for its commonest topic (else technique) not already taken.
+const taken = new Set<string>();
+const clusters = [...new Set(labels)]
+  .sort((a, b) => a - b)
+  .map((c) => {
+    const m = points.filter((p) => p.c === c);
+    const count = (key: "topic" | "ml") => {
+      const n = new Map<string, number>();
+      for (const p of m) for (const t of new Set(p[key])) n.set(t, (n.get(t) ?? 0) + 1);
+      return [...n].sort((a, b) => b[1] - a[1]).map(([t]) => tagLabel(key, t));
+    };
+    const name =
+      [...count("topic"), ...count("ml")].find((t) => !taken.has(t)) ?? `Cluster ${c + 1}`;
+    taken.add(name);
+    const cx = m.reduce((s, p) => s + p.x, 0) / m.length;
+    const cy = m.reduce((s, p) => s + p.y, 0) / m.length;
+    const r = Math.max(...m.map((p) => Math.hypot(p.x - cx, p.y - cy))) + 14;
+    const byField = Object.fromEntries(
+      FIELDS.map((f) => [f, m.filter((p) => p.field === f).length]),
+    ) as Record<IeTag, number>;
+    return {
+      c,
+      name,
+      members: m,
+      cx,
+      cy,
+      r,
+      byField,
+      none: m.filter((p) => !p.field).length,
+      thin: m.length < THIN_CLUSTER,
+    };
+  });
+// Labels sit above their cluster's centre; one that would land on an earlier label moves down.
+const LINE = 15;
+const placedLabels: { x: number; y: number }[] = [];
+for (const k of [...clusters].sort((a, b) => a.cy - b.cy)) {
+  const clash = (at: number) =>
+    placedLabels.some((l) => Math.abs(l.y - at) < LINE && Math.abs(l.x - k.cx) < 170);
+  let y = k.cy;
+  while (clash(y)) y += LINE;
+  placedLabels.push({ x: k.cx, y });
+  Object.assign(k, { ly: y });
+}
+const unplaced = all.length - placed.length;
+const thin = clusters.filter((c) => c.thin);
+const fieldTotals = FIELDS.map((f) => ({
+  f,
+  n: points.filter((p) => p.field === f).length,
+}));
+const none = points.filter((p) => !p.field).length;
+---
+
+{
+  points.length === 0 ? (
+    <p>
+      The map needs the entry vectors, and this build has none (run <code>pnpm run embed</code>{" "}
+      first).
+    </p>
+  ) : (
+    <>
+      <figure class="flow litmap not-content">
+        <div
+          class="litmap-scroll"
+          role="region"
+          aria-label="Map of the literature, scrolls sideways on a narrow screen"
+          tabindex="0"
+        >
+          <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-labelledby="litmap-t litmap-d" tabindex="-1">
+            <title id="litmap-t">Map of the literature</title>
+            <desc id="litmap-d">
+              {`${points.length} papers placed by the meaning of their text, nearby points being similar papers, in ${clusters.length} clusters. Each paper is a link; a table after the figure lists the clusters and their fields.${thin.length ? ` Thin clusters, with fewer than ${THIN_CLUSTER} papers, have a dashed outline.` : ""}`}
+            </desc>
+            {
+              clusters.map((k) => (
+                <g role="group" aria-label={`${k.name}: ${k.members.length} papers${k.thin ? ", thin" : ""}`}>
+                  {k.thin && <circle class="lm-ring" cx={k.cx} cy={k.cy} r={k.r} aria-hidden="true" />}
+                  {k.members.map((p) => (
+                    <a
+                      href={paperUrl(p.id)}
+                      aria-label={`${p.title} (${p.year}), ${p.field ? tagLabel("ie", p.field) : "no IE field"}`}
+                    >
+                      <circle class="lm-hit" cx={p.x} cy={p.y} r="12" />
+                      <path
+                        class={`lm-dot ${p.field ? `field-${p.field}` : "lm-none"}`}
+                        d={p.field ? SHAPES[p.field] : NONE}
+                        transform={`translate(${p.x} ${p.y})`}
+                      >
+                        <title>{`${p.title} (${p.year})`}</title>
+                      </path>
+                    </a>
+                  ))}
+                </g>
+              ))
+            }
+            {
+              clusters.map((k) => (
+                <text class="lm-label" x={k.cx} y={(k as typeof k & { ly: number }).ly} text-anchor="middle" aria-hidden="true">
+                  {k.name} <tspan class="flow-n">{k.members.length}{k.thin ? ", thin" : ""}</tspan>
+                </text>
+              ))
+            }
+          </svg>
+        </div>
+        <ul class="litmap-key" aria-label="Key">
+          {
+            FIELDS.map((f) => (
+              <li class={`field-${f}`}>
+                <svg viewBox="-8 -8 16 16" width="16" height="16" aria-hidden="true">
+                  <path class="lm-dot" d={SHAPES[f]} />
+                </svg>
+                {shortLabel(f)}
+              </li>
+            ))
+          }
+          <li>
+            <svg viewBox="-8 -8 16 16" width="16" height="16" aria-hidden="true">
+              <path class="lm-none" d={NONE} />
+            </svg>
+            No IE field
+          </li>
+        </ul>
+        <figcaption>
+          <span>
+            <b>Fig. 2.1</b> {points.length} papers laid out by the meaning of their title and
+            summary, so papers that read alike sit close together. A dashed outline marks a
+            cluster of fewer than {THIN_CLUSTER} papers, where the list is thin. The axes have no
+            unit, and a paper with several fields shows its first.
+          </span>
+          {unplaced > 0 && (
+            <span class="flow-gap">
+              {unplaced} {unplaced === 1 ? "paper has" : "papers have"} no vector yet and {unplaced === 1 ? "is" : "are"} not shown.
+            </span>
+          )}
+        </figcaption>
+      </figure>
+
+      <section class="apx-grid-wrap" aria-labelledby="litmap-table" tabindex="0">
+        <p class="apx-grid-title" id="litmap-table">
+          <b>Table 2.1</b> Papers by cluster and IE field
+        </p>
+        <table class="apx-grid">
+          <thead>
+            <tr>
+              <th aria-label="Cluster" />
+              {FIELDS.map((f) => (
+                <th scope="col" class={`field-${f}`}>
+                  <a href={litUrl({ ie: [f] })}>{shortLabel(f)}</a>
+                </th>
+              ))}
+              <th scope="col">None</th>
+              <th scope="col">Papers</th>
+            </tr>
+          </thead>
+          <tbody>
+            {clusters.map((k) => (
+              <tr>
+                <th scope="row">
+                  {k.name}
+                  {k.thin && <> (thin)</>}
+                </th>
+                {FIELDS.map((f) => <td data-n={k.byField[f] ? Math.min(k.byField[f], 3) : undefined}>{k.byField[f]}</td>)}
+                <td data-n={k.none ? Math.min(k.none, 3) : undefined}>{k.none}</td>
+                <td><b>{k.members.length}</b></td>
+              </tr>
+            ))}
+            <tr>
+              <th scope="row">All papers</th>
+              {fieldTotals.map(({ n }) => <td><b>{n}</b></td>)}
+              <td><b>{none}</b></td>
+              <td><b>{points.length}</b></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </>
+  )
+}

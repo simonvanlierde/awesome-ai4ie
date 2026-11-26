@@ -2210,3 +2210,75 @@ starlight-menu-button button {
     color: HighlightText;
   }
 }
+
+/* Fig. 2.1: the literature map. It keeps one size and scrolls sideways on a phone, like Table 1.1. */
+.litmap-scroll {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.litmap-scroll svg {
+  min-width: 640px;
+}
+.litmap text {
+  font-size: 12px;
+  paint-order: stroke;
+  stroke: var(--sl-color-bg);
+  stroke-width: 3px;
+}
+.litmap .lm-label {
+  font-weight: 650;
+}
+.litmap .lm-ring {
+  fill: none;
+  stroke: var(--sl-color-gray-3);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+}
+.litmap .lm-hit {
+  fill: transparent;
+}
+.litmap .lm-dot {
+  fill: var(--field, var(--sl-color-gray-3));
+  fill-opacity: 0.85;
+  stroke: var(--sl-color-bg);
+  stroke-width: 1;
+}
+.litmap .lm-none {
+  fill: none;
+  stroke: var(--sl-color-gray-2);
+  stroke-width: 2;
+}
+.litmap a:hover .lm-dot,
+.litmap a:focus-visible .lm-dot {
+  fill-opacity: 1;
+  stroke: var(--sl-color-white);
+  stroke-width: 2;
+}
+.litmap a:focus-visible {
+  outline: none;
+}
+.litmap a:focus-visible .lm-hit {
+  stroke: var(--sl-color-text-accent);
+  stroke-width: 2;
+}
+.litmap-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--sl-font);
+  font-size: 0.8125rem;
+}
+.litmap-key li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+}
+.litmap-key svg {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
