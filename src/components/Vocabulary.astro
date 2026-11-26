@@ -32,6 +32,9 @@ const meta = (c: Concept) =>
       ["Source", out(c.source ? [c.source] : undefined)],
       ["Same as", out(c.exactMatch)],
       ["Close to", out(c.closeMatch)],
+      ["Within", out(c.broadMatch)],
+      ["Includes", out(c.narrowMatch)],
+      ["Related elsewhere", out(c.relatedMatch)],
     ] as const
   ).filter(([, links]) => links?.length);
 

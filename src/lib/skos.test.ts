@@ -47,6 +47,17 @@ describe("skosExpanded", () => {
     expect(tops).toContain("https://ai4ie.org/vocabulary/#cv");
     expect(tops).not.toContain("https://ai4ie.org/vocabulary/#segmentation");
   });
+  it("publishes every match property as its SKOS term, with the IRI as an object", async () => {
+    const keys = ["exactMatch", "closeMatch", "broadMatch", "narrowMatch", "relatedMatch"] as const;
+    const iri = (k: string) => `https://example.org/${k}`;
+    const lca = concepts.find((c) => c.id === "lca");
+    if (!lca) throw new Error("lca is missing from the vocabulary");
+    const probe = { ...lca, ...Object.fromEntries(keys.map((k) => [k, [iri(k)]])) };
+    const out = (await skosExpanded([probe])) as Record<string, unknown>[];
+    const lcaNode = out.find((n) => n["@id"] === "https://ai4ie.org/vocabulary/#lca");
+    for (const k of keys) expect(lcaNode?.[`${SKOS}${k}`], k).toEqual([{ "@id": iri(k) }]);
+  });
+
   it("leaves out the site-only reserved flag", async () => {
     const reserved = concepts.map((c) => ({ ...c, reserved: true as const }));
     const out = JSON.stringify(await skosExpanded(reserved));

@@ -1,8 +1,9 @@
 name: Link check
 
-# Checks every external link and DOI in the content and data files once a week.
-# Not on PRs: a publisher being down for an hour should not block a merge.
-# On failure it opens one issue, or updates the open one, with lychee's report.
+# Checks every external link and DOI in the content and data files once a week, and
+# every Wikidata and OpenAlex link in the tag vocabulary, which can be merged or deleted
+# while it still answers 200. Not on PRs: a publisher being down for an hour should not
+# block a merge. On failure each job opens one issue, or updates the open one.
 on:
   schedule:
     - cron: "17 6 * * 1" # Mondays 06:17 UTC
@@ -77,4 +78,53 @@ jobs:
           number=$(gh api "${issues}?labels=broken-links&state=open" -q '.[0].number // empty')
           if [ -n "$number" ]; then
             gh api -X PATCH "${issues}/${number}" -f state=closed -f state_reason=completed >/dev/null
+          fi
+
+  vocabulary:
+    name: "vocabulary: Wikidata and OpenAlex links"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "26"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run vocabulary-links
+
+  notify:
+    # Scheduled runs only. The run log lists each dead link beside its concept.
+    name: "vocabulary: report failure"
+    needs: ['vocabulary']
+    # A job that runs past timeout-minutes ends cancelled, not failed.
+    if: always() && github.event_name == 'schedule' && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled'))
+    permissions:
+      issues: write # opens or comments on the failure issue
+    uses: $/.github/workflows/report-failure.yml
+    with:
+      title: Weekly vocabulary link check failed
+
+  resolved:
+    # A clean scheduled run closes the failure issue, so it never goes stale.
+    name: "vocabulary: close the failure issue"
+    needs: ['vocabulary']
+    if: github.event_name == 'schedule' && needs.vocabulary.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write # closes the failure issue
+    steps:
+      - name: close the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TITLE: Weekly vocabulary link check failed # the notify job's title
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |-
+          issue=$(gh issue list --state open --author app/github-actions --search "in:title \"$TITLE\"" --json number -q '.[0].number')
+          if [ -n "$issue" ]; then
+            gh issue close "$issue" --comment "A clean scheduled run: $RUN_URL"
           fi

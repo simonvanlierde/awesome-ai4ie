@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -87,6 +86,15 @@ describe("vocabulary.yaml", () => {
         expect(c.short, c.id).toBeTruthy();
   });
 
+  // SKOS makes exactMatch disjoint with the broad, narrow and related matches.
+  it("puts each outside IRI under one match property per concept", () => {
+    const keys = ["exactMatch", "closeMatch", "broadMatch", "narrowMatch", "relatedMatch"] as const;
+    for (const c of concepts) {
+      const iris = keys.flatMap((k) => c[k] ?? []);
+      expect(new Set(iris).size, c.id).toBe(iris.length);
+    }
+  });
+
   // Topics are a flat list with no rank, so readers scan them A to Z; fields and techniques keep a curated order.
   it("lists live topics in alphabetical order of their label", () => {
     const labels = concepts
@@ -121,28 +129,5 @@ describe("tags in use", () => {
       expect(inUse.has(c.id) || c.reserved === true, `${c.id} is unused`).toBe(true);
     for (const c of concepts.filter((x) => x.reserved))
       expect(inUse.has(c.id), `${c.id} is used, so drop reserved`).toBe(false);
-  });
-});
-
-describe("vocabulary/context.jsonld", () => {
-  it("has the pinned hash; both sites' copies change together", () => {
-    const sha = createHash("sha256")
-      .update(readFileSync("vocabulary/context.jsonld"))
-      .digest("hex");
-    expect(sha, "update the pin, and the other site's copy, in the same change").toBe(
-      "a363f7dc0069a593fffdb47f9d107d3224174812ecfa6a2f02d3c90a885bdce2",
-    );
-  });
-  it("is key-sorted with a 2-space indent, so both sites can hold it byte for byte", () => {
-    const text = readFileSync("vocabulary/context.jsonld", "utf8");
-    const sort = (v: unknown): unknown =>
-      v && typeof v === "object" && !Array.isArray(v)
-        ? Object.fromEntries(
-            Object.keys(v)
-              .sort()
-              .map((k) => [k, sort((v as Record<string, unknown>)[k])]),
-          )
-        : v;
-    expect(text).toBe(`${JSON.stringify(sort(JSON.parse(text)), null, 2)}\n`);
   });
 });

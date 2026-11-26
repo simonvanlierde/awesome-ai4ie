@@ -9,7 +9,7 @@ import { parse } from "yaml";
 export const VOCABULARY_FILE = "src/data/vocabulary.yaml";
 export const GENERATED_FILE = "src/data/vocabulary.gen.ts";
 
-/** Permanent, and deliberately not read from src/site.ts, so concept IRIs survive a host or domain move. Each concept's IRI is this plus its id. src/lib/skos.ts adds it as the JSON-LD base, since the shared context holds none. */
+/** Permanent, and deliberately not read from src/site.ts, so concept IRIs survive a host or domain move. Each concept's IRI is this plus its id. src/lib/skos.ts adds it as the JSON-LD base, since the context file holds none. */
 export const NAMESPACE = "https://ai4ie.org/vocabulary/#";
 
 /** The schemes in display order, with the label and line the /vocabulary/ page shows. */
@@ -41,8 +41,12 @@ export const conceptSchema = z.strictObject({
   source: z.url().optional(),
   broader: z.array(conceptId).optional(),
   related: z.array(conceptId).optional(),
-  exactMatch: z.array(z.url()).optional(), // the same concept elsewhere
-  closeMatch: z.array(z.url()).optional(), // near enough to swap in some uses; OpenAlex topics
+  // Matches to concepts elsewhere, by how far they are from this one (SKOS mapping properties).
+  exactMatch: z.array(z.url()).optional(), // the same concept
+  closeMatch: z.array(z.url()).optional(), // near enough to swap in some uses
+  broadMatch: z.array(z.url()).optional(), // wider than this one
+  narrowMatch: z.array(z.url()).optional(), // part of this one, such as one half of "A & B"
+  relatedMatch: z.array(z.url()).optional(),
   deprecated: z.literal(true).optional(),
   replacedBy: conceptId.optional(),
   reserved: z.literal(true).optional(), // defined before any entry uses it
