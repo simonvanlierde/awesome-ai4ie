@@ -445,3 +445,116 @@ describe("LiteratureBrowser pagination and text filter", () => {
     expect(bar.nextElementSibling).toBe(panel);
   });
 });
+
+describe("LiteratureBrowser with the map", () => {
+  // lcaPaper top left, symPaper to its right, otherPaper below: a plate of 100 x 100.
+  const MAP = {
+    w: 100,
+    h: 100,
+    clusters: [{ name: "Water", n: 3, thin: true, d: "M0 0L10 0L10 10Z", lx: 50, ly: 5 }],
+    points: "lcaPaper 10 10 0;symPaper 50 12 0;otherPaper 12 60 0",
+  };
+  const THREE = [...ENTRIES, entry("otherPaper", [])];
+  async function mountMap(url: string) {
+    history.replaceState(null, "", url);
+    host = document.createElement("div");
+    document.body.append(host);
+    root = createRoot(host);
+    await act(async () => root.render(<LiteratureBrowser entries={THREE} map={MAP} />));
+  }
+  const frame = () => document.querySelector<HTMLElement>(".lm-frame");
+  const card = () => document.querySelector(".lm-card");
+  const mark = (field: string) => document.querySelector(`.lm-plot .field-${field}`);
+  const key = (k: string) =>
+    act(async () => {
+      frame()?.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true }));
+    });
+  // The plate drawn at 200 x 200 px from the page's top left: plate units are half a pixel.
+  function plateAt200() {
+    const f = frame();
+    if (f)
+      f.getBoundingClientRect = () => ({ left: 0, top: 0, width: 200, height: 200 }) as DOMRect;
+  }
+  const pointer = (type: string, pointerType: string, x: number, y: number) =>
+    act(async () => {
+      const e = new MouseEvent(type, { clientX: x, clientY: y, bubbles: true });
+      Object.defineProperty(e, "pointerType", { value: pointerType });
+      frame()?.dispatchEvent(e);
+    });
+
+  it("draws every placed paper and counts those the filters keep", async () => {
+    await mountMap("/literature/?ie=lca");
+    expect(document.querySelectorAll(".lm-plot .lm-dot")).toHaveLength(3);
+    expect(document.querySelector(".lit-count [role=status]")?.textContent).toBe(
+      "1 of 3 entries, 1 on the map",
+    );
+    expect(mark("lca")?.classList.contains("is-out")).toBe(false);
+    expect(mark("symbiosis")?.classList.contains("is-out")).toBe(true);
+    expect(document.querySelector(".lm-plot .lm-none")?.classList.contains("is-out")).toBe(true);
+  });
+
+  it("is one tab stop with a name, behind a skip link to the list", async () => {
+    await mountMap("/literature/");
+    expect(document.querySelectorAll(".lm-figure [tabindex='0']")).toHaveLength(1);
+    expect(frame()?.getAttribute("aria-label")).toMatch(/^Map of the literature, 3 papers/);
+    expect(document.querySelector(".lm-plot")?.getAttribute("aria-hidden")).toBe("true");
+    await click(document.querySelector(".lm-skip"));
+    expect(document.activeElement?.id).toBe("lcaPaper");
+  });
+
+  it("moves with the arrow keys, opens with Enter and leaves with Escape", async () => {
+    await mountMap("/literature/");
+    await act(async () => frame()?.focus());
+    expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper lcaPaper");
+    await key("ArrowRight");
+    expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper symPaper");
+    await key("ArrowRight"); // nothing further right: stays
+    expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper symPaper");
+    await key("ArrowLeft");
+    await key("ArrowDown");
+    expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper otherPaper");
+    expect(card()?.textContent).toContain("Water");
+    await key("Escape");
+    expect(card()).toBeNull();
+    await key("Escape");
+    expect(document.activeElement?.id).toBe("lcaPaper");
+    await act(async () => frame()?.focus());
+    await key("ArrowDown");
+    await key("Enter");
+    expect(window.location.hash).toBe("#otherPaper");
+    expect(toggle("otherPaper")?.getAttribute("aria-expanded")).toBe("true");
+    expect(document.activeElement?.id).toBe("otherPaper");
+  });
+
+  it("moves only between the papers the filters keep", async () => {
+    await mountMap("/literature/?ie=lca,symbiosis");
+    await act(async () => frame()?.focus());
+    await key("ArrowDown"); // otherPaper is faded: nothing below
+    expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper lcaPaper");
+  });
+
+  it("shows the card on the first tap and opens the paper on the second", async () => {
+    await mountMap("/literature/");
+    plateAt200();
+    await pointer("pointerdown", "touch", 100, 24);
+    await pointer("click", "touch", 100, 24);
+    expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper symPaper");
+    expect(card()?.textContent).toContain("Tap it again");
+    expect(toggle("symPaper")?.getAttribute("aria-expanded")).toBe("false");
+    await pointer("pointerdown", "touch", 101, 25);
+    await pointer("click", "touch", 101, 25);
+    expect(toggle("symPaper")?.getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("shows the card on hover and opens the paper on a click", async () => {
+    await mountMap("/literature/");
+    plateAt200();
+    await pointer("pointermove", "mouse", 20, 20);
+    expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper lcaPaper");
+    await pointer("pointermove", "mouse", 190, 190); // far from every paper
+    expect(card()).toBeNull();
+    await pointer("pointerdown", "mouse", 20, 20);
+    await pointer("click", "mouse", 20, 20);
+    expect(toggle("lcaPaper")?.getAttribute("aria-expanded")).toBe("true");
+  });
+});

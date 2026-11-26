@@ -1,9 +1,11 @@
 ---
 import { getCollection } from "astro:content";
 import { paperExtras } from "../lib/literature";
+import { litMap } from "../lib/litmap";
 import { decodeVector, entryText } from "../lib/semantic";
 import { loadVectors, textKey } from "../lib/vectors";
 import LiteratureBrowser from "./LiteratureBrowser";
+import { encodePoints } from "./litMapNav";
 
 // No sorting here: LiteratureBrowser sorts what it renders, on the server too.
 const entries = (await getCollection("literature")).map((e) => ({ id: e.id, ...e.data }));
@@ -21,9 +23,12 @@ const extras = paperExtras(
     return v ? decodeVector(v) : undefined;
   }),
 );
+// The map over the list, laid out here so the browser gets only positions and outlines.
+const { points, ...plate } = litMap(entries);
+const map = points.length ? { ...plate, points: encodePoints(points) } : undefined;
 ---
 
 <noscript>
   <p class="lit-noscript">Enable JavaScript for filters, sorting, citation exports and paper details. The full list is below.</p>
 </noscript>
-<LiteratureBrowser client:load entries={entries} extras={extras} />
+<LiteratureBrowser client:load entries={entries} extras={extras} map={map} />
