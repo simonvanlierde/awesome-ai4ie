@@ -11,6 +11,13 @@ hero:
   tagline: What AI already does in industrial ecology research, how far to trust it, and the papers behind each claim. A proposal to the AI4IE working group, not yet its site.
 ---
 
+import { getCollection } from 'astro:content';
+
+export const papers = (await getCollection('literature')).length;
+export const apps = (await getCollection('applications')).length;
+
+It lists {papers} papers, {apps} applications by field, verification checks and browser demos.
+
 ## Contributing
 
 This site is one maintainer's proposal, meant to be argued with. [Send a correction or a paper](/contribute/), vote in the norms poll, read the [open questions](/open-questions/), or discuss it on [Discord](https://discord.gg/zhHAZakXHX). [Governance](repo:blob/main/GOVERNANCE.md) says what adoption by the group would mean.
