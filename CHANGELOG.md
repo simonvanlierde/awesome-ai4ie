@@ -96,6 +96,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- The urban China household study measures carbon footprints, not general environmental
+  footprints, and the food-sector model's 91.67% accuracy comes from a check on ten sectors.
 - Six more cited figures, checked against the papers:
   - The CaML 51% to 22% error drop is on 27,708 products, not 40K.
   - The NAICS-matching preprint's 45.88% error is on 20 companies with disclosed emissions,
