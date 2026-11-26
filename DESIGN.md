@@ -97,8 +97,8 @@ strokes at 40% and a light-blue stem, the same in both themes.
   Reduced motion skips it.
 - **Numbered tables.** A bold "Table N.N" title above, a source line below. Numbering and
   markup are in [CONTRIBUTING.md](CONTRIBUTING.md#look-and-feel).
-- **Application entries.** On the map page, each field's section has its synthesis paragraph,
-  then its applications as disclosures: closed, the name over the maturity call; open, the
+- **Application entries.** A field page opens with its synthesis paragraph; the map page's
+  explorer and each field page list applications as disclosures: closed, the name over the maturity call; open, the
   description, tags and papers link.
 - **Literature filter.** One disclosure button per dimension; its chips open in the page
   under the bar. Pressed chips and active filters are solid ink.

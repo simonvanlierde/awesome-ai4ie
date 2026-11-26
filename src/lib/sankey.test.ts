@@ -26,8 +26,12 @@ describe("sankeyLayout", () => {
     // The ML column has more nodes, so its gaps set the scale: (100 - 2*10) / 4.
     expect(mlNodes[0].h).toBe(40);
     expect(ieNodes[0].h).toBe(60);
-    const last = mlNodes.at(-1);
-    expect(last && last.y + last.h).toBe(100);
+    for (const column of [ieNodes, mlNodes]) {
+      const last = column.at(-1);
+      expect(last && last.y + last.h).toBe(100);
+    }
+    // The IE column has one gap fewer, so it widens it to fill the height: 100 - 4*20.
+    expect(ieNodes[1].y).toBe(80);
   });
 
   it("keeps each band's height and packs it inside both of its nodes", () => {

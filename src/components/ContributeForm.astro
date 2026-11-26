@@ -119,6 +119,18 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
       if (!form || !fallback || !status || !typeSelect || !typeHint || !turnstileBox || !submitBtn)
         return;
 
+      // Links from elsewhere on the site prefill the form; see contributeUrl.
+      const prefill = new URLSearchParams(location.search);
+      const type = prefill.get("type");
+      if (type && [...typeSelect.options].some((o) => o.value === type)) typeSelect.value = type;
+      for (const name of ["title", "details"]) {
+        const value = prefill.get(name);
+        const field = form.elements.namedItem(name);
+        if (value && (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement))
+          // A script-set value skips maxlength; without the attribute maxLength is -1.
+          field.value = field.maxLength < 0 ? value : value.slice(0, field.maxLength);
+      }
+
       const siteKey = this.dataset.turnstileSiteKey ?? "";
       if (!siteKey) return;
 

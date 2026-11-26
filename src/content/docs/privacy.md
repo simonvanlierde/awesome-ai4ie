@@ -31,8 +31,8 @@ Those services then see your IP address and browser under their own privacy term
 
 ## Suggesting a paper
 
-Suggestion links open a GitHub issue form under GitHub's privacy terms. Links from map gaps
-prefill the gap name; the search dialog does not include your query.
+Suggestion links open the on-site [contribution form](/contribute/), which works as described
+under [Contributions and norms poll](#contributions-and-norms-poll). Links from map gaps prefill the gap name; the search dialog does not include your query.
 
 ## Contributions and norms poll
 

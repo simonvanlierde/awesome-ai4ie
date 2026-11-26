@@ -1,9 +1,9 @@
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
+import { CONTRIBUTION_TYPES } from "../../worker/contribute";
 import { CHAPTERS } from "../lib/chapters";
-import { ISSUE_FORMS } from "../lib/urls";
 import { RESOURCE_KINDS } from "./schemas";
 import { TAGS } from "./tags";
 
@@ -11,6 +11,9 @@ import { TAGS } from "./tags";
 // reads them as static YAML. This keeps them in step with the site.
 const root = join(import.meta.dirname, "..", "..");
 const formsDir = join(root, ".github", "ISSUE_TEMPLATE");
+const ISSUE_FORMS = readdirSync(formsDir)
+  .filter((f) => f.endsWith(".yml") && f !== "config.yml")
+  .map((f) => f.slice(0, -4));
 
 type Field = {
   type: string;
@@ -87,22 +90,21 @@ describe("issue forms", () => {
   });
 });
 
-describe("repo:issues/new links", () => {
+describe("/contribute/?type= links", () => {
   const docs = join(root, "src", "content", "docs");
-  const FORM_LINK = /repo:issues\/new\?template=([^)\s&"']+)/g;
   const links = readdirSync(docs, { recursive: true, encoding: "utf8" })
     .filter((f) => /\.mdx?$/.test(f))
     .flatMap((f) =>
-      [...readFileSync(join(docs, f), "utf8").matchAll(FORM_LINK)].map((m) => ({
-        file: f,
-        form: m[1],
-      })),
+      [...readFileSync(join(docs, f), "utf8").matchAll(/\/contribute\/\?type=([\w-]+)/g)].map(
+        (m) => ({ file: f, type: m[1] }),
+      ),
     );
 
   it("finds the links", () => {
     expect(links.length).toBeGreaterThan(0);
   });
-  it.each(links)("$file opens an existing form, $form", ({ form }) => {
-    expect(existsSync(join(formsDir, form))).toBe(true);
+  // The form ignores an unknown type and falls back to the first option.
+  it.each(links)("$file picks an existing form type, $type", ({ type }) => {
+    expect(Object.hasOwn(CONTRIBUTION_TYPES, type)).toBe(true);
   });
 });
