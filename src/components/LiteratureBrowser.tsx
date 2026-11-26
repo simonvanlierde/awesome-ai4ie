@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { LitEntry } from "../data/schemas";
 import { DIM_LABELS, TAG_DIMS, TAGS, type TagDim, tagLabel } from "../data/tags";
 import { type Citations, citationFile, FORMATS } from "../lib/citations";
 import { citeAuthors, formatAuthors, isNew, type PaperExtras, paperLink } from "../lib/literature";
-import { issueUrl, litUrl, paperUrl, siteUrl } from "../lib/urls";
+import { contributeUrl, litUrl, paperUrl, siteUrl } from "../lib/urls";
 import {
   DEFAULT_SORT,
   EMPTY_FILTER,
@@ -42,6 +42,17 @@ import TagChips from "./TagChips";
  * notice that clears them; a card only opened on the page gets neither mark nor notice.
  */
 
+const FLIP_MS = 220;
+const FLIP_EASING = "cubic-bezier(0.2, 0, 0, 1)";
+const useIsomorphicLayoutEffect = typeof document !== "undefined" ? useLayoutEffect : useEffect;
+
+function prefersReducedMotion(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
 export default function LiteratureBrowser({
   entries,
   extras = {},
@@ -65,6 +76,10 @@ export default function LiteratureBrowser({
   const countRef = useRef<HTMLSpanElement | null>(null);
   // Index of the pill that was just removed: focus goes to whatever takes its place.
   const refocus = useRef<number | null>(null);
+  const listRef = useRef<HTMLOListElement | null>(null);
+  // Pre-update row positions captured right before a filter or sort change.
+  const firstRects = useRef<Map<string, DOMRect> | null>(null);
+  const flipAnims = useRef<WeakMap<Element, Animation>>(new WeakMap());
 
   // Read the initial view from the URL after hydration (SSR shows everything).
   // biome-ignore lint/correctness/useExhaustiveDependencies: entries are fixed for the page's life
@@ -119,6 +134,54 @@ export default function LiteratureBrowser({
     (pills[Math.min(i, pills.length - 1)] ?? countRef.current)?.focus();
   }, [filter]);
 
+  // FLIP: animate rows that stayed visible and moved after a filter or sort change.
+  useIsomorphicLayoutEffect(() => {
+    const first = firstRects.current;
+    firstRects.current = null;
+    if (!first || prefersReducedMotion() || !listRef.current) return;
+    for (const child of listRef.current.children) {
+      const prev = first.get(child.id);
+      if (!prev) continue;
+      flipAnims.current.get(child)?.cancel();
+      const next = child.getBoundingClientRect();
+      const dx = prev.left - next.left;
+      const dy = prev.top - next.top;
+      if (Math.abs(dx) < 1 && Math.abs(dy) < 1) continue;
+      if (typeof child.animate === "function") {
+        const anim = child.animate(
+          [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }],
+          {
+            duration: FLIP_MS,
+            easing: FLIP_EASING,
+          },
+        );
+        if (anim) flipAnims.current.set(child, anim);
+      }
+    }
+  }, [filter, sort]);
+
+  function captureRows() {
+    if (prefersReducedMotion() || !listRef.current) {
+      firstRects.current = null;
+      return;
+    }
+    const rects = new Map<string, DOMRect>();
+    for (const child of listRef.current.children) {
+      if (child.id) rects.set(child.id, child.getBoundingClientRect());
+    }
+    firstRects.current = rects;
+  }
+
+  function updateFilter(next: Filter | ((current: Filter) => Filter)) {
+    captureRows();
+    setFilter(next);
+  }
+
+  function updateSort(next: SortKey) {
+    captureRows();
+    setSort(next);
+  }
+
   // The records are a separate chunk, fetched on the first export click.
   async function download(picked: LitEntry[], format: (typeof FORMATS)[number], name: string) {
     setExportStatus(""); // so the same message twice is announced twice
@@ -162,7 +225,7 @@ export default function LiteratureBrowser({
   }
 
   function toggle(dim: TagDim, tag: string) {
-    setFilter((current) => toggleTag(current, dim, tag));
+    updateFilter((current) => toggleTag(current, dim, tag));
   }
 
   const shown = sortEntries(
@@ -249,7 +312,7 @@ export default function LiteratureBrowser({
               aria-label="Remove filter: linked papers"
               onClick={() => {
                 refocus.current = pills.length;
-                setFilter({ ...filter, papers: [] });
+                updateFilter({ ...filter, papers: [] });
               }}
             >
               {filter.papers.length} linked {filter.papers.length === 1 ? "paper" : "papers"}
@@ -261,7 +324,7 @@ export default function LiteratureBrowser({
             className="lit-clear"
             onClick={() => {
               refocus.current = 0;
-              setFilter(EMPTY_FILTER);
+              updateFilter(EMPTY_FILTER);
             }}
           >
             Clear all
@@ -293,7 +356,7 @@ export default function LiteratureBrowser({
         </span>
         <label className="lit-sort">
           Sort
-          <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
+          <select value={sort} onChange={(e) => updateSort(e.target.value as SortKey)}>
             {SORTS.map((s) => (
               <option key={s.key} value={s.key}>
                 {s.label}
@@ -311,14 +374,14 @@ export default function LiteratureBrowser({
             className="lit-clear"
             onClick={() => {
               pendingScroll.current = hiddenTarget.id;
-              setFilter(EMPTY_FILTER);
+              updateFilter(EMPTY_FILTER);
             }}
           >
             Clear the filters to show it
           </button>
         </p>
       )}
-      <ol className="lit-list">
+      <ol className="lit-list" ref={listRef}>
         {shown.map((e) => (
           <li
             key={e.id}
@@ -449,6 +512,14 @@ export function PaperDetails({
           </dd>
         </>
       )}
+      {e.evidence && (
+        <>
+          <dt>Evidence</dt>
+          <dd className="lit-evidence">
+            <EvidenceBlock entry={e} evidence={e.evidence} />
+          </dd>
+        </>
+      )}
       {similar.length > 0 && (
         <>
           <dt>Similar</dt>
@@ -478,15 +549,114 @@ export function PaperDetails({
       <dt>Fix</dt>
       <dd>
         <a
-          href={issueUrl("other", {
+          href={contributeUrl("other", {
             title: `[Edit] ${e.title}`,
-            what: `Reading-list entry ${e.id}.\n\nWhat should change:`,
+            details: `Reading-list entry ${e.id}.\n\nWhat should change:`,
           })}
         >
           Suggest an edit
         </a>
       </dd>
     </dl>
+  );
+}
+
+const SOURCE_LABELS = {
+  "author-reported": "Author-reported",
+  reproduced: "Reproduced",
+} as const;
+
+function EvidenceBlock({
+  entry: e,
+  evidence,
+}: {
+  entry: LitEntry;
+  evidence: NonNullable<LitEntry["evidence"]>;
+}) {
+  const { dataset, task, method, results } = evidence;
+  return (
+    <div className="lit-evidence-groups">
+      <section className="lit-evidence-group">
+        <p className="lit-evidence-heading">Dataset</p>
+        <dl className="lit-evidence-list">
+          <dt>Identifier</dt>
+          <dd>
+            {dataset.url ? <a href={dataset.url}>{dataset.identifier}</a> : dataset.identifier}
+          </dd>
+          <dt>Provenance</dt>
+          <dd>{dataset.provenance}</dd>
+          <dt>Modality</dt>
+          <dd>{dataset.modality}</dd>
+          <dt>Access</dt>
+          <dd>{dataset.access}</dd>
+          <dt>Licence</dt>
+          <dd>{dataset.licence}</dd>
+        </dl>
+      </section>
+      <section className="lit-evidence-group">
+        <p className="lit-evidence-heading">Task and protocol</p>
+        <dl className="lit-evidence-list">
+          <dt>Target</dt>
+          <dd>{task.target}</dd>
+          <dt>Scope</dt>
+          <dd>{task.scope}</dd>
+          <dt>Split / validation</dt>
+          <dd>{task.split}</dd>
+          <dt>Metric</dt>
+          <dd>{task.metric}</dd>
+          <dt>Reference labels</dt>
+          <dd>{task.reference}</dd>
+        </dl>
+      </section>
+      <section className="lit-evidence-group">
+        <p className="lit-evidence-heading">Method and implementation</p>
+        <dl className="lit-evidence-list">
+          <dt>Paper</dt>
+          <dd>
+            {e.doi && <a href={`https://doi.org/${e.doi}`}>DOI {e.doi}</a>}
+            {e.doi && e.arxiv && " · "}
+            {e.arxiv && <a href={`https://arxiv.org/abs/${e.arxiv}`}>arXiv {e.arxiv}</a>}
+          </dd>
+          <dt>Repository</dt>
+          <dd className={method.repositories.length > 0 ? "lit-details-links" : undefined}>
+            {method.repositories.length > 0
+              ? method.repositories.map((repo) => (
+                  <a key={repo.url} href={repo.url}>
+                    {repo.label}
+                  </a>
+                ))
+              : "Not reported."}
+          </dd>
+          <dt>Revision</dt>
+          <dd>{method.revision}</dd>
+          <dt>Model / checkpoint</dt>
+          <dd>{method.model}</dd>
+        </dl>
+      </section>
+      <section className="lit-evidence-group">
+        <p className="lit-evidence-heading">Reported results</p>
+        <ul className="lit-evidence-results">
+          {results.map((r) => (
+            <li key={`${r.source}:${r.metric}:${r.value}`} className="lit-evidence-result">
+              <p className="lit-evidence-result-head">
+                <span className="lit-evidence-source">{SOURCE_LABELS[r.source]}</span>{" "}
+                <strong>{r.metric}:</strong> {r.value}
+              </p>
+              <dl className="lit-evidence-list">
+                <dt>Uncertainty</dt>
+                <dd>{r.uncertainty}</dd>
+                <dt>Source</dt>
+                <dd>{r.locator}</dd>
+                <dt>Setting</dt>
+                <dd>{r.setting}</dd>
+                <dt>Limits</dt>
+                <dd>{r.limits}</dd>
+              </dl>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
   );
 }
 

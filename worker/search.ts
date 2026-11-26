@@ -2,7 +2,7 @@
 // /api/search and the MCP tools. Kept out of index.ts because the Workers runtime rejects any
 // export there that is not a handler.
 import {
-  decodeVector,
+  EMBED_DIM,
   EMBED_MODEL,
   type IndexEntry,
   queryText,
@@ -10,10 +10,18 @@ import {
   unit,
 } from "../src/lib/semantic.ts";
 
+export type RateLimiter = { limit(opts: { key: string }): Promise<{ success: boolean }> };
+
 export type Env = {
   AI: { run(model: string, input: object): Promise<{ data: number[][] }> };
   ASSETS: { fetch(req: Request | string): Promise<Response> };
-  SEARCH_LIMIT: { limit(opts: { key: string }): Promise<{ success: boolean }> };
+  SEARCH_LIMIT: RateLimiter;
+  SEARCH_LIMIT_GLOBAL: RateLimiter;
+  CONTRIBUTE_LIMIT?: RateLimiter;
+  CONTRIBUTE_LIMIT_GLOBAL?: RateLimiter;
+  POLL?: { getByName(name: string): { fetch(request: Request): Promise<Response> } };
+  TURNSTILE_SECRET_KEY?: string;
+  GITHUB_ISSUES_TOKEN?: string;
 };
 
 // Longer than any question a reader types; caps what one request can spend.
@@ -21,34 +29,51 @@ export const MAX_QUERY = 300;
 
 // One isolate serves many requests; the assets change only with a deploy.
 const assets = new Map<string, Promise<unknown>>();
-/** A built JSON asset, fetched and passed through `prepare` once per isolate. */
-export function cachedJson<T>(
-  env: Env,
-  origin: string,
-  path: string,
-  prepare: (json: never) => T = (json) => json,
-): Promise<T> {
-  let p = assets.get(path) as Promise<T> | undefined;
+/** What `load` gives, worked out once per isolate under `key`. */
+function cached<T>(key: string, load: () => Promise<T>): Promise<T> {
+  let p = assets.get(key) as Promise<T> | undefined;
   if (!p) {
-    p = env.ASSETS.fetch(`${origin}${path}`)
-      .then((r) => {
-        if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`);
-        return r.json();
-      })
-      .then((json) => prepare(json as never));
-    assets.set(path, p);
-    p.catch(() => assets.delete(path)); // a failed load must not poison every later request
+    p = load();
+    assets.set(key, p);
+    p.catch(() => assets.delete(key)); // a failed load must not poison every later request
   }
   return p;
 }
 
-type Index = { all: IndexEntry[]; entries: IndexEntry[]; vectors: Float32Array[] };
-/** Every entry (`all`), and the searchable ones with their decoded vectors. */
-export function loadIndex(env: Env, origin: string): Promise<Index> {
-  return cachedJson(env, origin, "/literature-index.json", (all: IndexEntry[]) => {
-    // An entry without a build-time vector (a build that skipped `pnpm run embed`) is not searched.
-    const entries = all.filter((e) => e.vector);
-    return { all, entries, vectors: entries.map((e) => decodeVector(e.vector as string)) };
+async function fetchAsset(env: Env, origin: string, path: string): Promise<Response> {
+  const r = await env.ASSETS.fetch(`${origin}${path}`);
+  if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`);
+  return r;
+}
+
+/** A built JSON asset, fetched and parsed once per isolate. */
+export function cachedJson<T>(env: Env, origin: string, path: string): Promise<T> {
+  return cached(path, async () => (await fetchAsset(env, origin, path)).json() as Promise<T>);
+}
+
+/** Every entry of the reading list. */
+export function loadIndex(env: Env, origin: string): Promise<IndexEntry[]> {
+  return cachedJson(env, origin, "/literature-index.json");
+}
+
+type Searchable = { entries: IndexEntry[]; vectors: Float32Array[] };
+/** The entries meaning search ranks, with their vectors: views into
+ * literature-vectors.bin, so nothing is parsed or copied. Only search waits for that file. */
+function loadSearchable(env: Env, origin: string): Promise<Searchable> {
+  return cached("/literature-vectors.bin", async () => {
+    const [all, bin] = await Promise.all([
+      loadIndex(env, origin),
+      fetchAsset(env, origin, "/literature-vectors.bin").then((r) => r.arrayBuffer()),
+    ]);
+    // An entry without a row (a build that skipped `pnpm run embed`) is not searched.
+    const entries = all.filter((e) => e.vectorRow !== undefined);
+    // A file of another length would still slice into rows, just wrong ones.
+    if (bin.byteLength !== entries.length * EMBED_DIM * 4)
+      throw new Error(`literature-vectors.bin: ${bin.byteLength} bytes for ${entries.length} rows`);
+    const vectors = entries.map(
+      (e) => new Float32Array(bin, (e.vectorRow as number) * EMBED_DIM * 4, EMBED_DIM),
+    );
+    return { entries, vectors };
   });
 }
 
@@ -70,12 +95,18 @@ export function limitKey(ip: string): string {
     .join(":");
 }
 
-/** False when this visitor has used up SEARCH_LIMIT, null when the limiter fails: the caller
- * then answers "unavailable" rather than spend AI calls unmetered. */
+/** False when this visitor has used up SEARCH_LIMIT, or all visitors at this Cloudflare location
+ * SEARCH_LIMIT_GLOBAL (approximate: counts are per location)
+ * (many IPs, or a whole IPv6 range, would get past the per-visitor count), null when a limiter
+ * fails: the caller then answers "unavailable" rather than spend AI calls unmetered. */
 export async function withinLimit(env: Env, request: Request): Promise<boolean | null> {
   const key = limitKey(request.headers.get("cf-connecting-ip") ?? "unknown");
   try {
-    return (await env.SEARCH_LIMIT.limit({ key })).success;
+    if (!(await env.SEARCH_LIMIT.limit({ key })).success) return false;
+    const ok = (await env.SEARCH_LIMIT_GLOBAL.limit({ key: "all" })).success;
+    // biome-ignore lint/suspicious/noConsole: Workers Logs show when the shared cap turns readers away
+    if (!ok) console.warn("search: SEARCH_LIMIT_GLOBAL reached");
+    return ok;
   } catch (err) {
     // biome-ignore lint/suspicious/noConsole: Workers Logs keep the cause
     console.error(err);
@@ -95,8 +126,8 @@ export async function searchPapers(
 ): Promise<IndexEntry[] | null> {
   try {
     // The index first: no AI call is spent when there is nothing to search.
-    const { entries, vectors } = await loadIndex(env, origin);
-    if (!entries.length) throw new Error("literature-index.json: no entry has a vector");
+    const { entries, vectors } = await loadSearchable(env, origin);
+    if (!entries.length) throw new Error("literature-index.json: no entry has a vector row");
     let timer: ReturnType<typeof setTimeout> | undefined;
     const { data } = await Promise.race([
       env.AI.run(EMBED_MODEL, { text: [queryText(q.trim())] }),

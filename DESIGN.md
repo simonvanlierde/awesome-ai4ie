@@ -65,18 +65,18 @@ Columns of numbers use tabular figures.
 The mark is an Æ with a 4 drawn inside it ([`Glyph.astro`](src/components/Glyph.astro)). It
 sits outside the six inks: on the page it is neutral ink, with the 4 at full strength and
 the A's leg and the E's arms faded to grey. The stem is the I of AI4IE, so it takes a lighter
-tint; the large mark (the 404 plate, the card) also cuts a hairline gap beside it. Cobalt is ink 1, so the mark is cobalt only off
-the page (the favicon and the README), with one exception: the home title ends on the
-favicon tile as its end mark, at cap height, hidden from screen readers. On load its strokes
-ink in as the mark is drawn: the 4, its stem, then the faded A leg and E arms. Pointing at
-or tapping the tile inks them in again.
+tint; the large mark (the 404 plate, the card) also cuts a hairline gap beside it. Cobalt is ink 1, so on the page the
+mark takes cobalt only as the favicon's tile: the cobalt square with white strokes, the faded
+strokes at 40% and a light-blue stem, the same in both themes.
 
 - **Header, home cover, colophon, and 404.** The top bar shows the unfolded `AI4IE` drafting
-  wordmark, which collapses to the Æ-4 mark on hover/focus and on narrow screens. The home
-  cover carries no mark of its own: the header wordmark and the title already name the site.
+  wordmark, which folds onto the tile as the Æ-4 mark on hover/focus and at rest on narrow screens. The home
+  title opens on the tile, as tall as its two lines: the site's lockup, as on the social card.
+  On load its strokes ink in once with Fig. 1's pour, in the order the name reads (A, I, 4, E,
+  under a second); the tile stays still, and reduced motion skips it.
   The 404 plate shows the Æ-4 mark in a dashed
   frame and expands it into `AI4IE` on hover/focus. Every inner page
-  and the home page also carry the mark in the colophon before the licences.
+  and the home page end on the tile in the colophon, before the licences.
 - **Never decoration.** No patterns, bullets, loaders or watermarks.
 - **Always beside text** that carries the meaning, so the SVG stays hidden from screen
   readers.
@@ -85,19 +85,20 @@ or tapping the tile inks them in again.
 
 - **Sidebar.** Each chapter carries a square number block in its ink; the current page gets a
   light tint of that ink.
-- **Fig. 1.** Built from `literature.yaml`. From 64rem it spans the cover below the
-  chapter index, wide and short with long bands; narrower screens get a compact plate. Node numbers count papers; band width
+- **Fig. 1.** Built from `literature.yaml`, below the chapter index. It fits its width: the
+  labels stay 13 to 17px (10px on a 320px phone), and the bands take the rest, at least 30%
+  of the width. Node numbers count papers; band width
   counts field-technique pairings, as the caption says. Each node opens the literature list
   holding exactly the papers it counts. Labels are the first words of each tag's full name.
   Pointing at a band lifts it and fades the rest. Pointing at, focusing or tapping a node
   lights its bands and names its reach in a live readout line under the plate; on touch the
   first tap lights a node and the second opens its list. On load the bands draw
-  along their curves, field by field, while the title's end mark inks in.
-  Reduced motion skips both.
+  along their curves, field by field.
+  Reduced motion skips it.
 - **Numbered tables.** A bold "Table N.N" title above, a source line below. Numbering and
   markup are in [CONTRIBUTING.md](CONTRIBUTING.md#look-and-feel).
-- **Application entries.** On the map page, each field's section has its synthesis paragraph,
-  then its applications as disclosures: closed, the name over the maturity call; open, the
+- **Application entries.** A field page opens with its synthesis paragraph; the map page's
+  explorer and each field page list applications as disclosures: closed, the name over the maturity call; open, the
   description, tags and papers link.
 - **Literature filter.** One disclosure button per dimension; its chips open in the page
   under the bar. Pressed chips and active filters are solid ink.

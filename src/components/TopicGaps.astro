@@ -17,7 +17,7 @@ const thin = thinTopics(entries, Astro.props.ie);
 ---
 
 {
-  thin.length > 0 && (
+  thin.length > 0 ? (
     <ul>
       {thin.map(({ topic, count }) => (
         <li>
@@ -33,5 +33,7 @@ const thin = thinTopics(entries, Astro.props.ie);
         </li>
       ))}
     </ul>
+  ) : (
+    !Astro.props.ie && <p>Every topic in the vocabulary currently has at least three papers.</p>
   )
 }

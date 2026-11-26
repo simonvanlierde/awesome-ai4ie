@@ -48,7 +48,9 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   ranks the papers. Where the host has no `/api/search`, the dialog leaves meaning search out.
 - A read-only MCP server at `/mcp` on the Worker, so AI assistants can search the reading list
   and read papers, applications, resources and the Agent Skills. Its tools are marked
-  read-only, return absolute links, and answer errors with a stable code.
+  read-only, return absolute links, and answer errors with a stable code. Every tool but
+  `get_skill` declares an output schema, the list tools filter by id, each application links
+  to its place on the map, and retired tag ids map to their replacements.
 - A privacy page at `/privacy/`, linked from the footer: what the site sends where, including
   the questions meaning search sends to Cloudflare.
 - An accessibility statement at `/accessibility/`, linked from the footer.
@@ -65,6 +67,19 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Each IE field's evidence summary moved from the map page to the field's own page, and
+  the map page lists the fields instead of repeating their applications. Old anchors such
+  as `/applications-map/#life-cycle-assessment` still land on the field list.
+- "Suggest a paper", "Suggest a correction", "Suggest an edit" and similar links open the
+  on-site contribution form, with the type and title filled in, instead of a GitHub issue
+  form. The form reads `?type=`, `?title=` and `?details=`.
+- Fig. 1 spreads the shorter column over the full height, so both sides of the flow line up.
+- The home page text runs wider on desktop, and a short opening line no longer leaves a
+  large gap above the first heading.
+- The colophon (licences and page links) sits below the previous and next page links, in
+  larger text.
+- An `@name` in a form submission no longer notifies that GitHub account from the public
+  issue, and the 404 page's report link fills in the missing address and the linking page.
 - Git hooks run with prek in place of lefthook.
 - Commit messages and pull request titles follow `type(scope): summary`, checked by a
   commit-msg hook and the pr-title workflow.

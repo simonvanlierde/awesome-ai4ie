@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { missingTechniques, sankeyLayout } from "./sankey";
+import { missingTechniques, sankeyLayout, topicLenses } from "./sankey";
 
 const entries = [
   { ie: ["lca"], ml: ["llm", "tabular-ml"] },
@@ -26,8 +26,12 @@ describe("sankeyLayout", () => {
     // The ML column has more nodes, so its gaps set the scale: (100 - 2*10) / 4.
     expect(mlNodes[0].h).toBe(40);
     expect(ieNodes[0].h).toBe(60);
-    const last = mlNodes.at(-1);
-    expect(last && last.y + last.h).toBe(100);
+    for (const column of [ieNodes, mlNodes]) {
+      const last = column.at(-1);
+      expect(last && last.y + last.h).toBe(100);
+    }
+    // The IE column has one gap fewer, so it widens it to fill the height: 100 - 4*20.
+    expect(ieNodes[1].y).toBe(80);
   });
 
   it("keeps each band's height and packs it inside both of its nodes", () => {
@@ -68,5 +72,39 @@ describe("missingTechniques", () => {
     expect(missing).not.toContain("llm");
     expect(missing).toContain("depth");
     expect(missing.indexOf("segmentation")).toBeLessThan(missing.indexOf("depth"));
+  });
+});
+
+describe("topicLenses", () => {
+  const tagged = [
+    { ie: ["lca", "sem"], ml: ["cv"], topic: ["buildings", "energy"] },
+    { ie: ["lca"], ml: ["llm", "cv"], topic: ["buildings"] },
+    { ie: ["circular"], ml: ["cv"], topic: ["electronics"] },
+    // Outside the flow (missing ie or ml): must not count toward any lens.
+    { ml: ["llm"], topic: ["water", "buildings"] },
+    { ie: ["lca"], topic: ["food"] },
+  ];
+
+  it("returns topics in vocabulary order, omitting those with no papers in the flow", () => {
+    const lenses = topicLenses(tagged);
+    expect(lenses.map((l) => l.tag)).toEqual(["buildings", "electronics", "energy"]);
+  });
+
+  it("counts distinct papers, fields, techniques and deduplicated band keys", () => {
+    const lenses = topicLenses(tagged);
+    const buildings = lenses.find((l) => l.tag === "buildings");
+    expect(buildings).toEqual({
+      tag: "buildings",
+      papers: 2,
+      fields: 2,
+      bands: ["lca|cv", "sem|cv", "lca|llm"],
+    });
+  });
+
+  it("deduplicates repeated topic, field and technique tags on one entry", () => {
+    const lenses = topicLenses([
+      { ie: ["lca", "lca"], ml: ["cv", "cv"], topic: ["buildings", "buildings"] },
+    ]);
+    expect(lenses).toEqual([{ tag: "buildings", papers: 1, fields: 1, bands: ["lca|cv"] }]);
   });
 });

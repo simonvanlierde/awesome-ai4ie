@@ -11,8 +11,8 @@ import ZeroShotDemo from '../../components/ZeroShotDemo.tsx';
 
 ## Classify a photo with CLIP
 
-Pick a photo and enter possible labels. <Cite id="radfordLearningTransferableVisual2021">CLIP</Cite>
-ranks those labels without training on your examples.
+<Cite id="radfordLearningTransferableVisual2021">CLIP</Cite> ranks labels you type
+for a photo, with no training on your examples.
 
 <ZeroShotDemo client:visible />
 
@@ -23,11 +23,11 @@ ranks those labels without training on your examples.
 
 ## Outline part of a photo with Segment Anything
 
-Click a region to trace its outline. This Hugging Face demo runs on your device
-using WebGPU. It finds outlines. You still need to identify each part to build a
-component list.
+Click a region to trace its outline. It runs on your device with WebGPU and finds
+outlines only: you still name each part yourself.
 
 <SpaceEmbed
+  figure="Fig. 2"
   title="Segment Anything WebGPU"
   href="https://huggingface.co/spaces/webml-community/segment-anything-webgpu"
   src="https://webml-community-segment-anything-webgpu.static.hf.space/index.html"
@@ -37,18 +37,17 @@ component list.
 
 ## Estimate depth with Depth Anything V2
 
-See which parts of a photo are closer to the camera. Use a test image.
-The demo sends the image to a Hugging Face server. The depth map alone
-doesn't give you measurements in centimetres.
+Shows which parts of a photo are closer to the camera, as relative depth, not
+centimetres. The image goes to a Hugging Face server, so use a test image.
 
 <SpaceEmbed
+  figure="Fig. 3"
   title="Depth Anything V2"
   href="https://huggingface.co/spaces/depth-anything/Depth-Anything-V2"
   src="https://depth-anything-depth-anything-v2.hf.space"
 />
 
-See how classification, segmentation and depth fit into
-[computer vision for products at end of life](/applications-map/cv-taxonomy/).
+Worked example: [computer vision for products at end of life](/applications-map/cv-taxonomy/).
 
 <details id="two-ways-to-add-a-demo">
 <summary>Add a demo</summary>

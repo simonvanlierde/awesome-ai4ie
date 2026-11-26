@@ -3,7 +3,7 @@
 // functions over entry fields, so the list, <Cite> and sorting all show an entry the
 // same way.
 import { nearest } from "./semantic";
-import { siteUrl } from "./urls";
+import { appUrl } from "./urls";
 
 type Authored = { authors: readonly string[]; etAl?: boolean };
 
@@ -47,8 +47,7 @@ export function isNew(added: string, now: Date = new Date()): boolean {
 export type PaperExtras = { apps: { name: string; href: string }[]; similar: string[] };
 
 /** Each entry's citing applications and its three most similar entries, by id. `vectors`
- * lines up with `entries`; an entry without one gets no similar papers and is nobody's.
- * An application is described in full on its first field's page, under its own id. */
+ * lines up with `entries`; an entry without one gets no similar papers and is nobody's. */
 export function paperExtras(
   entries: readonly { id: string }[],
   apps: readonly { id: string; name: string; ie: readonly string[]; papers: readonly string[] }[],
@@ -61,7 +60,7 @@ export function paperExtras(
       {
         apps: apps
           .filter((a) => a.papers.includes(e.id))
-          .map((a) => ({ name: a.name, href: siteUrl(`applications-map/${a.ie[0]}/#${a.id}`) })),
+          .map((a) => ({ name: a.name, href: appUrl(a) })),
         similar: near[i].map((j) => entries[j].id),
       },
     ]),

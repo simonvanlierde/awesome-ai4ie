@@ -1,22 +1,30 @@
 ---
 title: AI in industrial symbiosis
-description: Find applications and papers on matching one firm's waste to another firm's inputs.
+description: Applications and papers on matching one firm's waste to another firm's inputs.
 tableOfContents: false
 ---
 
+import Cite from '../../../components/Cite.astro';
 import FieldPage from '../../../components/FieldPage.astro';
 import SuggestPaper from '../../../components/SuggestPaper.astro';
 import TopicGaps from '../../../components/TopicGaps.astro';
 
-In industrial symbiosis, one firm's waste or by-product becomes another firm's input.
-Researchers use papers, patents and records of past exchanges to find possible matches.
+Industrial symbiosis turns one firm's waste or by-product into another firm's input.
+Researchers mine papers, patents and past exchange records to find candidate matches.
+
+In one study, a
+language model built a network of waste-to-resource links from papers and found 24 of
+45 known exchanges in Italy's Taranto district
+<Cite id="zhaoConstructionWastetoresourceKnowledge2025" />. Another model scored above
+0.82 F1 on its ecoinvent test set and 0.63–0.73 on 40 real exchanges
+<Cite id="zhaoNovelMachineLearningbased2025" />.
 
 <FieldPage ie="symbiosis" />
 
 ## Not mapped yet
 
-- **Recommender & matching systems.** These papers are tagged by the text methods they use.
-  See [gaps by field and technique](/applications-map/#where-the-gaps-meet).
+- **Recommender & matching systems.** Papers here are tagged by the text methods they use.
+  See [gaps by field and technique](/applications-map/#pairs-worth-trying).
   <SuggestPaper gap="Recommender & matching systems" />
 
 <TopicGaps ie="symbiosis" />

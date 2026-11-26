@@ -68,6 +68,7 @@
   year: 2022
   doi: "10.1145/3485128"
   blurb: "Maps potential uses of machine learning for climate action, from power grids to heavy industry."
+  topic: [energy]
   type: [review]
   added: 2026-11
 
@@ -177,7 +178,7 @@
   etAl: true
   year: 2025
   doi: "10.48550/arXiv.2510.19886"
-  blurb: "Experts judged 37% of responses inaccurate or misleading across 11 general-purpose models and 22 LCA tasks. Some models hallucinated citations at rates up to 40%."
+  blurb: "Experts found at least one inaccurate or misleading statement in 37.2% of responses across 11 general-purpose models and 22 LCA tasks. Some models hallucinated citations at rates up to 40%."
   ie: [lca]
   ml: [llm]
   type: [review]
@@ -529,6 +530,18 @@
   ml: [tabular-ml, uncertainty]
   type: [method]
   added: 2026-11
+- id: liArtificialIntelligencedrivenSustainable2026
+  title: "Artificial intelligence-driven sustainable polymers research: a lifecycle-integrated perspective"
+  authors: ["Li, H."]
+  etAl: true
+  year: 2026
+  doi: "10.1039/d6mh01944g"
+  blurb: "Reviews AI for polymers across feedstock, processing, use and end of life, from single-stage property prediction to optimisation that includes LCA and techno-economic analysis."
+  ie: [lca, circular]
+  topic: [chemicals]
+  ml: [tabular-ml]
+  type: [review]
+  added: 2026-11
 
 # ── Input-output ─────────────────────────────────────────────────────────────
 - id: balajiCaMLCarbonFootprinting2023
@@ -778,6 +791,7 @@
   doi: "10.1021/acs.est.5c01600"
   blurb: "Finds rooftop solar panels in satellite images and feeds a dynamic MFA of their recycling potential; CV and MFA in one pipeline."
   ie: [sem, circular]
+  topic: [energy]
   ml: [cv, remote-sensing]
   type: [method]
   added: 2026-07
@@ -917,6 +931,28 @@
   ml: [cv]
   type: [method, dataset]
   added: 2026-11
+- id: chenDetectingInterpretingPotential2026
+  title: "Detecting and interpreting potential illegal construction and demolition waste landfills using remote sensing and machine learning: evidence from Scotland"
+  authors: ["Chen, Y."]
+  etAl: true
+  year: 2026
+  doi: "10.1016/j.resconrec.2026.109243"
+  blurb: "A U-Net++ and DeepLabV3+ ensemble finds landfill-like ground disturbance in satellite images (IoU 0.67) and keeps 43 potential illegal C&D waste sites in three Scottish cities; XGBoost with SHAP links them mostly to low building density."
+  ie: [circular]
+  topic: [buildings]
+  ml: [remote-sensing, segmentation, tabular-ml]
+  type: [method]
+  added: 2026-11
+- id: buechelerIndustrialProductDocumentation2026
+  title: "From industrial product documentation to automated digital product passport generation: an experimental study of large language models"
+  authors: ["Buecheler, M.", "Richards, G.", "Hartman, N."]
+  year: 2026
+  arxiv: "2611.24998"
+  blurb: "Five LLMs with retrieval fill asset administration shell submodels for EU digital product passports from manufacturer documents; over 4,560 runs only 44.9% pass validation and 30.8% of fields are correct, against 60.4% by an LLM judge."
+  ie: [circular]
+  ml: [llm, nlp-extraction]
+  type: [method]
+  added: 2026-11
 
 # ── Industrial symbiosis ─────────────────────────────────────────────────────
 - id: zhaoConstructionWastetoresourceKnowledge2025
@@ -930,6 +966,50 @@
   ml: [llm, nlp-extraction]
   type: [method, dataset]
   added: 2026-11
+  evidence:
+    dataset:
+      identifier: "Zenodo 10.5281/zenodo.17438819"
+      url: "https://doi.org/10.5281/zenodo.17438819"
+      provenance: "Full texts of 77 review papers (1,180 valid chunks) plus abstracts, fused into W2RKG (3,518 waste entities, 4,471 resource entities, 33,679 waste-to-resource relationships)."
+      modality: "Text corpus (review papers and abstracts) and extracted knowledge graph."
+      access: "Annotated data, intermediate files and final database released on Zenodo and GitHub; raw full texts withheld due to copyright (DOIs provided)."
+      licence: "Not stated in paper for repository or dataset (paper is CC BY-NC-ND 4.0)."
+    task:
+      target: "Waste-to-resource (W2R) knowledge graph extraction and industrial symbiosis identification."
+      scope: "Literature-derived W2R relationships evaluated against the Maestri database, the Taranto industrial symbiosis benchmark, and a 100-relationship manual sample."
+      split: "No fixed train/test split reported for downstream evaluations; evaluated by manual check against Maestri, cosine-similarity matching (threshold 0.75) on Taranto, and 3-evaluator audit of 100 sampled relationships."
+      metric: "Recall on known Taranto exchanges; coverage of unique Maestri W2R relationships; alignment rates and Cohen's Kappa across 3 evaluators."
+      reference: "45 known Taranto industrial symbiosis exchanges; unique W2R relationships in Maestri; manual labels from 3 evaluators on 100 sampled relationships."
+    method:
+      repositories:
+        - label: "W2RKG-construction-with-LLMs (code and LoRA weights)"
+          url: "https://github.com/nancycyzl/W2RKG-construction-with-LLMs"
+        - label: "W2RKG_application (case study and interface)"
+          url: "https://github.com/nancycyzl/W2RKG_application"
+      revision: "Repository commit unverified."
+      model: "The authors built the graph with GPT-4o-mini. In a separate evaluation, they fine-tuned Llama-3.1-8B-Instruct with LoRA."
+    results:
+      - source: author-reported
+        metric: "Recall on Taranto industrial symbiosis benchmark"
+        value: "24 of 45 known exchanges (53%)"
+        uncertainty: "Not reported."
+        locator: "Results, 'W2RKG application and demonstration'."
+        setting: "Offline case study using cosine similarity at threshold 0.75."
+        limits: "Company matching uses cosine similarity only; literature-derived links require further verification for accuracy and practical viability (Discussion)."
+      - source: author-reported
+        metric: "Coverage of unique Maestri W2R relationships"
+        value: "58%"
+        uncertainty: "Not reported."
+        locator: "Results, 'W2RKG construction and quality assessment'."
+        setting: "Manual check of each unique W2R relationship in Maestri against W2RKG."
+        limits: "Single reference database; literature-derived links remain unverified in practice (Discussion)."
+      - source: author-reported
+        metric: "Manual alignment on 100 sampled relationships"
+        value: "90% waste_aligned, 87% resource_aligned"
+        uncertainty: "Inter-rater agreement across 3 evaluators (Cohen's Kappa): 0.54 waste_aligned, 0.41 waste_valid, 0.44 resource_aligned, 0.44 resource_valid (moderate)."
+        locator: "Results, 'W2RKG construction and quality assessment'."
+        setting: "Three human evaluators reviewing 100 sampled relationships."
+        limits: "Moderate inter-rater agreement (Kappa 0.41 to 0.54) and 100-link sample out of 33,679 relationships."
 - id: davisMachineLearningassistedIndustrial2022
   title: "Machine learning-assisted industrial symbiosis: testing the ability of word vectors to estimate similarity for material substitutions"
   authors: ["Davis, C.", "Aid, G."]

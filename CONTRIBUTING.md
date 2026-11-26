@@ -7,7 +7,8 @@
 [suggest a tool](../../issues/new?template=tool.yml),
 [suggest a course, video or post](../../issues/new?template=resource.yml) or
 [pick another suggestion form](../../issues/new?template=other.yml). A maintainer reviews
-the suggestion. The forms need a GitHub account. You can also post in the
+the suggestion. The forms need a GitHub account; without one, use the
+[contribution form on the site](https://ai4ie.org/contribute/). You can also post in the
 [AI4IE Discord](https://discord.gg/zhHAZakXHX).
 
 To make the change yourself:
@@ -159,7 +160,7 @@ Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUC
   starts with Fig. 1 on the home page.
 - In Markdown, set the title as `<p class="table-title"><b>Table 4.1</b> …</p>` and the source as `<p class="table-src">Source: …</p>`.
 - For a figure that counts entries at build time, see [`FlowFigure.astro`](src/components/FlowFigure.astro).
-- A new IE field needs four things beside its concept in the vocabulary: a short label, a `.field-<tag>` ink rule, a `<FieldApplications ie="<tag>" />` section on the map page, and its own page at `src/content/docs/applications-map/<tag>.mdx`. That page holds a short definition of the field, `<FieldPage ie="<tag>" />`, and the field's gaps; copy an existing one. The type check and `pnpm test` flag a missing one. Ink 6 is the one left, so a new field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md). A domain such as water or chemicals is a topic, not a field: topics take no ink.
+- A new IE field needs four things beside its concept in the vocabulary: a short label, a `.field-<tag>` ink rule, a link in the field list on the map page, and its own page at `src/content/docs/applications-map/<tag>.mdx`. That page holds a short definition of the field, what works today with `<Cite>` references, `<FieldPage ie="<tag>" />`, and the field's gaps; copy an existing one. The type check and `pnpm test` flag a missing one. Ink 6 is the one left, so a new field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md). A domain such as water or chemicals is a topic, not a field: topics take no ink.
 
 ### Checking accessibility
 

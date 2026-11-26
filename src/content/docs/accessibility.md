@@ -9,7 +9,7 @@ responsible for this page.
 ## How accessible the site is
 
 The site aims to meet [WCAG 2.2](https://www.w3.org/TR/WCAG22/) at level AA.
-Full conformance and screen reader use still need manual testing.
+I still need to test the site by hand, including with a screen reader, before I can claim full conformance.
 
 You can:
 
@@ -19,11 +19,11 @@ You can:
 
 ## Known problems
 
-The automated checks flag some contrast cases, such as text over a figure, for
-manual review. Those reviews are pending.
+The automated checks cannot judge some contrast cases, such as text over a figure.
+They flag these for a person to review, and I have not done those reviews yet.
 
-Other developers run the embedded Hugging Face demos. The site's accessibility
-checks cover the surrounding page.
+Other developers run the embedded Hugging Face demos. The site's checks cover the
+page around a demo, not the demo.
 
 ## How it is checked
 
@@ -33,7 +33,7 @@ These checks run on every proposed change:
   desktop and phone width, for WCAG 2.0, 2.1 and 2.2 level A and AA problems.
 - Every page is loaded at phone width and at 320 px with text at 200%, and the check fails if
   it scrolls sideways.
-- [Biome's accessibility rules](https://biomejs.dev/linter/rules/#a11y) check the code for
+- [Biome's accessibility rules](https://biomejs.dev/linter/html/rules/#a11y) check the code for
   problems such as missing alt text and invalid ARIA.
 
 You can read the pages with JavaScript off. Turn it on to use the filters, map
@@ -49,5 +49,5 @@ browser and assistive technology you use, if any. With a GitHub account you can 
 
 ## About this statement
 
-Self-assessed on 17 November 2026 using the checks above. The next review is due
-within 12 months.
+I assessed the site myself on 17 November 2026, using the checks above. The next
+review is due within 12 months.

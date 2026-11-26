@@ -1,5 +1,6 @@
 ---
-// Starlight's footer with a colophon above it: the mark as the page's end mark,
+// Starlight's footer (edit link, last updated, previous and next page) with a colophon
+// below it: the favicon tile as the page's end mark,
 // then the licences. The 404 page keeps the licences but drops the mark, since
 // its plate already shows it.
 import Default from "@astrojs/starlight/components/Footer.astro";
@@ -9,8 +10,9 @@ import Glyph from "../Glyph.astro";
 const is404 = Astro.locals.starlightRoute.entry.id === "404";
 ---
 
+<Default />
 <p class="colophon">
-  {!is404 && <Glyph />}
+  {!is404 && <Glyph tile />}
   <span>
     Content <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>{" · Code "}<a
       href={`${repoUrl}/blob/main/LICENSE`}>MIT</a
@@ -20,4 +22,3 @@ const is404 = Astro.locals.starlightRoute.entry.id === "404";
     >
   </span>
 </p>
-<Default />

@@ -1,23 +1,13 @@
 ---
 title: Map of AI applications in IE
 description: Browse AI applications in industrial ecology by field and technique.
-tableOfContents: false
 ---
 
 import ApplicationsSection from '../../../components/ApplicationsSection.astro';
-import FieldApplications from '../../../components/FieldApplications.astro';
-import Cite from '../../../components/Cite.astro';
 import SuggestPaper from '../../../components/SuggestPaper.astro';
 import TopicGaps from '../../../components/TopicGaps.astro';
 
-- [Life cycle assessment](#life-cycle-assessment)
-- [Socio-economic metabolism](#socio-economic-metabolism)
-- [Input-output](#input-output)
-- [Circular economy](#circular-economy)
-- [Industrial symbiosis](#industrial-symbiosis)
-- [Not mapped yet](#not-mapped-yet)
-
-This map is part of a proposal for the AI4IE working group. [Suggest a correction](repo:issues/new?template=other.yml).
+A proposal for the AI4IE working group. [Suggest a correction](/contribute/?type=other#send-a-contribution).
 
 ## Explore by technique
 
@@ -27,80 +17,24 @@ This map is part of a proposal for the AI4IE working group. [Suggest a correctio
 
 ## Applications by field
 
-### Life cycle assessment
+Each field has its own page with what works today, every mapped application and its papers.
 
-Researchers use machine learning to screen impacts and estimate missing inventory values.
-In two case studies, a fine-tuned large language model answered questions about inventory
-data in papers. Its answers scored 0.82 (methanol) and 0.86 (plastic packaging at end of
-life) on BERTScore F1, which measures how close the wording is to an expert's answer, not
-whether the numbers or units are right <Cite id="kumarLargeLanguageModelbased2025" />.
-Check retrieved values against the papers.
-In a separate benchmark of 11 general-purpose language models on 22 LCA tasks, experts
-judged 37% of responses inaccurate or misleading
-<Cite id="donaldsonExpertGroundedBenchmark2025" />.
-
-<FieldApplications ie="lca" />
-
-### Socio-economic metabolism
-
-This field includes material flow analysis (MFA) and stock modelling
-([Pauliuk & Hertwich, 2015](https://doi.org/10.1016/j.ecolecon.2015.08.012)).
-Researchers mapped building and infrastructure stocks in Austria and Germany at 10 m
-<Cite id="haberlHighResolutionMaps2021" />. A separate study mapped building stocks
-globally at 90 m and estimated 547 Gt in 2019 (391–672 Gt). Independent local estimates
-ranged from 53% to 200% of the corresponding mapped values
-<Cite id="haberlGlobalBuiltEnvironment2024" />.
-For material flows, Bayesian models combine expert estimates with reported data.
-One study estimated 146 flows and stock changes for construction aggregates in England
-<Cite id="masonBayesianMaterialFlow2025" />.
-
-<FieldApplications ie="sem" />
-
-### Input-output
-
-One study estimates values in next year's input-output tables with deep learning.
-It needs that year's row and column totals <Cite id="zhaoUsingDeepLearning2022" />.
-Another publishes emission factors
-derived from EXIOBASE for use in machine learning <Cite id="guoGlobalEmissionFactor2026" />.
-<SuggestPaper gap="Input-output" />
-
-<FieldApplications ie="eeio" />
-
-### Circular economy
-
-Most mapped applications here use computer vision. One study estimated the composition of
-shredded e-waste using images recorded on a pilot sorting line
-<Cite id="vogelgesangAutomatedMaterialFlow2025" />. In a washing machine study, software
-read model numbers in about 96% of usable repair photos and 40% of usable recycler photos
-<Cite id="sterkensProductLabelIdentification2023" />. The
-[computer vision worked example](/applications-map/cv-taxonomy/) gives the test conditions.
-
-<FieldApplications ie="circular" />
-
-### Industrial symbiosis
-
-Researchers look for firms that could use another firm's waste. In one study, a
-language model built a network of waste-to-resource links from papers and found 24 of
-45 known exchanges in Italy's Taranto district
-<Cite id="zhaoConstructionWastetoresourceKnowledge2025" />. Another model scored above
-0.82 F1 on held-out ecoinvent data and 0.63–0.73 on 40 real exchanges
-<Cite id="zhaoNovelMachineLearningbased2025" />.
-
-<FieldApplications ie="symbiosis" />
+- <span id="life-cycle-assessment"></span>[Life cycle assessment](/applications-map/lca/): screening impacts, estimating missing inventory values and extracting data from papers.
+- <span id="socio-economic-metabolism"></span>[Socio-economic metabolism](/applications-map/sem/): mapping building stocks from imagery and estimating material flows.
+- <span id="input-output"></span>[Input-output](/applications-map/eeio/): estimating table values and emission factors.
+- <span id="circular-economy"></span>[Circular economy](/applications-map/circular/): computer vision for waste, products and components.
+- <span id="industrial-symbiosis"></span>[Industrial symbiosis](/applications-map/symbiosis/): matching one firm's waste to another firm's inputs.
 
 ## Not mapped yet
 
-These gaps are in this collection. [Map an application](repo:issues/new?template=application.yml)
-or use a link below to suggest a paper.
+[Map an application](/contribute/?type=other&title=Application%3A+#send-a-contribution) or suggest a paper for any gap below.
 
 ### ISIE sections with no field
 
 - **Sustainable urban systems.** The collection covers building stocks, but has no field for the ISIE's work on cities.
   <SuggestPaper gap="Sustainable urban systems" />
 
-### Topics with few entries
-
-Topics with fewer than three entries in the reading list.
+### Topics with fewer than three papers
 
 <TopicGaps />
 
@@ -126,13 +60,9 @@ Topics with fewer than three entries in the reading list.
 - **Explainability.** Checking what drove a model's result.
   <SuggestPaper gap="Explainability" />
 
-### Where the gaps meet
+### Pairs worth trying
 
 - Chemicals × graph neural networks
 - Scenarios × surrogates
 - Symbiosis × matching
 - Circular economy × reinforcement learning
-
-## Deeper dives
-
-[Computer vision for product-scale data collection](/applications-map/cv-taxonomy/)

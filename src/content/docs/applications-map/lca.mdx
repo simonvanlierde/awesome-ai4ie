@@ -1,24 +1,32 @@
 ---
 title: AI in life cycle assessment (LCA)
-description: Look up AI applications and papers on life cycle assessment, from impact screening to inventory extraction.
+description: AI applications and papers on life cycle assessment, from impact screening to inventory extraction.
 tableOfContents: false
 ---
 
+import Cite from '../../../components/Cite.astro';
 import FieldPage from '../../../components/FieldPage.astro';
 import SuggestPaper from '../../../components/SuggestPaper.astro';
 import TopicGaps from '../../../components/TopicGaps.astro';
 
-Life cycle assessment (LCA) estimates environmental impacts from raw materials through
-disposal. These applications use AI to screen impacts, estimate missing inventory values
-and retrieve data from papers and reports.
+Life cycle assessment (LCA) estimates environmental impacts from raw materials to
+disposal. The applications below use AI to screen impacts, estimate missing inventory
+values and extract data from papers.
+
+In two case studies, a fine-tuned large language model answered questions about inventory
+data in papers. Its answers scored 0.82 (methanol) and 0.86 (plastic packaging at end of
+life) on BERTScore F1, which measures how close the wording is to an expert's answer, not
+whether the numbers or units are right <Cite id="kumarLargeLanguageModelbased2025" />.
+Check retrieved values against the papers.
+In a benchmark of 11 general-purpose language models on 22 LCA tasks, experts found at
+least one inaccurate or misleading statement in 37.2% of responses
+<Cite id="donaldsonExpertGroundedBenchmark2025" />.
 
 <FieldPage ie="lca" />
 
 ## Not mapped yet
 
-- **Knowledge graphs & ontologies.** Connecting inventory terms and matching flows across datasets.
+- **Knowledge graphs & ontologies.** Linking inventory terms and matching flows across datasets.
   <SuggestPaper gap="Knowledge graphs & ontologies" />
-- **Recommender & matching systems.** Matching products to emission factors.
-  <SuggestPaper gap="Recommender & matching systems" />
 
 <TopicGaps ie="lca" />

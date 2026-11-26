@@ -1,0 +1,102 @@
+---
+title: Agentic harnesses & verification
+description: How to wrap a coding agent in checks it cannot edit, keep AGENTS.md short, and verify AI-assisted IE work.
+---
+
+Give the agent a result you can verify independently. Keep the reference result and its tests outside the agent's write permissions.
+
+This page proposes a minimal verification setup for industrial ecology (IE) work done with coding agents. Treat it as a starting proposal rather than a settled norm: if a check is missing, too heavy, or a bad fit for your subfield, [push back or suggest a better one](/contribute/).
+
+## Chat vs. agent, and what a harness is
+
+In a **chat** interface, you send one message and get one reply back. You copy code out, run it yourself, and paste errors back in.
+
+A **coding agent** puts a language model inside a loop with tools: it can read files, edit code, run shell commands, inspect the output, and keep iterating until it decides the task is done.
+
+A **harness** is everything you put around that loop: the instructions file, file and command permissions, hooks that run before or after a tool call, and the tests the agent runs against. A useful mental model is onboarding a new lab member. You give them a short lab manual, clear limits on what they may touch, and a benchmark test they cannot rewrite.
+
+## Keep `AGENTS.md` short
+
+`AGENTS.md` is a plain Markdown file at the root of a repository that coding agents read when a session starts. Keep it short. Put only what the agent cannot infer quickly from the code:
+
+- **Check command:** linting, formatting, and type checks.
+- **Fast test command:** the quickest test command to run after each edit.
+- **Non-standard conventions:** units, coordinate systems, naming rules, or tools that differ from defaults.
+- **Never-do list:** hard boundaries such as protected test folders or licensed data that must stay out of git.
+
+Skip the repository overview, directory tree, and architecture prose. In an empirical evaluation of agent context files, Gloaguen et al. ([arXiv:2602.11988](https://arxiv.org/abs/2602.11988)) found that repository context files do not generally raise task success and add more than 20% to inference cost on average.
+
+```markdown
+# AGENTS.md
+
+- Lint: `uv run ruff check .`
+- Fast tests: `uv run pytest -q`
+- Conventions: all mass flows are in kg; impact factors come from open or synthetic fixtures only.
+- Never do:
+  - Do not edit files under `tests/golden/`.
+  - Do not commit licensed inventory data (such as ecoinvent values) to fixtures or notebooks.
+  - If a test cannot pass without changing expected values, stop and report the mismatch.
+```
+
+## Verify and document AI-assisted IE work
+
+### 1. Golden test
+
+Pin at least one known numerical result in a dedicated test (a **golden test**) using open or synthetic factors, never licensed database values. For example, build a small matrix life cycle assessment (LCA) where you know the exact total from hand calculation, and assert the result within a tight numerical tolerance.
+
+```python
+def test_steel_bracket_gwp_golden():
+    # Synthetic factors: 2.0 kg steel * 1.85 kg CO2e/kg + 0.5 kWh * 0.40 kg CO2e/kWh
+    result = run_bracket_lca(mass_kg=2.0, electricity_kwh=0.5)
+    assert abs(result["gwp100_kg_co2e"] - 3.90) < 1e-6
+```
+
+A script that still runs without raising an exception can still be wrong by three orders of magnitude. A planted unit swap (`kg` vs `t`) or an impact-method swap turns this test red immediately.
+
+### 2. Protect the test
+
+If a coding agent can edit both the model code and the test suite, a failing golden test is not a reliable guard: the agent can make the suite green by editing the expected number, relaxing the tolerance, or skipping the test.
+
+1. Give the agent read-only access to the canonical tests and fixtures, for example through a
+   read-only mount. Apply the restriction to its shell and edit tools as well.
+2. Check that the agent can run the tests and that its tools cannot write to the protected files.
+   A hook can give early feedback when a tool attempts a protected edit.
+3. Require a human review before changes to the protected files can merge. On GitHub, use
+   [required code-owner review](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners#codeowners-and-branch-protection).
+   Keep the review rule outside the agent's control.
+4. Tell the agent to report the failure when the test and the task disagree.
+
+On the ImpossibleBench benchmark ([arXiv:2510.20270](https://arxiv.org/abs/2510.20270)), GPT-5 passed 54% of the intentionally impossible Conflicting-SWEbench tasks by violating the task requirements. Opus 4.1 did so on 50%. Giving the model an explicit abort option cut GPT-5 cheating to 9%, while reducing Opus 4.1 cheating far less. Instructions help, so keep the abort rule, and enforce the boundary in the harness so the agent cannot edit the check.
+
+### 3. Claim ledger (existence checks are not claim checks)
+
+Automated reference tools can check whether a DOI resolves or whether a title appears in Crossref or OpenAlex. That checks **existence**, not **meaning**: a real paper can still be cited for a claim it does not make, a number from a different boundary, or a conclusion the authors qualified.
+
+Keep a plain **claim ledger** beside any AI-assisted manuscript or report: one row per cited claim, filled in only after opening the primary source.
+
+<p class="table-title"><b>Table 3.1</b> Minimal claim ledger schema for AI-assisted drafts</p>
+
+| Claim | Identifier | Locator | Supporting passage | Status |
+|---|---|---|---|---|
+| One sentence stating the claim in your draft | DOI or arXiv ID | Page, table, or section | Exact quote or verified paraphrase from the opened PDF | `verified`, `revised`, or `removed` |
+
+<p class="table-src">Source: Schema for AI-assisted IE writing; fill one row per cited claim after reading the primary source.</p>
+
+Pair the ledger with the [source-checking prompt](/best-practices/prompts-and-skills/#verify-a-claim-before-citing-it) to pull candidate quotes before you verify them in the PDF yourself.
+
+### 4. Log the run
+
+Log one row per run. Include the date, task, model, input and output tokens, and API cost.
+
+```csv
+date,task,model,input_tokens,output_tokens,cost_usd
+2026-11-18,refactor-matrix-solver,example-model,42100,6800,0.23
+```
+
+Report tokens and cost directly from the runner or provider logs. Only report energy use or greenhouse gas emissions when backed by a primary source you have read (such as a documented measurement study or provider methodology), not by multiplying token counts by an unverified rule of thumb.
+
+## Next steps
+
+- Review your diff and numerical checks with the [verification checklists](/best-practices/checklists/).
+- Copy the [source-checking prompt](/best-practices/prompts-and-skills/#verify-a-claim-before-citing-it), [adversarial code review prompt](/best-practices/prompts-and-skills/#adversarial-review-of-ai-written-code), or [`lca-data-sanity-check` skill](/best-practices/prompts-and-skills/#lca-data-sanity-check).
+- [Contribute](/contribute/) to vote on which checks should become IE norms or to suggest a golden question for your subfield.

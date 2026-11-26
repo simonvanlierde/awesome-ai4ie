@@ -8,7 +8,7 @@
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": "./dist",
-    // The Worker reads literature-index.json from here.
+    // The Worker reads literature-index.json and literature-vectors.bin from here.
     "binding": "ASSETS",
     // Only /api/* and /mcp run the Worker; every other request is a static file, which is not
     // billed or counted against the free plan's daily requests.
@@ -17,6 +17,8 @@
   },
   // Workers AI always runs remotely, in `wrangler dev` too (needs `wrangler login`).
   "ai": { "binding": "AI", "remote": true },
+  "durable_objects": { "bindings": [{ "name": "POLL", "class_name": "Poll" }] },
+  "migrations": [{ "tag": "poll-v1", "new_sqlite_classes": ["Poll"] }],
   "ratelimits": [
     {
       "name": "SEARCH_LIMIT",
@@ -24,14 +26,48 @@
       "namespace_id": "1001",
       // Per visitor IP: a reader types far slower; a script hitting the endpoint does not.
       "simple": { "limit": 30, "period": 60 }
+    },
+    {
+      "name": "SEARCH_LIMIT_GLOBAL",
+      "namespace_id": "1003",
+      // All visitors at one Cloudflare location, keyed on a constant: an approximate brake on AI
+      // spend when many IPs search at once, not a worldwide cap (Cloudflare counts per location,
+      // eventually consistent). A flood from many IPs also blocks readers at that location.
+      "simple": { "limit": 300, "period": 60 }
+    },
+    {
+      "name": "CONTRIBUTE_LIMIT",
+      "namespace_id": "1005",
+      "simple": { "limit": 10, "period": 60 }
+    },
+    {
+      "name": "CONTRIBUTE_LIMIT_GLOBAL",
+      "namespace_id": "1007",
+      "simple": { "limit": 60, "period": 60 }
     }
   ],
   // Settings for `wrangler preview`. Previews inherit no bindings, so they repeat them; their
   // own limiter namespace keeps Preview traffic off production's counter.
   "previews": {
     "ai": { "binding": "AI", "remote": true },
+    "durable_objects": { "bindings": [{ "name": "POLL", "class_name": "Poll" }] },
     "ratelimits": [
-      { "name": "SEARCH_LIMIT", "namespace_id": "1002", "simple": { "limit": 30, "period": 60 } }
+      { "name": "SEARCH_LIMIT", "namespace_id": "1002", "simple": { "limit": 30, "period": 60 } },
+      {
+        "name": "SEARCH_LIMIT_GLOBAL",
+        "namespace_id": "1004",
+        "simple": { "limit": 300, "period": 60 }
+      },
+      {
+        "name": "CONTRIBUTE_LIMIT",
+        "namespace_id": "1006",
+        "simple": { "limit": 10, "period": 60 }
+      },
+      {
+        "name": "CONTRIBUTE_LIMIT_GLOBAL",
+        "namespace_id": "1008",
+        "simple": { "limit": 60, "period": 60 }
+      }
     ]
   },
   "observability": { "enabled": true }

@@ -26,12 +26,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
-        with:
-          runtime: node@26
-          cache: true
-          install: false
-      - run: pnpm install --frozen-lockfile
+      - uses: $/.github/actions/setup-pnpm
       - name: Lint & format check
         run: pnpm run lint
       - name: Dependency licences
@@ -65,6 +60,13 @@ jobs:
       # withastro/action has no node-version-file input, so read .nvmrc here.
       - id: node
         run: echo "version=$(cat .nvmrc)" >> "$GITHUB_OUTPUT"
+      # Brings back the last build's vectors so `pnpm run embed` only embeds changed entries.
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        if: env.EMBED == 'true'
+        with:
+          path: src/data/literature-vectors.json
+          key: literature-vectors-${{ github.run_id }}
+          restore-keys: literature-vectors-
       # Builds the Astro site (also validates internal links) and uploads the Pages artifact.
       # Before the build it embeds the reading list for meaning search with Workers AI, which
       # literature-index.json then ships. A fork's pull request gets no secrets, so it
@@ -74,19 +76,31 @@ jobs:
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
         with:
           node-version: ${{ steps.node.outputs.version }}
           build-cmd: ${{ env.EMBED == 'true' && 'pnpm run embed && pnpm run build' || 'pnpm run build' }}
+      - name: Configured Turnstile key is present in the build
+        if: vars.PUBLIC_TURNSTILE_SITE_KEY != ''
+        env:
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
+        run: grep -Fq "data-turnstile-site-key=\"$PUBLIC_TURNSTILE_SITE_KEY\"" dist/contribute/index.html
+      # Rows 0 to n-1, each named once, and 4096 bytes a row: the embedding model gives
+      # 1024 float32 values.
       - name: Every entry has a vector
         if: env.EMBED == 'true'
-        run: jq -e 'length > 0 and all(.[]; .vector)' dist/literature-index.json
+        run: >-
+          jq -e --argjson bytes "$(stat -c %s dist/literature-vectors.bin)"
+          'length > 0 and ([.[].vectorRow] | sort) == [range(length)]
+          and $bytes == length * 4096'
+          dist/literature-index.json
       # The Worker's tests use hand-written fixtures; this checks the build gives what they mimic.
       - name: Worker data has the fields the tools read
         run: |
           jq -e 'length > 0 and all(.[]; .id and .title and .href and .year)' dist/literature-index.json
           jq -e '(.applications | length > 0) and (.resources | length > 0) and (.skills | length > 0)
-            and all(.applications[]; .id and .name and .ie and .ml)
-            and all(.resources[]; .id and .title and .kind and .ie and .topic)' dist/mcp-data.json
+            and all(.applications[]; .id and .name and .ie and .ml and .href)
+            and all(.resources[]; .id and .title and .url and .kind and .ie and .topic)' dist/mcp-data.json
       - name: Page weight budget
         run: pnpm run page-weight
       # The vocabulary against SkoHub Vocabs' SHACL shape, pinned to a commit of
@@ -145,12 +159,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
-        with:
-          runtime: node@26
-          cache: true
-          install: false
-      - run: pnpm install --frozen-lockfile
+      - uses: $/.github/actions/setup-pnpm
       # The build job's Pages artifact: dist/ as one tar file.
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
@@ -161,6 +170,14 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: pnpm exec wrangler deploy --message "${GITHUB_SHA::7}"
+      # A liveness check: production answers a search. It cannot tell the new version from the
+      # old one; curl retries while the deploy goes live.
+      - name: Meaning search answers on production
+        shell: bash
+        run: >-
+          curl -fsS --retry 6 --retry-all-errors --retry-delay 10 -X POST
+          https://awesome-ai4ie.simonvanlierde.workers.dev/api/search -H 'content-type: application/json'
+          -d '{"q": "which papers map building stocks from satellites?"}' | jq -e '.hits | length > 0'
 
   # Fork pull requests get no secrets, and drafts are not ready to show, so preview skips them.
   preview:
@@ -174,6 +191,8 @@ jobs:
     permissions:
       contents: read
       pull-requests: read
+    outputs:
+      url: ${{ steps.preview.outputs.url }}
     # Shared with preview-retire.yml, so a deletion waits for an upload in flight.
     concurrency:
       group: preview-${{ github.event.pull_request.number }}
@@ -202,14 +221,8 @@ jobs:
         if: steps.policy.outputs.deploy == 'true'
         with:
           persist-credentials: false
-      - uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
+      - uses: $/.github/actions/setup-pnpm
         if: steps.policy.outputs.deploy == 'true'
-        with:
-          runtime: node@26
-          cache: true
-          install: false
-      - if: steps.policy.outputs.deploy == 'true'
-        run: pnpm install --frozen-lockfile
       # The build job's Pages artifact: dist/ as one tar file.
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         if: steps.policy.outputs.deploy == 'true'
@@ -251,3 +264,28 @@ jobs:
           -H 'content-type: application/json' -H 'accept: application/json, text/event-stream'
           -d '{"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "list_applications", "arguments": {}}}'
           | sed -n -e 's/^data: //' -e '/^{/p' | jq -e '.result.isError == false'
+
+  # Posts the Preview's address as one pull request comment, edited on each push. A job of its
+  # own, so the write token never shares a runner with wrangler and the installed packages.
+  # It also runs when the checks above fail, so a failing Preview still shows its link.
+  preview-comment:
+    needs: preview
+    if: ${{ !cancelled() && needs.preview.outputs.url != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/scripts
+      - name: Comment the Preview address
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+          URL: ${{ needs.preview.outputs.url }}
+        run: '"$GITHUB_WORKSPACE/.github/scripts/preview-comment.sh" Preview "$URL"'

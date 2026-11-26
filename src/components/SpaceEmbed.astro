@@ -5,30 +5,56 @@
  * the plain link remains.
  */
 interface Props {
+  /** Numbered figure label (e.g. "Fig. 2"), continuing from Fig. 1 on the home page. */
+  figure: string;
   title: string;
   /** The Space page on huggingface.co. */
   href: string;
   /** The URL the iframe loads (the Space's *.hf.space app). */
   src: string;
 }
-const { title, href, src } = Astro.props;
+const { figure, title, href, src } = Astro.props;
 ---
 
-<space-embed class="space-embed not-content" data-src={src} data-title={`Demo: ${title}`}>
-  <p><a href={href}>Open {title} on Hugging Face</a></p>
-  <button type="button" class="space-embed-load" aria-label={`Load demo for ${title}`} hidden>
-    Load demo
-  </button>
-</space-embed>
+<figure class="space-embed-figure not-content">
+  <space-embed class="space-embed" data-src={src} data-title={`Demo: ${title}`}>
+    <div class="space-embed-bar">
+      <span class="space-embed-title">{title}</span>
+      <a class="space-embed-link" href={href}>Open {title} on Hugging Face</a>
+    </div>
+    <div role="status" class="space-embed-status"></div>
+    <button type="button" class="space-embed-load" aria-label={`Load demo for ${title}`} hidden>
+      Load demo
+    </button>
+  </space-embed>
+  <figcaption class="space-embed-caption">
+    <b>{figure}</b> {title} on Hugging Face Spaces.
+  </figcaption>
+</figure>
 
 <script>
   class SpaceEmbed extends HTMLElement {
     connectedCallback() {
       const button = this.querySelector("button");
-      if (!button) return;
+      const status = this.querySelector('[role="status"]');
+      if (!button || !status) return;
       button.hidden = false;
       button.addEventListener("click", () => {
+        if (!navigator.onLine) {
+          status.textContent = "You're offline. Reconnect and try again.";
+          return;
+        }
+        status.textContent = "Loading demo from Hugging Face…";
+        const timer = setTimeout(() => {
+          status.textContent = "Still loading. You can also use the Hugging Face link above.";
+        }, 10000);
         const iframe = document.createElement("iframe");
+        // The load event can also fire for blocked frames. Keep the direct
+        // link available and use this event only to stop the loading message.
+        iframe.addEventListener("load", () => {
+          clearTimeout(timer);
+          status.textContent = "";
+        }, { once: true });
         iframe.src = this.dataset.src ?? "";
         iframe.title = this.dataset.title ?? "";
         iframe.referrerPolicy = "no-referrer";

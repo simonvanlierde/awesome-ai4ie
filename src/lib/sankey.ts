@@ -1,6 +1,31 @@
 import { TAGS } from "../data/tags";
 
-type Tagged = { ie?: readonly string[]; ml?: readonly string[] };
+type Tagged = {
+  ie?: readonly string[];
+  ml?: readonly string[];
+  topic?: readonly string[];
+};
+
+export type TopicLens = {
+  tag: string;
+  /** Distinct papers in the flow that carry this topic. */
+  papers: number;
+  /** Distinct IE fields reached by this topic's papers in the flow. */
+  fields: number;
+  /** Matching `ie|ml` band keys, deduplicated. */
+  bands: string[];
+};
+
+function flowEntries(entries: readonly Tagged[]) {
+  // A tag listed twice on one entry still counts once, as the literature filter does.
+  return entries
+    .map((e) => ({
+      ie: [...new Set(e.ie ?? [])],
+      ml: [...new Set(e.ml ?? [])],
+      topic: [...new Set(e.topic ?? [])],
+    }))
+    .filter((e) => e.ie.length > 0 && e.ml.length > 0);
+}
 
 export type SankeyNode = {
   tag: string;
@@ -28,14 +53,13 @@ export type SankeyBand = {
  * carry the pair. An entry with two fields and two techniques sits in four
  * bands, so band and node heights count pairings (`total`). A node's `papers`
  * counts distinct entries, which is what the filtered literature list shows.
- * Both columns share one scale and stack in vocabulary order, `gap` apart,
- * within `height`.
+ * Both columns share one scale and stack in vocabulary order. The column
+ * with more nodes sits `gap` apart and sets the scale; the other spreads its
+ * spare height over wider gaps, so both columns span the full `height` (a
+ * one-node column does not).
  */
 export function sankeyLayout(entries: readonly Tagged[], height: number, gap: number) {
-  // A tag listed twice on one entry still counts once, as the literature filter does.
-  const flow = entries
-    .map((e) => ({ ie: [...new Set(e.ie ?? [])], ml: [...new Set(e.ml ?? [])] }))
-    .filter((e) => e.ie.length > 0 && e.ml.length > 0);
+  const flow = flowEntries(entries);
 
   const counts = new Map<string, number>();
   for (const e of flow)
@@ -61,10 +85,11 @@ export function sankeyLayout(entries: readonly Tagged[], height: number, gap: nu
   const k = total ? Math.min(...[ies, mls].map((s) => (height - gap * (s.length - 1)) / total)) : 0;
 
   const stack = (nodes: Omit<SankeyNode, "y" | "h">[]): SankeyNode[] => {
+    const spread = nodes.length > 1 ? (height - total * k) / (nodes.length - 1) : 0;
     let y = 0;
     return nodes.map((n) => {
       const node = { ...n, y, h: n.count * k };
-      y += node.h + gap;
+      y += node.h + spread;
       return node;
     });
   };
@@ -99,4 +124,47 @@ export function sankeyLayout(entries: readonly Tagged[], height: number, gap: nu
 export function missingTechniques(mlNodes: readonly { tag: string }[]): string[] {
   const inFlow = new Set(mlNodes.map((n) => n.tag));
   return Object.keys(TAGS.ml).filter((t) => !inFlow.has(t));
+}
+
+/** Per-topic reach across Fig. 1, in vocabulary order, omitting topics with no
+ * paper in the flow. Only entries with both an IE field and an AI technique
+ * take part, matching sankeyLayout. */
+export function topicLenses(entries: readonly Tagged[]): TopicLens[] {
+  const flow = flowEntries(entries);
+  const lenses: TopicLens[] = [];
+  for (const tag of Object.keys(TAGS.topic)) {
+    const matched = flow.filter((e) => e.topic.includes(tag));
+    if (matched.length === 0) continue;
+    const fields = new Set<string>();
+    const bands = new Set<string>();
+    for (const e of matched) {
+      for (const ie of e.ie) {
+        fields.add(ie);
+        for (const ml of e.ml) {
+          bands.add(`${ie}|${ml}`);
+        }
+      }
+    }
+    lenses.push({
+      tag,
+      papers: matched.length,
+      fields: fields.size,
+      bands: [...bands],
+    });
+  }
+  return lenses;
+}
+
+type Ends = { y0: number; y1: number; h: number };
+
+/** A band's outline from x `a` to x `b`: two horizontal-tangent curves, one per edge. */
+export function bandPath(a: number, b: number, { y0, y1, h }: Ends): string {
+  const mid = (a + b) / 2;
+  return `M${a} ${y0}C${mid} ${y0} ${mid} ${y1} ${b} ${y1}V${y1 + h}C${mid} ${y1 + h} ${mid} ${y0 + h} ${a} ${y0 + h}Z`;
+}
+
+/** The curve through a band's middle, which the entrance mask strokes along. */
+export function spinePath(a: number, b: number, { y0, y1, h }: Ends): string {
+  const mid = (a + b) / 2;
+  return `M${a} ${y0 + h / 2}C${mid} ${y0 + h / 2} ${mid} ${y1 + h / 2} ${b} ${y1 + h / 2}`;
 }

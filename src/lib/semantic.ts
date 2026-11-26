@@ -3,6 +3,8 @@
 // (worker/index.ts), both with this Workers AI model; the Worker ranks by cosine similarity.
 
 export const EMBED_MODEL = "@cf/qwen/qwen3-embedding-0.6b";
+/** Length of the vectors EMBED_MODEL gives. */
+export const EMBED_DIM = 1024;
 
 // Qwen3 embeds a query after a one-line task instruction and a document as is. On
 // search-eval.yaml the instruction put the right paper first for all 30 in-list
@@ -32,9 +34,9 @@ export type IndexEntry = {
   status?: "proposal";
   href: string;
   bibtex?: string;
-  /** Base64 float32 vector computed at build time (src/lib/vectors.ts); missing in a
-   * build that skipped `pnpm run embed`, and then the entry is not searched. */
-  vector?: string;
+  /** The entry's row in literature-vectors.bin (src/lib/vectors.ts); missing in a build
+   * that skipped `pnpm run embed`, and then the entry is not searched. */
+  vectorRow?: number;
 };
 
 /** The vector scaled to length 1, so a dot product of two is their cosine. */
@@ -45,8 +47,7 @@ export function unit(v: number[]): number[] {
 
 /** Reverses encodeVector() in src/lib/vectors.ts. */
 export function decodeVector(b64: string): Float32Array {
-  // A plain loop: Uint8Array.from with a mapper plus Array.from took about 20 times longer,
-  // and a cold Worker decodes every vector inside its CPU budget.
+  // A plain loop: Uint8Array.from with a mapper plus Array.from took about 20 times longer.
   const s = atob(b64);
   const bytes = new Uint8Array(s.length);
   for (let i = 0; i < s.length; i++) bytes[i] = s.charCodeAt(i);
@@ -64,8 +65,10 @@ export function entryText(e: {
   return `${e.title}. ${e.blurb} Tags: ${[...(e.ie ?? []), ...(e.ml ?? []), ...(e.type ?? [])].join(", ")}`;
 }
 
-// Cut-off for EMBED_MODEL and queryText(), tuned on src/data/search-eval.yaml with
-// scripts/search-eval.mjs; a model or instruction change needs a new tuning. On that
+// Cut-off for EMBED_MODEL and queryText(), tuned on all of src/data/search-eval.yaml with
+// scripts/search-eval.mjs; retune on its tuning half only (isHeldOut in
+// scripts/lib/eval-metrics.mjs) so the held-out half stays out of sample. A model or
+// instruction change needs a new tuning. On that
 // set the off-list questions score at most 0.495 and the weakest right answer 0.608.
 export const MIN_SCORE = 0.55;
 export const MAX_HITS = 5;

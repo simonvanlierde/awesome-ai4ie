@@ -49,6 +49,23 @@ describe("literature.yaml", () => {
     expect(literatureSchema.parse({ ...lit[0], status: "proposal" }).status).toBe("proposal");
     expect(literatureSchema.safeParse({ ...lit[0], status: "vetted" }).success).toBe(false);
   });
+  it("validates linked evaluation evidence and distinguishes author-reported from reproduced", () => {
+    const withEvidence = lit.find((e) => e.id === "zhaoConstructionWastetoresourceKnowledge2025");
+    const parsed = literatureSchema.parse(withEvidence);
+    expect(parsed.evidence?.results[0]?.source).toBe("author-reported");
+    const badSource = structuredClone(withEvidence) as Record<string, unknown>;
+    (
+      (badSource.evidence as { results: { source: string }[] }).results[0] as { source: string }
+    ).source = "estimated";
+    expect(literatureSchema.safeParse(badSource).success).toBe(false);
+    const missingUncertainty = structuredClone(withEvidence) as Record<string, unknown>;
+    (
+      (missingUncertainty.evidence as { results: { uncertainty: string }[] }).results[0] as {
+        uncertainty: string;
+      }
+    ).uncertainty = "";
+    expect(literatureSchema.safeParse(missingUncertainty).success).toBe(false);
+  });
 });
 
 describe("applications.yaml", () => {

@@ -4,7 +4,7 @@
 // closest literature entries above the keyword results, from the site's /api/search
 // Worker (worker/index.ts).
 import Default from "@astrojs/starlight/components/Search.astro";
-import { issueUrl, siteUrl } from "../../lib/urls";
+import { contributeUrl, siteUrl } from "../../lib/urls";
 ---
 
 <Default />
@@ -18,7 +18,7 @@ import { issueUrl, siteUrl } from "../../lib/urls";
   <p class="ss-status" role="status"></p>
   <ol class="ss-results" aria-label="Related papers"></ol>
   <p class="ss-gap" hidden>
-    <a href={issueUrl("paper")}>Suggest a paper on GitHub</a>
+    <a href={contributeUrl("resource")}>Suggest a paper</a>
   </p>
 </semantic-search>
 
@@ -84,6 +84,8 @@ import { issueUrl, siteUrl } from "../../lib/urls";
         clearTimeout(timer);
         const q = input?.value.trim() ?? "";
         const mine = ++seq;
+        // The input can change before the next debounced request starts.
+        const isCurrent = () => mine === seq && input?.value.trim() === q;
         if (!served) return;
         if (!isPhrase(q)) {
           show([], "");
@@ -91,7 +93,7 @@ import { issueUrl, siteUrl } from "../../lib/urls";
         }
         try {
           const { status, hits } = await search(q);
-          if (mine !== seq) return; // a newer query owns the results
+          if (!isCurrent()) return;
           const n = hits.length;
           if (NOT_SERVED.includes(status)) {
             served = false;
@@ -106,7 +108,7 @@ import { issueUrl, siteUrl } from "../../lib/urls";
         } catch (err) {
           // biome-ignore lint/suspicious/noConsole: the status line cannot show the cause; the console keeps it for debugging
           console.error(err);
-          if (mine !== seq) return;
+          if (!isCurrent()) return;
           show([], "Paper search did not respond. Check your connection and try again.");
         }
       };

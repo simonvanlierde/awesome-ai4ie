@@ -37,12 +37,15 @@ const CARD_CSS = `
   #og .flow .pour { animation: none; }
   #og .flow svg { display: block; width: 1200px; max-width: none; height: 232px; margin: 0; overflow: visible; }
   #og .flow text { font-size: 26px; }
+  #og .flow [data-dim="ml"] text { font-size: 22px; }
 `;
 
 const browser = await chromium.launch();
 const page = await browser.newPage({
   viewport: { width: 1200, height: 630 },
   colorScheme: "light",
+  // The settled page, without the entrance.
+  reducedMotion: "reduce",
   // The card CSS is an injected style, which the page's style-src would block.
   bypassCSP: true,
 });
@@ -57,22 +60,27 @@ await page.evaluate(
     card.innerHTML = `<div class="col glyph">${glyphSvg}</div><div class="col url">${host}</div>
       <p class="col line">${text}</p>`;
     card.append(h1, flow);
+    // The card has its own, larger tile beside the title.
+    h1.querySelector(".glyph")?.remove();
     document.body.replaceChildren(card);
     document
-      .querySelectorAll(
-        "#og .flow figcaption, #og .flow-readout, #og .flow-hit, #og .flow-plate--wide, #og .cover-endmark",
-      )
+      .querySelectorAll("#og .flow figcaption, #og .flow-readout, #og .flow-hit")
       .forEach((el) => {
         el.remove();
       });
 
     // Stretch the figure from its box to the card: bands run long, labels keep their size.
-    // The card stretches the compact plate. X0 and X1 are where its bands start and end:
-    // X0 + NODE and the compact X1 in FlowFigure.astro.
-    const svg = flow.querySelector("svg");
-    svg.setAttribute("viewBox", "0 0 1200 232");
+    // The page's script fitted the plate and wrote where its bands start and end. A copy
+    // replaces it, so that script's resize observer does not fit it again.
+    const fitted = flow.querySelector("svg");
+    if (!fitted.dataset.x1) throw new Error("Fig. 1 was not fitted: its svg has no data-x1");
+    const svg = fitted.cloneNode(true);
+    fitted.replaceWith(svg);
+    const H = svg.viewBox.baseVal.height;
+    const height = 232;
+    svg.setAttribute("viewBox", `0 0 1200 ${height}`);
     svg.removeAttribute("width");
-    const [X0, X1, SY, LEFT, RIGHT] = [268, 500, 232 / 420, 300, 900];
+    const [X0, X1, SY, LEFT, RIGHT] = [+svg.dataset.x0, +svg.dataset.x1, height / H, 300, 900];
     const sx = (RIGHT - LEFT) / (X1 - X0);
     const bands = svg.querySelector(".flow-bands");
     bands.setAttribute("transform", `translate(${LEFT - X0 * sx} 0) scale(${sx} ${SY})`);
@@ -82,20 +90,26 @@ await page.evaluate(
       r.setAttribute("y", +r.getAttribute("y") * SY);
       r.setAttribute("height", +r.getAttribute("height") * SY);
     }
-    // Labels are 26 px: only the largest right-hand nodes keep one, so they stay clear of each other.
-    const KEEP = ["Computer vision", "Tabular ML", "LLMs", "Detection", "Remote sensing"];
-    for (const t of svg.querySelectorAll("text")) {
-      if (
-        t.getAttribute("text-anchor") !== "end" &&
-        !KEEP.some((k) => t.textContent.startsWith(k))
-      ) {
-        t.remove();
-        continue;
-      }
-      const left = t.getAttribute("text-anchor") === "end";
-      t.setAttribute("x", left ? LEFT - 18 : RIGHT + 18);
+    for (const t of svg.querySelectorAll('[data-dim="ie"] text')) {
+      t.setAttribute("x", LEFT - 18);
       t.setAttribute("y", +t.getAttribute("y") * SY);
     }
+    // The narrow nodes can sit closer together than their labels. Space the
+    // labels evenly and connect each one to the middle of its node.
+    const labels = svg.querySelectorAll('[data-dim="ml"] text');
+    labels.forEach((label, i) => {
+      const nodeY = +label.getAttribute("y") * SY;
+      const labelY = ((i + 0.5) * height) / labels.length;
+      label.setAttribute("x", RIGHT + 30);
+      label.setAttribute("y", labelY);
+      const line = document.createElementNS(svg.namespaceURI, "line");
+      line.setAttribute("x1", RIGHT + 8);
+      line.setAttribute("y1", nodeY);
+      line.setAttribute("x2", RIGHT + 26);
+      line.setAttribute("y2", labelY);
+      line.setAttribute("stroke", "#536a87");
+      label.before(line);
+    });
   },
   { glyphSvg: glyph, text: LINE, host: address },
 );

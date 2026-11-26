@@ -4,32 +4,31 @@
 // what the heights and numbers count.
 import { getCollection } from "astro:content";
 import { shortLabel, tagLabel } from "../data/tags";
-import { missingTechniques, sankeyLayout } from "../lib/sankey";
+import { bandPath, missingTechniques, sankeyLayout, spinePath, topicLenses } from "../lib/sankey";
 import { litUrl } from "../lib/urls";
 import { repoUrl } from "../site";
 
-// viewBox geometry, in user units: label column, flow, label column. The label
-// columns fit the widest short labels ("Industrial symbiosis 10", "Foundation models 6") at the
-// phone font size in custom.css, the largest; wider columns only shrink the plate.
-// Two plates: a compact one up to 64rem, and from there a wide, short one that spans
-// the cover, with long bands (custom.css shows one of them). Each is a labelled group
-// with tabindex -1: Chromium otherwise gives the svg a Tab stop and maps it to img,
-// whose children (the links) are presentational.
+// viewBox geometry, in user units: label column, flow, label column. The build draws one
+// plate at a desktop width, which also serves without scripts. The script below then
+// fits it to its box: the labels keep a steady size (custom.css sets them in user units),
+// the label columns fit the labels, and the bands take the width that is left. Only x
+// changes; the height and every y come from the build. The svg is a labelled group with
+// tabindex -1: Chromium otherwise gives it a Tab stop and maps it to img, whose children
+// (the links) are presentational.
+const H = 380;
 const GAP = 18;
 const X0 = 260;
 const NODE = 8;
-const PLATES = [
-  { name: "compact", H: 420, X1: 500 },
-  { name: "wide", H: 340, X1: 920 },
-].map((p) => ({ ...p, W: p.X1 + NODE + 240, mid: (X0 + NODE + p.X1) / 2 }));
-// Node links get at least this tall a hit area: 24px even at a 320px-wide
-// screen, where the compact plate shrinks to about 0.39 (WCAG 2.5.8).
-const HIT = 66;
+const X1 = 920;
+const W = X1 + NODE + 240;
+// Node links get at least this tall a hit area: 24px at the smallest scale the script sets,
+// about 0.53 on a 320px screen (WCAG 2.5.8, checked by scripts/a11y.mjs). Small nodes
+// packed closer than that overlap a little; the later node takes the shared strip.
+const HIT = 46;
 
 const entries = (await getCollection("literature")).map((e) => e.data);
-const layouts = PLATES.map((p) => ({ ...p, ...sankeyLayout(entries, p.H, GAP) }));
-// Both plates count the same papers; only their geometry differs.
-const { ieNodes, mlNodes, bands, total, papers } = layouts[0];
+const { ieNodes, mlNodes, bands, total, papers } = sankeyLayout(entries, H, GAP);
+const lenses = topicLenses(entries);
 // A node opens the list scoped to the flow (the other column's tags ORed), so
 // the list shows exactly the papers the node's number counts.
 const ieInFlow = ieNodes.map((n) => n.tag);
@@ -37,17 +36,13 @@ const mlInFlow = mlNodes.map((n) => n.tag);
 // Techniques in the vocabulary with no paper in the flow yet: named in the
 // caption, so the figure does not imply the vocabulary ends at its right edge.
 const missing = missingTechniques(mlNodes).map((t) => tagLabel("ml", t));
-const band = (p: (typeof PLATES)[number], b: (typeof bands)[number]) =>
-  `M${X0 + NODE} ${b.y0}C${p.mid} ${b.y0} ${p.mid} ${b.y1} ${p.X1} ${b.y1}` +
-  `V${b.y1 + b.h}C${p.mid} ${b.y1 + b.h} ${p.mid} ${b.y0 + b.h} ${X0 + NODE} ${b.y0 + b.h}Z`;
+// Band ends as data, for the script to redraw the curves at another width.
+const ends = (b: (typeof bands)[number]) => ({ "data-y0": b.y0, "data-y1": b.y1, "data-h": b.h });
+const band = (b: (typeof bands)[number]) => bandPath(X0 + NODE, X1, b);
 // The entrance pours each band along its own centre line, through a mask stroke as wide
 // as the band is tall: at any x the band lies within h/2 of the line, so the stroke covers
 // it however steep the curve. Fields start top to bottom, their bands a beat apart.
-const spine = (p: (typeof PLATES)[number], b: (typeof bands)[number]) => {
-  const a = b.y0 + b.h / 2;
-  const z = b.y1 + b.h / 2;
-  return `M${X0 + NODE} ${a}C${p.mid} ${a} ${p.mid} ${z} ${p.X1} ${z}`;
-};
+const spine = (b: (typeof bands)[number]) => spinePath(X0 + NODE, X1, b);
 const pourDelay = (b: (typeof bands)[number]) => {
   const field = ieNodes.findIndex((n) => n.tag === b.ie);
   const nth = bands.filter((o) => o.ie === b.ie).indexOf(b);
@@ -64,31 +59,54 @@ const readout = (dim: "ie" | "ml", n: { tag: string; papers: number }) => {
       : `the ${ieNodes.length} IE fields shown`;
   return `${tagLabel(dim, n.tag)}: ${n.papers} ${n.papers === 1 ? "paper" : "papers"}, ${dim === "ie" ? "applying" : "in"} ${k} of ${of}`;
 };
-const idle = "Choose a label to browse its papers. On touch, tap twice.";
+const topicReadout = (t: (typeof lenses)[number]) =>
+  `${tagLabel("topic", t.tag)}: ${t.papers} ${t.papers === 1 ? "paper" : "papers"}, in ${t.fields} of the ${ieNodes.length} IE fields shown`;
+const idle = "Select a label to list its papers. On touch, tap twice.";
 ---
 
 <figure class="flow not-content">
   {
-    layouts.map((p) => (
+    lenses.length > 0 && (
+      <div class="flow-lenses" role="group" aria-label="Filter flow by topic" hidden>
+        <span class="flow-lenses-label" aria-hidden="true">Topic</span>
+        {
+          lenses.map((t) => (
+            <button
+              type="button"
+              class="flow-chip"
+              aria-pressed="false"
+              data-topic={t.tag}
+              data-bands={t.bands.join(",")}
+              data-readout={topicReadout(t)}
+            >
+              {`${tagLabel("topic", t.tag)} `}
+              <span class="flow-chip-n">{t.papers}</span>
+            </button>
+          ))
+        }
+      </div>
+    )
+  }
   <svg
-    class={`flow-plate flow-plate--${p.name}`}
-    viewBox={`0 0 ${p.W} ${p.H}`}
+    class="flow-plate"
+    viewBox={`0 0 ${W} ${H}`}
     role="group"
     aria-label="IE fields, linked to the AI techniques their papers use"
     tabindex="-1"
   >
     <defs>
       {
-        p.bands.map((b, i) => (
-          <mask id={`pour-${p.name}-${i}`} maskUnits="userSpaceOnUse" x="-4" y="-4" width={p.W + 8} height={p.H + 8}>
+        bands.map((b, i) => (
+          <mask id={`pour-${i}`} maskUnits="userSpaceOnUse" x="-4" y="-4" width={W + 8} height={H + 8}>
             <path
               class="pour"
-              d={spine(p, b)}
+              d={spine(b)}
+              {...ends(b)}
               stroke="#fff"
               stroke-width={b.h + 2}
               fill="none"
               pathLength="1"
-              style={pourDelay(layouts[0].bands[i])}
+              style={pourDelay(b)}
             />
           </mask>
         ))
@@ -96,7 +114,7 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
     </defs>
     <g class="flow-bands">
       {
-        p.bands.map((b, i) => (
+        bands.map((b, i) => (
           // Out of the tab order: the node links below reach the same lists
           // from the keyboard, and the literature filters reach every pair.
           <a
@@ -108,8 +126,9 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
               class={`band field-${b.ie}`}
               data-ie={b.ie}
               data-ml={b.ml}
-              d={band(p, b)}
-              mask={`url(#pour-${p.name}-${i})`}
+              {...ends(b)}
+              d={band(b)}
+              mask={`url(#pour-${i})`}
             >
               <title>{`${tagLabel("ie", b.ie)} → ${tagLabel("ml", b.ml)}: ${b.count}`}</title>
             </path>
@@ -118,7 +137,7 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
       }
     </g>
     {
-      p.ieNodes.map((n) => (
+      ieNodes.map((n) => (
         <a
           href={litUrl({ ie: [n.tag], ml: mlInFlow })}
           class="flow-node"
@@ -136,7 +155,7 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
       ))
     }
     {
-      p.mlNodes.map((n) => (
+      mlNodes.map((n) => (
         <a
           href={litUrl({ ie: ieInFlow, ml: [n.tag] })}
           class="flow-node"
@@ -144,9 +163,9 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
           data-tag={n.tag}
           data-readout={readout("ml", n)}
         >
-          <rect class="flow-hit" x={p.X1} y={hitY(n)} width={p.W - p.X1} height={Math.max(n.h, HIT)} />
-          <rect class="node" x={p.X1} y={n.y} width={NODE} height={n.h} />
-          <text x={p.X1 + NODE + 10} y={n.y + n.h / 2} dominant-baseline="middle">
+          <rect class="flow-hit" x={X1} y={hitY(n)} width={W - X1} height={Math.max(n.h, HIT)} />
+          <rect class="node" x={X1} y={n.y} width={NODE} height={n.h} />
+          <text x={X1 + NODE + 10} y={n.y + n.h / 2} dominant-baseline="middle">
             {`${shortLabel(n.tag)} `}
             <tspan class="flow-n">{n.papers}</tspan>
           </text>
@@ -154,18 +173,16 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
       ))
     }
   </svg>
-    ))
-  }
   <p class="flow-readout" aria-live="polite">{idle}</p>
   <figcaption>
-    <span><b>Fig. 1</b> {papers} papers by industrial ecology field and AI technique.
-      Each paper can contribute to several bands ({total} pairings in all).
+    <span><b>Fig. 1</b> {papers} papers by IE field and AI technique. A paper can fall in several
+      bands ({total} pairings).{" "}
       <a href={`${repoUrl}/blob/main/src/data/literature.yaml`}>Source data</a>
     </span>
     {
       missing.length > 0 && (
         <span class="flow-gap">
-          No papers in this figure for {missing.join(", ")}.
+          No papers yet for {missing.join(", ")}.
         </span>
       )
     }
@@ -173,27 +190,180 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
 </figure>
 
 <script>
+  import { bandPath, spinePath } from "../lib/sankey";
+
+  // Fit each plate to its box. Labels are set in user units (custom.css), so the viewBox
+  // width sets their size on screen: 13 px on a phone, growing to 17 px on a wide screen.
+  // The label columns fit the widest label and the bands take the rest, but never less
+  // than BANDS of the width: on a small phone the labels shrink instead, to 10 px at 320.
+  const NODE = 8;
+  const LABEL = 19;
+  const BANDS = 0.3;
+  // Label widths in user units, measured at the first fitted scale and again when the web
+  // font is ready. A text length read at each fit drifts with the on-screen scale
+  // (hinting), and the fit that drift causes changes the svg's height, so the observer
+  // would refit for ever. The fonts use font-display: optional, so a font that misses the
+  // first paint never swaps in later and needs no refit.
+  const widths = new WeakMap<SVGSVGElement, { ie: number; ml: number }>();
+  const fitted = new WeakMap<SVGSVGElement, number>();
+  const measure = (svg: SVGSVGElement) => {
+    const widest = (dim: string) =>
+      Math.max(
+        0,
+        ...[...svg.querySelectorAll<SVGTextElement>(`.flow-node[data-dim="${dim}"] text`)].map((t) =>
+          t.getComputedTextLength(),
+        ),
+      );
+    const w = { ie: widest("ie"), ml: widest("ml") };
+    widths.set(svg, w);
+    return w;
+  };
+  const fit = (svg: SVGSVGElement, force = false) => {
+    const px = svg.getBoundingClientRect().width;
+    // A height change alone, as this fit's own viewBox causes, needs no refit.
+    if (!px || (!force && fitted.get(svg) === px)) return;
+    fitted.set(svg, px);
+    const H = svg.viewBox.baseVal.height;
+    const first = !widths.has(svg);
+    const w = widths.get(svg) ?? measure(svg);
+    const X0 = Math.ceil(w.ie + 14);
+    const right = w.ml + 14 + NODE;
+    const labels = X0 + NODE + right;
+    const size = Math.min(17, 11.5 + px * 0.0045, (px * LABEL * (1 - BANDS)) / labels);
+    const W = (px * LABEL) / Math.max(10, size);
+    const X1 = Math.floor(W - right);
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    for (const n of svg.querySelectorAll(".flow-node")) {
+      const [hit, node] = n.querySelectorAll("rect");
+      const text = n.querySelector("text");
+      if ((n as SVGAElement).dataset.dim === "ie") {
+        hit.setAttribute("width", `${X0 + NODE}`);
+        node.setAttribute("x", `${X0}`);
+        text?.setAttribute("x", `${X0 - 10}`);
+      } else {
+        hit.setAttribute("x", `${X1}`);
+        hit.setAttribute("width", `${W - X1}`);
+        node.setAttribute("x", `${X1}`);
+        text?.setAttribute("x", `${X1 + NODE + 10}`);
+      }
+    }
+    for (const p of svg.querySelectorAll<SVGPathElement>("path[data-y0]")) {
+      const b = { y0: +(p.dataset.y0 ?? 0), y1: +(p.dataset.y1 ?? 0), h: +(p.dataset.h ?? 0) };
+      p.setAttribute("d", (p.classList.contains("pour") ? spinePath : bandPath)(X0 + NODE, X1, b));
+    }
+    for (const m of svg.querySelectorAll("mask")) m.setAttribute("width", `${W + 8}`);
+    svg.dataset.x0 = `${X0 + NODE}`;
+    svg.dataset.x1 = `${X1}`;
+    // The first widths were read at the build's desktop scale: read them again at this one.
+    if (first) {
+      measure(svg);
+      fit(svg, true);
+    }
+  };
+  const plates = [...document.querySelectorAll<SVGSVGElement>(".flow svg")];
+  const observer = new ResizeObserver((rows) => {
+    for (const r of rows) fit(r.target as SVGSVGElement);
+  });
+  for (const svg of plates) observer.observe(svg);
+  document.fonts.ready.then(() => {
+    for (const svg of plates) {
+      measure(svg);
+      fit(svg, true);
+    }
+  });
+  // Once the bands have poured in, their masks only cost paint, on every resize: drop them.
+  const unmask = (svg: SVGSVGElement) => {
+    for (const b of svg.querySelectorAll(".band")) b.removeAttribute("mask");
+    for (const m of svg.querySelectorAll("mask")) m.remove();
+  };
+  for (const svg of plates) {
+    const pours = svg.querySelectorAll(".pour").length;
+    if (!pours || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      unmask(svg);
+      continue;
+    }
+    let left = pours;
+    svg.addEventListener("animationend", (e) => {
+      if ((e.target as Element).classList.contains("pour") && --left === 0) unmask(svg);
+    });
+  }
+
   // Lighting a node fades every band but its own and names its reach in the
   // readout. Mouse lights on hover, keyboard on focus. On touch the first tap
   // on a node lights it and the second follows the link, since there is no
   // hover; a click without a pointer (a screen reader, Enter) follows at once.
+  // A topic chip holds its bands lit until clicked again or cleared with Escape;
+  // hovering or focusing a node previews that node and restores the topic on leave.
   for (const svg of document.querySelectorAll<SVGSVGElement>(".flow svg")) {
-    const out = svg.closest(".flow")?.querySelector(".flow-readout");
-    if (!out) continue;
+    const flow = svg.closest(".flow");
+    const out = flow?.querySelector(".flow-readout");
+    if (!flow || !out) continue;
     const idle = out.textContent;
     const nodes = [...svg.querySelectorAll<SVGAElement>(".flow-node")];
     const bands = [...svg.querySelectorAll<SVGPathElement>(".band")];
-    let lit: SVGAElement | null = null;
+    const lensBar = flow.querySelector<HTMLElement>(".flow-lenses");
+    const chips = [...flow.querySelectorAll<HTMLButtonElement>(".flow-chip")];
+    if (lensBar) lensBar.hidden = false;
+    let litNode: SVGAElement | null = null;
+    let activeTopic: HTMLButtonElement | null = null;
     let pointer = "";
-    const light = (node: SVGAElement | null) => {
-      if (node === lit) return;
-      lit = node;
-      svg.classList.toggle("is-lit", node !== null);
-      for (const n of nodes) n.classList.toggle("lit", n === node);
-      for (const b of bands)
-        b.classList.toggle("lit", node !== null && b.dataset[node.dataset.dim ?? ""] === node.dataset.tag);
-      out.textContent = node?.dataset.readout ?? idle;
+    const render = () => {
+      if (litNode) {
+        const dim = litNode.dataset.dim ?? "";
+        const tag = litNode.dataset.tag;
+        svg.classList.add("is-lit");
+        svg.classList.remove("is-topic");
+        for (const n of nodes) {
+          n.classList.toggle("lit", n === litNode);
+          n.classList.remove("in-topic");
+        }
+        for (const b of bands) b.classList.toggle("lit", b.dataset[dim] === tag);
+        out.textContent = litNode.dataset.readout ?? idle;
+      } else if (activeTopic) {
+        const allowed = new Set((activeTopic.dataset.bands ?? "").split(",").filter(Boolean));
+        const connectedIe = new Set<string>();
+        const connectedMl = new Set<string>();
+        svg.classList.add("is-lit", "is-topic");
+        for (const b of bands) {
+          const hit = allowed.has(`${b.dataset.ie}|${b.dataset.ml}`);
+          b.classList.toggle("lit", hit);
+          if (hit) {
+            if (b.dataset.ie) connectedIe.add(b.dataset.ie);
+            if (b.dataset.ml) connectedMl.add(b.dataset.ml);
+          }
+        }
+        for (const n of nodes) {
+          n.classList.remove("lit");
+          const hit =
+            n.dataset.dim === "ie"
+              ? connectedIe.has(n.dataset.tag ?? "")
+              : connectedMl.has(n.dataset.tag ?? "");
+          n.classList.toggle("in-topic", hit);
+        }
+        out.textContent = activeTopic.dataset.readout ?? idle;
+      } else {
+        svg.classList.remove("is-lit", "is-topic");
+        for (const n of nodes) n.classList.remove("lit", "in-topic");
+        for (const b of bands) b.classList.remove("lit");
+        out.textContent = idle;
+      }
     };
+    const light = (node: SVGAElement | null) => {
+      if (node === litNode) return;
+      litNode = node;
+      render();
+    };
+    const setTopic = (chip: HTMLButtonElement | null) => {
+      activeTopic = chip === activeTopic ? null : chip;
+      for (const c of chips) c.setAttribute("aria-pressed", String(c === activeTopic));
+      for (const m of nodes) m.classList.remove("armed");
+      litNode = null;
+      render();
+    };
+    for (const c of chips) c.addEventListener("click", () => setTopic(c));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && activeTopic) setTopic(null);
+    });
     for (const n of nodes) {
       n.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && light(n));
       n.addEventListener("pointerleave", (e) => e.pointerType === "mouse" && light(null));
@@ -212,11 +382,6 @@ const idle = "Choose a label to browse its papers. On touch, tap twice.";
     }
     svg.addEventListener("focusout", (e) => {
       if (!svg.contains(e.relatedTarget as Node)) light(null);
-    });
-    // A resize across 64rem hides this plate: drop its state so the readout is not stale.
-    matchMedia("(min-width: 64rem)").addEventListener("change", () => {
-      for (const m of nodes) m.classList.remove("armed");
-      light(null);
     });
     document.addEventListener("pointerdown", (e) => {
       if (!svg.contains(e.target as Node)) {

@@ -6,11 +6,11 @@
 // NOTE: unlike Starlight's own hero, this one ignores `hero.image`, the
 // draft notice and inline icon HTML; no page uses them.
 import { Icon } from "@astrojs/starlight/components";
-import favicon from "../../../public/favicon.svg?raw";
 import { CHAPTERS } from "../../lib/chapters";
-import { issueUrl, siteUrl } from "../../lib/urls";
+import { contributeUrl, siteUrl } from "../../lib/urls";
 import BrandMark from "../BrandMark.astro";
 import FlowFigure from "../FlowFigure.astro";
+import Glyph from "../Glyph.astro";
 
 const { id, data } = Astro.locals.starlightRoute.entry;
 const isHome = id === "" || id === "index";
@@ -18,31 +18,24 @@ const is404 = id === "404";
 let { title = data.title, tagline } = data.hero ?? {};
 if (is404) {
   title = "Page not found";
-  tagline = `Search the site, choose a chapter, or <a href="${issueUrl("other")}">report a broken link</a>.`;
+  tagline = `Search the site, choose a chapter, or <a data-broken-link href="${contributeUrl("other", { title: "Broken link" })}">report a broken link</a>.`;
 }
-// The home title ends on the favicon tile as its end mark. The no-break space keeps the
-// tile on the last word's line; the tile is hidden from readers, as the title names it.
-// pathLength="1" lets custom.css ink each stroke in with a unit dash; the strokes are
-// drawn twice, as a ghost the hover replay redraws over and as the ink itself.
-const endMark = favicon
-  .replace(/<!--[\s\S]*?-->/g, "")
-  .replaceAll("<path ", '<path pathLength="1" ')
-  .replace(
-    /<g [\s\S]*<\/g>/,
-    (g) =>
-      g.replace("<g ", '<g class="endmark-ghost" ') + g.replace("<g ", '<g class="endmark-ink" '),
-  )
-  .replace(
-    'role="img" aria-label="AI4IE"',
-    'class="cover-endmark" aria-hidden="true" focusable="false"',
-  );
-const heading = isHome ? `${title}&nbsp;${endMark}` : title;
 ---
 
 <div class="cover">
   <div class="cover-grid">
     <div class="cover-copy">
-      <h1 id="_top" data-page-title set:html={heading} />
+      {
+        isHome ? (
+          // The home title opens on the favicon tile, the site's lockup as on the social card.
+          <h1 id="_top" data-page-title class="cover-lockup">
+            <Glyph tile />
+            <span set:html={title} />
+          </h1>
+        ) : (
+          <h1 id="_top" data-page-title set:html={title} />
+        )
+      }
       {tagline && <p class="cover-tagline" set:html={tagline} />}
     </div>
     {
@@ -74,17 +67,15 @@ const heading = isHome ? `${title}&nbsp;${endMark}` : title;
 </div>
 
 <script>
-  // Pointing at or tapping the end mark inks its strokes in again over a faint ghost.
-  // Each replay swaps between two same-shaped keyframe sets, which restarts the CSS
-  // animations; a hover during a run is ignored, so the strokes never jump mid-draw.
-  const tile = document.querySelector(".cover-endmark");
-  let started = 0;
-  let round = false;
-  tile?.addEventListener("pointerenter", () => {
-    if (performance.now() - started < 500) return;
-    started = performance.now();
-    round = !round;
-    tile.classList.remove("reink-a", "reink-b");
-    tile.classList.add(round ? "reink-a" : "reink-b");
-  });
+  // The 404 page is static, so the missing address and the page that linked to it
+  // are added to the report link in the browser.
+  const link = document.querySelector<HTMLAnchorElement>("a[data-broken-link]");
+  if (link) {
+    const url = new URL(link.href);
+    url.searchParams.set(
+      "details",
+      `Missing page: ${location.href}\nLinked from: ${document.referrer || "unknown"}\n\n`,
+    );
+    link.href = url.href;
+  }
 </script>
