@@ -1259,6 +1259,11 @@ starlight-menu-button button {
   background: var(--sl-color-black);
   border: 1px solid var(--sl-color-gray-5);
 }
+@media (scripting: enabled) {
+  .lit-entry[data-late] {
+    display: none;
+  }
+}
 .lit-more {
   display: block;
   width: 100%;

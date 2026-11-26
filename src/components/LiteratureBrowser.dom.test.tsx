@@ -424,4 +424,14 @@ describe("LiteratureBrowser pagination and text filter", () => {
     expect(document.getElementById("p00")).not.toBeNull();
     expect(document.activeElement?.id).toBe("p00");
   });
+
+  it("says a text search matched nothing, and Clear all keeps focus on the count", async () => {
+    await mount("/literature/", many);
+    await type("zzzz");
+    expect(document.querySelector(".lit-empty")?.textContent).toBe("No entry matches that search.");
+    await click(document.querySelector(".lit-clear"));
+    expect(document.querySelector(".lit-search input")).not.toBeNull();
+    expect(listed()).toBe(20);
+    expect(document.activeElement?.getAttribute("role")).toBe("status");
+  });
 });

@@ -149,7 +149,7 @@ export default function LiteratureBrowser({
     refocus.current = null;
     const pills = activeRow.current?.querySelectorAll<HTMLButtonElement>(".lit-pill") ?? [];
     (pills[Math.min(i, pills.length - 1)] ?? countRef.current)?.focus();
-  }, [filter]);
+  }, [filter, q]);
 
   // FLIP: animate rows that stayed visible and moved after a filter or sort change.
   useIsomorphicLayoutEffect(() => {
@@ -269,7 +269,8 @@ export default function LiteratureBrowser({
   const pills = TAG_DIMS.flatMap((dim) =>
     filter[dim].map((tag) => ({ id: `${dim}:${tag}`, dim, tag, label: tagLabel(dim, tag) })),
   );
-  const anyActive = pills.length > 0 || filter.papers.length > 0 || q.trim() !== "";
+  const tagged = pills.length > 0 || filter.papers.length > 0;
+  const anyActive = tagged || q.trim() !== "";
   const byId = new Map(entries.map((e) => [e.id, e]));
   const hiddenTarget = target && !shown.some((e) => e.id === target) ? byId.get(target) : null;
 
@@ -426,11 +427,14 @@ export default function LiteratureBrowser({
         </p>
       )}
       <ol className="lit-list" ref={listRef}>
-        {shown.slice(0, visible).map((e) => (
+        {shown.slice(0, visible).map((e, i) => (
           <li
             key={e.id}
             id={e.id}
             className="lit-entry"
+            // Server-rendered entries past the first page: custom.css hides them while scripting
+            // is on, so the list does not collapse after hydration. No script, full list.
+            data-late={(!hydrated && i >= PAGE_SIZE) || undefined}
             data-target={e.id === target || undefined}
             // Focusable by script only, so a linked card takes focus for keyboard users.
             tabIndex={-1}
@@ -485,9 +489,8 @@ export default function LiteratureBrowser({
       )}
       {shown.length === 0 && (
         <p className="lit-empty">
-          {q.trim() && !anyActive
-            ? "No entry matches that search."
-            : emptyMessage(filter, tagLabel)}
+          {tagged ? emptyMessage(filter, tagLabel) : "No entry matches that search."}
+          {tagged && q.trim() && " The search text narrows the list too."}
         </p>
       )}
     </div>
