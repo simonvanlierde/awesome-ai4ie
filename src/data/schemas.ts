@@ -92,12 +92,21 @@ export const literatureSchema = z
   })
   .refine((e) => e.doi || e.arxiv, { message: "set doi, arxiv or both" });
 
+// Maturity stages in ascending order; the first entry is the least mature.
+export const STAGES = {
+  early: "Early studies",
+  tested: "Tested in research studies",
+  applied: "Applied to real data",
+} as const;
+export type Stage = keyof typeof STAGES;
+
 export const applicationSchema = z.object({
   name: z.string(),
   ie: z.array(ieTag).min(1),
   ml: z.array(mlTag).min(1),
   summary: z.string().max(400),
-  maturity: z.string().max(200), // plain prose, no rubric codes
+  stage: z.enum(Object.keys(STAGES) as [Stage, ...Stage[]]), // the verdict shown beside the name
+  maturity: z.string().max(200), // plain prose, no rubric codes: the evidence behind the stage
   papers: z.array(z.string()).default([]), // ids into literature.yaml
   demo: z.string().optional(), // site-relative path (resolved against base) or full URL
 });

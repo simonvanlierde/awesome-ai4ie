@@ -81,6 +81,8 @@ body:
         - Foundation models & transformers
         - Anomaly & condition detection
         - Uncertainty & probabilistic ML
+        - Knowledge graphs
+        - Recommender systems
   - type: checkboxes
     id: checks
     attributes:

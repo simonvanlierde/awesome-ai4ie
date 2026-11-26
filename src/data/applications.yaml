@@ -9,6 +9,7 @@
   ie: [lca]
   ml: [tabular-ml]
   summary: "Train regression models on existing characterisation results to screen chemicals or products."
+  stage: early
   maturity: "One 2017 method study and two reviews. Use these models to rank options quickly, and run a full characterisation for any value a decision depends on."
   papers: [songRapidLifeCycleImpact2017, ghoroghiAdvancesApplicationMachine2022, romeikoReviewMachineLearning2024]
 - id: lci-gap-filling
@@ -16,13 +17,15 @@
   ie: [lca]
   ml: [tabular-ml]
   summary: "Estimate missing inventory values from similar processes or product attributes."
-  maturity: "Research studies show that results depend on the method and training data. Check estimates made outside that data's range."
+  stage: early
+  maturity: "Two reviews, no study of its own. One finds that reported errors range widely without robust justification. Check estimates made outside the training data's range."
   papers: [zargarReviewInventoryModeling2022, gkousisMachineLearningLarge2026]
 - id: llm-lci-extraction
   name: "LLM extraction of LCI data from literature"
   ie: [lca]
   ml: [llm, nlp-extraction]
   summary: "Use a language model to retrieve reported inventory and impact values from papers and reports."
+  stage: early
   maturity: "One study reported a BERTScore F1 of 0.82 for methanol and 0.86 for plastic packaging at end-of-life; the score measures wording, not numbers or units. Verify extracted values against the source."
   papers: [kumarLargeLanguageModelbased2025, preussLargeLanguageModels2024, tuMitigatingGrandChallenges2024]
 - id: automated-carbon-footprinting
@@ -30,6 +33,7 @@
   ie: [lca]
   ml: [llm, nlp-extraction]
   summary: "Match product descriptions to emission factors by meaning with a language model, with no task-specific training, to footprint whole product catalogs."
+  stage: tested
   maturity: "Works when a product has a clear database match. Flamingo's mean error was 18% with a product-code filter and 144% without. A few bad matches, like a microwave as an HVAC unit, caused most of it."
   papers: [balajiFlamingoEnvironmentalImpact2023, dengAutoPCFEfficientProduct2023]
 - id: corporate-report-extraction
@@ -37,6 +41,7 @@
   ie: [lca]
   ml: [nlp-extraction, llm]
   summary: "Extract numerical sustainability indicators from company reports."
+  stage: early
   maturity: "In one study of 9,173 reports, the model returned values for 29% of extraction prompts. That share alone cannot establish extraction accuracy."
   papers: [forsterExtractingSustainabilityIndicators2026]
 - id: household-consumption-modeling
@@ -44,8 +49,17 @@
   ie: [lca]
   ml: [tabular-ml]
   summary: "Group households by consumption patterns and estimate their footprints by region."
-  maturity: "Demonstrated at national scale using detailed household data."
+  stage: early
+  maturity: "One 2020 study, demonstrated at national scale using detailed household data."
   papers: [froemeltMachineLearningBased2020]
+- id: lca-uncertainty-ml
+  name: "Uncertainty quantification for ML-based LCA"
+  ie: [lca]
+  ml: [tabular-ml, uncertainty]
+  summary: "Attach prediction intervals to ML-estimated inventory data and footprints, and carry both ML and LCA uncertainty through to the result."
+  stage: tested
+  maturity: "Three method studies, each on one case: crop fertiliser inventories, stainless steel melts, a biomass model. One finds that only 6 of 45 ML+LCA studies consider ML uncertainty."
+  papers: [daiGaussianProcessRegression2022, testiniExAnteProductCarbon2026, akramiAddressingUncertaintyMachine2025]
 
 # ── Socio-economic metabolism ────────────────────────────────────────────────
 - id: satellite-stock-mapping
@@ -53,6 +67,7 @@
   ie: [sem]
   ml: [remote-sensing]
   summary: "Map building and infrastructure stocks using satellite images, OpenStreetMap and material intensities."
+  stage: applied
   maturity: "The studies produced national maps at 10 m and a global map at 90 m. In local comparisons, independent estimates were 53–200% of the global map values."
   papers: [haberlHighResolutionMaps2021, haberlGlobalBuiltEnvironment2024, jiangBottomUpApproachIntegrating2025]
 - id: nightlights-stock-proxy
@@ -60,6 +75,7 @@
   ie: [sem]
   ml: [remote-sensing]
   summary: "Use nighttime-light radiance, alone or fused with optical imagery by deep models, as a proxy for built-up volume and stocks."
+  stage: tested
   maturity: "Night-light images have been used to estimate built-up volume across Europe. A deep model fusing them with daytime imagery kept Beijing's stock error under 14%, but still needs ground data."
   papers: [peledSpatialMaterialStock2021, baoDeepLearningFusion2023]
 - id: street-view-building-attributes
@@ -67,6 +83,7 @@
   ie: [sem]
   ml: [cv, segmentation]
   summary: "Predict floor area, age, and component counts (windows, doors) from street-level photos to feed urban stock models. Component counts have only been shown in a prototype, on van-mounted photos of one Sheffield neighbourhood."
+  stage: tested
   maturity: "In Toronto, the model had about 19% mean absolute percentage error for floor area and classified age correctly about 70% of the time. Age prediction was worse in all five other cities tested."
   papers: [huangImageBasedPrediction2024, arbabiScalableDataCollection2021]
 - id: interior-stock-prediction
@@ -74,6 +91,7 @@
   ie: [sem]
   ml: [tabular-ml, cv]
   summary: "Estimate interior wall lengths and room counts from exterior features."
+  stage: early
   maturity: "One study of 2,000 houses in England and Wales predicted wall length well (R² 0.84) and total room count less well (0.66). Adding facade photos did not improve the predictions much."
   papers: [daiModelingInteriorComponent2025]
 
@@ -83,6 +101,7 @@
   ie: [circular]
   ml: [cv, nlp-extraction]
   summary: "Read model numbers from product labels and match them to a reference database."
+  stage: tested
   maturity: "In one washing machine study, the system read model numbers in 95.7% of usable repair photos and 39.7% of usable recycler photos."
   papers: [sterkensProductLabelIdentification2023, koyanakaIndividualModelIdentification2024]
 - id: waste-stream-classification
@@ -90,6 +109,7 @@
   ie: [circular]
   ml: [cv]
   summary: "Classify waste in images from litter surveys and sorting conveyors."
+  stage: tested
   maturity: "Studies show high scores on lab datasets. Check performance on photos from the intended sorting line."
   papers: [luComputerVisionSolid2022, wuApplicationsConvolutionalNeural2023, majchrowskaDeepLearningbasedWaste2022]
 - id: sorting-plant-characterization
@@ -97,13 +117,15 @@
   ie: [sem, circular]
   ml: [cv, segmentation]
   summary: "Use images from a sorting line to classify particles and estimate the composition of shredded electronics."
-  maturity: "On pilot-line data, detection reached 0.99 mAP at the 0.5 threshold and estimated composition had 4.94% mean relative error on a validation set."
+  stage: early
+  maturity: "One study of recorded pilot-line data; no sorting was run. Detection reached 0.99 mAP at the 0.5 threshold and composition had 4.94% mean relative error."
   papers: [vogelgesangAutomatedMaterialFlow2025]
 - id: component-detection
   name: "Component detection & counting in opened products"
   ie: [circular]
   ml: [cv, segmentation]
   summary: "Detect, segment, and count components inside opened devices to build bills of components for disassembly and recycling."
+  stage: tested
   maturity: "Accurate on its benchmarks, untested on field photos. General segmenters such as SAM outline parts but do not name them."
   papers: [zhangEvaluatingLargeLightweight2026, kirillovSegmentAnything2023]
   demo: "demos/" # site-relative: the explorer prefixes the deploy base
@@ -112,6 +134,7 @@
   ie: [circular]
   ml: [cv, foundation]
   summary: "Models like CLIP score how well each label you type matches an image, with no training on your examples."
+  stage: tested
   maturity: "CLIP reached about 90% accuracy on TrashNet without labelled examples. The study did not test a working sorting line."
   papers: [funkEvaluationVisionLanguage2026, radfordLearningTransferableVisual2021]
   demo: "demos/" # site-relative: the explorer prefixes the deploy base
@@ -120,6 +143,7 @@
   ie: [circular]
   ml: [depth, cv]
   summary: "Estimate depth or shape from one photograph."
+  stage: early
   maturity: "The estimates are approximate. Reflective, transparent and thin parts are difficult, and performance on field photos is unclear."
   papers: [yangDepthAnythingV22024]
   demo: "demos/" # site-relative: the explorer prefixes the deploy base
@@ -128,6 +152,7 @@
   ie: [circular]
   ml: [cv, segmentation]
   summary: "Locate components and fasteners so a robot can take a product apart for reuse or recycling."
+  stage: early
   maturity: "One preprint shows a working robot system for one narrow product family, phones. No system yet handles many kinds of product."
   papers: [ameurFutureRoboticDisassembly2025, liuRAISERobotAssistedSelective2025]
 
@@ -135,8 +160,9 @@
 - id: symbiosis-matching
   name: "Waste-to-resource matching for industrial symbiosis"
   ie: [symbiosis]
-  ml: [nlp-extraction, llm]
+  ml: [nlp-extraction, llm, knowledge-graph, recommender]
   summary: "Suggest which company could use another's waste, drawing on papers, patents and records of past exchanges."
+  stage: tested
   maturity: "Research prototypes, each tested on its own parks or firms. One recovers 24 of 45 known exchanges in one district; methods that compare word meanings fail at some parks, Kalundborg among them."
   papers: [zhaoConstructionWastetoresourceKnowledge2025, davisMachineLearningassistedIndustrial2022, vancapelleveenBuildingRecommenderSystems2021, grimmelUrbanIndustrialSymbiosis2025, zhaoNovelMachineLearningbased2025]
 
@@ -146,6 +172,7 @@
   ie: [eeio]
   ml: [tabular-ml]
   summary: "Estimate missing or next-year cells in input-output tables and publish ML-ready emission factors from multiregional databases."
+  stage: tested
   maturity: "One US 71-sector study cut median error on hard cells from 37% to 11%, given the target year's row and column totals. Open emission-factor tables now exist for EXIOBASE 3.8.2."
   papers: [zhaoUsingDeepLearning2022, guoGlobalEmissionFactor2026, maBPNNbasedEcologicallyExtended2023]
 - id: eeio-sector-matching
@@ -153,6 +180,7 @@
   ie: [eeio, lca]
   ml: [nlp-extraction, llm, foundation]
   summary: "Map product text or company descriptions to EIO-LCA or NAICS sectors to assign carbon intensity factors."
+  stage: tested
   maturity: "On 27,708 products, zero-shot matching cut the error in kg CO₂e per dollar from 51% to 22% MAPE. A NAICS matching preprint reports 45.88% MAPE on 20 companies with disclosed emissions."
   papers: [balajiCaMLCarbonFootprinting2023, guoGroupReasoningEmission2025]
 
@@ -162,5 +190,6 @@
   ie: [sem]
   ml: [tabular-ml, uncertainty]
   summary: "Combine expert estimates and reported data to estimate material flows and decide where to measure next."
+  stage: tested
   maturity: "Methods papers, tested on US steel and global aluminium cycles, plus one national case on England's construction aggregates; each releases code or data."
   papers: [dongExpertElicitationData2023, wangBayesianMaterialFlow2024, liaoIntelligentDataCollection2025, masonBayesianMaterialFlow2025]

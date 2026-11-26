@@ -70,6 +70,8 @@ body:
         - Foundation models & transformers
         - Anomaly & condition detection
         - Uncertainty & probabilistic ML
+        - Knowledge graphs
+        - Recommender systems
   - type: dropdown
     id: type
     attributes:

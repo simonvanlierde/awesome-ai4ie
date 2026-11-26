@@ -6,6 +6,7 @@
 // application tagged with two techniques appears under both: in full under the
 // first, as a link back to it under the second.
 import { getCollection } from "astro:content";
+import { STAGES } from "../data/schemas";
 import { type IeTag, tagLabel } from "../data/tags";
 import { contributeUrl, siteUrl } from "../lib/urls";
 import { groupBy } from "./appPivot";
@@ -78,6 +79,7 @@ const parts = sections.map((s) => {
           <h3 id={a.id}>{a.name}</h3>
           <p>{a.summary}</p>
           <p>
+            <b class="apx-stage" data-stage={a.stage}>{STAGES[a.stage]}</b>{" "}
             {a.maturity}
           </p>
           {a.demo && (

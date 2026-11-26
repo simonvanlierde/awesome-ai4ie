@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { groupBy, toGrid } from "./appPivot";
+import { groupBy, stagePips, toGrid, topStage } from "./appPivot";
 
 const apps = [
   { id: "a", ie: ["circular"], ml: ["cv"] },
@@ -40,5 +40,15 @@ describe("toGrid", () => {
       { id: "b", ie: ["circular"], ml: ["cv"] },
     ]);
     expect(grid.cells.get("circular|cv")?.map((e) => e.id)).toEqual(["a", "b"]);
+  });
+});
+
+describe("topStage", () => {
+  it("returns the most mature stage and draws it as squares", () => {
+    expect(topStage([{ stage: "tested" }, { stage: "early" }, { stage: "applied" }])).toBe(
+      "applied",
+    );
+    expect(topStage([{ stage: "early" }])).toBe("early");
+    expect(stagePips("tested")).toBe("■■□");
   });
 });

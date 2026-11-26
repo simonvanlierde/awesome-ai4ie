@@ -1,9 +1,9 @@
 import { useState } from "react";
-import type { AppEntry } from "../data/schemas";
+import { type AppEntry, STAGES } from "../data/schemas";
 import { DIM_LABELS, shortLabel, tagLabel } from "../data/tags";
 import { litUrl } from "../lib/urls";
 import AppList from "./AppList";
-import { groupBy, toGrid } from "./appPivot";
+import { groupBy, stagePips, toGrid, topStage } from "./appPivot";
 
 type Mode = "ml" | "grid";
 
@@ -112,17 +112,29 @@ function Grid({ entries }: { entries: AppEntry[] }) {
                 const papers = [...new Set(apps.flatMap((a) => a.papers))];
                 const names = apps.map((a) => a.name).join(" · ");
                 // The visible text is only a count, so the accessible name carries the apps.
-                const name = `${apps.length} ${apps.length === 1 ? "application" : "applications"}: ${names}`;
+                const stage = topStage(apps);
+                const name = `${apps.length} ${apps.length === 1 ? "application" : "applications"}: ${names}. Most mature stage: ${STAGES[stage]}`;
+                const pips = (
+                  <span className="apx-pips" aria-hidden="true">
+                    {stagePips(stage)}
+                  </span>
+                );
                 // Shade steps at 1, 2 and 3+ applications.
                 return (
                   <td key={ie} data-n={Math.min(apps.length, 3)}>
                     {papers.length > 0 ? (
-                      <a href={litUrl({ papers })} title={names} aria-label={`Papers for ${name}`}>
+                      <a
+                        href={litUrl({ papers })}
+                        title={`${names} (${STAGES[stage]})`}
+                        aria-label={`Papers for ${name}`}
+                      >
                         {apps.length}
+                        {pips}
                       </a>
                     ) : (
-                      <span title={names}>
+                      <span title={`${names} (${STAGES[stage]})`}>
                         <span aria-hidden="true">{apps.length}</span>
+                        {pips}
                         <span className="sr-only">{name}</span>
                       </span>
                     )}
@@ -134,7 +146,15 @@ function Grid({ entries }: { entries: AppEntry[] }) {
         </tbody>
       </table>
       <p className="apx-grid-src">
-        Numbers count applications. Links open their papers. A dashed cell has no entry.
+        Numbers count applications. Links open their papers. A dashed cell has no entry. Squares
+        show the most mature stage in a cell:{" "}
+        {(["early", "tested", "applied"] as const).map((s, i) => (
+          <span key={s}>
+            {i > 0 && ", "}
+            <span aria-hidden="true">{stagePips(s)}</span> {STAGES[s]}
+          </span>
+        ))}
+        .
       </p>
     </section>
   );

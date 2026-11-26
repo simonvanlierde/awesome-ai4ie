@@ -24,6 +24,7 @@ const SAMPLE_APPS: AppEntry[] = [
     summary: "Extracts inventory flows from PDF reports.",
     ie: ["lca"],
     ml: ["llm"],
+    stage: "tested",
     maturity: "promising",
     papers: ["preuss2024"],
     demo: "demos/clip-zero-shot/",
@@ -34,6 +35,7 @@ const SAMPLE_APPS: AppEntry[] = [
     summary: "Classifies material fractions on a belt.",
     ie: ["circular"],
     ml: ["cv"],
+    stage: "applied",
     maturity: "established",
     papers: [],
   },
@@ -91,6 +93,8 @@ describe("AppList", () => {
     expect(html).toContain("Papers (1)");
     expect(html).toContain("Try the demo");
     expect(html).toContain("Related papers");
+    expect(html).toContain("Tested in research studies");
+    expect(html).toContain("Applied to real data");
   });
 });
 
@@ -102,6 +106,9 @@ describe("ApplicationsExplorer", () => {
     expect(html).toContain("Table 1.1");
     expect(html).toContain("Papers for 1 application: LCI extraction with LLMs");
     expect(html).toContain("1 application: Waste sorting with vision");
+    expect(html).toContain("Most mature stage: Applied to real data");
+    expect(html).toContain("■■■");
+    expect(html).toContain("Early studies");
     expect(html).toContain('data-n="0"');
   });
 });
