@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { decodePoints, encodePoints, first, markPath, nearest, step } from "./litMapNav";
+import {
+  categorise,
+  catPath,
+  decodePoints,
+  encodePoints,
+  first,
+  markPath,
+  nearest,
+  step,
+} from "./litMapNav";
 
 // A plus sign round the middle point, and one far off to the upper right.
 const P = decodePoints("mid 50 50 0;right 70 52 0;left 30 50 0;up 50 30 1;down 52 70 1;far 90 5 2");
@@ -44,5 +53,33 @@ describe("map navigation", () => {
     expect(first([])).toBeNull();
     expect(nearest(P, 68, 50, 5)?.id).toBe("right");
     expect(nearest(P, 60, 60, 5)).toBeNull();
+  });
+});
+
+describe("categorise", () => {
+  const id = (v: string) => v.toUpperCase();
+  it("gives the six commonest values a class each, the rest one, and none its own", () => {
+    const values = [..."aaaabbbcccdddeeefffgghh", undefined];
+    const { legend, cats } = categorise(values, id, "None");
+    // g and h tie on 2 papers and fall to "Other"; ties among the top go by label.
+    expect(cats).toBe("00001112223334445556666" + "7");
+    expect(legend.map((l) => [l.cat, l.label, l.n])).toEqual([
+      [0, "A", 4],
+      [1, "B", 3],
+      [2, "C", 3],
+      [3, "D", 3],
+      [4, "E", 3],
+      [5, "F", 3],
+      [6, "Other", 4],
+      [7, "None", 1],
+    ]);
+  });
+  it("leaves out the Other and None entries when nothing falls there", () => {
+    const { legend } = categorise(["x", "y", "x"], id, "None");
+    expect(legend.map((l) => l.label)).toEqual(["X", "Y"]);
+  });
+  it("draws a disc in a colour mode and the hollow dot for none", () => {
+    expect(catPath(0, 10, 10)).toBe(markPath("lca", 10, 10));
+    expect(catPath(7, 10, 10)).toBe(markPath(undefined, 10, 10));
   });
 });

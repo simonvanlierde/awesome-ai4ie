@@ -10,7 +10,10 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - A map of the literature over the reading list: papers laid out by the meaning of their
-  title, summary and tags (t-SNE), in named clusters. The list's filters and search fade the
+  own title and abstract (t-SNE, abstracts from OpenAlex), in named clusters. On `/literature/`
+  a "Colour by" control recolours the points by IE field, AI technique or OpenAlex topic.
+  `pnpm run literature-meta` records each paper's OpenAlex topic in
+  `src/data/literature-meta.json` (CC0 data, no abstract text). The list's filters and search fade the
   papers they leave out; a card shows a paper on hover, focus or tap, and a click, Enter or a
   second tap opens it in the list. `/literature-map/` keeps a static version with a table of
   the clusters by IE field.

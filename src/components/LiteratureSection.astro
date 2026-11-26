@@ -1,11 +1,13 @@
 ---
 import { getCollection } from "astro:content";
+import meta from "../data/literature-meta.json" with { type: "json" };
+import { shortLabel } from "../data/tags";
 import { paperExtras } from "../lib/literature";
 import { litMap } from "../lib/litmap";
 import { decodeVector, entryText } from "../lib/semantic";
 import { loadVectors, textKey } from "../lib/vectors";
 import LiteratureBrowser from "./LiteratureBrowser";
-import { encodePoints } from "./litMapNav";
+import { categorise, encodePoints, MODE_NONE } from "./litMapNav";
 
 // No sorting here: LiteratureBrowser sorts what it renders, on the server too.
 const entries = (await getCollection("literature")).map((e) => ({ id: e.id, ...e.data }));
@@ -25,7 +27,23 @@ const extras = paperExtras(
 );
 // The map over the list, laid out here so the browser gets only positions and outlines.
 const { points, ...plate } = litMap(entries);
-const map = points.length ? { ...plate, points: encodePoints(points) } : undefined;
+// The two other colourings, one digit per point in the points' order (see categorise()).
+const byId = new Map(entries.map((e) => [e.id, e]));
+const topicOf = (id: string) =>
+  (meta as Record<string, { topic: { name: string } | null }>)[id]?.topic?.name;
+const modes = {
+  ml: categorise(
+    points.map(([id]) => byId.get(id)?.ml[0]),
+    shortLabel,
+    MODE_NONE.ml,
+  ),
+  topic: categorise(
+    points.map(([id]) => topicOf(id)),
+    (t) => t,
+    MODE_NONE.topic,
+  ),
+};
+const map = points.length ? { ...plate, points: encodePoints(points), modes } : undefined;
 ---
 
 <noscript>

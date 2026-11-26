@@ -21,6 +21,53 @@ export function decodePoints(s: string): MapPoint[] {
     : [];
 }
 
+/** The colour modes after the default IE field: AI technique and OpenAlex topic. */
+export const MODES = ["ie", "ml", "topic"] as const;
+export type Mode = (typeof MODES)[number];
+export const MODE_LABELS: Record<Mode, string> = {
+  ie: "IE field",
+  ml: "AI technique",
+  topic: "OpenAlex topic",
+};
+export const MODE_NONE: Record<Mode, string> = {
+  ie: "No IE field",
+  ml: "No technique",
+  topic: "No topic data",
+};
+/** Colour classes 0-5 are the six biggest categories, OTHER the rest, NONE no value. */
+export const TOP = 6;
+export const OTHER = 6;
+export const NONE_CAT = 7;
+
+export type Legend = { cat: number; label: string; n: number }[];
+/** A category mode as the page ships it: its legend, and one digit per point in the points'
+ * order (the class number above). */
+export type ModeColours = { legend: Legend; cats: string };
+
+/** Puts each value in a category: the TOP commonest (ties by label) take 0-5 in that order,
+ * the rest share OTHER, and an undefined value gets NONE_CAT. */
+export function categorise(
+  values: readonly (string | undefined)[],
+  label: (v: string) => string,
+  none: string,
+): ModeColours {
+  const n = new Map<string, number>();
+  for (const v of values) if (v) n.set(v, (n.get(v) ?? 0) + 1);
+  const top = [...n]
+    .sort((a, b) => b[1] - a[1] || label(a[0]).localeCompare(label(b[0]), "en"))
+    .slice(0, TOP)
+    .map(([v]) => v);
+  const cat = (v: string | undefined) =>
+    v ? (top.includes(v) ? top.indexOf(v) : OTHER) : NONE_CAT;
+  const count = (c: number) => values.filter((v) => cat(v) === c).length;
+  const legend: Legend = [
+    ...top.map((v, c) => ({ cat: c, label: label(v), n: n.get(v) ?? 0 })),
+    { cat: OTHER, label: "Other", n: count(OTHER) },
+    { cat: NONE_CAT, label: none, n: count(NONE_CAT) },
+  ].filter((l) => l.n > 0);
+  return { legend, cats: values.map(cat).join("") };
+}
+
 // One shape per IE field, so colour is not the only cue. Absolute start, relative after it, so
 // CSS can scale a mark about its own centre (transform-box: fill-box) on a small screen.
 const SHAPES: Record<string, (x: number, y: number) => string> = {
@@ -35,6 +82,12 @@ const NONE = (x: number, y: number) => `M${x - 3} ${y}a3 3 0 1 0 6 0a3 3 0 1 0-6
 
 export function markPath(field: string | undefined, x: number, y: number): string {
   return (field ? (SHAPES[field] ?? NONE) : NONE)(x, y);
+}
+
+/** Mark in a category mode: shapes belong to IE fields alone, so every value is a disc and a
+ * missing one the hollow dot. */
+export function catPath(cat: number, x: number, y: number): string {
+  return markPath(cat === NONE_CAT ? undefined : "lca", x, y);
 }
 
 /** The point closest to (x, y) within `reach`, or null. */

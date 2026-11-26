@@ -30,6 +30,10 @@ Find suggestions under the `entry` label and other on-site submissions under
   or updates the open one, when a link on the site or a DOI in `literature.yaml` breaks. It
   doesn't check README.md or this file. Publishers that block crawlers answer 403 or 429, and
   the check counts those as fine.
+- **Map topics.** After adding entries, run `pnpm run literature-meta` and commit
+  `src/data/literature-meta.json`: each entry's OpenAlex id and primary topic, which colour the
+  map's topic mode. OpenAlex data is CC0; the file holds no abstract text, only its hash.
+  `pnpm run embed` fetches the abstracts live to place the papers.
 - **Weekly candidates.** Every Monday [`candidates.yml`](.github/workflows/candidates.yml) asks
   OpenAlex for new papers that pair an AI term with an industrial-ecology term. In the core
   industrial-ecology journals, a method term alone is enough. It adds up to 25 leads to

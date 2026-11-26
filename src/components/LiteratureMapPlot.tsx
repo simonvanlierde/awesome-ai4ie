@@ -3,7 +3,20 @@ import type { LitEntry } from "../data/schemas";
 import { IE_TAGS, shortLabel } from "../data/tags";
 import { formatAuthors } from "../lib/literature";
 import type { MapCluster } from "../lib/litmap";
-import { first, isArrow, type MapPoint, markPath, nearest, step } from "./litMapNav";
+import {
+  catPath,
+  first,
+  isArrow,
+  type Legend,
+  type MapPoint,
+  MODE_LABELS,
+  MODES,
+  type Mode,
+  markPath,
+  NONE_CAT,
+  nearest,
+  step,
+} from "./litMapNav";
 import TagChips from "./TagChips";
 
 /** The plate: hulls, marks and labels. Shared by the static figure on /literature-map/
@@ -15,6 +28,7 @@ export function MapPlot({
   clusters,
   points,
   fieldOf,
+  catOf,
   out,
   active,
   href,
@@ -25,6 +39,8 @@ export function MapPlot({
   clusters: readonly MapCluster[];
   points: readonly MapPoint[];
   fieldOf: (id: string) => string | undefined;
+  /** A colour mode's category per paper; without it a paper takes its IE field's colour and shape. */
+  catOf?: (id: string) => number;
   out?: ReadonlySet<string>;
   active?: MapPoint | null;
   href?: (id: string) => string;
@@ -32,8 +48,18 @@ export function MapPlot({
 }) {
   const mark = (p: MapPoint) => {
     const field = fieldOf(p.id);
-    const cls = `lm-dot ${field ? `field-${field}` : "lm-none"}${out?.has(p.id) ? " is-out" : ""}`;
-    const path = <path className={cls} d={markPath(field, p.x, p.y)} />;
+    const cat = catOf?.(p.id);
+    const colour =
+      cat === undefined
+        ? field
+          ? `field-${field}`
+          : "lm-none"
+        : cat === NONE_CAT
+          ? "lm-none"
+          : `lm-cat-${cat}`;
+    const cls = `lm-dot ${colour}${out?.has(p.id) ? " is-out" : ""}`;
+    const d = cat === undefined ? markPath(field, p.x, p.y) : catPath(cat, p.x, p.y);
+    const path = <path className={cls} d={d} />;
     if (!href) return <g key={p.id}>{path}</g>;
     return (
       <a key={p.id} href={href(p.id)} aria-label={title?.(p.id)}>
@@ -69,21 +95,59 @@ export function MapPlot({
   );
 }
 
-/** The key under the plate: one mark per IE field, and the hollow dot for none. */
-export function MapKey() {
-  const item = (field: string | undefined, label: string) => (
-    <li key={label} className={field ? `field-${field}` : undefined}>
+/** The key under the plate: one mark per IE field and the hollow dot for none, or, in a colour
+ * mode, one disc per category with its count. */
+export function MapKey({ legend }: { legend?: Legend }) {
+  const item = (cls: string | undefined, none: boolean, d: string, label: string) => (
+    <li key={label} className={cls}>
       <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
-        <path className={field ? "lm-dot" : "lm-dot lm-none"} d={markPath(field, 8, 8)} />
+        <path className={none ? "lm-dot lm-none" : "lm-dot"} d={d} />
       </svg>
       {label}
     </li>
   );
+  if (legend)
+    return (
+      <ul className="lm-key" aria-label="Key">
+        {legend.map((l) =>
+          item(
+            l.cat === NONE_CAT ? undefined : `lm-cat-${l.cat}`,
+            l.cat === NONE_CAT,
+            catPath(l.cat, 8, 8),
+            `${l.label} (${l.n})`,
+          ),
+        )}
+      </ul>
+    );
   return (
     <ul className="lm-key" aria-label="Key">
-      {Object.keys(IE_TAGS).map((f) => item(f, shortLabel(f)))}
-      {item(undefined, "No IE field")}
+      {Object.keys(IE_TAGS).map((f) => item(`field-${f}`, false, markPath(f, 8, 8), shortLabel(f)))}
+      {item(undefined, true, markPath(undefined, 8, 8), "No IE field")}
     </ul>
+  );
+}
+
+/** What colours the points: a segmented control of radio buttons, so the arrow keys move
+ * between the choices and a screen reader names the group. */
+export function ModePicker({
+  mode,
+  modes,
+  onChange,
+}: {
+  mode: Mode;
+  modes: readonly Mode[];
+  onChange: (m: Mode) => void;
+}) {
+  return (
+    <fieldset className="lm-modes">
+      <legend>Colour by</legend>
+      {MODES.filter((m) => modes.includes(m)).map((m) => (
+        <label key={m}>
+          <input type="radio" name="lm-mode" checked={mode === m} onChange={() => onChange(m)} />
+          <span>{MODE_LABELS[m]}</span>
+        </label>
+      ))}
+    </fieldset>
   );
 }
 
@@ -101,6 +165,7 @@ export function MapView({
   points,
   byId,
   kept,
+  catOf,
   onOpen,
   onLeave,
 }: {
@@ -110,6 +175,7 @@ export function MapView({
   points: readonly MapPoint[];
   byId: ReadonlyMap<string, LitEntry>;
   kept: ReadonlySet<string>;
+  catOf?: (id: string) => number;
   onOpen: (id: string) => void;
   onLeave: () => void;
 }) {
@@ -196,6 +262,7 @@ export function MapView({
           clusters={clusters}
           points={points}
           fieldOf={(id) => byId.get(id)?.ie[0]}
+          catOf={catOf}
           out={out}
           active={active}
         />

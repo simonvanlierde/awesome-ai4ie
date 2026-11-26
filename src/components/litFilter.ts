@@ -1,12 +1,13 @@
 import { currentTag, TAG_DIMS, type TagDim } from "../data/tags";
 import { surname } from "../lib/literature";
+import { MODES, type Mode } from "./litMapNav";
 
 export type Filter = Record<TagDim, string[]> & { papers: string[] };
 
 export type SortKey = "year" | "authors" | "title";
 
 /** Everything the literature list shows that a shared URL must reproduce. */
-export type View = { filter: Filter; sort: SortKey; q: string };
+export type View = { filter: Filter; sort: SortKey; q: string; mode: Mode };
 
 type Tagged = { id?: string } & Partial<Record<TagDim, string[]>>;
 
@@ -93,20 +94,27 @@ export function parseView(search: string): View {
     filter,
     sort: SORTS.find((o) => o.key === s)?.key ?? DEFAULT_SORT,
     q: params.get("q")?.trim() ?? "",
+    mode: MODES.find((m) => m === params.get("mode")) ?? "ie",
   };
 }
 
-/** Query string for a view ("" for the default view). The default sort is left
+/** Query string for a view ("" for the default view). The default sort and map colouring are left
  * out to keep the common URL clean.
  * NOTE: a plain string build, not URLSearchParams, so the commas between values
  * stay readable. Each value is still escaped: a hand-made URL can carry a `#`
  * or `&` that would otherwise turn into a fragment or a new key. */
-export function toQuery({ filter, sort, q }: View): string {
+export function toQuery({
+  filter,
+  sort,
+  q,
+  mode = "ie",
+}: Omit<View, "mode"> & { mode?: Mode }): string {
   const parts = KEYS.filter((k) => filter[k].length > 0).map(
     (k) => `${k}=${filter[k].map(encodeURIComponent).join(",")}`,
   );
   if (q.trim()) parts.push(`q=${encodeURIComponent(q.trim())}`);
   if (sort !== DEFAULT_SORT) parts.push(`sort=${sort}`);
+  if (mode !== "ie") parts.push(`mode=${mode}`);
   return parts.length > 0 ? `?${parts.join("&")}` : "";
 }
 

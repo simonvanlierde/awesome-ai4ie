@@ -6,7 +6,7 @@
 import { KMeans, TSNE } from "@saehrimnir/druidjs";
 import { tagLabel } from "../data/tags";
 import { decodeVector, entryText } from "./semantic";
-import { loadVectors, textKey } from "./vectors";
+import { loadMapVectors, textKey } from "./vectors";
 
 export const SEED = 4242;
 /** Clusters with fewer papers than this are drawn as thin. */
@@ -44,14 +44,12 @@ type Entry = {
 };
 
 /** The one place the map's input vectors come from: one per entry, or undefined for an entry
- * left off the map. Today these are the meaning-search embeddings (`pnpm run embed`); swap
- * this function to lay the map out from other inputs. */
+ * left off the map. They embed each paper's own title and abstract (its summary when OpenAlex
+ * has no abstract), written by `pnpm run embed`, not the curator's tags that then colour the
+ * points. Swap this function to lay the map out from other inputs. */
 export function mapVectors(entries: readonly Entry[]): (Float32Array | undefined)[] {
-  const stored = loadVectors();
-  return entries.map((e) => {
-    const v = stored[textKey(entryText(e))];
-    return v ? decodeVector(v) : undefined;
-  });
+  const stored = loadMapVectors();
+  return entries.map((e) => (stored[e.id] ? decodeVector(stored[e.id]) : undefined));
 }
 
 /** The vectors in 2D by t-SNE (cosine closeness, as unit vectors under euclidean distance),

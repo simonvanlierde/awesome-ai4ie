@@ -557,4 +557,73 @@ describe("LiteratureBrowser with the map", () => {
     await pointer("click", "mouse", 20, 20);
     expect(toggle("lcaPaper")?.getAttribute("aria-expanded")).toBe("true");
   });
+
+  describe("colour modes", () => {
+    const MODES_MAP = {
+      ...MAP,
+      modes: {
+        ml: {
+          legend: [{ cat: 0, label: "LLM", n: 3 }],
+          cats: "000",
+        },
+        topic: {
+          legend: [
+            { cat: 0, label: "Water", n: 1 },
+            { cat: 6, label: "Other", n: 1 },
+            { cat: 7, label: "No topic data", n: 1 },
+          ],
+          cats: "067",
+        },
+      },
+    };
+    async function mountModes(url: string) {
+      history.replaceState(null, "", url);
+      host = document.createElement("div");
+      document.body.append(host);
+      root = createRoot(host);
+      await act(async () => root.render(<LiteratureBrowser entries={THREE} map={MODES_MAP} />));
+    }
+    const radios = () => [...document.querySelectorAll<HTMLInputElement>(".lm-modes input")];
+    const classes = () =>
+      [...document.querySelectorAll(".lm-plot .lm-dot")].map((p) => p.getAttribute("class"));
+
+    it("colours by IE field until another mode is chosen, and says so in the URL", async () => {
+      await mountModes("/literature/");
+      expect(radios().map((r) => [r.checked, r.parentElement?.textContent])).toEqual([
+        [true, "IE field"],
+        [false, "AI technique"],
+        [false, "OpenAlex topic"],
+      ]);
+      expect(document.querySelector(".lm-modes legend")?.textContent).toBe("Colour by");
+      expect(classes()[0]).toContain("field-lca");
+      await click(radios()[2]);
+      expect(classes().map((c) => c?.replace("lm-dot ", ""))).toEqual([
+        "lm-cat-0",
+        "lm-cat-6",
+        "lm-none",
+      ]);
+      expect([...document.querySelectorAll(".lm-key li")].map((li) => li.textContent)).toEqual([
+        "Water (1)",
+        "Other (1)",
+        "No topic data (1)",
+      ]);
+      expect(location.search).toBe("?mode=topic");
+      await click(radios()[0]);
+      expect(location.search).toBe("");
+      expect(classes()[0]).toContain("field-lca");
+    });
+
+    it("opens in the mode the URL names and keeps the filters beside it", async () => {
+      await mountModes("/literature/?ie=lca&mode=ml");
+      expect(radios()[1].checked).toBe(true);
+      expect(classes().every((c) => c?.includes("lm-cat-0") || c?.includes("is-out"))).toBe(true);
+      await click(radios()[2]);
+      expect(location.search).toBe("?ie=lca&mode=topic");
+    });
+
+    it("offers no control when the page shipped no mode data", async () => {
+      await mountMap("/literature/");
+      expect(document.querySelector(".lm-modes")).toBeNull();
+    });
+  });
 });

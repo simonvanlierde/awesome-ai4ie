@@ -95,13 +95,17 @@ strokes at 40% and a light-blue stem, the same in both themes.
   first tap lights a node and the second opens its list. On load the bands draw
   along their curves, field by field.
   Reduced motion skips it.
-- **Literature map (Fig. 2.1).** Built at build time from the entry vectors
-  ([`src/lib/litmap.ts`](src/lib/litmap.ts)): t-SNE with a fixed seed, both axes on one scale,
+- **Literature map (Fig. 2.1).** Built at build time from vectors of each paper's own
+  title and abstract, never its tags ([`src/lib/litmap.ts`](src/lib/litmap.ts)): t-SNE with a fixed seed, both axes on one scale,
   clusters found on the 2D layout. Each cluster is a neutral slate hull (no ink: inks are for
   fields) named at its top centre for the tag most over-represented in it; a label moves below
   or inside its hull rather than cover a paper or another cluster. A thin cluster keeps a dashed
   outline. Marks take their first field's ink and shape; a paper with no IE field is a small
-  hollow grey dot. On `/literature/` the map sits between the count and the list, and the
+  hollow grey dot. On `/literature/` a segmented control ("Colour by", radio buttons, in the URL as
+  `mode=`) switches to AI technique or OpenAlex topic: the six biggest categories take inks 1
+  to 6, the rest one slate "Other", and every mark is a disc, since shapes belong to IE fields
+  alone. That is the one place inks stand for something other than a chapter or field, and the
+  key says which meaning is on. `/literature-map/` stays IE field only. On `/literature/` the map sits between the count and the list, and the
   list's filters drive it: kept papers in full ink, the rest at 16%. Pointing at, focusing or
   tapping a paper shows a card with the list's meta, title, blurb and tags; a click, Enter or
   a second tap opens its entry in the list, as on Fig. 1. One tab stop; arrow keys move to the

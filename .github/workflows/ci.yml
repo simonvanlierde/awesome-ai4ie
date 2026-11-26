@@ -64,7 +64,9 @@ jobs:
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         if: env.EMBED == 'true'
         with:
-          path: src/data/literature-vectors.json
+          path: |
+            src/data/literature-vectors.json
+            src/data/literature-map-vectors.json
           key: literature-vectors-${{ github.run_id }}
           restore-keys: literature-vectors-
       # Builds the Astro site (also validates internal links) and uploads the Pages artifact.
@@ -76,6 +78,8 @@ jobs:
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          # Optional: the embed step reads each abstract from OpenAlex, and a key lifts its daily limit.
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
           PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
         with:
           node-version: ${{ steps.node.outputs.version }}
@@ -94,6 +98,14 @@ jobs:
           'length > 0 and ([.[].vectorRow] | sort) == [range(length)]
           and $bytes == length * 4096'
           dist/literature-index.json
+      # The map's input: every entry has a title-and-abstract vector, or the map would drop it.
+      - name: Every entry has a map vector
+        if: env.EMBED == 'true'
+        run: |
+          jq -e --argjson n "$(jq length dist/literature-index.json)" \
+            '.vectors as $v | (.keys | length == $n) and all(.keys[]; $v[.] != null)' \
+            src/data/literature-map-vectors.json
+          ! grep -q "no vector yet" dist/literature-map/index.html
       # The Worker's tests use hand-written fixtures; this checks the build gives what they mimic.
       - name: Worker data has the fields the tools read
         run: |

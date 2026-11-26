@@ -67,9 +67,10 @@ const title = (id: string) => {
         </div>
         <MapKey />
         <figcaption>
-          <b>Fig. 2.1</b> {points.length} papers laid out by the meaning of their title, summary
-          and tags, so papers that read alike sit close together. Each shaded region is a cluster,
-          named for the tag that sets it apart most from the whole list. The axes have no unit,
+          <b>Fig. 2.1</b> {points.length} papers laid out by the meaning of their own title and
+          abstract, so papers that read alike sit close together. Each shaded region is a cluster,
+          named for the tag that sets it apart most from the whole list; the tags never shaped the
+          layout, so a cluster and its name are a check, not an input. The axes have no unit,
           and a paper with several fields shows its first.
           {unplaced > 0 &&
             ` ${unplaced} ${unplaced === 1 ? "paper has" : "papers have"} no vector yet and ${unplaced === 1 ? "is" : "are"} not shown.`}

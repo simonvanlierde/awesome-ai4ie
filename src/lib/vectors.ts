@@ -11,6 +11,11 @@ import { EMBED_MODEL } from "./semantic.ts";
 /** Generated, not committed (see .gitignore). */
 export const VECTORS_FILE = "src/data/literature-vectors.json";
 
+/** The map's own vectors (title and abstract), generated like VECTORS_FILE. Besides `vectors`
+ * by text key it holds `keys`, each entry id's text key: the abstract is fetched at embed time,
+ * so a build cannot rebuild the text to look the vector up. */
+export const MAP_VECTORS_FILE = "src/data/literature-map-vectors.json";
+
 type VectorsFile = { model: string; vectors: Record<string, string> };
 
 /** Key of an entry's embedded text, so an edited entry drops its stale vector. */
@@ -29,6 +34,20 @@ export function loadVectors(file = VECTORS_FILE): Record<string, string> {
   if (!existsSync(file)) return {};
   const data: VectorsFile = JSON.parse(readFileSync(file, "utf8"));
   return data.model === EMBED_MODEL ? data.vectors : {};
+}
+
+/** The map's vector by entry id, or an empty map when the file is missing or from another model. */
+export function loadMapVectors(file = MAP_VECTORS_FILE): Record<string, string> {
+  if (!existsSync(file)) return {};
+  const data: VectorsFile & { keys: Record<string, string> } = JSON.parse(
+    readFileSync(file, "utf8"),
+  );
+  if (data.model !== EMBED_MODEL) return {};
+  return Object.fromEntries(
+    Object.entries(data.keys).flatMap(([id, key]) =>
+      data.vectors[key] ? [[id, data.vectors[key]]] : [],
+    ),
+  );
 }
 
 /** Encoded vectors for `texts` by text key. A text already in `stored` keeps its vector and

@@ -5,7 +5,7 @@ import { type Citations, citationFile, FORMATS } from "../lib/citations";
 import { citeAuthors, formatAuthors, isNew, type PaperExtras, paperLink } from "../lib/literature";
 import type { MapCluster } from "../lib/litmap";
 import { contributeUrl, litUrl, paperUrl, siteUrl } from "../lib/urls";
-import { MapKey, MapView } from "./LiteratureMapPlot";
+import { MapKey, MapView, ModePicker } from "./LiteratureMapPlot";
 import {
   DEFAULT_SORT,
   EMPTY_FILTER,
@@ -23,7 +23,7 @@ import {
   toQuery,
   visibleCount,
 } from "./litFilter";
-import { decodePoints } from "./litMapNav";
+import { decodePoints, type Mode, type ModeColours } from "./litMapNav";
 import TagChips from "./TagChips";
 
 /**
@@ -53,7 +53,14 @@ import TagChips from "./TagChips";
  */
 
 /** The map's layout as the page ships it: points encoded by encodePoints(). */
-export type ListMap = { w: number; h: number; clusters: MapCluster[]; points: string };
+export type ListMap = {
+  w: number;
+  h: number;
+  clusters: MapCluster[];
+  points: string;
+  /** The AI technique and OpenAlex topic colourings; the IE field one needs no data. */
+  modes?: Partial<Record<Exclude<Mode, "ie">, ModeColours>>;
+};
 
 const FLIP_MS = 220;
 const FLIP_EASING = "cubic-bezier(0.2, 0, 0, 1)";
@@ -78,6 +85,7 @@ export default function LiteratureBrowser({
   const [filter, setFilter] = useState<Filter>(EMPTY_FILTER);
   const [sort, setSort] = useState<SortKey>(DEFAULT_SORT);
   const [q, setQ] = useState("");
+  const [mode, setMode] = useState<Mode>("ie");
   // Entries listed before "Show more". The server renders all of them; this applies after hydration.
   const [limit, setLimit] = useState(PAGE_SIZE);
   // First entry a "Show more" added: it takes focus, so a keyboard user carries on from there.
@@ -108,6 +116,7 @@ export default function LiteratureBrowser({
     setFilter(view.filter);
     setSort(view.sort);
     setQ(view.q);
+    setMode(view.mode);
     setHydrated(true);
     const ids = new Set(entries.map((e) => e.id));
     const follow = () => {
@@ -147,8 +156,8 @@ export default function LiteratureBrowser({
   useEffect(() => {
     if (!hydrated) return;
     const { pathname, hash } = window.location;
-    history.replaceState(null, "", pathname + toQuery({ filter, sort, q }) + hash);
-  }, [filter, sort, q, hydrated]);
+    history.replaceState(null, "", pathname + toQuery({ filter, sort, q, mode }) + hash);
+  }, [filter, sort, q, mode, hydrated]);
 
   // After a pill is removed its button is gone; move focus to the pill now in
   // its place, the last one, or the count.
@@ -296,6 +305,12 @@ export default function LiteratureBrowser({
   const byId = new Map(entries.map((e) => [e.id, e]));
   const mapPoints = map ? decodePoints(map.points) : [];
   const shownIds = new Set(shown.map((e) => e.id));
+  // A mode the page shipped no data for (or none at all) falls back to the IE field colours.
+  const colours = mode === "ie" ? undefined : map?.modes?.[mode];
+  const catById = colours
+    ? new Map(mapPoints.map((p, i) => [p.id, Number(colours.cats[i])]))
+    : undefined;
+  const modes: Mode[] = ["ie", ...(["ml", "topic"] as const).filter((m) => map?.modes?.[m])];
   const onMap = mapPoints.filter((p) => shownIds.has(p.id)).length;
   const hiddenTarget = target && !shown.some((e) => e.id === target) ? byId.get(target) : null;
 
@@ -447,6 +462,7 @@ export default function LiteratureBrowser({
             points={mapPoints}
             byId={byId}
             kept={shownIds}
+            catOf={catById && ((id) => catById.get(id) as number)}
             onOpen={(id) => {
               openEntry(id);
               const { pathname, search, hash } = window.location;
@@ -454,11 +470,14 @@ export default function LiteratureBrowser({
             }}
             onLeave={focusList}
           />
-          <MapKey />
+          {modes.length > 1 && (
+            <ModePicker mode={colours ? mode : "ie"} modes={modes} onChange={setMode} />
+          )}
+          <MapKey legend={colours?.legend} />
           <figcaption>
-            <b>Fig. 2.1</b> The papers laid out by the meaning of their title, summary and tags:
-            nearby papers read alike, and the axes have no unit. The filters above fade the papers
-            they leave out.
+            <b>Fig. 2.1</b> The papers laid out by the meaning of their own title and abstract:
+            nearby papers read alike, and the axes have no unit. The colour of a point is a tag or a
+            topic, which the layout never saw. The filters above fade the papers they leave out.
             {entries.length > mapPoints.length &&
               ` ${entries.length - mapPoints.length} ${entries.length - mapPoints.length === 1 ? "paper has" : "papers have"} no vector yet and ${entries.length - mapPoints.length === 1 ? "is" : "are"} not on the map.`}{" "}
             <a href={siteUrl("literature-map/")}>
