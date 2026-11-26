@@ -992,11 +992,10 @@ starlight-menu-button button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin: 3rem 0 0;
+  margin: 2.5rem 0 0;
   font-family: var(--sl-font);
-  font-size: 0.8125rem;
+  font-size: var(--sl-text-base);
   font-weight: 600;
-  font-stretch: 85%;
   color: var(--sl-color-gray-3);
 }
 .colophon .glyph {
@@ -1016,9 +1015,6 @@ starlight-menu-button button {
   .colophon a {
     padding-block: 0.3125rem;
   }
-}
-.colophon + footer .meta {
-  margin-top: 1.25rem;
 }
 /* Chapter index: the thumb-index tabs laid out across the cover. */
 .chapter-index ol {

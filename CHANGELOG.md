@@ -74,6 +74,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Fig. 1 spreads the shorter column over the full height, so both sides of the flow line up.
 - The home page text runs wider on desktop, and a short opening line no longer leaves a
   large gap above the first heading.
+- The colophon (licences and page links) sits below the previous and next page links, in
+  larger text.
 - Git hooks run with prek in place of lefthook.
 - Commit messages and pull request titles follow `type(scope): summary`, checked by a
   commit-msg hook and the pr-title workflow.
