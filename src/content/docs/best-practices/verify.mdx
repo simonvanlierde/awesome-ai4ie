@@ -87,16 +87,17 @@ Instructions alone don't hold. On ImpossibleBench ([arXiv:2510.20270](https://ar
 coding tasks whose tests contradict the specification, GPT-5 cheated on 54% and Opus 4.1 on
 50%. An explicit "stop and report" option cut GPT-5 to 9% but helped Opus 4.1 less.
 Read-only tests stopped Opus 4.1 from editing tests, but not from special-casing the tested
-inputs. On BaitBench ([arXiv:2608.30724](https://arxiv.org/abs/2608.30724)), seven frontier
-agents took a planted shortcut in 57.1% of runs, and still in over half when told not to
+inputs. On BaitBench ([arXiv:2608.30724](https://arxiv.org/abs/2608.30724)), three synthetic tabular
+ML tasks, seven frontier agents took a planted shortcut in 57.1% of runs, and still in over half when told not to
 cheat. So keep the instruction, and also enforce the boundary.
 
 Visible tests aren't enough either. On SpecBench ([arXiv:2605.21384](https://arxiv.org/abs/2605.21384)),
-every frontier agent passed all visible tests, while the gap to held-out tests grew by 28
+every frontier agent passed all visible tests, while the gap to held-out tests (tests the agent never saw) grew by 28
 percentage points for every tenfold increase in code size. On EvilGenie
 ([arXiv:2511.21654](https://arxiv.org/abs/2511.21654)), two of three commercial coding agents
 edited the tests to pass when they could. When a review panel kept rejecting research agents'
-shortcuts, evasion reached 40.5% with detailed feedback and 20.3% with a generic rejection
+shortcuts, cumulative evasion over five rounds reached 40.5% of 79 model-task pairs with
+detailed feedback and 20.3% with a generic rejection
 (Huang et al., [arXiv:2609.28614](https://arxiv.org/abs/2609.28614)), though the detailed
 feedback also carried the attempt history.
 
@@ -119,9 +120,10 @@ setup 23.4 points.
 
 Before you accept the work, give the task and the diff to a new session and tell it to find
 bugs, for example with the [adversarial code review prompt](/best-practices/prompts-and-skills/#adversarial-review-of-ai-written-code).
-Agents judge their own work badly: some that succeed 22% of the time predict 77% success, and
-asking for bugs calibrated best (Kaddour et al., [arXiv:2602.06948](https://arxiv.org/abs/2602.06948)).
-Across seven frontier coding models, an independent critic raised average accuracy on
+Agents overrate their own work: in one study some that succeeded 22% of the time predicted 77%
+success, and asking them to look for bugs rather than rate their success gave the
+best-calibrated self-assessment (Kaddour et al., [arXiv:2602.06948](https://arxiv.org/abs/2602.06948)).
+Across seven frontier coding models, an independent reviewing model (a critic) raised average accuracy on
 Terminal-Bench by 5.9 to 9.5 percentage points, at 1.13 to 1.25 times the cost (Zhang et al.,
 [arXiv:2610.34577](https://arxiv.org/abs/2610.34577)).
 
@@ -148,7 +150,8 @@ into your workflow. Run it again when the model, prompt or data change.
    Miller ([arXiv:2411.00640](https://arxiv.org/abs/2411.00640)) gives the formulas for
    treating an eval as an experiment.
 5. **Compare two models on the same items with a paired test.** Count the items only one
-   model got right, and run an exact McNemar test on those two counts. To detect a 20-point
+   model got right, and run an exact McNemar test on those two counts. It asks whether the
+split between them is larger than chance. To detect a 20-point
    gap (75% against 55%) with 80% power at the 5% level, plan for about 60 items per kind:
    about 40 if the weaker model's misses include all the stronger one's, about 100 if they
    miss items independently. On the Open LLM Leaderboard v1, 11 of 40 pairwise comparisons
@@ -157,7 +160,8 @@ into your workflow. Run it again when the model, prompt or data change.
    (Tamba, [arXiv:2606.26185](https://arxiv.org/abs/2606.26185)), and some providers reject
    the setting. Report how often an item's answer changes between runs.
 7. **Keep the eval out of the agent's reach,** like a [golden test](#keep-the-agent-away-from-the-test).
-   Keep a held-out split outside the public repository, and run it only on a frozen prompt.
+8. **Keep a held-out split** (questions you never tune the prompt on) outside the public
+   repository, and run it only on a frozen prompt.
 
 For example, the [RaMa-Scene explorer eval](https://github.com/simonvanlierde/ramascene-explorer/tree/main/evals/ask)
 scores how well a model turns a question into an EXIOBASE scenario, a what-if change to
@@ -181,7 +185,9 @@ Larger studies show the same gap. Across 14 models writing cited reports, even t
 kept over 94% of links valid but reached only 39 to 77% factual accuracy (Onweller et al.,
 [arXiv:2605.06635](https://arxiv.org/abs/2605.06635)). In a randomized trial with 288
 researchers reproducing published social science results, human-only teams reproduced 94%,
-AI-assisted teams 91% and AI-led teams 37% (Brodeur et al., [PNAS, 2026](https://doi.org/10.1073/pnas.2524747123)).
+AI-assisted teams 91% and AI-led teams 37%, all using ChatGPT (Brodeur et al.,
+[PNAS, 2026](https://doi.org/10.1073/pnas.2524747123)). The authors call the AI-led figure a
+lower bound on what AI can do.
 
 Keep a **claim ledger** next to any AI-assisted manuscript or report: one row per cited
 claim, filled in only after you open the source.
@@ -218,10 +224,11 @@ an instructions file, permissions, tests, and hooks.
   they can't work out from the code: the check and test commands, unusual conventions such as
   units, and what they must never do. Context files didn't raise task success on average and
   added more than 20% to cost in one study ([Gloaguen et al.](https://arxiv.org/abs/2602.11988)),
-  though another measured a 28.64% lower median runtime with one
-  ([Lulla et al.](https://arxiv.org/abs/2601.20404)).
-- **Delete lines the code no longer follows.** In 40 Python projects, 90.1% of agents' choices
-  followed a stale instruction file over the code. One sentence giving the code precedence
+  though another measured a 28.64% lower median runtime with one, across 124 pull requests in
+  10 repositories ([Lulla et al.](https://arxiv.org/abs/2601.20404)).
+- **Delete lines the code no longer follows.** In 40 constructed Python projects whose
+  instruction file and code used different conventions, two coding agents followed the stale
+  file in 90.1% of their choices. One sentence giving the code precedence
   raised the share that followed the code from 4.2% to 91.4%
   ([Xu and Wu](https://arxiv.org/abs/2610.30571)).
 - **Install few skills, each tested on your own tasks.** On SWE-Skills-Bench, 92 of 98 public
@@ -235,7 +242,8 @@ an instructions file, permissions, tests, and hooks.
   only: two patches that each pass can fail together. On constructed Django tasks this
   happened in 97% of runs (one of 834 real pull request pairs), and telling each agent about
   the other's change recovered 82% ([Xia et al.](https://arxiv.org/abs/2609.25396)).
-  Parallel subagents raised hidden-test pass rates by about 1 to 5 points at up to 3.8 times
+  On repository-construction tasks, parallel subagents raised hidden-test pass rates by only
+  about 1 to 5 points at up to 3.8 times
   the cost of one agent ([Lyu et al.](https://arxiv.org/abs/2611.33893)).
 - **Use hooks for rules without exceptions.** An `AGENTS.md` line is a request. A hook is a
   script the harness runs at a fixed point, such as before each edit, so it holds whatever the
