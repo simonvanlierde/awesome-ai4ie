@@ -12,12 +12,13 @@ demo's file sizes are typed in. To run the same check on your own site, see
 ## Result
 
 One page view of this site transfers about %%fp:viewKb%% kB and emits **%%fp:view%%** CO₂e
-(carbon dioxide equivalent, the only impact the model covers). A thousand page views emit
-%%fp:thousandViews%%.
+(carbon dioxide equivalent, the only impact the model covers).
 
 One run of the [CLIP demo](/demos/#classify-a-photo-with-clip), which labels a photo with an
 image model that runs in your browser, downloads about %%fp:demoMb%% MB and emits
-**%%fp:demo%%** CO₂e. That is as many bytes as about %%fp:viewsPerDemo%% page views.
+**%%fp:demo%%** CO₂e. That is as many bytes as about %%fp:viewsPerDemo%% page views. So if more
+than one reader in about %%fp:viewsPerDemo%% runs the demo, in this model the demo's downloads outweigh all page
+views, and a lighter demo model would save more than a lighter page.
 
 Each pair of numbers is the same estimate with and without the model's adjustment for a green
 host, not an error range. The model's own uncertainty is larger (see [Uncertainty](#uncertainty)).
@@ -79,8 +80,9 @@ demo downloads, and which host serves them. The background is the generic data f
 those bytes pass through: data centres, networks, the reader's device and the electricity
 grid. This page measures the foreground and takes the background from the
 [Sustainable Web Design model](https://sustainablewebdesign.org/estimating-digital-emissions/),
-version 4, through the [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview/)
-library (`@tgwf/co2` 0.19.0).
+version 4 (SWD v4), through the [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview/)
+library (`@tgwf/co2` 0.19.0). The result is the bytes per functional unit times the total
+factor per GB in Table 6.2.
 
 <p class="table-title"><b>Table 6.2</b> Inventory and emission factors</p>
 
