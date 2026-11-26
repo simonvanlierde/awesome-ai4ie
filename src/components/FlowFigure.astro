@@ -4,7 +4,7 @@
 // what the heights and numbers count.
 import { getCollection } from "astro:content";
 import { shortLabel, tagLabel } from "../data/tags";
-import { bandPath, missingTechniques, sankeyLayout, spinePath, topicLenses } from "../lib/sankey";
+import { bandPath, sankeyLayout, spinePath, topicLenses } from "../lib/sankey";
 import { litUrl } from "../lib/urls";
 import { repoUrl } from "../site";
 
@@ -36,7 +36,6 @@ const ieInFlow = ieNodes.map((n) => n.tag);
 const mlInFlow = mlNodes.map((n) => n.tag);
 // Techniques in the vocabulary with no paper in the flow yet: named in the
 // caption, so the figure does not imply the vocabulary ends at its right edge.
-const missing = missingTechniques(mlNodes).map((t) => tagLabel("ml", t));
 // Band ends as data, for the script to redraw the curves at another width.
 const ends = (b: (typeof bands)[number]) => ({ "data-y0": b.y0, "data-y1": b.y1, "data-h": b.h });
 const band = (b: (typeof bands)[number]) => bandPath(X0 + NODE, X1, b);
@@ -192,13 +191,6 @@ const idle =
       techniques appears in several bands ({total} in all).{" "}
       <a href={`${repoUrl}/blob/main/src/data/literature.yaml`}>Source data</a>
     </span>
-    {
-      missing.length > 0 && (
-        <span class="flow-gap">
-          No paper in the list uses {missing.join(", ")} yet.
-        </span>
-      )
-    }
   </figcaption>
 </figure>
 

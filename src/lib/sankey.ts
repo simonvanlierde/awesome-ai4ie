@@ -119,13 +119,6 @@ export function sankeyLayout(entries: readonly Tagged[], height: number, gap: nu
   return { ieNodes, mlNodes, bands, total, papers: flow.length };
 }
 
-/** Techniques in the vocabulary that no paper in the flow applies, in
- * vocabulary order: Fig. 1's caption names them as gaps. */
-export function missingTechniques(mlNodes: readonly { tag: string }[]): string[] {
-  const inFlow = new Set(mlNodes.map((n) => n.tag));
-  return Object.keys(TAGS.ml).filter((t) => !inFlow.has(t));
-}
-
 /** Per-topic reach across Fig. 1, in vocabulary order, omitting topics with no
  * paper in the flow. Only entries with both an IE field and an AI technique
  * take part, matching sankeyLayout. */
