@@ -43,15 +43,15 @@ body:
       description: The system or problem the paper is about. Pick all that apply, or none. Name a topic that is not listed in the gap field above.
       multiple: true
       options:
+        - Agriculture & food
         - Buildings & construction
         - Chemicals & toxicity
         - Electronics & e-waste
-        - Metals & critical materials
-        - Agriculture & food
-        - Water
-        - Product lifetime, reuse & repair
         - Energy & industrial decarbonisation
+        - Metals & critical materials
+        - Product lifetime, reuse & repair
         - Supply chains & resource security
+        - Water
   - type: dropdown
     id: ml
     attributes:

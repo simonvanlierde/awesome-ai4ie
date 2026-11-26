@@ -28,7 +28,8 @@ const HIT = 64;
 
 const entries = (await getCollection("literature")).map((e) => e.data);
 const { ieNodes, mlNodes, bands, total, papers } = sankeyLayout(entries, H, GAP);
-const lenses = topicLenses(entries);
+// A one-paper topic lights a single band, which reads as broken.
+const lenses = topicLenses(entries).filter((t) => t.papers >= 2);
 // A node opens the list scoped to the flow (the other column's tags ORed), so
 // the list shows exactly the papers the node's number counts.
 const ieInFlow = ieNodes.map((n) => n.tag);
@@ -60,16 +61,19 @@ const readout = (dim: "ie" | "ml", n: { tag: string; papers: number }) => {
   return `${tagLabel(dim, n.tag)}: ${n.papers} ${n.papers === 1 ? "paper" : "papers"}, ${dim === "ie" ? "applying" : "in"} ${k} of ${of}`;
 };
 const topicReadout = (t: (typeof lenses)[number]) =>
-  `${tagLabel("topic", t.tag)}: ${t.papers} ${t.papers === 1 ? "paper" : "papers"}, in ${t.fields} of the ${ieNodes.length} IE fields shown`;
+  `${tagLabel("topic", t.tag)}: ${t.papers} of the ${papers} papers, in ${t.fields} of the ${ieNodes.length} IE fields shown`;
+// A topic's list, scoped to the flow like the node links, so it holds exactly the chip's papers.
+const topicUrl = (t: (typeof lenses)[number]) =>
+  litUrl({ topic: [t.tag], ie: ieInFlow, ml: mlInFlow });
 const idle =
-  "Select a field or technique to list its papers. On a touch screen, tap one for its count, then use the button to open the list.";
+  "Select a field or technique to list its papers, or a topic to highlight where its papers sit. On a touch screen, tap one for its count, then use the button to open the list.";
 ---
 
 <figure class="flow not-content">
   {
     lenses.length > 0 && (
-      <div class="flow-lenses" role="group" aria-label="Filter flow by topic" hidden>
-        <span class="flow-lenses-label" aria-hidden="true">Topic</span>
+      <div class="flow-lenses" role="group" aria-labelledby="flow-lenses-label" hidden>
+        <span class="flow-lenses-label" id="flow-lenses-label">Highlight by topic</span>
         {
           lenses.map((t) => (
             <button
@@ -77,8 +81,11 @@ const idle =
               class="flow-chip"
               aria-pressed="false"
               data-topic={t.tag}
+              data-label={tagLabel("topic", t.tag)}
               data-bands={t.bands.join(",")}
               data-readout={topicReadout(t)}
+              data-href={topicUrl(t)}
+              data-papers={t.papers}
             >
               {`${tagLabel("topic", t.tag)} `}
               <span class="flow-chip-n">{t.papers}</span>
@@ -145,6 +152,7 @@ const idle =
           data-dim="ie"
           data-tag={n.tag}
           data-readout={readout("ie", n)}
+          data-label={tagLabel("ie", n.tag)}
           data-papers={n.papers}
         >
           <rect class="flow-hit" x="0" y={hitY(n)} width={X0 + NODE} height={Math.max(n.h, HIT)} />
@@ -164,6 +172,7 @@ const idle =
           data-dim="ml"
           data-tag={n.tag}
           data-readout={readout("ml", n)}
+          data-label={tagLabel("ml", n.tag)}
           data-papers={n.papers}
         >
           <rect class="flow-hit" x={X1} y={hitY(n)} width={W - X1} height={Math.max(n.h, HIT)} />
@@ -297,8 +306,8 @@ const idle =
   // readout. Mouse lights on hover, keyboard on focus. On touch a tap
   // on a node lights it and shows a button that follows the link, since there is no
   // hover; a click without a pointer (a screen reader, Enter) follows at once.
-  // A topic chip holds its bands lit until clicked again or cleared with Escape;
-  // hovering or focusing a node previews that node and restores the topic on leave.
+  // A topic chip holds its bands lit until clicked again or cleared with Escape, and
+  // shows the button to its list; a node lit meanwhile narrows the topic to its own bands.
   for (const svg of document.querySelectorAll<SVGSVGElement>(".flow svg")) {
     const flow = svg.closest(".flow");
     const out = flow?.querySelector(".flow-readout");
@@ -314,7 +323,7 @@ const idle =
     let activeTopic: HTMLButtonElement | null = null;
     let pointer = "";
     const render = () => {
-      if (litNode) {
+      if (litNode && !activeTopic) {
         const dim = litNode.dataset.dim ?? "";
         const tag = litNode.dataset.tag;
         svg.classList.add("is-lit");
@@ -330,23 +339,32 @@ const idle =
         const connectedIe = new Set<string>();
         const connectedMl = new Set<string>();
         svg.classList.add("is-lit", "is-topic");
+        // A node lit inside a topic narrows the topic's bands to its own.
+        const dim = litNode?.dataset.dim ?? "";
+        let hits = 0;
         for (const b of bands) {
-          const hit = allowed.has(`${b.dataset.ie}|${b.dataset.ml}`);
+          const hit =
+            allowed.has(`${b.dataset.ie}|${b.dataset.ml}`) &&
+            (!litNode || b.dataset[dim] === litNode.dataset.tag);
           b.classList.toggle("lit", hit);
           if (hit) {
+            hits++;
             if (b.dataset.ie) connectedIe.add(b.dataset.ie);
             if (b.dataset.ml) connectedMl.add(b.dataset.ml);
           }
         }
         for (const n of nodes) {
-          n.classList.remove("lit");
+          n.classList.toggle("lit", n === litNode);
           const hit =
             n.dataset.dim === "ie"
               ? connectedIe.has(n.dataset.tag ?? "")
               : connectedMl.has(n.dataset.tag ?? "");
           n.classList.toggle("in-topic", hit);
         }
-        out.textContent = activeTopic.dataset.readout ?? idle;
+        out.textContent =
+          litNode && !hits
+            ? `${activeTopic.dataset.label}: no papers in ${litNode.dataset.label}`
+            : (activeTopic.dataset.readout ?? idle);
       } else {
         svg.classList.remove("is-lit", "is-topic");
         for (const n of nodes) n.classList.remove("lit", "in-topic");
@@ -354,13 +372,24 @@ const idle =
         out.textContent = idle;
       }
     };
+    const point = (to: { href: string; papers: number }) => {
+      go.href = to.href;
+      go.textContent = `Show ${to.papers === 1 ? "this paper" : `these ${to.papers} papers`}`;
+      go.hidden = false;
+    };
+    // With no node armed, the button follows the pressed topic, or hides.
+    const settle = () => {
+      if (activeTopic)
+        point({ href: activeTopic.dataset.href ?? "", papers: Number(activeTopic.dataset.papers) });
+      else go.hidden = true;
+    };
     const disarm = () => {
       for (const m of nodes) m.classList.remove("armed");
-      go.hidden = true;
+      settle();
     };
     const light = (node: SVGAElement | null) => {
       if (node === litNode) return;
-      if (!node?.classList.contains("armed")) go.hidden = true;
+      if (!node?.classList.contains("armed")) settle();
       litNode = node;
       render();
     };
@@ -385,12 +414,10 @@ const idle =
       n.addEventListener("click", (e) => {
         if (pointer === "touch") {
           e.preventDefault();
-          for (const m of nodes) m.classList.toggle("armed", m === n);
+          // Under a pressed topic a tap only narrows the highlight; the button keeps the topic's list.
+          if (!activeTopic) for (const m of nodes) m.classList.toggle("armed", m === n);
           light(n);
-          go.href = n.getAttribute("href") ?? "";
-          const count = Number(n.dataset.papers);
-          go.textContent = `Show ${count === 1 ? "this paper" : `these ${count} papers`}`;
-          go.hidden = false;
+          if (!activeTopic) point({ href: n.getAttribute("href") ?? "", papers: Number(n.dataset.papers) });
         }
         pointer = "";
       });

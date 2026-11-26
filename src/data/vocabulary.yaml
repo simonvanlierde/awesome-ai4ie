@@ -74,6 +74,11 @@
   deprecated: true
 
 # Topics: the system or problem an entry is about. A topic cuts across fields.
+# Live topics are in alphabetical order of prefLabel (vocabulary.test.ts checks it).
+- id: food
+  scheme: topic
+  prefLabel: Agriculture & food
+  definition: Agriculture, food production and food waste.
 - id: buildings
   scheme: topic
   prefLabel: Buildings & construction
@@ -86,30 +91,26 @@
   scheme: topic
   prefLabel: Electronics & e-waste
   definition: Electronic products and the waste they become.
-- id: metals
-  scheme: topic
-  prefLabel: Metals & critical materials
-  definition: Metals, among them the critical raw materials.
-- id: food
-  scheme: topic
-  prefLabel: Agriculture & food
-  definition: Agriculture, food production and food waste.
-- id: water
-  scheme: topic
-  prefLabel: Water
-  definition: Water use, water footprints and water scarcity.
-- id: lifetime
-  scheme: topic
-  prefLabel: Product lifetime, reuse & repair
-  definition: How long products last, and how they are reused and repaired.
 - id: energy
   scheme: topic
   prefLabel: Energy & industrial decarbonisation
   definition: Energy systems and the decarbonisation of industry.
+- id: metals
+  scheme: topic
+  prefLabel: Metals & critical materials
+  definition: Metals, among them the critical raw materials.
+- id: lifetime
+  scheme: topic
+  prefLabel: Product lifetime, reuse & repair
+  definition: How long products last, and how they are reused and repaired.
 - id: supply-risk
   scheme: topic
   prefLabel: Supply chains & resource security
   definition: Supply chains and the security of resource supply.
+- id: water
+  scheme: topic
+  prefLabel: Water
+  definition: Water use, water footprints and water scarcity.
 - id: io
   scheme: topic
   prefLabel: Input–output & economy-wide footprints
