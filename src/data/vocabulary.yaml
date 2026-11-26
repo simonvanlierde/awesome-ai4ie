@@ -132,9 +132,8 @@
   short: NLP
   definition: Natural language processing that pulls structured data out of text, such as papers and reports.
   closeMatch:
-    - https://openalex.org/T10181
-  narrowMatch:
     - http://www.wikidata.org/entity/Q1662562
+    - https://openalex.org/T10181
 - id: cv
   scheme: technique
   prefLabel: Computer vision
