@@ -59,6 +59,8 @@ body:
         - Foundation models & transformers
         - Anomaly & condition detection
         - Uncertainty & probabilistic ML
+        - Knowledge graphs
+        - Recommender & matching systems
   - type: input
     id: gap
     attributes:

@@ -193,6 +193,20 @@
   definition: Methods that quantify uncertainty, such as Bayesian inference and probabilistic machine learning.
   closeMatch:
     - http://www.wikidata.org/entity/Q7882499
+- id: knowledge-graph
+  scheme: technique
+  prefLabel: Knowledge graphs
+  short: Knowledge graphs
+  definition: Facts stored as linked entities and relations, built by hand or extracted from text, and queried or reasoned over.
+  closeMatch:
+    - http://www.wikidata.org/entity/Q33002955
+- id: recommender
+  scheme: technique
+  prefLabel: Recommender & matching systems
+  short: Recommender
+  definition: Systems that rank or suggest the best matches for a user or item, such as partners, materials or products, from past choices or similarity.
+  closeMatch:
+    - http://www.wikidata.org/entity/Q554950
 
 # Entry types: what kind of paper an entry is.
 - id: landmark-ml

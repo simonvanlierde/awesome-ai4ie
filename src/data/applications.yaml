@@ -160,7 +160,7 @@
 - id: symbiosis-matching
   name: "Waste-to-resource matching for industrial symbiosis"
   ie: [symbiosis]
-  ml: [nlp-extraction, llm]
+  ml: [nlp-extraction, llm, knowledge-graph, recommender]
   summary: "Suggest which company could use another's waste, drawing on papers, patents and records of past exchanges."
   stage: tested
   maturity: "Research prototypes, each tested on its own parks or firms. One recovers 24 of 45 known exchanges in one district; methods that compare word meanings fail at some parks, Kalundborg among them."

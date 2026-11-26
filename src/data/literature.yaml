@@ -963,7 +963,7 @@
   doi: "10.1038/s41467-025-66599-7"
   blurb: "Builds a waste-to-resource knowledge graph from literature with LLMs (33,679 links); it captures 24 of 45 known Taranto symbiosis exchanges."
   ie: [symbiosis]
-  ml: [llm, nlp-extraction]
+  ml: [llm, nlp-extraction, knowledge-graph]
   type: [method, dataset]
   added: 2026-11
   evidence:
@@ -1017,7 +1017,7 @@
   doi: "10.1111/jiec.13245"
   blurb: "fastText word vectors from 2.5 GB of waste-reuse patents and papers rank waste-to-industry matches; F-measure about 50% above a co-occurrence baseline, but poor at Kalundborg."
   ie: [symbiosis]
-  ml: [nlp-extraction]
+  ml: [nlp-extraction, recommender]
   type: [method]
   added: 2026-11
 - id: vancapelleveenBuildingRecommenderSystems2021
@@ -1028,7 +1028,7 @@
   doi: "10.1016/j.jenvman.2020.111430"
   blurb: "Tags 311 short waste descriptions with one of 841 EWC codes by term matching, a thesaurus and Word2vec; top-10 micro precision is 0.36 baseline, 0.39 best."
   ie: [symbiosis]
-  ml: [nlp-extraction]
+  ml: [nlp-extraction, recommender]
   type: [method]
   added: 2026-11
 - id: grimmelUrbanIndustrialSymbiosis2025
@@ -1039,7 +1039,7 @@
   doi: "10.1111/jiec.70015"
   blurb: "Ranks symbiosis partners from reported exchange cases with a k-nearest-neighbour score; demonstrated on one firm each in Braunschweig and Singapore."
   ie: [symbiosis]
-  ml: [tabular-ml]
+  ml: [tabular-ml, recommender]
   type: [method]
   added: 2026-11
 - id: zhaoNovelMachineLearningbased2025
@@ -1074,7 +1074,7 @@
   doi: "10.1016/j.procir.2019.01.015"
   blurb: "Text analytics fill the waste-to-resource database behind a symbiosis recommender, replacing a hand-built knowledge base that is costly to maintain."
   ie: [symbiosis]
-  ml: [nlp-extraction]
+  ml: [nlp-extraction, recommender]
   type: [method]
   added: 2026-11
   status: proposal
@@ -1086,7 +1086,7 @@
   doi: "10.1016/j.envsoft.2018.04.004"
   blurb: "Compares a knowledge-based input-output recommender with an association-rule one for waste-to-industry matches on workshop survey data; explicit knowledge brings many data problems, so implicit-knowledge methods may suit better."
   ie: [symbiosis]
-  ml: [tabular-ml]
+  ml: [tabular-ml, recommender]
   type: [method]
   added: 2026-11
   status: proposal
@@ -1109,7 +1109,7 @@
   doi: "10.1080/02533839.2025.2567945"
   blurb: "Word2Vec similarity between waste types and raw materials in Taiwan's real-time Industrial Waste Report and Management System recommends where a waste can be reused."
   ie: [symbiosis]
-  ml: [nlp-extraction]
+  ml: [nlp-extraction, recommender]
   type: [method]
   added: 2026-11
   status: proposal
