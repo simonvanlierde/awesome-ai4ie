@@ -1147,7 +1147,7 @@ starlight-menu-button button {
   margin-top: 1.5rem;
   font-family: var(--sl-font);
 }
-/* Filter bar: one button per dimension; the open one's chips show below it. */
+/* Filter bar, under the search box: one button per dimension; the open one's chips show right below it. */
 .lit-bar {
   display: flex;
   flex-wrap: wrap;
@@ -1257,7 +1257,7 @@ starlight-menu-button button {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 .lit-search input {
   flex: 1;
