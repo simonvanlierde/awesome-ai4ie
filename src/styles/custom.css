@@ -163,17 +163,27 @@ h1#_top,
   font-weight: 700;
 }
 
-/* Reading text: the serif. It fills the 48rem column, so lines run to about 95 characters
-   on a wide screen. Islands (.not-content) set their own text; the :where() adds no
-   specificity, so island classes win. */
+/* Reading text: the serif. It fills the column, and on a docs page the type grows with the
+   column so a line stays at or under about 80 characters (the serif averages 0.475em a
+   character). Islands (.not-content) set their own text; the :where() adds no specificity,
+   so island classes win. */
+.sl-markdown-content {
+  container-type: inline-size;
+}
 .sl-markdown-content :is(p, li, blockquote, dd):not(:where(.not-content *)) {
   font-family: var(--font-read);
   font-size: 1.0625rem;
   line-height: 1.65;
 }
-/* The home page has no sidebar and a 67.5rem column, too wide for a line of text. */
+:where(:root:not([data-has-hero]))
+  .sl-markdown-content
+  :is(p, li, blockquote, dd):not(:where(.not-content *)) {
+  font-size: max(1.0625rem, 100cqi / 37);
+}
+/* The home page has no sidebar and a 67.5rem column, so its text keeps 17px and stops at
+   the same 80 characters instead. */
 [data-has-hero] .sl-markdown-content > :is(p, ul, ol, blockquote) {
-  max-width: 90ch;
+  max-width: 70ch;
 }
 /* An opening line is followed by a ruled h2, whose 2.75rem top margin reads as a hole
    after one short paragraph. Paragraph spacing keeps the rule close to it. */
