@@ -3,9 +3,11 @@ import {
   emptyMessage,
   hashTarget,
   matchesFilter,
+  matchesText,
   parseView,
   sortEntries,
   toQuery,
+  visibleCount,
 } from "./litFilter";
 
 const entry = { ie: ["circular"], ml: ["cv", "segmentation"], type: ["method"] };
@@ -43,6 +45,7 @@ describe("parseView", () => {
     expect(parseView("?ie=circular,lca&ml=cv&foo=x")).toEqual({
       filter: { ...none, ie: ["circular", "lca"], ml: ["cv"] },
       sort: "year",
+      q: "",
     });
   });
   it("reads a retired tag as its replacement and moves a tag to its current dimension", () => {
@@ -56,7 +59,7 @@ describe("parseView", () => {
     expect(parseView("?ie=nope").filter.ie).toEqual(["nope"]);
   });
   it("handles empty search", () => {
-    expect(parseView("")).toEqual({ filter: none, sort: "year" });
+    expect(parseView("")).toEqual({ filter: none, sort: "year", q: "" });
   });
   it("reads a known sort and falls back to year for an unknown one", () => {
     expect(parseView("?sort=title").sort).toBe("title");
@@ -71,21 +74,26 @@ describe("parseView", () => {
       papers: ["kirillovSegmentAnything2023"],
     };
     for (const sort of ["year", "authors", "title"] as const) {
-      expect(parseView(toQuery({ filter, sort }))).toEqual({ filter, sort });
+      expect(parseView(toQuery({ filter, sort, q: "" }))).toEqual({ filter, sort, q: "" });
     }
-    expect(parseView(toQuery({ filter: none, sort: "title" }))).toEqual({
+    expect(parseView(toQuery({ filter: none, sort: "title", q: "" }))).toEqual({
       filter: none,
       sort: "title",
+      q: "",
     });
   });
   it("escapes values, so a # or & in a hand-made URL stays a value", () => {
     const filter = { ...none, ie: ["a#b", "c&d"] };
-    expect(parseView(toQuery({ filter, sort: "year" }))).toEqual({ filter, sort: "year" });
+    expect(parseView(toQuery({ filter, sort: "year", q: "" }))).toEqual({
+      filter,
+      sort: "year",
+      q: "",
+    });
   });
   it("omits empty filters and the default sort", () => {
-    expect(toQuery({ filter: none, sort: "year" })).toBe("");
-    expect(toQuery({ filter: none, sort: "title" })).toBe("?sort=title");
-    expect(toQuery({ filter: { ...none, ie: ["circular"] }, sort: "authors" })).toBe(
+    expect(toQuery({ filter: none, sort: "year", q: "" })).toBe("");
+    expect(toQuery({ filter: none, sort: "title", q: "" })).toBe("?sort=title");
+    expect(toQuery({ filter: { ...none, ie: ["circular"] }, sort: "authors", q: "" })).toBe(
       "?ie=circular&sort=authors",
     );
   });
@@ -138,5 +146,30 @@ describe("hashTarget", () => {
     expect(hashTarget("#courses-videos-and-posts", ids)).toBeNull();
     expect(hashTarget("", ids)).toBeNull();
     expect(hashTarget("#%E0", ids)).toBeNull();
+  });
+});
+
+describe("text filter", () => {
+  const e = { title: "Segment Anything", authors: ["Kirillov, A."], blurb: "Promptable masks." };
+  it("needs every word, in any case and order, across title, authors and blurb", () => {
+    expect(matchesText(e, "")).toBe(true);
+    expect(matchesText(e, "  ")).toBe(true);
+    expect(matchesText(e, "anything SEGMENT")).toBe(true);
+    expect(matchesText(e, "kirillov masks")).toBe(true);
+    expect(matchesText(e, "segment depth")).toBe(false);
+  });
+  it("round-trips through the URL and leaves it out when empty", () => {
+    const view = { filter: none, sort: "year" as const, q: "life cycle & more" };
+    expect(toQuery(view)).toBe("?q=life%20cycle%20%26%20more");
+    expect(parseView(toQuery(view)).q).toBe("life cycle & more");
+    expect(toQuery({ ...view, q: "  " })).toBe("");
+  });
+});
+
+describe("visibleCount", () => {
+  it("caps at the limit, grows to reach a linked paper and never passes the total", () => {
+    expect(visibleCount(20, 141, -1)).toBe(20);
+    expect(visibleCount(20, 141, 50)).toBe(51);
+    expect(visibleCount(20, 5, -1)).toBe(5);
   });
 });

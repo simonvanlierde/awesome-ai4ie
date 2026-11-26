@@ -11,12 +11,15 @@ import {
   type Filter,
   hashTarget,
   matchesFilter,
+  matchesText,
+  PAGE_SIZE,
   parseView,
   SORTS,
   type SortKey,
   sortEntries,
   toggleTag,
   toQuery,
+  visibleCount,
 } from "./litFilter";
 import TagChips from "./TagChips";
 
@@ -62,6 +65,11 @@ export default function LiteratureBrowser({
 }) {
   const [filter, setFilter] = useState<Filter>(EMPTY_FILTER);
   const [sort, setSort] = useState<SortKey>(DEFAULT_SORT);
+  const [q, setQ] = useState("");
+  // Entries listed before "Show more". The server renders all of them; this applies after hydration.
+  const [limit, setLimit] = useState(PAGE_SIZE);
+  // First entry a "Show more" added: it takes focus, so a keyboard user carries on from there.
+  const focusAfterMore = useRef<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [open, setOpen] = useState<TagDim | null>(null);
   const [exportStatus, setExportStatus] = useState("");
@@ -87,6 +95,7 @@ export default function LiteratureBrowser({
     const view = parseView(window.location.search);
     setFilter(view.filter);
     setSort(view.sort);
+    setQ(view.q);
     setHydrated(true);
     const ids = new Set(entries.map((e) => e.id));
     const follow = () => {
@@ -116,12 +125,20 @@ export default function LiteratureBrowser({
     to.focus({ preventScroll: true });
   });
 
+  // After "Show more", focus moves to the first entry it added.
+  useEffect(() => {
+    const id = focusAfterMore.current;
+    if (!id) return;
+    focusAfterMore.current = null;
+    document.getElementById(id)?.focus({ preventScroll: false });
+  });
+
   // Write the filter and sort back to the URL, once the initial view is read.
   useEffect(() => {
     if (!hydrated) return;
     const { pathname, hash } = window.location;
-    history.replaceState(null, "", pathname + toQuery({ filter, sort }) + hash);
-  }, [filter, sort, hydrated]);
+    history.replaceState(null, "", pathname + toQuery({ filter, sort, q }) + hash);
+  }, [filter, sort, q, hydrated]);
 
   // After a pill is removed its button is gone; move focus to the pill now in
   // its place, the last one, or the count.
@@ -175,11 +192,19 @@ export default function LiteratureBrowser({
   function updateFilter(next: Filter | ((current: Filter) => Filter)) {
     captureRows();
     setFilter(next);
+    setLimit(PAGE_SIZE);
   }
 
   function updateSort(next: SortKey) {
     captureRows();
     setSort(next);
+    setLimit(PAGE_SIZE);
+  }
+
+  function updateQuery(next: string) {
+    captureRows();
+    setQ(next);
+    setLimit(PAGE_SIZE);
   }
 
   // The records are a separate chunk, fetched on the first export click.
@@ -229,15 +254,22 @@ export default function LiteratureBrowser({
   }
 
   const shown = sortEntries(
-    entries.filter((e) => matchesFilter(e, filter)),
+    entries.filter((e) => matchesFilter(e, filter) && matchesText(e, q)),
     sort,
   );
+  const visible = hydrated
+    ? visibleCount(
+        limit,
+        shown.length,
+        shown.findIndex((e) => e.id === target),
+      )
+    : shown.length;
   // One pill per active tag, plus one for a `?papers=` deep-link, which would
   // otherwise narrow the list with nothing on screen to explain why.
   const pills = TAG_DIMS.flatMap((dim) =>
     filter[dim].map((tag) => ({ id: `${dim}:${tag}`, dim, tag, label: tagLabel(dim, tag) })),
   );
-  const anyActive = pills.length > 0 || filter.papers.length > 0;
+  const anyActive = pills.length > 0 || filter.papers.length > 0 || q.trim() !== "";
   const byId = new Map(entries.map((e) => [e.id, e]));
   const hiddenTarget = target && !shown.some((e) => e.id === target) ? byId.get(target) : null;
 
@@ -269,6 +301,15 @@ export default function LiteratureBrowser({
           );
         })}
       </div>
+      <label className="lit-search">
+        <span className="lit-bar-label">Search</span>
+        <input
+          type="search"
+          value={q}
+          placeholder="Title, author or summary"
+          onChange={(e) => updateQuery(e.target.value)}
+        />
+      </label>
       {open && (
         <fieldset id="lit-facet-panel" className="lit-facet-panel" aria-label={DIM_LABELS[open]}>
           {Object.entries(TAGS[open]).map(([tag, label]) => (
@@ -324,6 +365,7 @@ export default function LiteratureBrowser({
             className="lit-clear"
             onClick={() => {
               refocus.current = 0;
+              updateQuery("");
               updateFilter(EMPTY_FILTER);
             }}
           >
@@ -336,6 +378,7 @@ export default function LiteratureBrowser({
       <div className="lit-count">
         <span role="status" ref={countRef} tabIndex={-1}>
           {shown.length} of {entries.length} entries
+          {visible < shown.length && `, showing the first ${visible}`}
         </span>
         <fieldset className="lit-export" aria-labelledby="lit-export-label">
           <span id="lit-export-label">Export</span>
@@ -374,6 +417,7 @@ export default function LiteratureBrowser({
             className="lit-clear"
             onClick={() => {
               pendingScroll.current = hiddenTarget.id;
+              updateQuery("");
               updateFilter(EMPTY_FILTER);
             }}
           >
@@ -382,7 +426,7 @@ export default function LiteratureBrowser({
         </p>
       )}
       <ol className="lit-list" ref={listRef}>
-        {shown.map((e) => (
+        {shown.slice(0, visible).map((e) => (
           <li
             key={e.id}
             id={e.id}
@@ -426,7 +470,26 @@ export default function LiteratureBrowser({
           </li>
         ))}
       </ol>
-      {shown.length === 0 && <p className="lit-empty">{emptyMessage(filter, tagLabel)}</p>}
+      {visible < shown.length && (
+        <button
+          type="button"
+          className="lit-more"
+          onClick={() => {
+            focusAfterMore.current = shown[visible]?.id ?? null;
+            setLimit(visible + PAGE_SIZE);
+          }}
+        >
+          Show {Math.min(PAGE_SIZE, shown.length - visible)} more ({shown.length - visible} not
+          shown)
+        </button>
+      )}
+      {shown.length === 0 && (
+        <p className="lit-empty">
+          {q.trim() && !anyActive
+            ? "No entry matches that search."
+            : emptyMessage(filter, tagLabel)}
+        </p>
+      )}
     </div>
   );
 }
