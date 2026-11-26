@@ -127,7 +127,8 @@ Every tag is a concept in [`src/data/vocabulary.yaml`](src/data/vocabulary.yaml)
 
 To add a tag:
 
-1. Add the concept to `vocabulary.yaml`, in display order within its scheme.
+1. Add the concept to `vocabulary.yaml`, in display order within its scheme: topics go in
+   alphabetical order of `prefLabel`, fields and techniques where they fit.
 2. Run `pnpm run vocabulary`. It writes `src/data/vocabulary.gen.ts`, the labels the site's
    code imports.
 3. Add the `prefLabel` to the matching dropdown in the issue forms in

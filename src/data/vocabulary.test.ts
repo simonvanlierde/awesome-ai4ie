@@ -87,6 +87,14 @@ describe("vocabulary.yaml", () => {
         expect(c.short, c.id).toBeTruthy();
   });
 
+  // Topics are a flat list with no rank, so readers scan them A to Z; fields and techniques keep a curated order.
+  it("lists live topics in alphabetical order of their label", () => {
+    const labels = concepts
+      .filter((c) => c.scheme === "topic" && !c.deprecated)
+      .map((c) => c.prefLabel);
+    expect(labels).toEqual([...labels].sort((a, b) => a.localeCompare(b, "en")));
+  });
+
   it("has no flag a retired concept cannot carry", () => {
     for (const c of concepts.filter((x) => x.deprecated)) expect(c.reserved, c.id).toBeUndefined();
   });
