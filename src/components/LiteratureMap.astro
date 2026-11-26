@@ -52,9 +52,11 @@ const points = placed.map((p, i) => ({
 }));
 
 // A cluster is named for its commonest topic (else technique) not already taken.
+// Names go to the biggest clusters first, so a small cluster does not take a big one's name.
 const taken = new Set<string>();
+const size = (c: number) => labels.filter((l) => l === c).length;
 const clusters = [...new Set(labels)]
-  .sort((a, b) => a - b)
+  .sort((a, b) => size(b) - size(a) || a - b)
   .map((c) => {
     const m = points.filter((p) => p.c === c);
     const count = (key: "topic" | "ml") => {
@@ -82,15 +84,17 @@ const clusters = [...new Set(labels)]
       none: m.filter((p) => !p.field).length,
       thin: m.length < THIN_CLUSTER,
     };
-  });
-// Labels sit above their cluster's centre; one that would land on an earlier label moves down.
+  })
+  .sort((a, b) => a.c - b.c);
+// Labels sit above their cluster; one that would land on an earlier label moves up.
 const LINE = 15;
 const placedLabels: { x: number; y: number }[] = [];
-for (const k of [...clusters].sort((a, b) => a.cy - b.cy)) {
+for (const k of [...clusters].sort((a, b) => b.cy - a.cy)) {
   const clash = (at: number) =>
     placedLabels.some((l) => Math.abs(l.y - at) < LINE && Math.abs(l.x - k.cx) < 170);
-  let y = k.cy;
-  while (clash(y)) y += LINE;
+  let y = k.cy - k.r - 6;
+  while (clash(y)) y -= LINE; // up, away from the cluster's own points
+  y = Math.max(y, LINE); // a wide cluster keeps its label on the plate
   placedLabels.push({ x: k.cx, y });
   Object.assign(k, { ly: y });
 }
@@ -111,7 +115,11 @@ const none = points.filter((p) => !p.field).length;
     </p>
   ) : (
     <>
+      <p class="litmap-skip">
+        <a href="#litmap-table-section">Skip to the table</a>
+      </p>
       <figure class="flow litmap not-content">
+        <p class="litmap-hint">Scroll sideways to see the whole map.</p>
         <div
           class="litmap-scroll"
           role="region"
@@ -132,7 +140,7 @@ const none = points.filter((p) => !p.field).length;
                       href={paperUrl(p.id)}
                       aria-label={`${p.title} (${p.year}), ${p.field ? tagLabel("ie", p.field) : "no IE field"}`}
                     >
-                      <circle class="lm-hit" cx={p.x} cy={p.y} r="12" />
+                      <circle class="lm-hit" cx={p.x} cy={p.y} r="15" />
                       <path
                         class={`lm-dot ${p.field ? `field-${p.field}` : "lm-none"}`}
                         d={p.field ? SHAPES[p.field] : NONE}
@@ -174,10 +182,10 @@ const none = points.filter((p) => !p.field).length;
         </ul>
         <figcaption>
           <span>
-            <b>Fig. 2.1</b> {points.length} papers laid out by the meaning of their title and
-            summary, so papers that read alike sit close together. A dashed outline marks a
+            <b>Fig. 2.1</b> {points.length} papers laid out by the meaning of their title,
+            summary and tags, so papers that read alike sit close together. A dashed outline marks a
             cluster of fewer than {THIN_CLUSTER} papers, where the list is thin. The axes have no
-            unit, and a paper with several fields shows its first.
+            unit, and each is stretched to fill the plate on its own, and a paper with several fields shows its first.
           </span>
           {unplaced > 0 && (
             <span class="flow-gap">
@@ -187,14 +195,14 @@ const none = points.filter((p) => !p.field).length;
         </figcaption>
       </figure>
 
-      <section class="apx-grid-wrap" aria-labelledby="litmap-table" tabindex="0">
+      <section class="apx-grid-wrap" id="litmap-table-section" aria-labelledby="litmap-table" tabindex="0">
         <p class="apx-grid-title" id="litmap-table">
           <b>Table 2.1</b> Papers by cluster and IE field
         </p>
         <table class="apx-grid">
           <thead>
             <tr>
-              <th aria-label="Cluster" />
+              <th><span class="sr-only">Cluster</span></th>
               {FIELDS.map((f) => (
                 <th scope="col" class={`field-${f}`}>
                   <a href={litUrl({ ie: [f] })}>{shortLabel(f)}</a>

@@ -34,7 +34,7 @@ const unitRows = (vs: ArrayLike<number>[]) =>
   });
 
 /** The first two principal components of the unit-length vectors, as [x, y] per vector,
- * scaled together so the larger spread fits [-1, 1]. Power iteration with deflation; each
+ * scaled together so the larger spread fits [-1, 1] (the map component then stretches each axis itself). Power iteration with deflation; each
  * axis' sign is fixed so its largest-magnitude point sits positive. */
 export function project(vectors: ArrayLike<number>[], seed = SEED): [number, number][] {
   const rows = unitRows(vectors);

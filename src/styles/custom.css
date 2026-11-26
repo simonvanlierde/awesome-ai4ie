@@ -2282,3 +2282,19 @@ starlight-menu-button button {
   width: 16px;
   height: 16px;
 }
+
+.litmap-skip {
+  margin: 0 0 0.5rem;
+  font-size: var(--sl-text-sm);
+}
+.litmap-hint {
+  display: none;
+  margin: 0 0 0.5rem;
+  font-size: var(--sl-text-sm);
+  color: var(--sl-color-gray-2);
+}
+@media (max-width: 680px) {
+  .litmap-hint {
+    display: block;
+  }
+}
