@@ -773,6 +773,19 @@ starlight-menu-button button {
 .flow-lenses[hidden] {
   display: none;
 }
+/* On a phone the chips scroll in one row, so the figure stays near the top; the fade marks the overflow. */
+@media (max-width: 40rem) {
+  .flow-lenses {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    mask-image: linear-gradient(to left, transparent, #000 2rem);
+    padding-right: 2rem;
+  }
+  .flow-lenses > * {
+    flex-shrink: 0;
+  }
+}
 .flow-lenses-label {
   font-family: var(--sl-font);
   font-size: 0.75rem;
@@ -792,7 +805,7 @@ starlight-menu-button button {
   font-weight: 600;
   font-stretch: 88%;
   padding: 0.2rem 0.55rem;
-  border: 1px solid var(--sl-color-gray-5);
+  border: 1px solid var(--sl-color-gray-4);
   border-radius: 0;
   background: transparent;
   color: var(--sl-color-gray-1);
@@ -809,13 +822,11 @@ starlight-menu-button button {
   font-variant-numeric: tabular-nums;
   color: var(--sl-color-gray-3);
 }
+/* Pressed reads as selected without outweighing the figure below. */
 .flow-chip[aria-pressed="true"] {
-  background: var(--sl-color-white);
-  border-color: var(--sl-color-white);
-  color: var(--sl-color-black);
-}
-.flow-chip[aria-pressed="true"] .flow-chip-n {
-  color: inherit;
+  background: var(--sl-color-accent-low);
+  border-color: var(--sl-color-text-accent);
+  color: var(--sl-color-white);
 }
 @media (pointer: coarse) {
   .flow-chip {
