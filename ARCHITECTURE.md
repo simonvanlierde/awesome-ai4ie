@@ -30,8 +30,8 @@ flowchart TD
 ## Code layout
 
 - `src/data/`: curated YAML data (`literature.yaml`, `applications.yaml`, `resources.yaml`), citation cache (`citations.json`), tag vocabulary (`vocabulary.yaml`, with the labels the code imports in `vocabulary.gen.ts` and `tags.ts`) and Zod schemas (`schemas.ts`).
-- `src/lib/`: `skos.ts` (the vocabulary as SKOS) and pure helpers for citations, RSS feed, URLs, resource lists, Sankey geometry, the literature map layout (`litmap.ts`), chapter checks and stall detection.
-- `src/components/`: static components (`AppList.tsx`, `TagChips.tsx`, `Resources.astro`), three React islands (`LiteratureBrowser.tsx`, `ApplicationsExplorer.tsx`, `ZeroShotDemo.tsx`) and their filter and pivot helpers.
+- `src/lib/`: `skos.ts` (the vocabulary as SKOS) and pure helpers for citations, RSS feed, URLs, resource lists, Sankey geometry, chapter checks and stall detection; `litmap.ts` lays out the literature map at build time (t-SNE and k-means from the `@saehrimnir/druidjs` dev dependency, never shipped to the browser).
+- `src/components/`: static components (`AppList.tsx`, `TagChips.tsx`, `Resources.astro`), three React islands (`LiteratureBrowser.tsx`, `ApplicationsExplorer.tsx`, `ZeroShotDemo.tsx`) and their filter and pivot helpers. `LiteratureMapPlot.tsx` draws the literature map, inside the literature browser and as static HTML on `/literature-map/`; `litMapNav.ts` holds its pointer and arrow-key logic.
 - `src/plugins/`: Markdown and HTML build plugins, plus `csp-inline-scripts.mjs`.
 - `src/content/docs/`: guide pages in Markdown and MDX.
 - `worker/`: the Cloudflare Worker: `/api/search`, `/api/contribute` (`contribute.ts`), `/api/poll` (`poll.ts`), the MCP server (`mcp.ts`) and the shared search and rate-limit code (`search.ts`).

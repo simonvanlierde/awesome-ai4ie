@@ -9,8 +9,11 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- A map of the literature: the reading list as a 2D map of papers laid out by the meaning of
-  their title, summary and tags, grouped by IE field, with a table of the same data.
+- A map of the literature over the reading list: papers laid out by the meaning of their
+  title, summary and tags (t-SNE), in named clusters. The list's filters and search fade the
+  papers they leave out; a card shows a paper on hover, focus or tap, and a click, Enter or a
+  second tap opens it in the list. `/literature-map/` keeps a static version with a table of
+  the clusters by IE field.
 - The contribute page links the AI4IE community survey, and `/qr/contribute.svg` and
   `/qr/contribute.png` hold a QR code for `https://ai4ie.org/contribute/`.
 - `pnpm run cited-figures` lists every number the site attributes to a paper. With
