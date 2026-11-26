@@ -1688,6 +1688,17 @@ starlight-menu-button button {
   line-height: 1.5;
   color: var(--sl-color-gray-2);
 }
+.apx-stage {
+  display: inline-block;
+  margin-right: 0.35rem;
+  padding: 0 0.4rem;
+  border: 1px solid var(--sl-color-gray-3);
+  font-family: var(--sl-font);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-stretch: 88%;
+  color: var(--sl-color-white);
+}
 .apx-entry details[open] > .apx-summary {
   margin-top: 0.6rem;
 }
@@ -1771,10 +1782,19 @@ starlight-menu-button button {
   display: inline-grid;
   place-items: center;
   min-width: 2.75rem;
-  height: 1.75rem;
+  height: 2.25rem;
   font-weight: 750;
   text-decoration: none;
   color: var(--sl-color-white);
+}
+.apx-grid td > :not(.sr-only) {
+  align-content: center;
+  line-height: 1.1;
+}
+.apx-pips {
+  font-size: 0.5rem;
+  letter-spacing: 0.05em;
+  font-weight: 400;
 }
 .apx-grid td[data-n="1"] > * {
   background: color-mix(in srgb, var(--ink-1) 30%, transparent);
@@ -1790,7 +1810,7 @@ starlight-menu-button button {
   content: "";
   display: inline-block;
   width: 2.75rem;
-  height: 1.75rem;
+  height: 2.25rem;
   border: 1px dashed var(--sl-color-gray-4);
   vertical-align: middle;
 }

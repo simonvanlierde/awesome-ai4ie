@@ -1,3 +1,4 @@
+import { STAGES, type Stage } from "../data/schemas";
 import { TAGS } from "../data/tags";
 
 type App = { id: string; ie: string[]; ml: string[] };
@@ -38,3 +39,18 @@ export function toGrid<T extends App>(entries: T[]) {
   const cols = [...new Set(entries.flatMap((e) => e.ml))].sort(byVocabulary("ml"));
   return { rows, cols, cells };
 }
+
+/** The most mature stage among a cell's applications. */
+export function topStage(apps: { stage: Stage }[]): Stage {
+  const order = Object.keys(STAGES);
+  return apps.reduce<Stage>(
+    (top, a) => (order.indexOf(a.stage) > order.indexOf(top) ? a.stage : top),
+    apps[0].stage,
+  );
+}
+
+/** Filled squares for a stage, "■■□": 1 to 3 of 3. Hidden from assistive tech; the label carries it. */
+export const stagePips = (s: Stage) => {
+  const n = Object.keys(STAGES).indexOf(s) + 1;
+  return "■".repeat(n) + "□".repeat(Object.keys(STAGES).length - n);
+};

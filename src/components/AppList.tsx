@@ -1,4 +1,4 @@
-import type { AppEntry } from "../data/schemas";
+import { type AppEntry, STAGES } from "../data/schemas";
 import { litUrl, siteUrl } from "../lib/urls";
 import TagChips from "./TagChips";
 
@@ -16,7 +16,12 @@ export default function AppList({ apps }: { apps: readonly AppEntry[] }) {
           <details>
             <summary>
               <span className="apx-name">{a.name}</span>
-              <span className="apx-maturity">{a.maturity}</span>
+              <span className="apx-maturity">
+                <b className="apx-stage" data-stage={a.stage}>
+                  {STAGES[a.stage]}
+                </b>{" "}
+                {a.maturity}
+              </span>
             </summary>
             <p className="apx-summary">{a.summary}</p>
             <span className="apx-links">

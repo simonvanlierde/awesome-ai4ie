@@ -39,7 +39,7 @@ When you reject a weekly lead, give the rule it fails as its `why`.
 - Give a `doi` (the bare `10.…` id), an `arxiv` id (the bare id, such as `2401.01234`), or both.
 - An entry is marked "new" in the list for about two months from the start of its `added` month.
 - Resource entries need an `id`, `title`, `url`, a `kind`, a one-line `blurb` saying why it's worth the time, and `checked: YYYY-MM`, the month you last opened the link. A tool also takes `good` and `notFor` (the "Good for" and "Not for" verdict), `cost`, `data` (whether data leaves your machine) and `group` (its list on the tools pages).
-- Application entries need both tag dimensions (`ie:` and `ml:`), an honest one-line `maturity:`, and `papers:` referencing literature ids.
+- Application entries need both tag dimensions (`ie:` and `ml:`), a `stage:` (`early`: reviews, one study or a prototype; `tested`: several studies or a benchmark, not operational data; `applied`: checked against real-world data at scale, with an independent reference), an honest one-line `maturity:` giving the evidence behind the stage, and `papers:` referencing literature ids.
 - `pnpm test` checks every field, tag, and cross-reference. CI runs it on your PR.
 - If you work locally, run `pnpm run citations` and include the citation cache with the paper.
   A maintainer can fetch the record for a GitHub-only edit. Until the cache has a record,
