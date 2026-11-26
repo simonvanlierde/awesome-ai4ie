@@ -1786,8 +1786,6 @@ starlight-menu-button button {
   font-weight: 750;
   text-decoration: none;
   color: var(--sl-color-white);
-}
-.apx-grid td > :not(.sr-only) {
   align-content: center;
   line-height: 1.1;
 }
