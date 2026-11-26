@@ -150,11 +150,10 @@ links, so the filter it set goes away.
 
 [`vocabulary/context.jsonld`](vocabulary/context.jsonld) maps the YAML fields to SKOS. The
 build uses it to publish the vocabulary at `/vocabulary.ttl` and `/vocabulary.jsonld`, and
-CI checks the Turtle against the SHACL shape of SkoHub Vocabs. The same file is in
-[simonvanlierde.github.io](https://github.com/simonvanlierde/simonvanlierde.github.io), byte
-for byte, so it holds no `@base` or `@vocab`: each site adds its own namespace when it builds
-(`src/lib/skos.ts` here). Do not edit it here alone: change both copies in the same way. `pnpm test` pins the file's SHA-256, and the pin moves in
-both repos in the same change.
+CI checks the Turtle against the SHACL shape of SkoHub Vocabs. It holds no `@base` or
+`@vocab`: `src/lib/skos.ts` adds the namespace when it builds. A new field in
+`vocabulary.yaml` needs a term here, or it is published in the site's namespace instead of
+SKOS.
 
 ### Look and feel
 

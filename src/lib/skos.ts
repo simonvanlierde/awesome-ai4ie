@@ -1,4 +1,4 @@
-// The vocabulary as SKOS: vocabulary.yaml read through the shared JSON-LD
+// The vocabulary as SKOS: vocabulary.yaml read through the JSON-LD
 // context (vocabulary/context.jsonld), plus one skos:ConceptScheme per scheme.
 // The site publishes the result at /vocabulary.ttl and /vocabulary.jsonld.
 import { readFileSync } from "node:fs";

@@ -13,6 +13,8 @@ import process from "node:process";
 import { pathToFileURL } from "node:url";
 
 const UA = "awesome-ai4ie vocabulary link check (+https://github.com/simonvanlierde/awesome-ai4ie)";
+// A hung request fails within this, not at the 10-minute job timeout.
+const TIMEOUT_MS = 30_000;
 const WIKIDATA = /^https?:\/\/www\.wikidata\.org\/entity\/(Q\d+)$/;
 const OPENALEX = /^https:\/\/openalex\.org\/(T\d+)$/;
 
@@ -55,6 +57,7 @@ async function wikidataLabels(qids) {
     });
     const res = await fetch(`https://www.wikidata.org/w/api.php?${query}`, {
       headers: { "User-Agent": UA },
+      signal: AbortSignal.timeout(TIMEOUT_MS),
     });
     if (!res.ok) throw new Error(`Wikidata answered ${res.status}`);
     const body = await res.json();
@@ -68,6 +71,7 @@ async function wikidataLabels(qids) {
 async function openalexLabel(tid) {
   const res = await fetch(`https://api.openalex.org/topics/${tid}`, {
     headers: { "User-Agent": UA },
+    signal: AbortSignal.timeout(TIMEOUT_MS),
   });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`OpenAlex answered ${res.status} for ${tid}`);

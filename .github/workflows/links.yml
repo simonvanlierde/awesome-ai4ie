@@ -106,3 +106,25 @@ jobs:
     uses: $/.github/workflows/report-failure.yml
     with:
       title: Weekly vocabulary link check failed
+
+  resolved:
+    # A clean scheduled run closes the failure issue, so it never goes stale.
+    name: "vocabulary: close the failure issue"
+    needs: ['vocabulary']
+    if: github.event_name == 'schedule' && needs.vocabulary.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write # closes the failure issue
+    steps:
+      - name: close the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TITLE: Weekly vocabulary link check failed # the notify job's title
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |-
+          issue=$(gh issue list --state open --author app/github-actions --search "in:title \"$TITLE\"" --json number -q '.[0].number')
+          if [ -n "$issue" ]; then
+            gh issue close "$issue" --comment "A clean scheduled run: $RUN_URL"
+          fi
