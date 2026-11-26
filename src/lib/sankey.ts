@@ -55,7 +55,8 @@ export type SankeyBand = {
  * counts distinct entries, which is what the filtered literature list shows.
  * Both columns share one scale and stack in vocabulary order. The column
  * with more nodes sits `gap` apart and sets the scale; the other spreads its
- * spare height over wider gaps, so both columns span the full `height`.
+ * spare height over wider gaps, so both columns span the full `height` (a
+ * one-node column does not).
  */
 export function sankeyLayout(entries: readonly Tagged[], height: number, gap: number) {
   const flow = flowEntries(entries);

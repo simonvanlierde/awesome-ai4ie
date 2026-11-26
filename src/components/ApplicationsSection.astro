@@ -9,3 +9,15 @@ const entries = (await getCollection("applications"))
 
 {/* The grid is server-rendered; the view switch only needs to work once seen. */}
 <ApplicationsExplorer client:visible entries={entries} />
+
+<script>
+  // Browsers without ::details-content print closed entries, so open them for printing.
+  let opened: HTMLDetailsElement[] = [];
+  addEventListener("beforeprint", () => {
+    opened = [...document.querySelectorAll<HTMLDetailsElement>(".apx-entry details:not([open])")];
+    for (const d of opened) d.open = true;
+  });
+  addEventListener("afterprint", () => {
+    for (const d of opened) d.open = false;
+  });
+</script>
