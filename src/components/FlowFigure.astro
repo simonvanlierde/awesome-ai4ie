@@ -388,14 +388,16 @@ const idle =
           for (const m of nodes) m.classList.toggle("armed", m === n);
           light(n);
           go.href = n.getAttribute("href") ?? "";
-          go.textContent = `Show these ${n.dataset.papers} papers`;
+          const count = Number(n.dataset.papers);
+          go.textContent = `Show ${count === 1 ? "this paper" : `these ${count} papers`}`;
           go.hidden = false;
         }
         pointer = "";
       });
     }
     svg.addEventListener("focusout", (e) => {
-      if (!svg.contains(e.relatedTarget as Node)) light(null);
+      // Moving focus to the "Show these N papers" link must not hide it before its click.
+      if (!svg.contains(e.relatedTarget as Node) && e.relatedTarget !== go) light(null);
     });
     document.addEventListener("pointerdown", (e) => {
       if (!svg.contains(e.target as Node) && e.target !== go) {
