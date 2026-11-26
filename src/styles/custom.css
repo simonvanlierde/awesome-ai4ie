@@ -1780,8 +1780,13 @@ starlight-menu-button button {
   background:
     linear-gradient(to right, var(--sl-color-bg) 30%, transparent) left / 2rem 100% no-repeat local,
     linear-gradient(to left, var(--sl-color-bg) 30%, transparent) right / 2rem 100% no-repeat local,
-    linear-gradient(to right, rgb(0 0 0 / 0.35), transparent) left / 0.75rem 100% no-repeat scroll,
-    linear-gradient(to left, rgb(0 0 0 / 0.35), transparent) right / 0.75rem 100% no-repeat scroll;
+    linear-gradient(to right, var(--apx-edge), transparent) left / 0.75rem 100% no-repeat scroll,
+    linear-gradient(to left, var(--apx-edge), transparent) right / 0.75rem 100% no-repeat scroll;
+  --apx-edge: rgb(0 0 0 / 0.35);
+}
+/* A dark shadow vanishes on a dark page, so the cue turns light there. */
+:root[data-theme="dark"] .apx-grid-wrap {
+  --apx-edge: rgb(255 255 255 / 0.3);
 }
 /* The technique names stay in view while the field columns scroll. */
 .apx-grid tbody th {
