@@ -163,18 +163,15 @@ h1#_top,
   font-weight: 700;
 }
 
-/* Reading text: the serif, at a reading measure. Islands (.not-content) set
-   their own text; the :where() adds no specificity, so island classes win. */
+/* Reading text: the serif. It fills the 48rem column, so lines run to about 95 characters
+   on a wide screen. Islands (.not-content) set their own text; the :where() adds no
+   specificity, so island classes win. */
 .sl-markdown-content :is(p, li, blockquote, dd):not(:where(.not-content *)) {
   font-family: var(--font-read);
   font-size: 1.0625rem;
   line-height: 1.65;
 }
-.sl-markdown-content > :is(p, ul, ol, blockquote) {
-  max-width: 68ch;
-}
-/* The home page has no sidebar and a wider column: the same text may run wider, still
-   inside a readable line length. */
+/* The home page has no sidebar and a 67.5rem column, too wide for a line of text. */
 [data-has-hero] .sl-markdown-content > :is(p, ul, ol, blockquote) {
   max-width: 90ch;
 }
@@ -642,9 +639,6 @@ starlight-menu-button button {
   font-family: var(--sl-font);
   font-weight: 750;
   font-stretch: 85%;
-}
-.starlight-aside__content > :is(p, ul, ol) {
-  max-width: 68ch;
 }
 .sl-markdown-content .card {
   border: none;
@@ -2171,12 +2165,6 @@ starlight-menu-button button {
 }
 .vocab dd p {
   margin-top: 0.25rem;
-}
-/* The prose is nested in sections and a list, so the 68ch rule above does not reach it. */
-.sl-markdown-content > section > p,
-.vocab dd p,
-.sl-markdown-content > details > p {
-  max-width: 68ch;
 }
 .vocab-meta {
   font-size: var(--sl-text-sm);
