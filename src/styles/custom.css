@@ -877,6 +877,26 @@ starlight-menu-button button {
 .flow-node:is(:hover, :focus-visible, .lit) text {
   text-decoration: underline;
 }
+/* The touch route to a node's list: shown after a tap, since a tap only lights the node.
+   On a touch screen its space stays reserved so showing it moves nothing. */
+.flow-go {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 0.25rem;
+  font-family: var(--sl-font);
+  font-weight: 700;
+  color: var(--sl-color-text-accent);
+}
+.flow-go[hidden] {
+  display: none;
+}
+@media (pointer: coarse) {
+  .flow-go[hidden] {
+    display: inline-flex;
+    visibility: hidden;
+  }
+}
 /* Invisible hit area so thin nodes are still easy to tap. */
 .flow-hit {
   fill: transparent;
@@ -1722,6 +1742,19 @@ starlight-menu-button button {
   position: relative;
   overflow-x: auto;
   margin-top: 1.25rem;
+  /* Edge shadows that show only where more columns lie beyond the edge. */
+  background:
+    linear-gradient(to right, var(--sl-color-bg) 30%, transparent) left / 2rem 100% no-repeat local,
+    linear-gradient(to left, var(--sl-color-bg) 30%, transparent) right / 2rem 100% no-repeat local,
+    linear-gradient(to right, rgb(0 0 0 / 0.35), transparent) left / 0.75rem 100% no-repeat scroll,
+    linear-gradient(to left, rgb(0 0 0 / 0.35), transparent) right / 0.75rem 100% no-repeat scroll;
+}
+/* The technique names stay in view while the field columns scroll. */
+.apx-grid tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--sl-color-bg);
 }
 .apx-grid-title,
 .sl-markdown-content .table-title {
