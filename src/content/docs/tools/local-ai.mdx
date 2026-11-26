@@ -17,17 +17,19 @@ Check your data-management plan and institutional policy first.
 
 ## Local / self-hosted inference
 
+These tools run a model on your own computer or server.
+
 <Resources group="local" />
 
 [Find a model to download](/tools/data-and-models/#pretrained-models).
 
 ## Hardware
 
-Start with GPU memory (or unified memory on Apple silicon). At 4 bits per parameter,
-weights alone take about half a byte per parameter. Leave headroom for the context
-window and runtime. Check your target model with a
-[memory estimator](https://huggingface.co/docs/accelerate/usage_guides/model_size_estimator)
-before buying hardware.
+The first limit is GPU memory, or unified memory on Apple silicon. At 4 bits per
+parameter, the weights alone take about half a byte per parameter. Leave room for the
+context window (the text the model reads at once) and for the runtime. Before you buy
+hardware, check your target model with a
+[memory estimator](https://huggingface.co/docs/accelerate/usage_guides/model_size_estimator).
 
 <p class="table-title"><b>Table 4.1</b> Weight memory at 4 bits per parameter</p>
 
@@ -38,10 +40,10 @@ before buying hardware.
 | 30 billion parameters | 15 GB |
 | 70 billion parameters | 35 GB |
 
-Weights take roughly twice the memory at 8 bits and four times at 16 bits. Actual
-model files can be larger.
+At 8 bits the weights take about twice this memory, and at 16 bits about four times.
+Actual model files can be larger.
 
 ### Per-institution notes
 
-[Add a note for your institution](repo:issues/new?template=other.yml) with how to
-request GPU access and a link to its data policy.
+[Add a note for your institution](/contribute/?type=other#send-a-contribution): say how to
+request GPU access there, and link its data policy.

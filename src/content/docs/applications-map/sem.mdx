@@ -4,6 +4,7 @@ description: AI applications and papers on material stocks and material flow ana
 tableOfContents: false
 ---
 
+import Cite from '../../../components/Cite.astro';
 import FieldPage from '../../../components/FieldPage.astro';
 import SuggestPaper from '../../../components/SuggestPaper.astro';
 import TopicGaps from '../../../components/TopicGaps.astro';
@@ -11,7 +12,16 @@ import TopicGaps from '../../../components/TopicGaps.astro';
 Socio-economic metabolism studies the materials a society takes in, stores and releases
 ([Pauliuk & Hertwich, 2015](https://doi.org/10.1016/j.ecolecon.2015.08.012)). The
 applications below map building and infrastructure stocks from imagery and estimate
-material flows with Bayesian models.
+material flows.
+
+Researchers mapped building and infrastructure stocks in Austria and Germany at 10 m
+<Cite id="haberlHighResolutionMaps2021" />. A separate study mapped building stocks
+globally at 90 m and estimated 547 Gt in 2019 (391–672 Gt). Independent local estimates
+ranged from 53% to 200% of the corresponding mapped values
+<Cite id="haberlGlobalBuiltEnvironment2024" />.
+For material flows, Bayesian models combine expert estimates with reported data.
+One study estimated 146 flows and stock changes for England's construction aggregates from
+reported data covering 20% of the system plus expert priors <Cite id="masonBayesianMaterialFlow2025" />.
 
 <FieldPage ie="sem" />
 

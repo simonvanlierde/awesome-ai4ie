@@ -173,6 +173,16 @@ h1#_top,
 .sl-markdown-content > :is(p, ul, ol, blockquote) {
   max-width: 68ch;
 }
+/* The home page has no sidebar and a wider column: the same text may run wider, still
+   inside a readable line length. */
+[data-has-hero] .sl-markdown-content > :is(p, ul, ol, blockquote) {
+  max-width: 90ch;
+}
+/* An opening line is followed by a ruled h2, whose 2.75rem top margin reads as a hole
+   after one short paragraph. Paragraph spacing keeps the rule close to it. */
+.sl-markdown-content > p:first-child + .sl-heading-wrapper.level-h2 {
+  margin-top: 1.25rem;
+}
 .sl-markdown-content a:not(:where(.not-content *, .sl-link-button)) {
   color: var(--sl-color-text-accent);
   text-decoration-thickness: 1px;
@@ -742,7 +752,7 @@ starlight-menu-button button {
 }
 .cover-tagline {
   margin: 0;
-  max-width: 34ch;
+  max-width: 44ch;
   font-family: var(--font-read);
   font-size: clamp(1.125rem, 1rem + 0.4vw, 1.3125rem);
   line-height: 1.5;
@@ -955,6 +965,21 @@ starlight-menu-button button {
 .glyph--tile .glyph-stem {
   stroke: var(--tile-stem);
 }
+/* On the 404 page the plate sits beside the text, not in a row of its own that leaves the
+   right half of the cover empty. */
+@media (min-width: 64rem) {
+  .cover-grid:has(.plate) {
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    align-items: center;
+  }
+  .cover-grid:has(.plate) .cover-copy {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "title" "tagline";
+  }
+}
+.cover-tagline a {
+  color: var(--sl-color-text-accent);
+}
 /* Fig. 404: the mark as a plate, framed by the dashed gap outline. */
 .plate {
   margin: 0;
@@ -982,11 +1007,10 @@ starlight-menu-button button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin: 3rem 0 0;
+  margin: 2.5rem 0 0;
   font-family: var(--sl-font);
-  font-size: 0.8125rem;
+  font-size: var(--sl-text-base);
   font-weight: 600;
-  font-stretch: 85%;
   color: var(--sl-color-gray-3);
 }
 .colophon .glyph {
@@ -1006,9 +1030,6 @@ starlight-menu-button button {
   .colophon a {
     padding-block: 0.3125rem;
   }
-}
-.colophon + footer .meta {
-  margin-top: 1.25rem;
 }
 /* Chapter index: the thumb-index tabs laid out across the cover. */
 .chapter-index ol {
@@ -1680,9 +1701,6 @@ starlight-menu-button button {
     display: none;
   }
 }
-.apx-field {
-  margin: 1.25rem 0 0;
-}
 .apx-links {
   display: flex;
   flex-wrap: wrap;
@@ -2049,6 +2067,12 @@ starlight-menu-button button {
 }
 .vocab dd p {
   margin-top: 0.25rem;
+}
+/* The prose is nested in sections and a list, so the 68ch rule above does not reach it. */
+.sl-markdown-content > section > p,
+.vocab dd p,
+.sl-markdown-content > details > p {
+  max-width: 68ch;
 }
 .vocab-meta {
   font-size: var(--sl-text-sm);

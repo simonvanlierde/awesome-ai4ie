@@ -35,7 +35,8 @@ function usedTags(): { where: string; dim: TagDim; tag: string }[] {
   // Component props (`ie="lca"`) and literature links (`?ie=lca,sem`) in the pages.
   const docs = "src/content/docs";
   const PROP = /\b(ie|topic|ml|type)="([a-z0-9-]+)"/g;
-  const QUERY = /[?&](ie|topic|ml|type)=([a-z0-9,-]+)/g;
+  // `/contribute/?type=` picks a form type, not a tag.
+  const QUERY = /(?<!contribute\/)[?&](ie|topic|ml|type)=([a-z0-9,-]+)/g;
   for (const f of readdirSync(docs, { recursive: true, encoding: "utf8" })) {
     if (!/\.mdx?$/.test(f)) continue;
     const text = readFileSync(join(docs, f), "utf8");
