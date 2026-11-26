@@ -1,6 +1,6 @@
 <h1><img src="public/favicon.svg" width="36" height="36" alt=""> Awesome AI for Industrial Ecology</h1>
 
-[ai4ie.org](https://ai4ie.org/) lists papers, applications and practical guides on AI for industrial ecology. It is a proposal for the AI4IE working group. You can [suggest a paper](../../issues/new?template=paper.yml) or [contribute on GitHub](CONTRIBUTING.md).
+[ai4ie.org](https://ai4ie.org/) maps what AI already does in industrial ecology research (life cycle assessment, material flows, input-output, circular economy and industrial symbiosis), how far to trust each application, and the papers behind it. It also has a filterable reading list, checks for AI-assisted work, tool guidance and in-browser demos. It is my proposal to the AI4IE working group, which hasn't adopted it yet ([governance](GOVERNANCE.md)). You can [suggest a paper](../../issues/new?template=paper.yml) or [contribute on GitHub](CONTRIBUTING.md): the easiest code change is one entry in a YAML file under `src/data/`.
 
 [![CI](https://img.shields.io/github/actions/workflow/status/simonvanlierde/awesome-ai4ie/ci.yml?label=CI)](https://github.com/simonvanlierde/awesome-ai4ie/actions)
 [![Coverage](https://img.shields.io/codecov/c/github/simonvanlierde/awesome-ai4ie)](https://codecov.io/gh/simonvanlierde/awesome-ai4ie)
@@ -8,7 +8,7 @@
 
 ## Development
 
-You need Node 26 and pnpm. To build the site and run the checks:
+You need Node 26 or newer (see `.nvmrc`) and pnpm. To build the site and run the checks:
 
 ```bash
 pnpm install

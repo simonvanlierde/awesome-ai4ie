@@ -7,12 +7,15 @@ import Cite from '../../components/Cite.astro';
 import SpaceEmbed from '../../components/SpaceEmbed.astro';
 import ZeroShotDemo from '../../components/ZeroShotDemo.tsx';
 
+Try three computer vision models on your own photo, in your browser.
+
 <span id="in-this-browser-zero-shot-identification-clip"></span>
 
 ## Classify a photo with CLIP
 
 <Cite id="radfordLearningTransferableVisual2021">CLIP</Cite> ranks labels you type
-for a photo, with no training on your examples.
+for a photo, with no training on your examples. Use it to sort photos of e-waste or
+products by label.
 
 <ZeroShotDemo client:visible />
 
@@ -23,8 +26,9 @@ for a photo, with no training on your examples.
 
 ## Outline part of a photo with Segment Anything
 
-Click a region to trace its outline. It runs on your device with WebGPU and finds
-outlines only: you still name each part yourself.
+Click a region to trace its outline, for example a component in a teardown photo. It
+runs on your device's graphics chip (WebGPU) and finds outlines only: you still name each
+part yourself.
 
 <SpaceEmbed
   figure="Fig. 2"
@@ -38,7 +42,8 @@ outlines only: you still name each part yourself.
 ## Estimate depth with Depth Anything V2
 
 Shows which parts of a photo are closer to the camera, as relative depth, not
-centimetres. The image goes to a Hugging Face server, so use a test image.
+centimetres. Relative depth is a first step towards estimating a product's shape or
+volume from one photo. The image goes to a Hugging Face server, so use a test image.
 
 <SpaceEmbed
   figure="Fig. 3"
@@ -47,7 +52,8 @@ centimetres. The image goes to a Hugging Face server, so use a test image.
   src="https://depth-anything-depth-anything-v2.hf.space"
 />
 
-Worked example: [computer vision for products at end of life](/applications-map/cv-taxonomy/).
+What each method can measure in discarded products, and how well it has been tested:
+[computer vision for products at end of life](/demos/cv-taxonomy/).
 
 <details id="two-ways-to-add-a-demo">
 <summary>Add a demo</summary>

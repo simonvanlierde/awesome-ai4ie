@@ -58,7 +58,7 @@
   group: coding
   blurb: "Coding assistant that reads and edits project files and runs tests."
   good: "multi-file changes, test-driven work, cleaning up research code."
-  notFor: "unreviewed use; read the diffs (see the [coding checklist](/best-practices/checklists/#ai-assisted-coding))."
+  notFor: "unreviewed use; read the diffs (see the [coding checklist](/best-practices/verify/#ai-assisted-coding))."
   cost: Paid
   data: leaves
   ml: [llm]
@@ -189,7 +189,7 @@
   url: https://scikit-learn.org
   kind: tool
   group: library
-  blurb: "Python library for fitting and evaluating models. The [reproducibility checklist](/best-practices/checklists/#machine-learning-reproducibility) shows where to start with a baseline."
+  blurb: "Python library for fitting and evaluating models. The [reproducibility checklist](/best-practices/verify/#machine-learning-reproducibility) shows where to start with a baseline."
   ml: [tabular-ml]
   checked: 2026-07
 - id: pytorch

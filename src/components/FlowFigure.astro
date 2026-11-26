@@ -61,7 +61,8 @@ const readout = (dim: "ie" | "ml", n: { tag: string; papers: number }) => {
 };
 const topicReadout = (t: (typeof lenses)[number]) =>
   `${tagLabel("topic", t.tag)}: ${t.papers} ${t.papers === 1 ? "paper" : "papers"}, in ${t.fields} of the ${ieNodes.length} IE fields shown`;
-const idle = "Select a label to list its papers. On touch, tap twice.";
+const idle =
+  "Select a field or technique to list its papers. On a touch screen, tap once for the count and again to open the list.";
 ---
 
 <figure class="flow not-content">
@@ -175,14 +176,15 @@ const idle = "Select a label to list its papers. On touch, tap twice.";
   </svg>
   <p class="flow-readout" aria-live="polite">{idle}</p>
   <figcaption>
-    <span><b>Fig. 1</b> {papers} papers by IE field and AI technique. A paper can fall in several
-      bands ({total} pairings).{" "}
+    <span><b>Fig. 1</b> {papers} papers, linking each IE field (left) to the AI techniques
+      applied in it (right). Wider bands mean more papers. A paper with several fields or
+      techniques appears in several bands ({total} in all).{" "}
       <a href={`${repoUrl}/blob/main/src/data/literature.yaml`}>Source data</a>
     </span>
     {
       missing.length > 0 && (
         <span class="flow-gap">
-          No papers yet for {missing.join(", ")}.
+          No paper in the list uses {missing.join(", ")} yet.
         </span>
       )
     }

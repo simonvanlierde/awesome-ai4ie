@@ -980,6 +980,11 @@ starlight-menu-button button {
 .cover-tagline a {
   color: var(--sl-color-text-accent);
 }
+.cover-start {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.9em;
+}
 /* Fig. 404: the mark as a plate, framed by the dashed gap outline. */
 .plate {
   margin: 0;

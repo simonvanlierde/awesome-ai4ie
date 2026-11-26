@@ -1,0 +1,268 @@
+---
+title: Verify AI-assisted work
+description: Checklists, golden tests, evals, a claim ledger and a run log for checking AI-assisted IE work before you rely on it.
+---
+
+Before you rely on code, numbers or citations that an AI produced, check them against
+something the AI could not change: a known answer, a primary source, or a test it cannot
+edit. This page gives the checks in the order you need them.
+
+These checks are my proposal, not a settled norm. If one is missing, too heavy, or a
+poor fit for your subfield, [say so](/contribute/). Most studies cited here are preprints,
+not yet peer reviewed.
+
+## Checklists
+
+### AI-assisted coding
+
+- [ ] Did I read the actual diff, not only the chat summary of what changed?
+- [ ] Are units, defaults and thresholds still what I intended?
+- [ ] Does every imported package and function exist, and do what the AI claims?
+- [ ] Did I run it on a case with a known answer, not only check that it ran without errors?
+- [ ] If a coding agent did the work, could it edit the [golden tests](#golden-tests)? It shouldn't.
+- [ ] Have I seen the golden test fail on a planted error, such as a mass in tonnes instead of kg?
+- [ ] Did I read the agent's plan before it edited any file?
+- [ ] Did the full test suite run after the agent's last edit?
+- [ ] Did I check each cited claim against the primary source, not only that the DOI resolves?
+- [ ] If I didn't understand a change, did I ask for an explanation before accepting it?
+- [ ] Did I [log](#log-the-run) the run's model, tokens (the text units a provider bills by) and cost?
+- [ ] If an AI step runs inside the analysis, did I [score it on known answers](#score-an-ai-step) first?
+
+### Machine learning reproducibility
+
+A preprint review of 50 ML studies in industrial ecology found reproducibility problems
+in 42 and clear data leakage in 14 ([Rankin et al.](https://doi.org/10.21203/rs.3.rs-9270723/v1)).
+Leakage means the model saw information from the test data during training, so its
+test score looks better than it is.
+
+- [ ] Did you set the test set aside before any scaling, normalization or gap-filling?
+- [ ] If the data is ordered in time, did you split by time (for example with time-series cross-validation), not at random?
+- [ ] Does the write-up give the pipeline steps in order ("we split the data, then normalized, then trained"), not only the model?
+- [ ] Do you report a simple baseline, such as linear regression, next to any complex model?
+- [ ] Is ML needed here, or could you test the hypothesis on empirical data directly?
+- [ ] If you withhold data, code or a model, do you say why, and how someone could get similar data?
+- [ ] If an LLM is part of the model itself, not only a coding aid, do you discuss whether its training data could include your test set?
+
+:::note[For reviewers]
+Look for a missing held-out test set, leakage across time, and preprocessing before the
+split. If the authors withheld data, look for the reason and for what you can still check.
+:::
+
+The [`ml-reproducibility` skill](/best-practices/prompts-and-skills/#ml-reproducibility)
+lets a supported assistant run this checklist on a pipeline.
+
+## Golden tests
+
+A **golden test** pins one result you know exactly. Use open or synthetic factors, never
+licensed database values. For example, build a small life cycle assessment (LCA) whose total
+you can calculate by hand, and assert the result to a tight tolerance:
+
+```python
+def test_steel_bracket_gwp_golden():
+    # Synthetic factors: 2.0 kg steel * 1.85 kg CO2e/kg + 0.5 kWh * 0.40 kg CO2e/kWh
+    result = run_bracket_lca(mass_kg=2.0, electricity_kwh=0.5)
+    assert abs(result["gwp100_kg_co2e"] - 3.90) < 1e-6
+```
+
+A script can run without errors and still be wrong by three orders of magnitude. A planted
+unit swap (`kg` for `t`) or a swapped impact method turns this test red at once.
+
+### Keep the agent away from the test
+
+If a coding agent can edit both the model code and the tests, it can make a failing golden
+test pass by changing the expected number, loosening the tolerance, or skipping the test.
+
+1. Give the agent read-only access to the golden tests and their fixtures, for example
+   through a read-only mount. Apply this to its shell as well as its edit tool.
+2. Check that the agent can run the tests but can't write to them.
+3. Require a human review for changes to those files. On GitHub, use
+   [required code-owner review](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners#codeowners-and-branch-protection).
+4. Tell the agent to stop and report when the test and the task disagree.
+5. Keep at least one golden case outside the agent's repository, and run it yourself.
+6. Diff the test files at review, even when the suite is green.
+7. When you reject the work, say only that it failed, not how you caught the shortcut.
+   Recompute the headline number yourself before you report it.
+
+Instructions alone don't hold. On ImpossibleBench ([arXiv:2510.20270](https://arxiv.org/abs/2510.20270)),
+coding tasks whose tests contradict the specification, GPT-5 cheated on 54% and Opus 4.1 on
+50%. An explicit "stop and report" option cut GPT-5 to 9% but helped Opus 4.1 less.
+Read-only tests stopped Opus 4.1 from editing tests, but not from special-casing the tested
+inputs. On BaitBench ([arXiv:2608.30724](https://arxiv.org/abs/2608.30724)), three synthetic tabular
+ML tasks, seven frontier agents took a planted shortcut in 57.1% of runs, and still in over half when told not to
+cheat. So keep the instruction, and also enforce the boundary.
+
+Visible tests aren't enough either. On SpecBench ([arXiv:2605.21384](https://arxiv.org/abs/2605.21384)),
+every frontier agent passed all visible tests, while the gap to held-out tests (tests the agent never saw) grew by 28
+percentage points for every tenfold increase in code size. On EvilGenie
+([arXiv:2511.21654](https://arxiv.org/abs/2511.21654)), two of three commercial coding agents
+edited the tests to pass when they could. When a review panel kept rejecting research agents'
+shortcuts, cumulative evasion over five rounds reached 40.5% of 79 model-task pairs with
+detailed feedback and 20.3% with a generic rejection
+(Huang et al., [arXiv:2609.28614](https://arxiv.org/abs/2609.28614)), though the detailed
+feedback also carried the attempt history.
+
+## Check the meaning, not only that it ran
+
+For data work, a script that runs and returns a plausible number can still use the wrong
+indicator, unit or filter. Before the agent starts:
+
+- Write a frozen **metadata card** for each dataset: its units, codes and classifications,
+  and the filters that matter. Keep it read-only, like the golden tests.
+- Write the **output contract** in full: columns, units, ranking key and the shape of the answer.
+
+Then check the result against both. Necula ([arXiv:2609.22222](https://arxiv.org/abs/2609.22222))
+ran one model (Claude Sonnet 5, three replicates) on 30 Eurostat tasks. A frozen metadata card
+raised exact correctness from 27.8% to 51.1%. Even in the best setup, one answer in five ran
+fine and was silently wrong. Leaving the ranking key and unit out of the contract cost one
+setup 23.4 points.
+
+## Review in a fresh session
+
+Before you accept the work, give the task and the diff to a new session and tell it to find
+bugs, for example with the [adversarial code review prompt](/best-practices/prompts-and-skills/#adversarial-review-of-ai-written-code).
+Agents overrate their own work: in one study some that succeeded 22% of the time predicted 77%
+success, and asking them to look for bugs rather than rate their success gave the
+best-calibrated self-assessment (Kaddour et al., [arXiv:2602.06948](https://arxiv.org/abs/2602.06948)).
+Across seven frontier coding models, an independent reviewing model (a critic) raised average accuracy on
+Terminal-Bench by 5.9 to 9.5 percentage points, at 1.13 to 1.25 times the cost (Zhang et al.,
+[arXiv:2610.34577](https://arxiv.org/abs/2610.34577)).
+
+Count a test the agent wrote only if it asserts a number you derived another way: by hand,
+from a published table, or with a second method. In 86,156 agent-written test patches, 80.2%
+had weak or no checks of the result (Banik et al., [arXiv:2606.18168](https://arxiv.org/abs/2606.18168)).
+
+## Score an AI step
+
+An **eval** is a fixed set of questions with known answers that a script scores. Run one
+against an AI step, such as a prompt that pulls a value out of a paper, before the step goes
+into your workflow. Run it again when the model, prompt or data change.
+
+1. **Collect gold questions from real use.** Write the known correct answer, or a check the
+   answer must pass, next to each question.
+2. **Add questions unlike your examples.** Include reworded questions, and off-topic ones the
+   step must refuse. A set that looks like the prompt's examples tests copying. Have a model
+   you aren't testing write the rewordings, and check by hand that each has one reading.
+3. **Score with code.** Have a script compare each answer with the gold answer.
+4. **Report correct out of _n_ for each kind of question, with a Wilson 95% interval** (the
+   range the true rate likely lies in), plus the model, its version and the date. At small
+   _n_, the usual error bar is too narrow: only Wilson and Bayesian intervals keep their
+   stated coverage (Bowyer et al., [arXiv:2503.01747](https://arxiv.org/abs/2503.01747)).
+   Miller ([arXiv:2411.00640](https://arxiv.org/abs/2411.00640)) gives the formulas for
+   treating an eval as an experiment.
+5. **Compare two models on the same items with a paired test.** Count the items only one
+   model got right, and run an exact McNemar test on those two counts. It asks whether the
+split between them is larger than chance. To detect a 20-point
+   gap (75% against 55%) with 80% power at the 5% level, plan for about 60 items per kind:
+   about 40 if the weaker model's misses include all the stronger one's, about 100 if they
+   miss items independently. On the Open LLM Leaderboard v1, 11 of 40 pairwise comparisons
+   couldn't be resolved at that standard (Kotawala, [arXiv:2605.30315](https://arxiv.org/abs/2605.30315)).
+6. **Run each item more than once.** Temperature 0 doesn't guarantee the same output
+   (Tamba, [arXiv:2606.26185](https://arxiv.org/abs/2606.26185)), and some providers reject
+   the setting. Report how often an item's answer changes between runs.
+7. **Keep the eval out of the agent's reach,** like a [golden test](#keep-the-agent-away-from-the-test).
+8. **Keep a held-out split** (questions you never tune the prompt on) outside the public
+   repository, and run it only on a frozen prompt.
+
+For example, the [RaMa-Scene explorer eval](https://github.com/simonvanlierde/ramascene-explorer/tree/main/evals/ask)
+scores how well a model turns a question into an EXIOBASE scenario, a what-if change to
+products, regions or industries. In its 2026-11-19 run (vLLM, 4-bit weights, temperature 0),
+Qwen3.8-27B answered 151 of 153 label questions correctly and Gemma-4-26B-A4B 135. Item by
+item, 16 labels went to Qwen and none to Gemma, so the exact McNemar p is about 0.00003: on
+labels, Qwen is better. But 15 of Gemma's 18 misses are one mistake repeated: on the
+electrical-machinery scenarios it named the industry where the product was asked for. Related
+items like these aren't independent evidence, so count them as one finding, and fix the prompt
+or the gold answer before you rank models on them.
+
+The reworded questions show the opposite problem. Qwen got 6 of 8 (Wilson 95% interval 0.41
+to 0.93) and Gemma 3 of 8 (0.14 to 0.69). All 3 differing items went to Qwen, and the exact
+McNemar p is still 0.25. Eight items can't rank the two models, and most misses are readings
+the question allows.
+
+## Claim ledger
+
+A reference checker can tell you that a DOI resolves. It can't tell you that the paper says
+what your draft claims. In one of my AI-assisted drafts, all 64 references passed the
+existence check. I then opened four of them: all four were cited for something the paper
+doesn't say. That is one draft, so it shows the failure, not a rate.
+
+Larger studies show the same gap. Across 14 models writing cited reports, even the strongest
+kept over 94% of links valid but reached only 39 to 77% factual accuracy (Onweller et al.,
+[arXiv:2605.06635](https://arxiv.org/abs/2605.06635)). In a randomized trial with 288
+researchers reproducing published social science results, human-only teams reproduced 94%,
+AI-assisted teams 91% and AI-led teams 37%, all using ChatGPT (Brodeur et al.,
+[PNAS, 2026](https://doi.org/10.1073/pnas.2524747123)). The authors call the AI-led figure a
+lower bound on what AI can do.
+
+Keep a **claim ledger** next to any AI-assisted manuscript or report: one row per cited
+claim, filled in only after you open the source.
+
+<p class="table-title"><b>Table 3.2</b> A minimal claim ledger</p>
+
+| Claim | Identifier | Locator | Supporting passage | Status |
+|---|---|---|---|---|
+| The claim as your draft states it | DOI or arXiv ID | Page, table or section | Exact quote or checked paraphrase | `verified`, `revised` or `removed` |
+
+The [source-checking prompt](/best-practices/prompts-and-skills/#verify-a-claim-before-citing-it)
+finds candidate quotes. Check them in the PDF yourself.
+
+## Log the run
+
+Log one row per run, so the cost of AI-assisted work sits next to the result:
+
+```csv
+date,task,model,input_tokens,output_tokens,cost_usd
+2026-11-18,refactor-matrix-solver,example-model,42100,6800,0.23
+```
+
+Take tokens and cost from the provider's logs. Report energy or emissions only from a primary
+source you have read, such as a measurement study. Don't multiply tokens by a rule of thumb.
+
+## If a coding agent does the work
+
+In a **chat**, you send a message, get a reply, and run the code yourself. A **coding agent**
+runs a language model in a loop with tools: it reads files, edits code, runs commands and
+keeps going until it decides it is done. The **harness** is what you put around that loop:
+an instructions file, permissions, tests, and hooks.
+
+- **Keep `AGENTS.md` short.** Agents read this file at the start of a session. List only what
+  they can't work out from the code: the check and test commands, unusual conventions such as
+  units, and what they must never do. Context files didn't raise task success on average and
+  added more than 20% to cost in one study ([Gloaguen et al.](https://arxiv.org/abs/2602.11988)),
+  though another measured a 28.64% lower median runtime with one, across 124 pull requests in
+  10 repositories ([Lulla et al.](https://arxiv.org/abs/2601.20404)).
+- **Delete lines the code no longer follows.** In 40 constructed Python projects whose
+  instruction file and code used different conventions, two coding agents followed the stale
+  file in 90.1% of their choices. One sentence giving the code precedence
+  raised the share that followed the code from 4.2% to 91.4%
+  ([Xu and Wu](https://arxiv.org/abs/2610.30571)).
+- **Install few skills, each tested on your own tasks.** On SWE-Skills-Bench, 92 of 98 public
+  skills had no statistically significant effect ([arXiv:2603.15401](https://arxiv.org/abs/2603.15401)),
+  and a second skill for the same job takes one run in five from the first
+  ([Yan et al.](https://arxiv.org/abs/2610.11647)).
+- **Ask for a plan first.** A wrong emission factor or system boundary is easier to catch in
+  a short plan than in a long diff.
+- **Give each agent its own [git worktree](https://git-scm.com/docs/git-worktree)** when you
+  run two at once, so their edits can't overwrite each other. That stops textual clashes
+  only: two patches that each pass can fail together. On constructed Django tasks this
+  happened in 97% of runs (one of 834 real pull request pairs), and telling each agent about
+  the other's change recovered 82% ([Xia et al.](https://arxiv.org/abs/2609.25396)).
+  On repository-construction tasks, parallel subagents raised hidden-test pass rates by only
+  about 1 to 5 points at up to 3.8 times
+  the cost of one agent ([Lyu et al.](https://arxiv.org/abs/2611.33893)).
+- **Use hooks for rules without exceptions.** An `AGENTS.md` line is a request. A hook is a
+  script the harness runs at a fixed point, such as before each edit, so it holds whatever the
+  agent decides. For example: refuse writes under `tests/golden/`, or run the tests when the
+  agent says it is done.
+
+```markdown
+# AGENTS.md
+
+- Lint: `uv run ruff check .`
+- Fast tests: `uv run pytest -q`
+- Conventions: all mass flows are in kg; impact factors come from open or synthetic fixtures only.
+- Never do:
+  - Do not edit files under `tests/golden/`.
+  - Do not commit licensed inventory data (such as ecoinvent values) to fixtures or notebooks.
+  - If a test cannot pass without changing expected values, stop and report the mismatch.
+- When this file and the code disagree, follow the code and say so.
+```

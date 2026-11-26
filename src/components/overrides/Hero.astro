@@ -16,6 +16,10 @@ const { id, data } = Astro.locals.starlightRoute.entry;
 const isHome = id === "" || id === "index";
 const is404 = id === "404";
 let { title = data.title, tagline } = data.hero ?? {};
+if (isHome) {
+  // Links are built here, not in the frontmatter, so they get the base path.
+  tagline += ` <span class="cover-start">Start with <a href="${siteUrl("applications-map/")}">your field on the map</a>, or with <a href="${siteUrl("best-practices/")}">Getting started &amp; pitfalls</a> if you're new to machine learning.</span>`;
+}
 if (is404) {
   title = "Page not found";
   tagline = `Search the site, choose a chapter, or <a data-broken-link href="${contributeUrl("other", { title: "Broken link" })}">report a broken link</a>.`;
@@ -42,7 +46,7 @@ if (is404) {
       is404 && (
         // The dashed frame is the site's mark for a gap: a missing page is one.
         <figure class="plate not-content">
-          <a href={siteUrl("")} class="plate-frame plate-link" aria-label="AI4IE — return to the home page">
+          <a href={siteUrl("")} class="plate-frame plate-link" aria-label="AI4IE: return to the home page">
             <BrandMark mode="glyph" large />
           </a>
         </figure>

@@ -9,7 +9,7 @@
   ie: [lca]
   ml: [tabular-ml]
   summary: "Train regression models on existing characterisation results to screen chemicals or products."
-  maturity: "Studies have demonstrated rapid screening since 2017. Use a full characterisation for decisions that need more precise estimates."
+  maturity: "One 2017 method study and two reviews. Use these models to rank options quickly, and run a full characterisation for any value a decision depends on."
   papers: [songRapidLifeCycleImpact2017, ghoroghiAdvancesApplicationMachine2022, romeikoReviewMachineLearning2024]
 - id: lci-gap-filling
   name: "Inventory gap-filling & estimation"
@@ -29,8 +29,8 @@
   name: "Automated product carbon footprinting"
   ie: [lca]
   ml: [llm, nlp-extraction]
-  summary: "Match products to emission factors semantically (zero-shot or LLM-driven) to footprint whole product catalogs."
-  maturity: "Works for products with a clear database match. In one evaluation, a few wrong matches caused most of the error (MAPE 18% with a product-code filter, 144% without). Audit trails remain the weak point."
+  summary: "Match product descriptions to emission factors by meaning with a language model, with no task-specific training, to footprint whole product catalogs."
+  maturity: "Works when a product has a clear database match. Flamingo's mean error was 18% with a product-code filter and 144% without. A few bad matches, like a microwave as an HVAC unit, caused most of it."
   papers: [balajiFlamingoEnvironmentalImpact2023, dengAutoPCFEfficientProduct2023]
 - id: corporate-report-extraction
   name: "Sustainability-indicator extraction from corporate reports"
@@ -60,7 +60,7 @@
   ie: [sem]
   ml: [remote-sensing]
   summary: "Use nighttime-light radiance, alone or fused with optical imagery by deep models, as a proxy for built-up volume and stocks."
-  maturity: "Continent-scale proxy validated; deep fusion improves accuracy but still needs ground data for calibration."
+  maturity: "Night-light images have been used to estimate built-up volume across Europe. A deep model fusing them with daytime imagery kept Beijing's stock error under 14%, but still needs ground data."
   papers: [peledSpatialMaterialStock2021, baoDeepLearningFusion2023]
 - id: street-view-building-attributes
   name: "Building attributes from street-level imagery"
@@ -104,14 +104,14 @@
   ie: [circular]
   ml: [cv, segmentation]
   summary: "Detect, segment, and count components inside opened devices to build bills of components for disassembly and recycling."
-  maturity: "Accurate on the benchmarks it was tuned for, untested on field photos. Foundation segmenters (SAM) still need a class-assignment layer."
+  maturity: "Accurate on its benchmarks, untested on field photos. General segmenters such as SAM outline parts but do not name them."
   papers: [zhangEvaluatingLargeLightweight2026, kirillovSegmentAnything2023]
   demo: "demos/" # site-relative: the explorer prefixes the deploy base
 - id: zero-shot-eol-recognition
   name: "Zero-shot recognition with vision-language models"
   ie: [circular]
   ml: [cv, foundation]
-  summary: "CLIP-class models score user-chosen labels against images: recognition without task-specific training data."
+  summary: "Models like CLIP score how well each label you type matches an image, with no training on your examples."
   maturity: "CLIP reached about 90% accuracy on TrashNet without labelled examples. The study did not test a working sorting line."
   papers: [funkEvaluationVisionLanguage2026, radfordLearningTransferableVisual2021]
   demo: "demos/" # site-relative: the explorer prefixes the deploy base
@@ -128,7 +128,7 @@
   ie: [circular]
   ml: [cv, segmentation]
   summary: "Locate components and fasteners so a robot can take a product apart for reuse or recycling."
-  maturity: "Working cells exist for narrow product families (phones); generalization across products is the open problem."
+  maturity: "One preprint shows a working robot system for one narrow product family, phones. No system yet handles many kinds of product."
   papers: [ameurFutureRoboticDisassembly2025, liuRAISERobotAssistedSelective2025]
 
 # ── Industrial symbiosis ─────────────────────────────────────────────────────
@@ -137,7 +137,7 @@
   ie: [symbiosis]
   ml: [nlp-extraction, llm]
   summary: "Suggest which company could use another's waste, drawing on papers, patents and records of past exchanges."
-  maturity: "Research prototypes, each tested on its own parks or firms. One recovers 24 of 45 known exchanges in one district; word vectors fail at some parks, Kalundborg among them."
+  maturity: "Research prototypes, each tested on its own parks or firms. One recovers 24 of 45 known exchanges in one district; methods that compare word meanings fail at some parks, Kalundborg among them."
   papers: [zhaoConstructionWastetoresourceKnowledge2025, davisMachineLearningassistedIndustrial2022, vancapelleveenBuildingRecommenderSystems2021, grimmelUrbanIndustrialSymbiosis2025, zhaoNovelMachineLearningbased2025]
 
 # ── Input-output ─────────────────────────────────────────────────────────────
@@ -146,7 +146,7 @@
   ie: [eeio]
   ml: [tabular-ml]
   summary: "Estimate missing or next-year cells in input-output tables and publish ML-ready emission factors from multiregional databases."
-  maturity: "One US 71-sector study cut median error on hard cells from 37% to 11%, given the target year's marginal totals. Open emission-factor tables now exist for Exiobase 3.8.2."
+  maturity: "One US 71-sector study cut median error on hard cells from 37% to 11%, given the target year's row and column totals. Open emission-factor tables now exist for EXIOBASE 3.8.2."
   papers: [zhaoUsingDeepLearning2022, guoGlobalEmissionFactor2026, maBPNNbasedEcologicallyExtended2023]
 - id: eeio-sector-matching
   name: "Product and firm matching to input-output sectors"

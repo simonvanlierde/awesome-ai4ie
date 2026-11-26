@@ -140,7 +140,13 @@ export default defineConfig({
 
   // Old URLs that are live on the deployed site must keep working after a move.
   // Astro adds `base` to the route but not to the destination, hence `basePath`.
-  redirects: { "/hardware/": `${basePath}/tools/local-ai/` },
+  redirects: {
+    "/hardware/": `${basePath}/tools/local-ai/`,
+    "/applications-map/cv-taxonomy/": `${basePath}/demos/cv-taxonomy/`,
+    "/best-practices/checklists/": `${basePath}/best-practices/verify/`,
+    "/best-practices/agentic-harnesses/": `${basePath}/best-practices/verify/`,
+    "/best-practices/evals/": `${basePath}/best-practices/verify/#score-an-ai-step`,
+  },
 
   integrations: [
     cspInlineScripts(), // after Astro writes the policy: hashes the scripts Starlight inlines
@@ -232,29 +238,33 @@ export default defineConfig({
               label,
               slug: `applications-map/${tag}`,
             })),
-            { label: "Worked example: CV taxonomy", slug: "applications-map/cv-taxonomy" },
           ],
         },
-        { label: "Literature & resources", slug: "literature" },
+        { label: "Literature", slug: "literature" },
         {
           label: "Best practices & guides",
           items: [
             { label: "Getting started & pitfalls", slug: "best-practices" },
-            { label: "Verification checklists", slug: "best-practices/checklists" },
-            { label: "Agentic harnesses", slug: "best-practices/agentic-harnesses" },
-            { label: "Evals & agent benchmarks", slug: "best-practices/evals" },
+            { label: "Verify AI-assisted work", slug: "best-practices/verify" },
             { label: "Prompts & skills", slug: "best-practices/prompts-and-skills" },
           ],
         },
         {
-          label: "Tools & hardware",
+          label: "Tools & courses",
           items: [
             { label: "Software tools", slug: "tools" },
             { label: "Local AI & hardware", slug: "tools/local-ai" },
             { label: "Datasets & models", slug: "tools/data-and-models" },
+            { label: "Courses, videos & posts", slug: "tools/learning" },
           ],
         },
-        { label: "Demos", slug: "demos" },
+        {
+          label: "Demos",
+          items: [
+            { label: "Try a model", slug: "demos" },
+            { label: "CV for end-of-life products", slug: "demos/cv-taxonomy" },
+          ],
+        },
         {
           label: "Community & contribute",
           items: [

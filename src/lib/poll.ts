@@ -15,7 +15,7 @@ export const POLL_OPTIONS = [
   },
   {
     id: "held-out-test",
-    label: "Held-out test the agent cannot edit",
+    label: "Test the agent cannot edit",
     summary:
       "A separate test suite outside the agent's write scope so it cannot pass by changing the test.",
   },
@@ -26,7 +26,7 @@ export const POLL_OPTIONS = [
   },
   {
     id: "compute-receipt",
-    label: "Compute and token footprint receipt",
+    label: "Log of model, tokens and energy",
     summary: "Record of model, token count, runtime, or energy used for AI-assisted analysis.",
   },
   {

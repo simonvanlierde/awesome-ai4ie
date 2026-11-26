@@ -1,34 +1,54 @@
 ---
 title: Getting started & pitfalls
-description: How to check an ML model, review AI-assisted work, and avoid errors in IE research.
+description: How reliable AI is on IE tasks today, how to use it as a research method or an assistant, and the errors to watch for.
 ---
 
 import Resources from '../../../components/Resources.astro';
+
+Start here if you're new to using AI in industrial ecology (IE) research. This page says
+how reliable AI is on IE tasks today, how to use it well, and which errors to watch for.
+To check finished work, use [Verify AI-assisted work](/best-practices/verify/).
+
+## How reliable is AI today?
+
+Two benchmarks test language models on IE tasks. Both found frequent errors.
+
+<p class="table-title"><b>Table 3.1</b> Benchmarks of language models on IE tasks</p>
+
+| Benchmark | What it tests | Headline result |
+|---|---|---|
+| [Expert-grounded LCA benchmark](https://arxiv.org/abs/2510.19886) | 11 general-purpose models on 22 LCA tasks, reviewed by 17 LCA practitioners | Experts found inaccurate or misleading information in 37.2% of responses. Some models invented up to 40% of their citations. |
+| [PCFBench](https://arxiv.org/abs/2608.27716) | Eight frontier models on 614 expert-labelled items across six product carbon footprint tasks | The strongest models came within a factor of 2 of declared totals on 77% of products. When they built the footprint step by step, that fell to 37–58%, and only 45–75% of those footprints conserved mass. |
+
+<p class="table-src">Source: the abstract of each paper.</p>
+
+Outside IE, agents that try to reproduce published results from the paper's own code and
+data still fail most of the time: the best agent scored 21% on the hardest level of
+[CORE-Bench](https://arxiv.org/abs/2409.11363). Scores change quickly as models change, so
+check a paper's date and the models it tested before you quote a number.
 
 ## AI as a research method
 
 - **Start with a baseline.** Compare your model with a simple one, such as linear
   regression. If the gain is small, explain why you need the more complex model.
-- **Isolate the test set first.** Normalization, gap-filling and feature selection
-  can leak information from the test set. For time-ordered data, split by time.
-  Use the [ML reproducibility checklist](/best-practices/checklists/#machine-learning-reproducibility)
+- **Set the test set aside first.** The test set is data the model never sees in
+  training. If you normalize, gap-fill or select features before you split, the model
+  learns from the test set and scores too well. This is called leakage. For
+  time-ordered data, split by time. Use the
+  [ML reproducibility checklist](/best-practices/verify/#machine-learning-reproducibility),
   or [check an existing pipeline for leakage](/best-practices/prompts-and-skills/#data-leakage-self-check).
 - **Test where you plan to use the model.** A model trained to estimate building
   age from Toronto street-view photos was less accurate in five other Canadian
   cities. Report where you validated the model.
   [Building-age study](https://doi.org/10.1111/jiec.13591)
-- **Compare with independent data.** One satellite map of building stocks agreed
-  with most local studies, with large differences in some places. Report the
-  discrepancy and explain how you estimate uncertainty.
-  [Building-stock study](https://doi.org/10.1111/jiec.13585)
+- **Compare with independent data.** Local estimates of building stocks ranged from 53%
+  to 200% of one global satellite map. Report such differences and say how you estimate
+  uncertainty. [Building-stock study](https://doi.org/10.1111/jiec.13585)
 - **Check extracted values against the document.** In the
   [inventory studies](/applications-map/lca/), researchers use
   language models to extract values from documents and check them by hand.
   [Try the extraction prompt](/best-practices/prompts-and-skills/#extract-without-inventing).
-  If you use synthetic data, describe how you generated it in the methods.
-- **Report the pipeline in order.** State when you split, normalized and trained.
-  Pin versions and seeds, record the environment, and explain any restrictions on
-  sharing data or code.
+- **Describe synthetic data.** If you generate data, say how in the methods.
 
 ### If you're new to ML
 
@@ -43,7 +63,7 @@ Free Python courses on baselines and testing on unseen data.
 - **Give specific instructions.** Include the schema, units or method constraints
   the assistant needs. Check your data policy before sharing any material.
 - **Review small changes.** Read the diff, run tests, and check numerical work on a
-  case with a known answer. [AI-assisted coding checklist](/best-practices/checklists/#ai-assisted-coding)
+  case with a known answer. [AI-assisted coding checklist](/best-practices/verify/#ai-assisted-coding)
 - **Get a second review.** Open a fresh session and use the
   [code review prompt](/best-practices/prompts-and-skills/#adversarial-review-of-ai-written-code).
 - **Verify claims and citations.** Open the primary source and check what it supports.
@@ -64,11 +84,10 @@ itself doesn't check whether the text is true.
 
 - **Invented references.** GPT-3.5 fabricated 55% and GPT-4 fabricated 18% of the
   references they produced in one study ([Walters & Wilder, 2023](https://doi.org/10.1038/s41598-023-41032-5)).
-  In a benchmark on LCA questions, rates reached 40% for some models
-  ([Donaldson et al., 2025](https://doi.org/10.48550/arXiv.2510.19886)).
+  On LCA questions, some models invented up to 40% ([above](#how-reliable-is-ai-today)).
   Open each reference before citing it.
 - **Wrong numbers.** Trace each number you plan to publish to a primary source or
   recalculate it.
-- **Confidential data.** A hosted service receives what you send and may retain it.
+- **Confidential data.** A hosted service receives what you send and may keep it.
   Check your data-management plan and institutional policy before sharing anything.
   [Local AI options](/tools/local-ai/)

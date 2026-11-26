@@ -7,6 +7,8 @@ import { Code } from '@astrojs/starlight/components';
 import mlReproducibility from '@skills/ml-reproducibility/SKILL.md?raw';
 import lcaSanityCheck from '@skills/lca-data-sanity-check/SKILL.md?raw';
 
+Copy a prompt into any chat, or save a skill file so an assistant loads it for a task.
+
 ## Reusable prompts
 
 ### Verify a claim before citing it
@@ -50,7 +52,7 @@ what is the standard alternative if it fails? Cite a methods reference I can che
 ### Data-leakage self-check
 
 *Use when you've built an ML pipeline and want the leakage audit from the
-[reproducibility checklist](/best-practices/checklists/#machine-learning-reproducibility)
+[reproducibility checklist](/best-practices/verify/#machine-learning-reproducibility)
 run against it.*
 
 ```text
@@ -106,23 +108,7 @@ check the database and method names, then rerun a case with a known answer.
 
 ## Add your own skill
 
-A skill is worth writing when you give an assistant the same instructions for the
-same task more than twice.
-
-1. Copy the [skill template](repo:blob/main/skills/SKILL-template.md) to
-   `skills/<your-skill-name>/SKILL.md`. The `name` field in the file's front matter
-   must match the folder name: lowercase letters, numbers and single hyphens, at most
-   64 characters, not starting or ending with a hyphen
-   ([specification](https://agentskills.io/specification)).
-2. Write the `description` so the assistant knows when to load the skill: the task,
-   the inputs, and what the skill checks. Until the task comes up, the assistant reads
-   only the `name` and this line.
-3. Write the steps. End each check with a result you can verify, such as a known
-   answer or a balance that must close.
-4. Try it on a real task in a fresh session. Keep it generic enough that someone
-   else can use it without editing.
-
-To submit it, open a pull request on GitHub
-([contributing guide](repo:blob/main/CONTRIBUTING.md#adding-an-agent-skill)).
-Without a GitHub account, paste the skill into the
+A skill is worth writing when you give an assistant the same instructions for the same
+task more than twice. The [contributing guide](repo:blob/main/CONTRIBUTING.md#adding-an-agent-skill)
+has the steps. Without a GitHub account, paste the skill into the
 [contribution form](/contribute/?type=other#send-a-contribution) as "Other".
