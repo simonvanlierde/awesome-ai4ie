@@ -1,0 +1,40 @@
+---
+title: Evals & agent benchmarks
+description: How to score an AI step on known answers before you trust it, and the benchmarks that test agents and language models on research, coding and LCA tasks.
+---
+
+An **eval** is a fixed set of questions with known answers, run against one AI step (for example, a prompt that pulls a value out of a paper) and scored by a script. Run it before the step goes into your workflow, and again when the model, prompt, or data change.
+
+## Score an AI step before you trust it
+
+1. **Collect gold questions from real use.** Write the gold answer (the known correct one), or a check the answer must pass, next to each question.
+2. **Add questions that differ from your examples.** Include reworded questions and off-topic ones the step must refuse. A set that looks like the prompt's examples tests copying, not understanding.
+3. **Score with code.** Have a script compare each answer with the gold answer. Do not judge answers by reading them.
+4. **Report correct out of _n_ for each kind of question,** with the model, its version, and the date. A score on 8 questions is a rough signal. Miller ([arXiv:2411.00640](https://arxiv.org/abs/2411.00640)) treats evals as experiments and gives the formulas for their error bars.
+5. **Keep the eval outside the agent's write access,** like a [golden test](/best-practices/agentic-harnesses/#2-protect-the-test).
+
+### Worked example
+
+The [RaMa-Scene explorer Ask eval](https://github.com/simonvanlierde/ramascene-explorer/tree/main/evals/ask) scores how well a model turns a question into a scenario (a what-if change to EXIOBASE products, regions or industries) for an EXIOBASE footprint engine. The gold set has four kinds: the labels of published scenarios, reworded questions, view questions, and off-topic questions that must get no action.
+
+In its 2026-11-19 run (vLLM, 4-bit weights, temperature 0), Gemma-4-26B-A4B answered 151 of 153 label questions correctly, but only 3 of 8 reworded ones. Qwen3.8-27B got 151 and 6. Eight reworded questions are too few to rank the two models, and most misses are readings the question allows. The label score alone would not have shown where to look.
+
+## Benchmarks for agents and models on research tasks
+
+A benchmark score tells you how a model did on someone else's tasks. Use it to choose what to test, then run your own eval.
+
+<p class="table-title"><b>Table 3.2</b> Benchmarks that test agents and language models on research, coding and LCA tasks</p>
+
+| Benchmark | What it tests | Headline result |
+|---|---|---|
+| [CORE-Bench](https://arxiv.org/abs/2409.11363) | Agents reproduce published results from the paper's own code and data: 270 tasks from 90 papers in computer science, social science, and medicine | The best agent scored 21% on the hardest level |
+| [ScienceAgentBench](https://arxiv.org/abs/2410.05080) | Agents write code for data-driven discovery: 102 tasks from 44 peer-reviewed papers in four disciplines | The best agent solved 32.4% of tasks alone, 34.3% with expert knowledge |
+| [ImpossibleBench](https://arxiv.org/abs/2510.20270) | Coding tasks whose tests contradict the specification, so any pass is a shortcut | GPT-5 passed 54% of the Conflicting-SWEbench tasks |
+| [Expert-grounded LCA benchmark](https://arxiv.org/abs/2510.19886) | 11 general-purpose models on 22 LCA tasks, reviewed by 17 LCA practitioners | Experts found inaccurate or misleading information in 37% of responses; some models hallucinated up to 40% of citations |
+| [PCFBench](https://arxiv.org/abs/2608.27716) | 614 expert-labelled items across six product carbon footprint tasks, eight frontier models | The strongest models are within 2 times of declared totals on 77% of products, 37-58% when the footprint is built step by step, with only 45-75% of those obeying mass conservation |
+
+<p class="table-src">Source: the abstract of each paper, except the ImpossibleBench rate (Section 4 of that paper).</p>
+
+Scores date quickly as models change. Check the paper's date and the models it tested before you quote a number.
+
+[Suggest a benchmark](/contribute/?type=resource#send-a-contribution) for your subfield, or a golden question as a candidate.
