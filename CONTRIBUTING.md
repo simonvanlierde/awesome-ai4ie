@@ -118,10 +118,13 @@ Every tag is a concept in [`src/data/vocabulary.yaml`](src/data/vocabulary.yaml)
   Fig. 1 on the home page. Every IE field and AI technique needs a `short`.
 - `definition`: one line. An IE field gives its ISIE section as `source`.
 - `broader` and `related`: ids of other concepts.
-- `exactMatch` and `closeMatch`: IRIs of the concept elsewhere. Use `exactMatch` only for the
-  same concept, such as the Wikidata item for life cycle assessment. An OpenAlex topic is
-  always a `closeMatch`. Open each IRI before you add it; `pnpm run vocabulary-links` prints
-  every link beside the label it points at, and runs weekly in CI.
+- `exactMatch`, `closeMatch`, `broadMatch`, `narrowMatch` and `relatedMatch`: IRIs of
+  concepts elsewhere, by how far they are from this one. `exactMatch` is the same concept,
+  such as the Wikidata item for life cycle assessment; `closeMatch` is near enough to swap
+  in some uses. `broadMatch` is wider: most OpenAlex topics are. `narrowMatch` is part of
+  this concept, such as the Wikidata item for one half of "Detection & segmentation". One
+  IRI goes under one of them only. Open each IRI before you add it; `pnpm run
+  vocabulary-links` prints every link beside the label it points at, and runs weekly in CI.
 - `reserved: true`: no entry uses the concept yet. Set it on a concept added before any entry
   uses it, such as a planned facet. `pnpm test` fails once an entry uses it, so remove the flag
   in the same change.

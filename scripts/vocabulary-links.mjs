@@ -16,13 +16,16 @@ const UA = "awesome-ai4ie vocabulary link check (+https://github.com/simonvanlie
 const WIKIDATA = /^https?:\/\/www\.wikidata\.org\/entity\/(Q\d+)$/;
 const OPENALEX = /^https:\/\/openalex\.org\/(T\d+)$/;
 
+/** @type {("exactMatch" | "closeMatch" | "broadMatch" | "narrowMatch" | "relatedMatch")[]} */
+const MATCHES = ["exactMatch", "closeMatch", "broadMatch", "narrowMatch", "relatedMatch"];
+
 /**
- * Every exactMatch and closeMatch of the concepts, as rows to check.
- * @param {{ id: string, prefLabel: string, exactMatch?: string[], closeMatch?: string[] }[]} concepts
+ * Every outside match of the concepts, as rows to check.
+ * @param {{ id: string, prefLabel: string, exactMatch?: string[], closeMatch?: string[], broadMatch?: string[], narrowMatch?: string[], relatedMatch?: string[] }[]} concepts
  */
 export function links(concepts) {
   return concepts.flatMap((c) =>
-    ["exactMatch", "closeMatch"].flatMap((rel) =>
+    MATCHES.flatMap((rel) =>
       (c[rel] ?? []).map((iri) => ({ id: c.id, label: c.prefLabel, rel, iri })),
     ),
   );

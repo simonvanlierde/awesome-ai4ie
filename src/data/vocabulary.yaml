@@ -14,7 +14,7 @@
   source: https://is4ie.org/sections
   exactMatch:
     - http://www.wikidata.org/entity/Q581950
-  closeMatch:
+  broadMatch:
     - https://openalex.org/T10435
 # SEM as the umbrella over MFA: Pauliuk & Hertwich 2015, doi:10.1016/j.ecolecon.2015.08.012
 - id: sem
@@ -31,7 +31,7 @@
   short: Input-output
   definition: Environmentally extended input-output (EEIO) analysis links the trade between the sectors of an economy to the emissions and resources behind it, which gives economy-wide footprints.
   source: https://is4ie.org/sections
-  closeMatch:
+  narrowMatch:
     - http://www.wikidata.org/entity/Q18206850
 - id: circular
   scheme: field
@@ -49,7 +49,7 @@
   source: https://is4ie.org/sections
   exactMatch:
     - http://www.wikidata.org/entity/Q977291
-  closeMatch:
+  broadMatch:
     - https://openalex.org/T12746
 - id: mfa
   scheme: field
@@ -69,7 +69,7 @@
   scheme: field
   prefLabel: Urban mining & secondary resources
   definition: Secondary resources recovered from the stocks of cities and discarded products. Its entries moved to socio-economic metabolism or the circular economy.
-  closeMatch:
+  narrowMatch:
     - http://www.wikidata.org/entity/Q2500233
   deprecated: true
 
@@ -123,7 +123,7 @@
   prefLabel: LLMs & agents
   short: LLMs
   definition: Large language models and the agents built on them.
-  closeMatch:
+  narrowMatch:
     - http://www.wikidata.org/entity/Q115305900
 - id: nlp-extraction
   scheme: technique
@@ -131,8 +131,9 @@
   short: NLP
   definition: Natural language processing that pulls structured data out of text, such as papers and reports.
   closeMatch:
-    - http://www.wikidata.org/entity/Q1662562
     - https://openalex.org/T10181
+  narrowMatch:
+    - http://www.wikidata.org/entity/Q1662562
 - id: cv
   scheme: technique
   prefLabel: Computer vision
@@ -146,7 +147,7 @@
   short: Detection
   definition: Computer vision that finds objects in an image and outlines them.
   broader: [cv]
-  closeMatch:
+  narrowMatch:
     - http://www.wikidata.org/entity/Q3045304
     - http://www.wikidata.org/entity/Q56933
 - id: depth
@@ -176,7 +177,7 @@
   prefLabel: Foundation models & transformers
   short: Foundation models
   definition: Large pretrained models, often transformers, adapted to many tasks.
-  closeMatch:
+  narrowMatch:
     - http://www.wikidata.org/entity/Q112702082
 - id: anomaly-detection
   scheme: technique
@@ -184,14 +185,15 @@
   short: Anomaly
   definition: Finding unusual patterns in data, such as faults or a change in a machine's condition.
   closeMatch:
-    - http://www.wikidata.org/entity/Q3560506
     - https://openalex.org/T11512
+  narrowMatch:
+    - http://www.wikidata.org/entity/Q3560506
 - id: uncertainty
   scheme: technique
   prefLabel: Uncertainty & probabilistic ML
   short: Uncertainty
   definition: Methods that quantify uncertainty, such as Bayesian inference and probabilistic machine learning.
-  closeMatch:
+  narrowMatch:
     - http://www.wikidata.org/entity/Q7882499
 - id: knowledge-graph
   scheme: technique

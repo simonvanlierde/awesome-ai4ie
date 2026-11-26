@@ -1,6 +1,10 @@
 {
   "@context": {
     "@language": "en",
+    "broadMatch": {
+      "@id": "skos:broadMatch",
+      "@type": "@id"
+    },
     "broader": {
       "@id": "skos:broader",
       "@type": "@vocab"
@@ -17,11 +21,19 @@
       "@type": "@id"
     },
     "id": "@id",
+    "narrowMatch": {
+      "@id": "skos:narrowMatch",
+      "@type": "@id"
+    },
     "owl": "http://www.w3.org/2002/07/owl#",
     "prefLabel": "skos:prefLabel",
     "related": {
       "@id": "skos:related",
       "@type": "@vocab"
+    },
+    "relatedMatch": {
+      "@id": "skos:relatedMatch",
+      "@type": "@id"
     },
     "replacedBy": {
       "@id": "dct:isReplacedBy",

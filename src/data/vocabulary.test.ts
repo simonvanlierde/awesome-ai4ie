@@ -86,6 +86,15 @@ describe("vocabulary.yaml", () => {
         expect(c.short, c.id).toBeTruthy();
   });
 
+  // SKOS makes exactMatch disjoint with the broad, narrow and related matches.
+  it("puts each outside IRI under one match property per concept", () => {
+    const keys = ["exactMatch", "closeMatch", "broadMatch", "narrowMatch", "relatedMatch"] as const;
+    for (const c of concepts) {
+      const iris = keys.flatMap((k) => c[k] ?? []);
+      expect(new Set(iris).size, c.id).toBe(iris.length);
+    }
+  });
+
   it("has no flag a retired concept cannot carry", () => {
     for (const c of concepts.filter((x) => x.deprecated)) expect(c.reserved, c.id).toBeUndefined();
   });

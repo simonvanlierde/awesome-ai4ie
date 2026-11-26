@@ -41,8 +41,12 @@ export const conceptSchema = z.strictObject({
   source: z.url().optional(),
   broader: z.array(conceptId).optional(),
   related: z.array(conceptId).optional(),
-  exactMatch: z.array(z.url()).optional(), // the same concept elsewhere
-  closeMatch: z.array(z.url()).optional(), // near enough to swap in some uses; OpenAlex topics
+  // Matches to concepts elsewhere, by how far they are from this one (SKOS mapping properties).
+  exactMatch: z.array(z.url()).optional(), // the same concept
+  closeMatch: z.array(z.url()).optional(), // near enough to swap in some uses
+  broadMatch: z.array(z.url()).optional(), // wider than this one
+  narrowMatch: z.array(z.url()).optional(), // part of this one, such as one half of "A & B"
+  relatedMatch: z.array(z.url()).optional(),
   deprecated: z.literal(true).optional(),
   replacedBy: conceptId.optional(),
   reserved: z.literal(true).optional(), // defined before any entry uses it
