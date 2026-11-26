@@ -17,15 +17,15 @@
   ie: [lca]
   ml: [tabular-ml]
   summary: "Estimate missing inventory values from similar processes or product attributes."
-  stage: tested
-  maturity: "Research studies show that results depend on the method and training data. Check estimates made outside that data's range."
+  stage: early
+  maturity: "Two reviews, no study of its own. One finds that reported errors range widely without robust justification. Check estimates made outside the training data's range."
   papers: [zargarReviewInventoryModeling2022, gkousisMachineLearningLarge2026]
 - id: llm-lci-extraction
   name: "LLM extraction of LCI data from literature"
   ie: [lca]
   ml: [llm, nlp-extraction]
   summary: "Use a language model to retrieve reported inventory and impact values from papers and reports."
-  stage: tested
+  stage: early
   maturity: "One study reported a BERTScore F1 of 0.82 for methanol and 0.86 for plastic packaging at end-of-life; the score measures wording, not numbers or units. Verify extracted values against the source."
   papers: [kumarLargeLanguageModelbased2025, preussLargeLanguageModels2024, tuMitigatingGrandChallenges2024]
 - id: automated-carbon-footprinting
@@ -49,8 +49,8 @@
   ie: [lca]
   ml: [tabular-ml]
   summary: "Group households by consumption patterns and estimate their footprints by region."
-  stage: tested
-  maturity: "Demonstrated at national scale using detailed household data."
+  stage: early
+  maturity: "One 2020 study, demonstrated at national scale using detailed household data."
   papers: [froemeltMachineLearningBased2020]
 - id: lca-uncertainty-ml
   name: "Uncertainty quantification for ML-based LCA"
@@ -58,7 +58,7 @@
   ml: [tabular-ml, uncertainty]
   summary: "Attach prediction intervals to ML-estimated inventory data and footprints, and carry both ML and LCA uncertainty through to the result."
   stage: tested
-  maturity: "Three method studies, each on one case: crop fertiliser inventories, stainless steel melts, a biomass model. One finds that only 6 of 45 ML+LCA studies consider uncertainty."
+  maturity: "Three method studies, each on one case: crop fertiliser inventories, stainless steel melts, a biomass model. One finds that only 6 of 45 ML+LCA studies consider ML uncertainty."
   papers: [daiGaussianProcessRegression2022, testiniExAnteProductCarbon2026, akramiAddressingUncertaintyMachine2025]
 
 # ── Socio-economic metabolism ────────────────────────────────────────────────
@@ -117,8 +117,8 @@
   ie: [sem, circular]
   ml: [cv, segmentation]
   summary: "Use images from a sorting line to classify particles and estimate the composition of shredded electronics."
-  stage: tested
-  maturity: "On pilot-line data, detection reached 0.99 mAP at the 0.5 threshold and estimated composition had 4.94% mean relative error on a validation set."
+  stage: early
+  maturity: "One study of recorded pilot-line data; no sorting was run. Detection reached 0.99 mAP at the 0.5 threshold and composition had 4.94% mean relative error."
   papers: [vogelgesangAutomatedMaterialFlow2025]
 - id: component-detection
   name: "Component detection & counting in opened products"

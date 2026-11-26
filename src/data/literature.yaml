@@ -501,7 +501,7 @@
   etAl: true
   year: 2025
   doi: "10.1016/j.jenvman.2025.126225"
-  blurb: "Adds ML and LCA uncertainty to an open hydrothermal-biomass ML+LCA model: with both, GWP spans -257 to 344 kg CO2-eq/Mt DW. Only 6 of 45 ML+LCA studies it surveys consider uncertainty."
+  blurb: "Adds ML and LCA uncertainty to an open hydrothermal-biomass ML+LCA model: with both, GWP spans -257 to 344 kg CO2-eq/Mt DW. Only 6 of 45 ML+LCA studies it surveys consider ML uncertainty."
   ie: [lca]
   ml: [uncertainty, tabular-ml]
   type: [method]
@@ -1050,7 +1050,7 @@
   doi: "10.1016/j.jclepro.2025.145607"
   blurb: "Predicts from text whether a waste is an input or output of an activity, trained on ecoinvent; F1 is above 0.82 on test data but 0.63-0.73 on external symbiosis cases."
   ie: [symbiosis]
-  ml: [nlp-extraction, foundation]
+  ml: [nlp-extraction, foundation, recommender]
   type: [method]
   added: 2026-11
 
