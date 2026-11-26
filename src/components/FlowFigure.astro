@@ -21,10 +21,10 @@ const X0 = 260;
 const NODE = 8;
 const X1 = 920;
 const W = X1 + NODE + 240;
-// Node links get at least this tall a hit area: 24px at the smallest scale the script sets,
-// about 0.53 on a 320px screen (WCAG 2.5.8, checked by scripts/a11y.mjs). Small nodes
+// Node links get at least this tall a hit area: 34px at the smallest scale the script sets,
+// about 0.53 on a 320px screen, 43px at 390px (WCAG 2.5.8 needs 24, checked by scripts/a11y.mjs). Small nodes
 // packed closer than that overlap a little; the later node takes the shared strip.
-const HIT = 46;
+const HIT = 64;
 
 const entries = (await getCollection("literature")).map((e) => e.data);
 const { ieNodes, mlNodes, bands, total, papers } = sankeyLayout(entries, H, GAP);
@@ -62,7 +62,7 @@ const readout = (dim: "ie" | "ml", n: { tag: string; papers: number }) => {
 const topicReadout = (t: (typeof lenses)[number]) =>
   `${tagLabel("topic", t.tag)}: ${t.papers} ${t.papers === 1 ? "paper" : "papers"}, in ${t.fields} of the ${ieNodes.length} IE fields shown`;
 const idle =
-  "Select a field or technique to list its papers. On a touch screen, tap once for the count and again to open the list.";
+  "Select a field or technique to list its papers. On a touch screen, tap one for its count, then use the button to open the list.";
 ---
 
 <figure class="flow not-content">
@@ -145,6 +145,7 @@ const idle =
           data-dim="ie"
           data-tag={n.tag}
           data-readout={readout("ie", n)}
+          data-papers={n.papers}
         >
           <rect class="flow-hit" x="0" y={hitY(n)} width={X0 + NODE} height={Math.max(n.h, HIT)} />
           <rect class={`node field-${n.tag}`} x={X0} y={n.y} width={NODE} height={n.h} />
@@ -163,6 +164,7 @@ const idle =
           data-dim="ml"
           data-tag={n.tag}
           data-readout={readout("ml", n)}
+          data-papers={n.papers}
         >
           <rect class="flow-hit" x={X1} y={hitY(n)} width={W - X1} height={Math.max(n.h, HIT)} />
           <rect class="node" x={X1} y={n.y} width={NODE} height={n.h} />
@@ -175,6 +177,7 @@ const idle =
     }
   </svg>
   <p class="flow-readout" aria-live="polite">{idle}</p>
+  <a class="flow-go" href="#top" hidden>Show papers</a>
   <figcaption>
     <span><b>Fig. 1</b> {papers} papers, linking each IE field (left) to the AI techniques
       applied in it (right). Wider bands mean more papers. A paper with several fields or
@@ -291,15 +294,16 @@ const idle =
   }
 
   // Lighting a node fades every band but its own and names its reach in the
-  // readout. Mouse lights on hover, keyboard on focus. On touch the first tap
-  // on a node lights it and the second follows the link, since there is no
+  // readout. Mouse lights on hover, keyboard on focus. On touch a tap
+  // on a node lights it and shows a button that follows the link, since there is no
   // hover; a click without a pointer (a screen reader, Enter) follows at once.
   // A topic chip holds its bands lit until clicked again or cleared with Escape;
   // hovering or focusing a node previews that node and restores the topic on leave.
   for (const svg of document.querySelectorAll<SVGSVGElement>(".flow svg")) {
     const flow = svg.closest(".flow");
     const out = flow?.querySelector(".flow-readout");
-    if (!flow || !out) continue;
+    const go = flow?.querySelector<HTMLAnchorElement>(".flow-go");
+    if (!flow || !out || !go) continue;
     const idle = out.textContent;
     const nodes = [...svg.querySelectorAll<SVGAElement>(".flow-node")];
     const bands = [...svg.querySelectorAll<SVGPathElement>(".band")];
@@ -350,15 +354,20 @@ const idle =
         out.textContent = idle;
       }
     };
+    const disarm = () => {
+      for (const m of nodes) m.classList.remove("armed");
+      go.hidden = true;
+    };
     const light = (node: SVGAElement | null) => {
       if (node === litNode) return;
+      if (!node?.classList.contains("armed")) go.hidden = true;
       litNode = node;
       render();
     };
     const setTopic = (chip: HTMLButtonElement | null) => {
       activeTopic = chip === activeTopic ? null : chip;
       for (const c of chips) c.setAttribute("aria-pressed", String(c === activeTopic));
-      for (const m of nodes) m.classList.remove("armed");
+      disarm();
       litNode = null;
       render();
     };
@@ -374,20 +383,25 @@ const idle =
       });
       n.addEventListener("focus", () => light(n));
       n.addEventListener("click", (e) => {
-        if (pointer === "touch" && !n.classList.contains("armed")) {
+        if (pointer === "touch") {
           e.preventDefault();
           for (const m of nodes) m.classList.toggle("armed", m === n);
           light(n);
+          go.href = n.getAttribute("href") ?? "";
+          const count = Number(n.dataset.papers);
+          go.textContent = `Show ${count === 1 ? "this paper" : `these ${count} papers`}`;
+          go.hidden = false;
         }
         pointer = "";
       });
     }
     svg.addEventListener("focusout", (e) => {
-      if (!svg.contains(e.relatedTarget as Node)) light(null);
+      // Moving focus to the "Show these N papers" link must not hide it before its click.
+      if (!svg.contains(e.relatedTarget as Node) && e.relatedTarget !== go) light(null);
     });
     document.addEventListener("pointerdown", (e) => {
-      if (!svg.contains(e.target as Node)) {
-        for (const m of nodes) m.classList.remove("armed");
+      if (!svg.contains(e.target as Node) && e.target !== go) {
+        disarm();
         light(null);
       }
     });

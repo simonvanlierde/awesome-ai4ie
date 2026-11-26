@@ -6,7 +6,7 @@ export type Filter = Record<TagDim, string[]> & { papers: string[] };
 export type SortKey = "year" | "authors" | "title";
 
 /** Everything the literature list shows that a shared URL must reproduce. */
-export type View = { filter: Filter; sort: SortKey };
+export type View = { filter: Filter; sort: SortKey; q: string };
 
 type Tagged = { id?: string } & Partial<Record<TagDim, string[]>>;
 
@@ -26,6 +26,26 @@ export const SORTS: { key: SortKey; label: string }[] = [
 export function matchesFilter(entry: Tagged, f: Filter): boolean {
   if (f.papers.length > 0 && !f.papers.includes(entry.id ?? "")) return false;
   return TAG_DIMS.every((d) => f[d].length === 0 || (entry[d] ?? []).some((t) => f[d].includes(t)));
+}
+
+const WHITESPACE = /\s+/;
+
+/** The text filter: every word of `q` must appear, in any order and case, in the title,
+ * authors or blurb. It ANDs with the tag filters. */
+export function matchesText(
+  entry: { title: string; authors: readonly string[]; blurb: string },
+  q: string,
+): boolean {
+  const words = q.toLowerCase().split(WHITESPACE).filter(Boolean);
+  if (words.length === 0) return true;
+  const hay = `${entry.title} ${entry.authors.join(" ")} ${entry.blurb}`.toLowerCase();
+  return words.every((w) => hay.includes(w));
+}
+
+/** Entries the list shows: the first `limit`, or more when a linked paper lies further down. */
+export const PAGE_SIZE = 20;
+export function visibleCount(limit: number, total: number, targetIndex: number): number {
+  return Math.min(total, Math.max(limit, targetIndex + 1));
 }
 
 /** Why a filter matches nothing, in the list's own logic: tags within a
@@ -69,7 +89,11 @@ export function parseView(search: string): View {
         filter[now.dim] = [...filter[now.dim], now.tag];
     }
   const s = params.get("sort");
-  return { filter, sort: SORTS.find((o) => o.key === s)?.key ?? DEFAULT_SORT };
+  return {
+    filter,
+    sort: SORTS.find((o) => o.key === s)?.key ?? DEFAULT_SORT,
+    q: params.get("q")?.trim() ?? "",
+  };
 }
 
 /** Query string for a view ("" for the default view). The default sort is left
@@ -77,10 +101,11 @@ export function parseView(search: string): View {
  * NOTE: a plain string build, not URLSearchParams, so the commas between values
  * stay readable. Each value is still escaped: a hand-made URL can carry a `#`
  * or `&` that would otherwise turn into a fragment or a new key. */
-export function toQuery({ filter, sort }: View): string {
+export function toQuery({ filter, sort, q }: View): string {
   const parts = KEYS.filter((k) => filter[k].length > 0).map(
     (k) => `${k}=${filter[k].map(encodeURIComponent).join(",")}`,
   );
+  if (q.trim()) parts.push(`q=${encodeURIComponent(q.trim())}`);
   if (sort !== DEFAULT_SORT) parts.push(`sort=${sort}`);
   return parts.length > 0 ? `?${parts.join("&")}` : "";
 }

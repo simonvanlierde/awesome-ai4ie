@@ -19,7 +19,7 @@ export function siteUrl(pathOrUrl: string): string {
 /** Literature-page URL with the given filter pre-applied, in the default sort. */
 export function litUrl(f: Partial<Filter> = {}): string {
   return siteUrl(
-    `literature/${toQuery({ filter: { ...EMPTY_FILTER, ...f }, sort: DEFAULT_SORT })}`,
+    `literature/${toQuery({ filter: { ...EMPTY_FILTER, ...f }, sort: DEFAULT_SORT, q: "" })}`,
   );
 }
 

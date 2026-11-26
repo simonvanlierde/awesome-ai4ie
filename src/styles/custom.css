@@ -877,6 +877,26 @@ starlight-menu-button button {
 .flow-node:is(:hover, :focus-visible, .lit) text {
   text-decoration: underline;
 }
+/* The touch route to a node's list: shown after a tap, since a tap only lights the node.
+   On a touch screen its space stays reserved so showing it moves nothing. */
+.flow-go {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 0.25rem;
+  font-family: var(--sl-font);
+  font-weight: 700;
+  color: var(--sl-color-text-accent);
+}
+.flow-go[hidden] {
+  display: none;
+}
+@media (pointer: coarse) {
+  .flow-go[hidden] {
+    display: inline-flex;
+    visibility: hidden;
+  }
+}
 /* Invisible hit area so thin nodes are still easy to tap. */
 .flow-hit {
   fill: transparent;
@@ -1221,6 +1241,40 @@ starlight-menu-button button {
   .lit-pill {
     min-height: 44px;
   }
+}
+.lit-search {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+.lit-search input {
+  flex: 1;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.6rem;
+  font: inherit;
+  font-size: 1rem; /* 16px keeps iOS from zooming the page on focus */
+  color: var(--sl-color-white);
+  background: var(--sl-color-black);
+  border: 1px solid var(--sl-color-gray-5);
+}
+@media (scripting: enabled) {
+  .lit-entry[data-late] {
+    display: none;
+  }
+}
+.lit-more {
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  margin-top: 1.25rem;
+  font: inherit;
+  font-weight: 650;
+  color: var(--sl-color-white);
+  background: none;
+  border: 1px solid var(--sl-color-white);
+  cursor: pointer;
 }
 .lit-count {
   display: flex;
@@ -1733,6 +1787,24 @@ starlight-menu-button button {
   position: relative;
   overflow-x: auto;
   margin-top: 1.25rem;
+  /* Edge shadows that show only where more columns lie beyond the edge. */
+  background:
+    linear-gradient(to right, var(--sl-color-bg) 30%, transparent) left / 2rem 100% no-repeat local,
+    linear-gradient(to left, var(--sl-color-bg) 30%, transparent) right / 2rem 100% no-repeat local,
+    linear-gradient(to right, var(--apx-edge), transparent) left / 0.75rem 100% no-repeat scroll,
+    linear-gradient(to left, var(--apx-edge), transparent) right / 0.75rem 100% no-repeat scroll;
+  --apx-edge: rgb(0 0 0 / 0.35);
+}
+/* A dark shadow vanishes on a dark page, so the cue turns light there. */
+:root[data-theme="dark"] .apx-grid-wrap {
+  --apx-edge: rgb(255 255 255 / 0.3);
+}
+/* The technique names stay in view while the field columns scroll. */
+.apx-grid tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--sl-color-bg);
 }
 .apx-grid-title,
 .sl-markdown-content .table-title {

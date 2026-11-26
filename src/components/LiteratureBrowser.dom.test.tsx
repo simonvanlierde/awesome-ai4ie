@@ -374,3 +374,64 @@ describe("LiteratureBrowser FLIP animation", () => {
     expect(calls).toHaveLength(0);
   });
 });
+
+describe("LiteratureBrowser pagination and text filter", () => {
+  const many = Array.from({ length: 45 }, (_, i) => ({
+    ...entry(`p${String(i).padStart(2, "0")}`, ["lca"]),
+    year: 2000 + i,
+    title: i === 7 ? "Needle in a haystack" : `Paper ${i}`,
+  }));
+  const listed = () => document.querySelectorAll(".lit-entry").length;
+  const more = () => document.querySelector<HTMLButtonElement>(".lit-more");
+  const type = (value: string) =>
+    act(() => {
+      const input = document.querySelector<HTMLInputElement>(".lit-search input");
+      if (!input) return;
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set?.call(input, value);
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+
+  it("lists 20, then 20 more with focus on the first new card, and announces the count", async () => {
+    await mount("/literature/", many);
+    expect(listed()).toBe(20);
+    expect(document.querySelector("[role=status]")?.textContent).toBe(
+      "45 of 45 entries, showing the first 20",
+    );
+    await click(more());
+    expect(listed()).toBe(40);
+    expect(document.activeElement?.id).toBe(document.querySelectorAll(".lit-entry")[20]?.id);
+    await click(more());
+    expect(listed()).toBe(45);
+    expect(more()).toBeNull();
+  });
+
+  it("filters by text, keeps it in the URL and combines with tags", async () => {
+    await mount("/literature/", many);
+    await type("needle");
+    expect(listed()).toBe(1);
+    expect(location.search).toBe("?q=needle");
+    await pickField("symbiosis");
+    expect(listed()).toBe(0);
+    expect(location.search).toBe("?ie=symbiosis&q=needle");
+  });
+
+  it("reads q from the URL, and shows a linked paper past the first page", async () => {
+    await mount("/literature/?q=paper", many);
+    expect((document.querySelector(".lit-search input") as HTMLInputElement).value).toBe("paper");
+    await act(async () => root.unmount());
+    host.remove();
+    await mount("/literature/#p00", many); // the oldest paper sorts last
+    expect(document.getElementById("p00")).not.toBeNull();
+    expect(document.activeElement?.id).toBe("p00");
+  });
+
+  it("says a text search matched nothing, and Clear all keeps focus on the count", async () => {
+    await mount("/literature/", many);
+    await type("zzzz");
+    expect(document.querySelector(".lit-empty")?.textContent).toBe("No entry matches that search.");
+    await click(document.querySelector(".lit-clear"));
+    expect(document.querySelector(".lit-search input")).not.toBeNull();
+    expect(listed()).toBe(20);
+    expect(document.activeElement?.getAttribute("role")).toBe("status");
+  });
+});
