@@ -28,11 +28,8 @@ const HIT = 64;
 
 const entries = (await getCollection("literature")).map((e) => e.data);
 const { ieNodes, mlNodes, bands, total, papers } = sankeyLayout(entries, H, GAP);
-// Alphabetical, so a reader finds their topic in the scrolling row; each chip shows its own
-// count. A one-paper topic lights a single band, which reads as broken.
-const lenses = topicLenses(entries)
-  .filter((t) => t.papers >= 2)
-  .sort((a, b) => tagLabel("topic", a.tag).localeCompare(tagLabel("topic", b.tag), "en"));
+// A one-paper topic lights a single band, which reads as broken.
+const lenses = topicLenses(entries).filter((t) => t.papers >= 2);
 // A node opens the list scoped to the flow (the other column's tags ORed), so
 // the list shows exactly the papers the node's number counts.
 const ieInFlow = ieNodes.map((n) => n.tag);

@@ -54,7 +54,7 @@ export const TOPIC_WANTED: Record<TopicTag, string> = {
 /** A topic with fewer entries than this is listed as wanted on the map page. */
 export const THIN_TOPIC = 3;
 
-/** All four vocabularies by dimension. Key order is the curated display order. */
+/** All four vocabularies by dimension. Key order is the display order: curated, but alphabetical for topics. */
 export const TAGS = { ie: IE_TAGS, topic: TOPIC_TAGS, ml: ML_TAGS, type: TYPE_TAGS } as const;
 export type TagDim = keyof typeof TAGS;
 export const TAG_DIMS = Object.keys(TAGS) as TagDim[];
