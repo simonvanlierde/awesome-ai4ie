@@ -965,6 +965,21 @@ starlight-menu-button button {
 .glyph--tile .glyph-stem {
   stroke: var(--tile-stem);
 }
+/* On the 404 page the plate sits beside the text, not in a row of its own that leaves the
+   right half of the cover empty. */
+@media (min-width: 64rem) {
+  .cover-grid:has(.plate) {
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    align-items: center;
+  }
+  .cover-grid:has(.plate) .cover-copy {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "title" "tagline";
+  }
+}
+.cover-tagline a {
+  color: var(--sl-color-text-accent);
+}
 /* Fig. 404: the mark as a plate, framed by the dashed gap outline. */
 .plate {
   margin: 0;
@@ -2052,6 +2067,12 @@ starlight-menu-button button {
 }
 .vocab dd p {
   margin-top: 0.25rem;
+}
+/* The prose is nested in sections and a list, so the 68ch rule above does not reach it. */
+.sl-markdown-content > section > p,
+.vocab dd p,
+.sl-markdown-content > details > p {
+  max-width: 68ch;
 }
 .vocab-meta {
   font-size: var(--sl-text-sm);
