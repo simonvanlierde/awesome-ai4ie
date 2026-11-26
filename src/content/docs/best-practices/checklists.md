@@ -10,9 +10,9 @@ description: Checklists for AI-assisted coding and ML reproducibility, drawn fro
 - [ ] Does every imported package/function actually exist and do what the AI claims?
 - [ ] Did I run it on a case with a known answer, not just "it executed without error"?
 - [ ] If a coding agent ran the work, were golden tests protected so the agent could not edit them?
-- [ ] Have I seen the golden test fail on a planted error, such as kg entered as t, so I know it can go red?
+- [ ] Have I seen the golden test fail on a planted error, such as a mass entered in tonnes instead of kg, so I know it can fail?
 - [ ] Did I read the agent's plan before it edited any file?
-- [ ] Did the full test suite run after the agent's last edit, not only during the session?
+- [ ] Did the full test suite run after the agent's last edit, not only earlier in the session?
 - [ ] Did I verify cited claims against the primary source, not only that the DOI resolves?
 - [ ] If I didn't fully understand a change, did I ask the AI to explain it before accepting it?
 - [ ] Did I log the run's model, tokens, and cost?

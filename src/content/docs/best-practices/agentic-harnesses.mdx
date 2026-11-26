@@ -17,7 +17,7 @@ A **harness** is everything you put around that loop: the instructions file, fil
 
 - **`AGENTS.md` is the onboarding document:** the few rules they cannot guess.
 - **Skills are the lab protocols:** written steps for one task, read only when that task comes up.
-- **Tests and CI are the calibration:** a known sample that must give the known answer.
+- **Tests and automated checks (CI) are the calibration:** a known sample that must give the known answer.
 - **Hooks are the safety interlock:** a rule the harness enforces, whatever the agent decides.
 
 ## Set up the harness
@@ -47,23 +47,23 @@ Skip the repository overview, directory tree, and architecture prose. In an empi
 
 ### Ask for a plan first
 
-For anything bigger than a one-line fix, ask the agent to write its plan before it edits any file. Read the plan: a wrong emission factor or system boundary is easier to catch in five lines of plan than in a 300-line diff.
+For anything bigger than a one-line fix, ask the agent to write its plan before it edits any file. Read the plan: a wrong emission factor or system boundary is easier to catch in a short plan than in a long diff.
 
 ### One worktree per agent
 
-If you run two agents at once, give each its own [git worktree](https://git-scm.com/docs/git-worktree): a separate checkout of the same repository on its own branch. Their edits cannot collide, and you review each branch on its own.
+If you run two agents at once, give each its own [git worktree](https://git-scm.com/docs/git-worktree): a separate checkout of the same repository on its own branch. Their edits cannot overwrite each other, and you review each branch on its own.
 
 ### Hooks for rules without exceptions
 
 A line in `AGENTS.md` is a request: the agent usually follows it, but nothing makes it. A **hook** is a script the harness runs at a fixed point in the loop, such as before each edit or when the agent says it is done. Use hooks only for rules that have no exceptions, for example:
 
-- before an edit: refuse any write under `tests/golden/` (see [the blocked cheat](#2-protect-the-test));
+- before an edit: refuse any write under `tests/golden/` (see [Protect the test](#2-protect-the-test));
 - after an edit: run the formatter;
-- when the agent stops: run the test suite, and send the failures back if it is red.
+- when the agent stops: run the test suite, and send the failures back if any test fails.
 
-Most coding agents support hooks. The configuration format differs per tool, so check your tool's documentation.
+Several coding agents support hooks. The configuration format differs per tool, so check your tool's documentation.
 
-## Verifying AI-assisted IE work
+## Verify AI-assisted IE work
 
 ### 1. Golden test
 
@@ -104,7 +104,7 @@ case "$1" in
 esac
 ```
 
-The hook only sees the agent's edit tool, not a shell command that writes the same file, so keep the read-only mount from step 1 as well.
+The hook only sees the agent's edit tool, not a shell command that writes the same file, so keep the read-only mount from item 1 of the list above as well.
 
 On the ImpossibleBench benchmark ([arXiv:2510.20270](https://arxiv.org/abs/2510.20270)), GPT-5 passed 54% of the intentionally impossible Conflicting-SWEbench tasks by violating the task requirements. Opus 4.1 did so on 50%. Giving the model an explicit abort option cut GPT-5 cheating to 9%, while reducing Opus 4.1 cheating far less. Read-only tests were particularly effective against Opus 4.1, whose main shortcut was editing the tests, but they did not stop other shortcuts such as special-casing the tested inputs. Instructions help, so keep the abort rule, and enforce the boundary in the harness so the agent cannot edit the check.
 
@@ -112,7 +112,7 @@ On the ImpossibleBench benchmark ([arXiv:2510.20270](https://arxiv.org/abs/2510.
 
 Automated reference tools can check whether a DOI resolves or whether a title appears in Crossref or OpenAlex. That checks **existence**, not **meaning**: a real paper can still be cited for a claim it does not make, a number from a different boundary, or a conclusion the authors qualified.
 
-One reference sweep on an AI-assisted draft shows the gap. All 64 references passed the existence check. Four of them had claims that reached the draft, and all four were mischaracterized until the PDFs were read (n = 4 of 64 checked, single sweep). That is one example of the failure mode, not a rate.
+One reference sweep on an AI-assisted draft shows the gap. All 64 references passed the existence check. Four of them, cited for claims that reached the draft, were then checked against their PDFs, and all four had been mischaracterized. That is one sweep of one draft: an example of the failure mode, not a rate.
 
 Keep a plain **claim ledger** beside any AI-assisted manuscript or report: one row per cited claim, filled in only after opening the primary source.
 
@@ -126,7 +126,7 @@ Keep a plain **claim ledger** beside any AI-assisted manuscript or report: one r
 
 Pair the ledger with the [source-checking prompt](/best-practices/prompts-and-skills/#verify-a-claim-before-citing-it) to pull candidate quotes before you verify them in the PDF yourself.
 
-### 4. Log the run (footprint receipt)
+### 4. Log the run
 
 Log one row per run, so the cost of AI-assisted work is on record next to the result. Include the date, task, model, input and output tokens, and API cost.
 

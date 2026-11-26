@@ -110,12 +110,13 @@ A skill is worth writing when you give an assistant the same instructions for th
 same task more than twice.
 
 1. Copy the [skill template](repo:blob/main/skills/SKILL-template.md) to
-   `skills/<your-skill-name>/SKILL.md`. The `name` field must match the folder name:
-   lowercase letters, numbers, and hyphens
+   `skills/<your-skill-name>/SKILL.md`. The `name` field in the file's front matter
+   must match the folder name: lowercase letters, numbers and single hyphens, at most
+   64 characters, not starting or ending with a hyphen
    ([specification](https://agentskills.io/specification)).
 2. Write the `description` so the assistant knows when to load the skill: the task,
-   the inputs, and what the skill checks. The assistant reads only this line until
-   the task comes up.
+   the inputs, and what the skill checks. Until the task comes up, the assistant reads
+   only the `name` and this line.
 3. Write the steps. End each check with a result you can verify, such as a known
    answer or a balance that must close.
 4. Try it on a real task in a fresh session. Keep it generic enough that someone
