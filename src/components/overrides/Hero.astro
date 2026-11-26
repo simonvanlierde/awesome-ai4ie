@@ -7,7 +7,7 @@
 // draft notice and inline icon HTML; no page uses them.
 import { Icon } from "@astrojs/starlight/components";
 import { CHAPTERS } from "../../lib/chapters";
-import { issueUrl, siteUrl } from "../../lib/urls";
+import { contributeUrl, siteUrl } from "../../lib/urls";
 import BrandMark from "../BrandMark.astro";
 import FlowFigure from "../FlowFigure.astro";
 import Glyph from "../Glyph.astro";
@@ -18,7 +18,7 @@ const is404 = id === "404";
 let { title = data.title, tagline } = data.hero ?? {};
 if (is404) {
   title = "Page not found";
-  tagline = `Search the site, choose a chapter, or <a href="${issueUrl("other")}">report a broken link</a>.`;
+  tagline = `Search the site, choose a chapter, or <a href="${contributeUrl("other", { title: "Broken link" })}">report a broken link</a>.`;
 }
 ---
 

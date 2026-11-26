@@ -7,7 +7,7 @@
 // first, as a link back to it under the second.
 import { getCollection } from "astro:content";
 import { type IeTag, tagLabel } from "../data/tags";
-import { issueUrl, siteUrl } from "../lib/urls";
+import { contributeUrl, siteUrl } from "../lib/urls";
 import { groupBy } from "./appPivot";
 import PaperList from "./PaperList.astro";
 
@@ -105,5 +105,5 @@ const parts = sections.map((s) => {
 }
 
 <p>
-  <a href={issueUrl("application")}>Suggest an application</a>
+  <a href={contributeUrl("other", { title: "Application: " })}>Suggest an application</a>
 </p>

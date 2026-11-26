@@ -3,7 +3,7 @@ import type { LitEntry } from "../data/schemas";
 import { DIM_LABELS, TAG_DIMS, TAGS, type TagDim, tagLabel } from "../data/tags";
 import { type Citations, citationFile, FORMATS } from "../lib/citations";
 import { citeAuthors, formatAuthors, isNew, type PaperExtras, paperLink } from "../lib/literature";
-import { issueUrl, litUrl, paperUrl, siteUrl } from "../lib/urls";
+import { contributeUrl, litUrl, paperUrl, siteUrl } from "../lib/urls";
 import {
   DEFAULT_SORT,
   EMPTY_FILTER,
@@ -549,9 +549,9 @@ export function PaperDetails({
       <dt>Fix</dt>
       <dd>
         <a
-          href={issueUrl("other", {
+          href={contributeUrl("other", {
             title: `[Edit] ${e.title}`,
-            what: `Reading-list entry ${e.id}.\n\nWhat should change:`,
+            details: `Reading-list entry ${e.id}.\n\nWhat should change:`,
           })}
         >
           Suggest an edit

@@ -119,6 +119,17 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
       if (!form || !fallback || !status || !typeSelect || !typeHint || !turnstileBox || !submitBtn)
         return;
 
+      // Links from elsewhere on the site prefill the form; see contributeUrl.
+      const prefill = new URLSearchParams(location.search);
+      const type = prefill.get("type");
+      if (type && [...typeSelect.options].some((o) => o.value === type)) typeSelect.value = type;
+      for (const name of ["title", "details"]) {
+        const value = prefill.get(name);
+        const field = form.elements.namedItem(name);
+        if (value && (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement))
+          field.value = value;
+      }
+
       const siteKey = this.dataset.turnstileSiteKey ?? "";
       if (!siteKey) return;
 

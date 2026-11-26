@@ -173,6 +173,16 @@ h1#_top,
 .sl-markdown-content > :is(p, ul, ol, blockquote) {
   max-width: 68ch;
 }
+/* The home page has no sidebar and a wider column: the same text may run wider, still
+   inside a readable line length. */
+[data-has-hero] .sl-markdown-content > :is(p, ul, ol, blockquote) {
+  max-width: 90ch;
+}
+/* An opening line is followed by a ruled h2, whose 2.75rem top margin reads as a hole
+   after one short paragraph. Paragraph spacing keeps the rule close to it. */
+.sl-markdown-content > p:first-child + .sl-heading-wrapper.level-h2 {
+  margin-top: 1.25rem;
+}
 .sl-markdown-content a:not(:where(.not-content *, .sl-link-button)) {
   color: var(--sl-color-text-accent);
   text-decoration-thickness: 1px;
@@ -742,7 +752,7 @@ starlight-menu-button button {
 }
 .cover-tagline {
   margin: 0;
-  max-width: 34ch;
+  max-width: 44ch;
   font-family: var(--font-read);
   font-size: clamp(1.125rem, 1rem + 0.4vw, 1.3125rem);
   line-height: 1.5;
@@ -1679,9 +1689,6 @@ starlight-menu-button button {
   .apx-entry summary::after {
     display: none;
   }
-}
-.apx-field {
-  margin: 1.25rem 0 0;
 }
 .apx-links {
   display: flex;

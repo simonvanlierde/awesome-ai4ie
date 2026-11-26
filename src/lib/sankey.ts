@@ -53,8 +53,9 @@ export type SankeyBand = {
  * carry the pair. An entry with two fields and two techniques sits in four
  * bands, so band and node heights count pairings (`total`). A node's `papers`
  * counts distinct entries, which is what the filtered literature list shows.
- * Both columns share one scale and stack in vocabulary order, `gap` apart,
- * within `height`.
+ * Both columns share one scale and stack in vocabulary order. The column
+ * with more nodes sits `gap` apart and sets the scale; the other spreads its
+ * spare height over wider gaps, so both columns span the full `height`.
  */
 export function sankeyLayout(entries: readonly Tagged[], height: number, gap: number) {
   const flow = flowEntries(entries);
@@ -83,10 +84,11 @@ export function sankeyLayout(entries: readonly Tagged[], height: number, gap: nu
   const k = total ? Math.min(...[ies, mls].map((s) => (height - gap * (s.length - 1)) / total)) : 0;
 
   const stack = (nodes: Omit<SankeyNode, "y" | "h">[]): SankeyNode[] => {
+    const spread = nodes.length > 1 ? (height - total * k) / (nodes.length - 1) : 0;
     let y = 0;
     return nodes.map((n) => {
       const node = { ...n, y, h: n.count * k };
-      y += node.h + gap;
+      y += node.h + spread;
       return node;
     });
   };
