@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { expect, test } from "vitest";
-import { weighAll } from "../../scripts/page-weight.mjs";
+import { kindOf, weighAll } from "../../scripts/page-weight.mjs";
 import {
   compareFigure,
   DEMO_DOWNLOAD,
@@ -10,6 +10,9 @@ import {
   footprint,
   footprintTokens,
   pageFigure,
+  pageTable,
+  partsFigure,
+  WEB_MEDIAN_KB,
 } from "./footprint.mjs";
 
 const rows = [
@@ -35,7 +38,13 @@ test("a demo run is the sum of its downloads, and views per demo is the byte rat
 });
 
 test("every text token for fixed rows", () => {
-  const { pageFigure: _p, compareFigure: _c, ...text } = footprintTokens(footprint(rows));
+  const {
+    pageFigure: _p,
+    pageTable: _t,
+    partsFigure: _f,
+    compareFigure: _c,
+    ...text
+  } = footprintTokens(footprint(rows));
   expect(text).toEqual({
     pages: "2",
     viewKb: "200",
@@ -55,6 +64,16 @@ test("every text token for fixed rows", () => {
     deviceShare: "54%",
     deviceEmbodiedShare: "50%",
     gridIntensity: "494",
+    shellKb: "100",
+    largestPart: "other files",
+    largestShare: "0%",
+    secondPart: "other files",
+    secondShare: "0%",
+    webDesktopKb: "2,862",
+    webMobileKb: "2,559",
+    webDesktop: "346 mg to 424 mg",
+    webMobile: "310 mg to 379 mg",
+    webTimes: "13",
   });
 });
 
@@ -66,15 +85,72 @@ test("the background segments add up to the total, green host or not", () => {
   expect(dataCentre.low).toBeLessThan(dataCentre.high);
 });
 
-test("the page figure lists pages heaviest first, on one scale up to the largest budget", () => {
-  const html = pageFigure(footprint(rows), "b/index.html");
+test("the page figure shows pages over 1.1 × the median, then one row for the rest", () => {
+  const many = [
+    { page: "big/index.html", kb: 300, budget: 400 },
+    ...[100, 102, 104, 108].map((kb, i) => ({ page: `p${i}/index.html`, kb, budget: 200 })),
+  ];
+  const html = pageFigure(footprint(many), "big/index.html");
   const names = [...html.matchAll(/class="fp-name">([^<]*)</g)].map((m) => m[1]);
-  expect(names).toEqual(["/b/ (this page)", "/a/"]);
-  // b: 300 of a 400 kB scale, its budget tick at the end; a: 100, tick at 200.
+  expect(names).toEqual(["/big/ (this page)", "4 other pages"]);
+  // big: 300 of a 400 kB scale, its budget tick at the end; the rest at their mean, 103.5.
   expect(html).toContain('--w:75.00%"></span><span class="fp-limit" style="--x:100.00%"');
-  expect(html).toContain('--w:25.00%"></span><span class="fp-limit" style="--x:50.00%"');
-  expect(html).toContain('<span class="sr-only">, budget 200 kB</span>');
-  expect(html.match(/<li/g)).toHaveLength(2);
+  expect(html).toContain('<span class="sr-only">, budget 400 kB</span>');
+  expect(html).toContain(">100 to 108 kB<");
+  expect(html).toContain('--w:25.87%"');
+});
+
+test("the page table lists every page with its budget and CO2e", () => {
+  const html = pageTable(footprint(rows), "a/index.html");
+  expect(html.match(/<tr>/g)).toHaveLength(3);
+  expect(html).toContain("<td>/b/</td><td>300</td><td>400</td><td>36–44</td>");
+  expect(html).toContain("<td>/a/ (this page)</td>");
+});
+
+test("parts are the mean page view by asset type, largest first, as shares of the whole", () => {
+  const parts = (fonts: number, js: number) => ({
+    html: 10,
+    css: 0,
+    js,
+    fonts,
+    images: 0,
+    other: 0,
+  });
+  const f = footprint([
+    { page: "a.html", kb: 110, parts: parts(100, 0) },
+    { page: "b.html", kb: 140, parts: parts(100, 30) },
+  ]);
+  expect(f.parts).toEqual([
+    { kind: "fonts", kb: 100 },
+    { kind: "js", kb: 15 },
+    { kind: "html", kb: 10 },
+  ]);
+  const t = footprintTokens(f);
+  expect([t.largestPart, t.largestShare, t.secondPart, t.secondShare]).toEqual([
+    "fonts",
+    "80%",
+    "JavaScript",
+    "12%",
+  ]);
+  expect(partsFigure(f)).toContain('>Fonts</span><span class="fp-val">100 kB, 80%<');
+});
+
+test("the web median is converted with the same model as a page view", () => {
+  const f = footprint(rows);
+  const t = footprintTokens(f);
+  expect(f.web.mobile.high).toBeCloseTo((WEB_MEDIAN_KB.mobile * 1e3 * 148.2) / 1e9, 6);
+  expect(t.webTimes).toBe((WEB_MEDIAN_KB.mobile / 200).toFixed(0));
+});
+
+test("kindOf sorts files by extension", () => {
+  expect(["/a.css", "/a.js", "/a.mjs", "/f.woff2", "/i.svg", "/x.json"].map(kindOf)).toEqual([
+    "css",
+    "js",
+    "js",
+    "fonts",
+    "images",
+    "other",
+  ]);
 });
 
 test("the comparison figure splits each bar into the green-host part and the rest", () => {
@@ -90,11 +166,11 @@ test("the comparison figure splits each bar into the green-host part and the res
 });
 
 test("the home page is named, not shown as a bare slash", () => {
-  expect(pageFigure(footprint([{ page: "index.html", kb: 1 }]), "")).toContain(">/ (home)<");
+  expect(pageTable(footprint([{ page: "index.html", kb: 1 }]), "")).toContain(">/ (home)<");
 });
 
 test("a page name with markup is escaped", () => {
-  const html = pageFigure(footprint([{ page: "<b>/index.html", kb: 1 }]), "");
+  const html = pageTable(footprint([{ page: "<b>/index.html", kb: 1 }]), "");
   expect(html).toContain("/&lt;b&gt;/");
 });
 
@@ -114,7 +190,10 @@ test("weighAll weighs assets under the given root, not ./dist", async () => {
   writeFileSync(join(root, "index.html"), '<link rel="stylesheet" href="/_astro/a.css">');
   const [row] = await weighAll(root);
   expect(row).toMatchObject({ page: "index.html", budget: 220 });
-  expect(row.kb).toBeGreaterThan(0);
+  expect(row.parts.css).toBeGreaterThan(0);
+  expect(row.parts.html).toBeGreaterThan(0);
+  const sum = Object.values(row.parts as Record<string, number>).reduce((a, b) => a + b, 0);
+  expect(sum).toBeCloseTo(row.kb, 9);
 });
 
 test("weighAll skips redirect stubs and 404.html", async () => {

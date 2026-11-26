@@ -27,6 +27,25 @@ export const DEMO_DOWNLOAD = {
   "ort-wasm-simd-threaded.asyncify.wasm": 23_567_050,
 };
 
+// The median home page on the web, July 2025 crawl: "In total, desktop pages were 2,862 KB
+// and mobile were 2,559 KB." HTTP Archive, Web Almanac 2025, Page Weight chapter,
+// https://almanac.httparchive.org/en/2025/page-weight (linked from footprint.md). Read as
+// decimal kB; if the chapter means KiB, these are 2.4% low.
+export const WEB_MEDIAN_KB = { desktop: 2862, mobile: 2559 };
+
+// Asset types in page-weight.mjs's `parts`, named as in a sentence.
+const PART_NAMES = {
+  html: "HTML",
+  css: "CSS",
+  js: "JavaScript",
+  fonts: "fonts",
+  images: "images",
+  other: "other files",
+};
+const capital = (s) => s[0].toUpperCase() + s.slice(1);
+// A page more than this much over the median weight is shown on its own in Fig. 6.
+const OUTLIER = 1.1;
+
 // `results: "segment"` makes perByte return the split by data centre, network and device.
 const swd = new co2({ model: "swd", version: 4, results: "segment" });
 const GB = 1e9;
@@ -53,8 +72,9 @@ function background() {
 }
 
 /**
- * Numbers for the footprint page from page-weight rows ({page, kb, budget?} in kB, gzipped
- * first visit). Grams CO₂e are {low, high}: a green host or not.
+ * Numbers for the footprint page from page-weight rows ({page, kb, budget?, parts?} in kB,
+ * gzipped first visit). Grams CO₂e are {low, high}: a green host or not. `parts` is the
+ * mean page view split by asset type, largest first, when the rows carry parts.
  */
 export function footprint(rows) {
   if (rows.length === 0) throw new Error("footprint: no page-weight rows");
@@ -77,6 +97,15 @@ export function footprint(rows) {
     // The SWD v4 background per GB transferred.
     perGb: background(),
     gridIntensity: swd.perByteTrace(GB).variables.gridIntensity.network.value,
+    parts: Object.keys(PART_NAMES)
+      .map((k) => ({ kind: k, kb: mean(rows.map((r) => r.parts?.[k] ?? 0)) }))
+      .filter((p) => p.kb > 0)
+      .toSorted((a, b) => b.kb - a.kb),
+    medianKb: sorted[Math.floor(sorted.length / 2)].kb,
+    web: {
+      desktop: grams(WEB_MEDIAN_KB.desktop * KB),
+      mobile: grams(WEB_MEDIAN_KB.mobile * KB),
+    },
   };
 }
 
@@ -110,7 +139,19 @@ export function footprintTokens(f, self = "footprint/index.html") {
     deviceShare: `${((f.perGb.device.high / f.perGb.total.high) * 100).toFixed(0)}%`,
     deviceEmbodiedShare: `${((f.perGb.deviceEmbodied.high / f.perGb.device.high) * 100).toFixed(0)}%`,
     gridIntensity: String(f.gridIntensity),
+    shellKb: f.medianKb.toFixed(0),
+    largestPart: PART_NAMES[f.parts[0]?.kind ?? "other"],
+    largestShare: share(f.parts[0]?.kb ?? 0, f.viewKb),
+    secondPart: PART_NAMES[f.parts[1]?.kind ?? "other"],
+    secondShare: share(f.parts[1]?.kb ?? 0, f.viewKb),
+    webDesktopKb: WEB_MEDIAN_KB.desktop.toLocaleString("en"),
+    webMobileKb: WEB_MEDIAN_KB.mobile.toLocaleString("en"),
+    webDesktop: range(f.web.desktop, mg),
+    webMobile: range(f.web.mobile, mg),
+    webTimes: (WEB_MEDIAN_KB.mobile / f.viewKb).toFixed(0),
     pageFigure: pageFigure(f, self),
+    pageTable: pageTable(f, self),
+    partsFigure: partsFigure(f),
     compareFigure: compareFigure(f),
   };
 }
@@ -119,6 +160,7 @@ const SPECIAL = /[&<>"]/g;
 const INDEX_HTML = /index\.html$/;
 const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" };
 const esc = (s) => String(s).replace(SPECIAL, (c) => ESC[c]);
+const share = (x, total) => `${((x / total) * 100).toFixed(0)}%`;
 const pct = (x, max) => `${((x / max) * 100).toFixed(2)}%`;
 const urlOf = (page) => (page === "index.html" ? "/ (home)" : `/${page.replace(INDEX_HTML, "")}`);
 
@@ -128,22 +170,65 @@ const row = (name, value, track, cls = "") =>
   `<span class="fp-val">${value}</span>` +
   `<span class="fp-track" aria-hidden="true">${track}</span></li>`;
 
-/** Fig. 5's bar list: each page's weight against its budget, heaviest first. */
+const pageName = (r, self) => esc(urlOf(r.page)) + (r.page === self ? " (this page)" : "");
+
+/** Fig. 5's bar list: the mean page view by asset type, largest first, as shares of the whole. */
+export function partsFigure(f) {
+  return `<ol class="fp-bars fp-parts">${f.parts
+    .map((p) =>
+      row(
+        capital(PART_NAMES[p.kind]),
+        `${p.kb.toFixed(0)} kB, ${share(p.kb, f.viewKb)}`,
+        `<span class="fp-bar" style="--w:${pct(p.kb, f.viewKb)}"></span>`,
+      ),
+    )
+    .join("")}</ol>`;
+}
+
+/**
+ * Fig. 6's bar list: the pages more than 10% over the median weight, heaviest first, each
+ * against its budget, then one row for all the others at their mean.
+ */
 export function pageFigure(f, self) {
+  const heavy = f.rows.filter((r) => r.kb > f.medianKb * OUTLIER);
+  const rest = f.rows.filter((r) => r.kb <= f.medianKb * OUTLIER);
   const max = Math.max(...f.rows.map((r) => Math.max(r.kb, r.budget ?? 0)));
-  return `<ol class="fp-bars">${f.rows
+  const restKb = rest.length ? mean(rest.map((r) => r.kb)) : 0;
+  const restRow = rest.length
+    ? row(
+        `${rest.length} other ${rest.length === 1 ? "page" : "pages"}`,
+        `${Math.min(...rest.map((r) => r.kb)).toFixed(0)} to ${Math.max(...rest.map((r) => r.kb)).toFixed(0)} kB`,
+        `<span class="fp-bar" style="--w:${pct(restKb, max)}"></span>`,
+      )
+    : "";
+  return `<ol class="fp-bars">${heavy
     .map((r) => {
       const budget = r.budget ? `<span class="sr-only">, budget ${r.budget} kB</span>` : "";
       const tick = r.budget
         ? `<span class="fp-limit" style="--x:${pct(r.budget, max)}"></span>`
         : "";
       return row(
-        esc(urlOf(r.page)) + (r.page === self ? " (this page)" : ""),
+        pageName(r, self),
         `${r.kb.toFixed(0)} kB${budget}, ${range(r.co2, mg)}`,
         `<span class="fp-bar" style="--w:${pct(r.kb, max)}"></span>${tick}`,
       );
     })
-    .join("")}</ol>`;
+    .join("")}${restRow}</ol>`;
+}
+
+/** Every page as a table, heaviest first: the full list behind Fig. 6. */
+export function pageTable(f, self) {
+  const body = f.rows
+    .map(
+      (r) =>
+        `<tr><td>${pageName(r, self)}</td><td>${r.kb.toFixed(0)}</td>` +
+        `<td>${r.budget ?? ""}</td><td>${(r.co2.low * 1000).toFixed(0)}–${(r.co2.high * 1000).toFixed(0)}</td></tr>`,
+    )
+    .join("");
+  return (
+    "<table><thead><tr><th>Page</th><th>Weight (kB)</th><th>Budget (kB)</th>" +
+    `<th>CO₂e per view (mg)</th></tr></thead><tbody>${body}</tbody></table>`
+  );
 }
 
 /** Fig. 4's bar list: one view, 1,000 views and one demo run on one linear scale of grams. */

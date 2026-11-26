@@ -12,7 +12,11 @@ demo's file sizes are typed in. To run the same check on your own site, see
 ## Result
 
 One page view of this site transfers about %%fp:viewKb%% kB and emits **%%fp:view%%** CO₂e
-(carbon dioxide equivalent, the only impact the model covers).
+(carbon dioxide equivalent, the only impact the model covers). For comparison, the median
+home page on the web weighed %%fp:webMobileKb%% kB on mobile and %%fp:webDesktopKb%% kB on
+desktop in July 2025 ([Web Almanac 2025](https://almanac.httparchive.org/en/2025/page-weight), HTTP Archive). With the same model, a
+view of the mobile median emits %%fp:webMobile%% CO₂e, about %%fp:webTimes%% times a page of this
+site.
 
 One run of the [CLIP demo](/demos/#classify-a-photo-with-clip), which labels a photo with an
 image model that runs in your browser, downloads about %%fp:demoMb%% MB and emits
@@ -43,24 +47,48 @@ Source: [`src/lib/footprint.mjs`](repo:blob/main/src/lib/footprint.mjs) on this 
 | One page view | %%fp:viewKb%% kB | %%fp:view%% |
 | 1,000 page views (scaled) | %%fp:thousandMb%% MB | %%fp:thousandViews%% |
 | One demo run | %%fp:demoMb%% MB | %%fp:demo%% |
+| One view of the median web home page, mobile | %%fp:webMobileKb%% kB | %%fp:webMobile%% |
+| One view of the median web home page, desktop | %%fp:webDesktopKb%% kB | %%fp:webDesktop%% |
 
-<p class="table-src">Source: <code>scripts/page-weight.mjs</code> on this build, and the demo's file listings.</p>
+<p class="table-src">Source: <code>scripts/page-weight.mjs</code> on this build, the demo's file listings, and the Web Almanac 2025 for the median web page.</p>
 
-The page view is the plain mean of all %%fp:pages%% pages, not weighted by visits. They weigh
-%%fp:minKb%% to %%fp:maxKb%% kB.
-Most of them weigh about the same, because they share the fonts, styles and scripts. The
-pages with an interactive list, map or demo load React and weigh more (Fig. 5).
+## What a page view is made of
+
+The page view is the plain mean of all %%fp:pages%% pages, not weighted by visits. Most pages
+weigh about the same, because they share one shell: fonts, styles and scripts. The largest
+part is %%fp:largestPart%%, at %%fp:largestShare%% of a mean page view, and %%fp:secondPart%%
+is next at %%fp:secondShare%% (Fig. 5). Cutting %%fp:largestPart%% would save the most. The
+browser keeps the shared files after the first page, so the saving is largest for readers who
+open one page and leave.
+
+<figure class="fp-figure not-content">
+%%fp:partsFigure%%
+<figcaption>
+
+**Fig. 5** The mean page view by asset type, gzipped, largest first. Bar length is the share of
+the whole page view. Source: [`scripts/page-weight.mjs`](repo:blob/main/scripts/page-weight.mjs) on this build.
+
+</figcaption>
+</figure>
+
+The pages range from %%fp:minKb%% to %%fp:maxKb%% kB, around a median of %%fp:shellKb%% kB. The
+pages with an interactive list, map or demo load React and weigh more (Fig. 6).
 
 <figure class="fp-figure not-content">
 %%fp:pageFigure%%
 <figcaption>
 
-**Fig. 5** First-visit weight of every page, heaviest first, and its CO₂e per view. The tick
-marks the page's weight budget: the build check fails when a page goes over it. Source:
-[`scripts/page-weight.mjs`](repo:blob/main/scripts/page-weight.mjs) on this build.
+**Fig. 6** The pages more than 10% over the median weight, and the mean of all the others, with
+CO₂e per view. The tick marks a page's weight budget: the build check fails when a page goes
+over it. Source: [`scripts/page-weight.mjs`](repo:blob/main/scripts/page-weight.mjs) on this build.
 
 </figcaption>
 </figure>
+
+<details class="fp-all">
+<summary>All %%fp:pages%% pages</summary>
+%%fp:pageTable%%
+</details>
 
 ## Functional unit
 
@@ -135,6 +163,9 @@ a reader presses Classify.
   pick one.
 - **Grid intensity.** The model uses a world average. Readers on cleaner or dirtier grids
   get less or more.
+- **The web median.** The Web Almanac counts every request a page makes while it loads.
+  This page leaves out files that load only when used, so the comparison flatters this site
+  a little.
 - **Gzip.** Page weight is the gzipped size, a proxy for bytes on the wire. Cloudflare may
   send Brotli, which is smaller.
 - **Demo files.** The sizes are typed into the code, and I update them when the demo's

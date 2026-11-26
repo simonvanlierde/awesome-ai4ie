@@ -1056,6 +1056,13 @@ starlight-menu-button button {
   line-height: 1.45;
   color: var(--sl-color-gray-2);
 }
+.fp-all table {
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+.fp-all td:not(:first-child) {
+  white-space: nowrap;
+}
 .fp-figure figcaption p {
   margin: 0;
 }

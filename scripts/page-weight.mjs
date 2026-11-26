@@ -89,15 +89,34 @@ async function gzipped(file) {
   return gzipSync(await readFile(file)).length;
 }
 
+const KINDS = [
+  ["css", /\.css$/],
+  ["js", /\.m?js$/],
+  ["fonts", /\.(woff2?|ttf|otf)$/],
+  ["images", /\.(svg|png|jpe?g|webp|avif|gif|ico)$/],
+];
+
+/** The asset type a file counts under in a page's parts. */
+export function kindOf(url) {
+  return KINDS.find(([, re]) => re.test(url))?.[0] ?? "other";
+}
+
 async function weigh(page, root) {
   const html = await readFile(`${root}/${page}`, "utf8");
   const seen = new Set(extractAssets(html));
   const queue = [...seen];
-  let bytes = await gzipped(`${root}/${page}`);
+  const parts = {
+    html: await gzipped(`${root}/${page}`),
+    css: 0,
+    js: 0,
+    fonts: 0,
+    images: 0,
+    other: 0,
+  };
   while (queue.length) {
     const url = queue.shift();
     const file = toDist(url, basePath, root);
-    bytes += await gzipped(file);
+    parts[kindOf(url)] += await gzipped(file);
     if (!url.endsWith(".js")) continue;
     for (const dep of staticImports(await readFile(file, "utf8"), url)) {
       if (seen.has(dep)) continue;
@@ -105,11 +124,14 @@ async function weigh(page, root) {
       queue.push(dep);
     }
   }
-  return { page, kb: bytes / 1000, budget: budgetOf(page) };
+  const kb = Object.values(parts).reduce((x, y) => x + y, 0) / 1000;
+  for (const k of Object.keys(parts)) parts[k] /= 1000;
+  return { page, kb, budget: budgetOf(page), parts };
 }
 
 /**
- * Every built page as {page, kb, budget}, heaviest first. Meta-refresh redirect stubs and 404.html
+ * Every built page as {page, kb, budget, parts}, heaviest first; `parts` splits kb by asset
+ * type (html, css, js, fonts, images, other). Meta-refresh redirect stubs and 404.html
  * are left out: they are not pages a reader views.
  */
 export async function weighAll(root = "dist") {
