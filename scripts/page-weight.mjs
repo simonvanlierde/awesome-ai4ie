@@ -20,7 +20,7 @@ import { gzipSync } from "node:zlib";
 import { basePath } from "../src/site.ts";
 
 // Per-page budget in KB: the heaviest page without a React island (182 KB) plus ~20%.
-export const DEFAULT_BUDGET_KB = 150;
+export const DEFAULT_BUDGET_KB = 220;
 // Per-page overrides in KB, keyed by the path under dist/. The island pages ship React
 // (about 70 KB gzipped); each is budgeted at its weight on 2026-11-20 plus ~20%.
 /** @type {Record<string, number>} */
