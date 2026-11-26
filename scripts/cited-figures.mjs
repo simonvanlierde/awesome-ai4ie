@@ -39,16 +39,24 @@ function numbersIn(text) {
   return (text.match(NUMBER) ?? []).map((n) => n.replaceAll(",", ""));
 }
 
+/** Removes tags until none are left, since removing one can join the halves of another. */
+function stripTags(text) {
+  let previous;
+  let out = text;
+  do {
+    previous = out;
+    out = out.replace(TAG, "");
+  } while (out !== previous);
+  return out;
+}
+
 /** The claims in one page: the text before each Cite, back to the previous Cite or the paragraph start. */
 export function citedFigures(text) {
   const out = [];
   for (const para of text.split(PARAGRAPH)) {
     let start = 0;
     for (const m of para.matchAll(CITE)) {
-      const claim = para
-        .slice(start, m.index)
-        .replace(LINK_TARGET, "]") // link targets: DOIs carry digits
-        .replace(TAG, "")
+      const claim = stripTags(para.slice(start, m.index).replace(LINK_TARGET, "]")) // link targets: DOIs carry digits
         .replace(ANGLE, "") // a bracket left by nested tags, such as "<<b>x>"
         .replace(SPACE, " ")
         .replace(LEADING, "")
