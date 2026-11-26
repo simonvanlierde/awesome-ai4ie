@@ -19,10 +19,11 @@ import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
 import { basePath } from "../src/site.ts";
 
-// Per-page budget in KB: the heaviest page without a React island (182 KB) plus ~20%.
+// Per-page budget in kB (1,000 bytes): the heaviest page without a React island (182 KiB)
+// plus ~20%.
 export const DEFAULT_BUDGET_KB = 220;
-// Per-page overrides in KB, keyed by the path under dist/. The island pages ship React
-// (about 70 KB gzipped); each is budgeted at its weight on 2026-11-20 plus ~20%.
+// Per-page overrides in kB, keyed by the path under dist/. The island pages ship React
+// (about 70 kB gzipped); each is budgeted at its weight on 2026-11-20 plus ~20%.
 /** @type {Record<string, number>} */
 export const OVERRIDES = {
   "literature/index.html": 315,
@@ -104,7 +105,7 @@ async function weigh(page, root) {
       queue.push(dep);
     }
   }
-  return { page, kb: bytes / 1024, budget: budgetOf(page) };
+  return { page, kb: bytes / 1000, budget: budgetOf(page) };
 }
 
 /**
@@ -126,14 +127,14 @@ async function main() {
     console.error("No dist/ folder: run `pnpm run build` first.");
     process.exit(2);
   });
-  console.log(`${"page".padEnd(46)}${"KB (gzip)".padStart(10)}${"budget".padStart(8)}`);
+  console.log(`${"page".padEnd(46)}${"kB (gzip)".padStart(10)}${"budget".padStart(8)}`);
   for (const r of rows) {
     const kb = r.kb.toFixed(1).padStart(10);
     console.log(`${r.page.padEnd(46)}${kb}${String(r.budget).padStart(8)}`);
   }
   const over = overBudget(rows);
   for (const r of over) {
-    console.error(`over budget: ${r.page} ${r.kb.toFixed(1)} KB > ${r.budget} KB`);
+    console.error(`over budget: ${r.page} ${r.kb.toFixed(1)} kB > ${r.budget} kB`);
   }
   if (over.length) {
     console.error(

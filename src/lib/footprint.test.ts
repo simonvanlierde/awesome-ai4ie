@@ -12,49 +12,48 @@ import {
   pageFigure,
 } from "./footprint.mjs";
 
-// page-weight rows are KiB; the page shows decimal kB.
 const rows = [
   { page: "a/index.html", kb: 100, budget: 200 },
   { page: "b/index.html", kb: 300, budget: 400 },
 ];
-const KIB = 1.024;
 
 test("a page view is the mean weight run through SWD v4, green host lower than not", () => {
   const f = footprint(rows);
-  expect(f.viewKb).toBeCloseTo(200 * KIB, 9);
+  expect(f.viewKb).toBe(200);
   // SWD v4: 148.2 g CO2e per GB, 121.0 with a green data centre
-  expect(f.view.high).toBeCloseTo((200 * 1024 * 148.2) / 1e9, 4);
-  expect(f.view.low).toBeCloseTo((200 * 1024 * 121.03) / 1e9, 4);
+  expect(f.view.high).toBeCloseTo((200e3 * 148.2) / 1e9, 4);
+  expect(f.view.low).toBeCloseTo((200e3 * 121.03) / 1e9, 4);
   expect(f.view.low).toBeLessThan(f.view.high);
-  expect([f.minKb, f.maxKb]).toEqual([100 * KIB, 300 * KIB]);
+  expect([f.minKb, f.maxKb]).toEqual([100, 300]);
 });
 
 test("a demo run is the sum of its downloads, and views per demo is the byte ratio", () => {
   const f = footprint(rows);
   const bytes = Object.values(DEMO_DOWNLOAD).reduce((a, b) => a + b, 0);
   expect(f.demoMb).toBeCloseTo(bytes / 1e6, 6);
-  expect(f.viewsPerDemo).toBeCloseTo(bytes / (200 * 1024), 6);
+  expect(f.viewsPerDemo).toBeCloseTo(bytes / 200e3, 6);
 });
 
 test("every text token for fixed rows", () => {
   const { pageFigure: _p, compareFigure: _c, ...text } = footprintTokens(footprint(rows));
   expect(text).toEqual({
     pages: "2",
-    viewKb: "205",
-    minKb: "102",
-    maxKb: "307",
-    thousandMb: "205",
+    viewKb: "200",
+    minKb: "100",
+    maxKb: "300",
+    thousandMb: "200",
     demoMb: "182",
     onnxMb: "154",
-    view: "25 mg to 30 mg",
-    thousandViews: "25 g to 30 g",
+    view: "24 mg to 30 mg",
+    thousandViews: "24 g to 30 g",
     demo: "22 g to 27 g",
-    viewsPerDemo: "890",
+    viewsPerDemo: "910",
     dataCentreGb: "6 to 33 g/GB",
     networkGb: "36 g/GB",
     deviceGb: "80 g/GB",
     totalGb: "121 to 148 g/GB",
     deviceShare: "54%",
+    deviceEmbodiedShare: "50%",
     gridIntensity: "494",
   });
 });
@@ -71,10 +70,10 @@ test("the page figure lists pages heaviest first, on one scale up to the largest
   const html = pageFigure(footprint(rows), "b/index.html");
   const names = [...html.matchAll(/class="fp-name">([^<]*)</g)].map((m) => m[1]);
   expect(names).toEqual(["/b/ (this page)", "/a/"]);
-  // b: 300 of a 400 KiB scale, its budget tick at the end; a: 100, tick at 200.
+  // b: 300 of a 400 kB scale, its budget tick at the end; a: 100, tick at 200.
   expect(html).toContain('--w:75.00%"></span><span class="fp-limit" style="--x:100.00%"');
   expect(html).toContain('--w:25.00%"></span><span class="fp-limit" style="--x:50.00%"');
-  expect(html).toContain('<span class="sr-only">, budget 410 kB</span>');
+  expect(html).toContain('<span class="sr-only">, budget 200 kB</span>');
   expect(html.match(/<li/g)).toHaveLength(2);
 });
 
@@ -87,7 +86,7 @@ test("the comparison figure splits each bar into the green-host part and the res
   const ends = [0, 2, 4].map((i) => widths[i] + widths[i + 1]);
   expect(Math.max(...ends)).toBeCloseTo(100, 1);
   expect(html).toContain(">One page view<");
-  expect(html).toMatch(/0\.025 to 0\.030 g/);
+  expect(html).toMatch(/0\.024 to 0\.030 g/);
 });
 
 test("a page name with markup is escaped", () => {

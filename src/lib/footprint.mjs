@@ -5,8 +5,7 @@
  */
 import { co2 } from "@tgwf/co2";
 
-// Decimal units on the page (1 kB = 1,000 bytes), so 1,000 views of 190 kB make 190 MB.
-// page-weight.mjs reports KiB; rows convert on the way in.
+// Decimal units, as page-weight.mjs reports them: 1,000 views of 190 kB make 190 MB.
 const KB = 1e3;
 const MB = 1e6;
 
@@ -40,33 +39,32 @@ const perGb = (part) => both((green) => swd.perByte(GB, green)[part]);
 /** The SWD v4 background per GB, split by segment. CO2.js applies the green-host factor
  * to the total only, so the data centre's green value is what the others leave. */
 function background() {
-  const [network, device, total] = ["networkCO2e", "consumerDeviceCO2e", "total"].map(perGb);
+  const [network, device, deviceEmbodied, total] = [
+    "networkCO2e",
+    "consumerDeviceCO2e",
+    "consumerDeviceEmbodiedCO2e",
+    "total",
+  ].map(perGb);
   const dataCentre = {
     low: total.low - network.low - device.low,
     high: perGb("dataCenterCO2e").high,
   };
-  return { dataCentre, network, device, total };
+  return { dataCentre, network, device, deviceEmbodied, total };
 }
 
 /**
- * Numbers for the footprint page from page-weight rows ({page, kb, budget?} in KiB, gzipped
- * first visit). Sizes out are decimal kB and MB; grams CO₂e are {low, high}: a green host
- * or not.
+ * Numbers for the footprint page from page-weight rows ({page, kb, budget?} in kB, gzipped
+ * first visit). Grams CO₂e are {low, high}: a green host or not.
  */
 export function footprint(rows) {
   if (rows.length === 0) throw new Error("footprint: no page-weight rows");
   const sorted = rows.toSorted((a, b) => b.kb - a.kb);
-  const bytes = sorted.map((r) => r.kb * 1024);
+  const bytes = sorted.map((r) => r.kb * KB);
   const viewBytes = mean(bytes);
   const demoBytes = Object.values(DEMO_DOWNLOAD).reduce((a, b) => a + b, 0);
   return {
     pages: rows.length,
-    rows: sorted.map((r) => ({
-      page: r.page,
-      kB: (r.kb * 1024) / KB,
-      budgetKb: r.budget && (r.budget * 1024) / KB,
-      co2: grams(r.kb * 1024),
-    })),
+    rows: sorted.map((r) => ({ ...r, co2: grams(r.kb * KB) })),
     viewKb: viewBytes / KB,
     minKb: Math.min(...bytes) / KB,
     maxKb: Math.max(...bytes) / KB,
@@ -110,6 +108,7 @@ export function footprintTokens(f, self = "footprint/index.html") {
     deviceGb: perGbText(f.perGb.device),
     totalGb: perGbText(f.perGb.total),
     deviceShare: `${((f.perGb.device.high / f.perGb.total.high) * 100).toFixed(0)}%`,
+    deviceEmbodiedShare: `${((f.perGb.deviceEmbodied.high / f.perGb.device.high) * 100).toFixed(0)}%`,
     gridIntensity: String(f.gridIntensity),
     pageFigure: pageFigure(f, self),
     compareFigure: compareFigure(f),
@@ -129,27 +128,25 @@ const row = (name, value, track, cls = "") =>
   `<span class="fp-val">${value}</span>` +
   `<span class="fp-track" aria-hidden="true">${track}</span></li>`;
 
-/** Fig. 4's bar list: each page's weight against its budget, heaviest first. */
+/** Fig. 5's bar list: each page's weight against its budget, heaviest first. */
 export function pageFigure(f, self) {
-  const max = Math.max(...f.rows.map((r) => Math.max(r.kB, r.budgetKb ?? 0)));
+  const max = Math.max(...f.rows.map((r) => Math.max(r.kb, r.budget ?? 0)));
   return `<ol class="fp-bars">${f.rows
     .map((r) => {
-      const budget = r.budgetKb
-        ? `<span class="sr-only">, budget ${r.budgetKb.toFixed(0)} kB</span>`
-        : "";
-      const tick = r.budgetKb
-        ? `<span class="fp-limit" style="--x:${pct(r.budgetKb, max)}"></span>`
+      const budget = r.budget ? `<span class="sr-only">, budget ${r.budget} kB</span>` : "";
+      const tick = r.budget
+        ? `<span class="fp-limit" style="--x:${pct(r.budget, max)}"></span>`
         : "";
       return row(
         esc(urlOf(r.page)) + (r.page === self ? " (this page)" : ""),
-        `${r.kB.toFixed(0)} kB${budget}, ${range(r.co2, mg)}`,
-        `<span class="fp-bar" style="--w:${pct(r.kB, max)}"></span>${tick}`,
+        `${r.kb.toFixed(0)} kB${budget}, ${range(r.co2, mg)}`,
+        `<span class="fp-bar" style="--w:${pct(r.kb, max)}"></span>${tick}`,
       );
     })
     .join("")}</ol>`;
 }
 
-/** Fig. 5's bar list: one view, 1,000 views and one demo run on one linear scale of grams. */
+/** Fig. 4's bar list: one view, 1,000 views and one demo run on one linear scale of grams. */
 export function compareFigure(f) {
   const units = [
     ["One page view", f.view],
