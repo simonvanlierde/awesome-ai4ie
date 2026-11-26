@@ -13,9 +13,11 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `--notes <dir>` it lists only the numbers no reading note records yet.
 - A Verify AI-assisted work page: the coding and ML reproducibility checklists, golden
   tests kept out of an agent's reach, scoring an AI step on known answers, a claim ledger,
-  a run log, and short tips for working with a coding agent (`AGENTS.md`, a plan first, one
-  git worktree per agent, hooks). `/best-practices/checklists/`, `/agentic-harnesses/` and
-  `/evals/` redirect to it.
+  a run log, a meaning check against a frozen metadata card, a bug-finding review in a fresh
+  session, and short tips for working with a coding agent (`AGENTS.md`, few tested skills, a
+  plan first, one git worktree per agent, hooks), each with the recent studies behind it.
+  Evals report a Wilson interval per question kind and compare models with an exact McNemar
+  test. `/best-practices/checklists/`, `/agentic-harnesses/` and `/evals/` redirect to it.
 - Getting started & pitfalls opens with "How reliable is AI today?", a table of the two
   benchmarks that test language models on IE tasks.
 - The verification checklist gains items on a test seen failing, reading the agent's plan,
