@@ -434,4 +434,14 @@ describe("LiteratureBrowser pagination and text filter", () => {
     expect(listed()).toBe(20);
     expect(document.activeElement?.getAttribute("role")).toBe("status");
   });
+
+  it("puts search first and opens a facet's chips directly under the filter buttons", async () => {
+    await mount("/literature/", many);
+    const search = document.querySelector(".lit-search") as HTMLElement;
+    const bar = document.querySelector(".lit-bar") as HTMLElement;
+    await click(document.querySelector(".lit-facet-trigger"));
+    const panel = document.querySelector(".lit-facet-panel") as HTMLElement;
+    expect(search.nextElementSibling).toBe(bar);
+    expect(bar.nextElementSibling).toBe(panel);
+  });
 });

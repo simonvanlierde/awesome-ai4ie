@@ -193,7 +193,8 @@ kept over 94% of links valid but reached only 39 to 77% factual accuracy (Onwell
 researchers reproducing published social science results, human-only teams reproduced 94%,
 AI-assisted teams 91% and AI-led teams 37%, all using ChatGPT (Brodeur et al.,
 [PNAS, 2026](https://doi.org/10.1073/pnas.2524747123)). The authors call the AI-led figure a
-lower bound on what AI can do.
+lower bound on what AI can do. Human-only teams also found significantly more major coding errors
+than AI-assisted ones.
 
 Keep a **claim ledger** next to any AI-assisted manuscript or report: one row per cited
 claim, filled in only after you open the source.
@@ -255,6 +256,10 @@ an instructions file, permissions, tests, and hooks.
   script the harness runs at a fixed point, such as before each edit, so it holds whatever the
   agent decides. For example: refuse writes under `tests/golden/`, or run the tests when the
   agent says it is done.
+  A callable check can beat the same rule in prose, though the evidence is thin: on SciCode
+  repair tasks, agents given checks as a tool fully repaired 29 of 30 cases against 26 of 30
+  with the checks written out, but a larger cohort tied at 13 of 24 each
+  ([Ning et al.](https://arxiv.org/abs/2610.00313)).
 
 ```markdown
 # AGENTS.md
