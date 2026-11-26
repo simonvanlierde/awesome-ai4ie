@@ -2211,51 +2211,217 @@ starlight-menu-button button {
   }
 }
 
-/* Fig. 2.1: the literature map. It keeps one size and scrolls sideways on a phone, like Table 1.1. */
+/* Fig. 2.1: the literature map. On /literature/ it sits over the list (.lm-view); on
+   /literature-map/ it is a static figure that keeps one size and scrolls sideways on a phone. */
+.lm-figure {
+  position: relative;
+  margin: 1rem 0 0;
+}
+.lm-plot {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.lm-hull {
+  fill: var(--sl-color-gray-6);
+  stroke: var(--sl-color-hairline);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+.lm-hull.is-thin {
+  stroke: var(--sl-color-gray-3);
+  stroke-dasharray: 5 4;
+}
+.lm-dot {
+  fill: var(--field, var(--sl-color-gray-3));
+  stroke: var(--sl-color-bg);
+  stroke-width: 1;
+  transform-box: fill-box;
+  transform-origin: center;
+  scale: var(--lm-mark, 1);
+  transition: opacity 150ms ease-out;
+}
+.lm-dot.lm-none {
+  fill: var(--sl-color-bg);
+  stroke: var(--sl-color-gray-3);
+  stroke-width: 1.5;
+}
+.lm-dot.is-out {
+  opacity: 0.16;
+}
+.lm-active {
+  fill: none;
+  stroke: var(--sl-color-text-accent);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  scale: var(--lm-mark, 1);
+}
+.lm-label {
+  font-family: var(--sl-font);
+  font-size: 12px;
+  font-weight: 650;
+  font-stretch: 85%;
+  fill: var(--sl-color-white);
+  paint-order: stroke;
+  stroke: var(--sl-color-bg);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+.lm-n {
+  font-weight: 400;
+  fill: var(--sl-color-gray-2);
+  font-variant-numeric: tabular-nums;
+}
+.lm-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--sl-font);
+  font-size: 0.8125rem;
+}
+.lm-key li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+}
+.lm-figure figcaption {
+  margin-top: 0.5rem;
+  font-size: var(--sl-text-sm);
+  color: var(--sl-color-gray-2);
+}
+.lm-figure figcaption b {
+  color: var(--sl-color-white);
+}
+
+/* The interactive map on /literature/. */
+.lm-view {
+  position: relative;
+}
+.lm-frame {
+  cursor: default;
+}
+.lm-frame:focus {
+  outline: none;
+}
+.lm-frame:focus-visible {
+  outline: 2px solid var(--sl-color-accent);
+  outline-offset: 2px;
+}
+.lm-skip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  padding: 0.25rem 0.5rem;
+  border: 0;
+  background: var(--sl-color-bg);
+  color: var(--sl-color-text-accent);
+  font: inherit;
+  font-size: var(--sl-text-sm);
+  text-decoration: underline;
+  cursor: pointer;
+  transform: translateY(-120%);
+  opacity: 0;
+}
+.lm-skip:focus {
+  transform: none;
+  opacity: 1;
+}
+.lm-card {
+  position: absolute;
+  z-index: 2;
+  width: min(20rem, 60%);
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--sl-color-gray-4);
+  border-top: 2px solid var(--sl-color-text-accent);
+  background: var(--sl-color-bg);
+  pointer-events: none;
+  transform: translate(16px, -1.5rem);
+}
+.lm-card[data-flip-x] {
+  transform: translate(calc(-100% - 16px), -1.5rem);
+}
+.lm-card[data-flip-y] {
+  transform: translate(16px, calc(-100% + 1.5rem));
+}
+.lm-card[data-flip-x][data-flip-y] {
+  transform: translate(calc(-100% - 16px), calc(-100% + 1.5rem));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lm-card {
+    animation: lm-card-in 150ms ease-out;
+  }
+}
+@keyframes lm-card-in {
+  from {
+    opacity: 0;
+  }
+}
+.lm-card .lit-title {
+  margin: 0.15rem 0;
+  font-size: 1rem;
+}
+.lm-card .lit-title:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.lm-card .lit-blurb {
+  margin: 0.2rem 0 0.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+/* The cluster name is in the card only where the plate's labels give way. */
+.lm-card-cluster {
+  display: none;
+  font-weight: 400;
+}
+.lm-card-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--sl-color-gray-2);
+}
+/* Phones: the plate fits the width, the marks grow to stay visible, the cluster labels give
+   way (the card names a paper's cluster), and the card docks under the plate. */
+@media (max-width: 40rem) {
+  .lm-view {
+    --lm-mark: 1.6;
+  }
+  .lm-view .lm-labels {
+    display: none;
+  }
+  .lm-card-cluster {
+    display: inline;
+  }
+  .lm-card,
+  .lm-card[data-flip-x],
+  .lm-card[data-flip-y],
+  .lm-card[data-flip-x][data-flip-y] {
+    position: static;
+    width: auto;
+    margin-top: 0.5rem;
+    transform: none;
+  }
+}
+
+/* The static figure on /literature-map/. */
 .litmap-scroll {
   overflow-x: auto;
   scrollbar-width: thin;
 }
-.litmap-scroll svg {
+.litmap-scroll .lm-plot {
   min-width: 640px;
-}
-.litmap text {
-  font-size: 12px;
-  paint-order: stroke;
-  stroke: var(--sl-color-bg);
-  stroke-width: 3px;
-}
-.litmap .lm-leader {
-  stroke: var(--sl-color-gray-4);
-  stroke-width: 1;
-}
-
-.litmap .lm-label {
-  font-weight: 650;
-}
-.litmap .lm-ring {
-  fill: none;
-  stroke: var(--sl-color-gray-3);
-  stroke-width: 1.5;
-  stroke-dasharray: 5 4;
 }
 .litmap .lm-hit {
   fill: transparent;
 }
-.litmap .lm-dot {
-  fill: var(--field, var(--sl-color-gray-3));
-  fill-opacity: 0.85;
-  stroke: var(--sl-color-bg);
-  stroke-width: 1;
-}
-.litmap .lm-none {
-  fill: none;
-  stroke: var(--sl-color-gray-2);
-  stroke-width: 2;
-}
 .litmap a:hover .lm-dot,
 .litmap a:focus-visible .lm-dot {
-  fill-opacity: 1;
   stroke: var(--sl-color-white);
   stroke-width: 2;
 }
@@ -2266,28 +2432,6 @@ starlight-menu-button button {
   stroke: var(--sl-color-text-accent);
   stroke-width: 2;
 }
-.litmap-key {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1rem;
-  margin: 0.75rem 0 0;
-  padding: 0;
-  list-style: none;
-  font-family: var(--sl-font);
-  font-size: 0.8125rem;
-}
-.litmap-key li {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  margin: 0;
-}
-.litmap-key svg {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-}
-
 .litmap-skip {
   margin: 0 0 0.5rem;
   font-size: var(--sl-text-sm);

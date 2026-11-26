@@ -1,6 +1,6 @@
 ---
 title: Map of the literature
-description: "A 2D map of the reading list: papers laid out by the meaning of their title, summary and tags, grouped by IE field, with a table of the same data."
+description: "A 2D map of the reading list: papers laid out by the meaning of their title, summary and tags, grouped into clusters, with a table of the same data."
 ---
 
 import LiteratureMap from '../../components/LiteratureMap.astro';
@@ -8,11 +8,14 @@ import LiteratureMap from '../../components/LiteratureMap.astro';
 Each point is a paper from the [reading list](/literature/). Papers whose title, summary and tags
 read alike sit close together, and the colour and shape of a point give its IE field.
 Where a region is empty or a cluster is small, the list is thin. Select a point to open the
-paper.
+paper. The [reading list](/literature/) shows the same map over the list, where its filters
+pick which papers stand out.
 
 <LiteratureMap />
 
 The layout comes from the same text embeddings that power meaning search, reduced to two
-dimensions by principal component analysis (PCA) and grouped by k-means. Both are
-deterministic, so the same vectors give the same map. Closeness in the plane is approximate:
-PCA keeps the largest differences and flattens the rest, and each axis is stretched to fill the plate on its own.
+dimensions by t-SNE (t-distributed stochastic neighbour embedding) with a fixed seed, so the same
+vectors give the same map. The clusters are then found on that 2D layout by k-means, so each one
+is a group you can see, and each is named for the tag most over-represented in it compared with
+the whole list. Both axes share one scale. t-SNE keeps near neighbours near: a paper's closest
+points are its closest papers, but the distance between two clusters means little.
