@@ -60,7 +60,7 @@ body:
         - Anomaly & condition detection
         - Uncertainty & probabilistic ML
         - Knowledge graphs
-        - Recommender & matching systems
+        - Recommender systems
   - type: input
     id: gap
     attributes:

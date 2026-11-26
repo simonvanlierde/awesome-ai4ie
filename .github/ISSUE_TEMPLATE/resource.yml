@@ -82,7 +82,7 @@ body:
         - Anomaly & condition detection
         - Uncertainty & probabilistic ML
         - Knowledge graphs
-        - Recommender & matching systems
+        - Recommender systems
   - type: checkboxes
     id: checks
     attributes:

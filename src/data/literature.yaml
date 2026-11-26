@@ -1028,7 +1028,7 @@
   doi: "10.1016/j.jenvman.2020.111430"
   blurb: "Tags 311 short waste descriptions with one of 841 EWC codes by term matching, a thesaurus and Word2vec; top-10 micro precision is 0.36 baseline, 0.39 best."
   ie: [symbiosis]
-  ml: [nlp-extraction, recommender]
+  ml: [nlp-extraction]
   type: [method]
   added: 2026-11
 - id: grimmelUrbanIndustrialSymbiosis2025

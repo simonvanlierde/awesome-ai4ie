@@ -202,9 +202,9 @@
     - http://www.wikidata.org/entity/Q33002955
 - id: recommender
   scheme: technique
-  prefLabel: Recommender & matching systems
+  prefLabel: Recommender systems
   short: Recommender
-  definition: Systems that rank or suggest the best matches for a user or item, such as partners, materials or products, from past choices or similarity.
+  definition: Systems that suggest partners, exchanges or options to a user, ranked from past choices or similarity. Matching an item to a database record, such as a product to an emission factor, is tagged by its text method instead.
   closeMatch:
     - http://www.wikidata.org/entity/Q554950
 

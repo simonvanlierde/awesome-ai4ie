@@ -30,7 +30,7 @@ export const CONCEPTS = [
   {"id":"anomaly-detection","scheme":"technique","prefLabel":"Anomaly & condition detection","short":"Anomaly"},
   {"id":"uncertainty","scheme":"technique","prefLabel":"Uncertainty & probabilistic ML","short":"Uncertainty"},
   {"id":"knowledge-graph","scheme":"technique","prefLabel":"Knowledge graphs","short":"Knowledge graphs"},
-  {"id":"recommender","scheme":"technique","prefLabel":"Recommender & matching systems","short":"Recommender"},
+  {"id":"recommender","scheme":"technique","prefLabel":"Recommender systems","short":"Recommender"},
   {"id":"landmark-ml","scheme":"type","prefLabel":"ML landmark"},
   {"id":"meta","scheme":"type","prefLabel":"Research practice"},
   {"id":"review","scheme":"type","prefLabel":"Review"},
