@@ -120,7 +120,9 @@ Every tag is a concept in [`src/data/vocabulary.yaml`](src/data/vocabulary.yaml)
 - `broader` and `related`: ids of other concepts.
 - `exactMatch` and `closeMatch`: IRIs of the concept elsewhere. Use `exactMatch` only for the
   same concept, such as the Wikidata item for life cycle assessment. An OpenAlex topic is
-  always a `closeMatch`. Open each IRI before you add it.
+  always a `closeMatch`. Open each IRI before you add it; `pnpm run vocabulary-links` prints
+  every link beside the label it points at, and runs weekly in CI. [vocabulary/CONVENTIONS.md](vocabulary/CONVENTIONS.md)
+  has the rules this vocabulary shares with r9lab-vocabulary.
 - `reserved: true`: no entry uses the concept yet. Set it on a concept added before any entry
   uses it, such as a planned facet. `pnpm test` fails once an entry uses it, so remove the flag
   in the same change.
