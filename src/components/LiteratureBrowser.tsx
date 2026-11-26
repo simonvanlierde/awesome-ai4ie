@@ -276,6 +276,15 @@ export default function LiteratureBrowser({
 
   return (
     <div className="lit-browser not-content">
+      <label className="lit-search">
+        <span className="lit-bar-label">Search</span>
+        <input
+          type="search"
+          value={q}
+          placeholder="Title, author or summary"
+          onChange={(e) => updateQuery(e.target.value)}
+        />
+      </label>
       <div className="lit-bar">
         <span className="lit-bar-label">Filter</span>
         {TAG_DIMS.map((dim) => {
@@ -302,15 +311,6 @@ export default function LiteratureBrowser({
           );
         })}
       </div>
-      <label className="lit-search">
-        <span className="lit-bar-label">Search</span>
-        <input
-          type="search"
-          value={q}
-          placeholder="Title, author or summary"
-          onChange={(e) => updateQuery(e.target.value)}
-        />
-      </label>
       {open && (
         <fieldset id="lit-facet-panel" className="lit-facet-panel" aria-label={DIM_LABELS[open]}>
           {Object.entries(TAGS[open]).map(([tag, label]) => (
