@@ -52,6 +52,14 @@
   stage: tested
   maturity: "Demonstrated at national scale using detailed household data."
   papers: [froemeltMachineLearningBased2020]
+- id: lca-uncertainty-ml
+  name: "Uncertainty quantification for ML-based LCA"
+  ie: [lca]
+  ml: [tabular-ml, uncertainty]
+  summary: "Attach prediction intervals to ML-estimated inventory data and footprints, and carry both ML and LCA uncertainty through to the result."
+  stage: tested
+  maturity: "Three method studies, each on one case: crop fertiliser inventories, stainless steel melts, a biomass model. One finds that only 6 of 45 ML+LCA studies consider uncertainty."
+  papers: [daiGaussianProcessRegression2022, testiniExAnteProductCarbon2026, akramiAddressingUncertaintyMachine2025]
 
 # ── Socio-economic metabolism ────────────────────────────────────────────────
 - id: satellite-stock-mapping
