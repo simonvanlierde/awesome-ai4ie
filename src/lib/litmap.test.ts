@@ -6,6 +6,8 @@ import {
   layoutMap,
   liftRanking,
   litMap,
+  nameBox,
+  namePxPerUnit,
   paddedHull,
   project,
   rng,
@@ -232,6 +234,17 @@ describe("layoutMap", () => {
       for (const [id, x, y] of map.points)
         expect(x > b.x0 && x < b.x1 && y > b.y0 && y < b.y1, id).toBe(false);
     }
+    boxes.forEach((a, i) => {
+      for (const b of boxes.slice(i + 1))
+        expect(a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1).toBe(false);
+    });
+  });
+
+  it("keeps the cluster-name buttons from touching at the smallest desktop scale", () => {
+    // Each is 24px tall, so meeting WCAG 2.5.8 (24 by 24px) leaves only that no two overlap.
+    const s = namePxPerUnit(map.h);
+    const boxes = map.clusters.map((k) => nameBox(k, s));
+    for (const b of boxes) expect((b.y1 - b.y0) * s).toBeCloseTo(24);
     boxes.forEach((a, i) => {
       for (const b of boxes.slice(i + 1))
         expect(a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1).toBe(false);

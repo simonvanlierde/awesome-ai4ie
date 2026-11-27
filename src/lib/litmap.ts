@@ -4,6 +4,7 @@
 // is a group the reader can see. No randomness reaches the output except through SEED, so the
 // same vectors give the same map on every build.
 import { KMeans, TSNE } from "@saehrimnir/druidjs";
+import { nameWidthPx } from "../components/litMapNav";
 import { tagLabel } from "../data/tags";
 import { decodeVector, entryText } from "./semantic";
 import { loadMapVectors, textKey } from "./vectors";
@@ -247,11 +248,38 @@ export function layoutMap(entries: readonly Entry[], vectors = mapVectors(entrie
     lx: 0,
     ly: 0,
   }));
-  // Each label goes to the top centre of its hull. One that would cover a paper, an earlier
-  // label or another cluster's shading tries the bottom centre, a line or two higher, and last
-  // just inside its own hull, each also a third of its width to either side; it takes the place
-  // that covers least, preferring that order. Labels stay on the plate.
+  placeNames(clusters, outlines, pts, h);
+  return {
+    w: W,
+    h,
+    points: placed.map((p, i) => [p.e.id, pts[i][0], pts[i][1], labels[i]]),
+    clusters,
+  };
+}
+
+/** Screen px per plate unit in a desktop map frame 630px wide and 300px high (42vh of a window
+ * about 715px tall): the smallest scale the cluster-name buttons are spaced for. A shorter
+ * window draws the plate smaller and can bring two names closer than WCAG 2.5.8 allows. */
+export const namePxPerUnit = (h: number) => Math.min(630 / W, 300 / h);
+
+/** A cluster name's button in plate units at s px a unit: 24px tall (WCAG 2.5.8), its middle
+ * 4px above the label's anchor, as custom.css sets .lm-name. */
+export function nameBox(k: { name: string; n: number; lx: number; ly: number }, s: number) {
+  const half = nameWidthPx(k) / 2 / s;
+  return { x0: k.lx - half, x1: k.lx + half, y0: k.ly - 16 / s, y1: k.ly + 8 / s };
+}
+
+type Outline = ReturnType<typeof paddedHull>;
+
+/** Sets each cluster's label anchor (lx, ly). A label goes to the top centre of its hull. One
+ * that would cover a paper, an earlier name's button or another cluster's shading tries the
+ * bottom centre, a line or two higher, just inside its own hull, a button's height or two
+ * above or below, and any line further down its hull, each also a third of its width to either
+ * side; it takes the place that covers least, preferring that order. Labels stay on the plate. */
+export function placeNames(clusters: MapCluster[], outlines: Outline[], pts: Pt[], h: number) {
   const width = labelWidth;
+  const s = namePxPerUnit(h);
+  const gap = 2 / s;
   const done: MapCluster[] = [];
   // Sitting on another cluster's shading would tie the label to the wrong cluster.
   const onOther = (i: number, x: number, y: number) =>
@@ -262,15 +290,21 @@ export function layoutMap(entries: readonly Entry[], vectors = mapVectors(entrie
           inside(o.poly, [lx, y - 4]),
         ),
     ).length;
-  const cost = (k: MapCluster, x: number, y: number) =>
-    (y - 11 < 0 || y + 4 > h ? 100 : 0) +
-    pts.filter(([px, py]) => Math.abs(px - x) < width(k) / 2 + 6 && py > y - 17 && py < y + 10)
-      .length +
-    10 *
-      done.filter(
-        (o) => Math.abs(o.ly - y) < LINE && Math.abs(o.lx - x) < (width(o) + width(k)) / 2 + 4,
-      ).length;
-  for (const i of [...ids.keys()].sort((a, b) => outlines[a].top - outlines[b].top)) {
+  const cost = (k: MapCluster, x: number, y: number) => {
+    const b = nameBox({ ...k, lx: x, ly: y }, s);
+    return (
+      (y - 11 < 0 || y + 4 > h ? 100 : 0) +
+      pts.filter(([px, py]) => Math.abs(px - x) < width(k) / 2 + 6 && py > y - 17 && py < y + 10)
+        .length +
+      10 *
+        done.filter((o) => {
+          const a = nameBox(o, s);
+          return a.x0 < b.x1 + gap && b.x0 < a.x1 + gap && a.y0 < b.y1 + gap && b.y0 < a.y1 + gap;
+        }).length
+    );
+  };
+  const tap = 24 / s;
+  for (const i of [...clusters.keys()].sort((a, b) => outlines[a].top - outlines[b].top)) {
     const k = clusters[i];
     const o = outlines[i];
     const ys = [
@@ -280,7 +314,15 @@ export function layoutMap(entries: readonly Entry[], vectors = mapVectors(entrie
       o.top - 5 - 2 * LINE,
       o.top + 17,
       o.bottom - 6,
-    ];
+      o.top - 5 - tap,
+      o.bottom + 13 + tap,
+      o.top - 5 - 2 * tap,
+      o.bottom + 13 + 2 * tap,
+      ...Array.from(
+        { length: Math.floor((o.bottom - o.top) / LINE) },
+        (_, j) => o.top + 17 + j * LINE,
+      ),
+    ].map(Math.round);
     const tries = ys.flatMap((y) =>
       [0, -1 / 3, 1 / 3].map((f) => {
         const x = o.cx + f * width(k);
@@ -297,12 +339,6 @@ export function layoutMap(entries: readonly Entry[], vectors = mapVectors(entrie
     k.ly = best.y;
     done.push(k);
   }
-  return {
-    w: W,
-    h,
-    points: placed.map((p, i) => [p.e.id, pts[i][0], pts[i][1], labels[i]]),
-    clusters,
-  };
 }
 
 /** A cluster label's width in plate units: about 7 a character at the label's bold 12px. */

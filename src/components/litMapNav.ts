@@ -39,6 +39,11 @@ export const TOP = 6;
 export const OTHER = 6;
 export const NONE_CAT = 7;
 
+/** A cluster name's button width over the plate, in px: about 6.2 a character of its 12px
+ * text (name, space, count), and 4px padding a side. Its height is 24px (custom.css). */
+export const nameWidthPx = (k: { name: string; n: number }) =>
+  (k.name.length + String(k.n).length + 1) * 6.2 + 8;
+
 export type Legend = { cat: number; label: string; n: number }[];
 /** A category mode as the page ships it: its legend, and one digit per point in the points'
  * order (the class number above). */

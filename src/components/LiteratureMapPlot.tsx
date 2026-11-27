@@ -17,6 +17,7 @@ import {
   type Mode,
   markPath,
   NONE_CAT,
+  nameWidthPx,
   nearest,
   panBy,
   placeLabels,
@@ -210,8 +211,6 @@ const MARK = 11;
 const ZOOM_BAR = [150, 36] as const;
 /** Screen pixels per plate unit that the marks' sizes are drawn for. */
 const MARK_PX_PER_UNIT = 0.8;
-/** Rough width of one cluster-name character at 12px, in px. */
-const NAME_CHAR_PX = 6.2;
 
 const reducedMotion = () =>
   typeof window !== "undefined" &&
@@ -434,7 +433,7 @@ export function MapView({
   // A cluster name kept whole inside the frame (its width estimated) once the frame is measured.
   const nameLeft = (k: MapCluster) => {
     if (!size) return `${fx(k.lx) * 100}%`;
-    const half = ((k.name.length + String(k.n).length + 1) * NAME_CHAR_PX) / 2 + 4;
+    const half = nameWidthPx(k) / 2;
     return `${Math.min(Math.max(fx(k.lx) * size.w, half), size.w - half)}px`;
   };
 
