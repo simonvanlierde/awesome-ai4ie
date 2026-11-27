@@ -229,6 +229,10 @@ runs a language model in a loop with tools: it reads files, edits code, runs com
 keeps going until it decides it is done. The **harness** is what you put around that loop:
 an instructions file, permissions, tests, and hooks.
 
+[ie-agent-harness](https://github.com/simonvanlierde/ie-agent-harness) is a small example to fork:
+a toy matrix LCA with a golden test, a hook that refuses edits to the golden values, a short
+`AGENTS.md`, one skill and CI. Its README has a "break it yourself" exercise.
+
 - **Keep `AGENTS.md` short.** Agents read this file at the start of a session. List only what
   they can't work out from the code: the check and test commands, unusual conventions such as
   units, and what they must never do. Context files didn't raise task success on average and
