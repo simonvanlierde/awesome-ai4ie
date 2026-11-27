@@ -1,5 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { cluster, hull, layoutMap, liftRanking, paddedHull, project, rng, W } from "./litmap";
+import {
+  cluster,
+  hull,
+  labelWidth,
+  layoutMap,
+  liftRanking,
+  litMap,
+  paddedHull,
+  project,
+  rng,
+  W,
+} from "./litmap";
 
 // Three blobs in 16 dimensions, so the projection and the clusters have something to find.
 function blobs(n = 30) {
@@ -45,6 +56,29 @@ describe("project", () => {
   it("handles no vectors and too few for t-SNE", () => {
     expect(project([])).toEqual([]);
     expect(project([[1, 0]])).toHaveLength(1);
+    // Three vectors would give t-SNE a perplexity of 0, and NaN positions.
+    const three = project(blobs(3));
+    expect(three.flat().every(Number.isFinite)).toBe(true);
+    expect(new Set(three.map((p) => p.join())).size).toBe(3);
+  });
+
+  it("lays an elongated cloud across, its farthest points on the positive side", () => {
+    // 40 points along one direction in 16 dimensions, with a little noise.
+    const next = rng(3);
+    const line = Array.from({ length: 40 }, (_, i) =>
+      Array.from(
+        { length: 16 },
+        (__, j) => (j === 0 ? 1 : 0) + (j === 1 ? i / 8 : 0) + (next() - 0.5) * 0.05,
+      ),
+    );
+    const xy = project(line);
+    const spread = (d: 0 | 1) =>
+      Math.max(...xy.map((p) => p[d])) - Math.min(...xy.map((p) => p[d]));
+    expect(spread(0)).toBeGreaterThan(2 * spread(1));
+    for (const d of [0, 1] as const) {
+      const big = xy.reduce((m, p) => (Math.abs(p[d]) > Math.abs(m) ? p[d] : m), 0);
+      expect(big).toBeGreaterThan(0);
+    }
   });
 });
 
@@ -111,6 +145,30 @@ describe("liftRanking", () => {
     // depth: 2 of 6, lift 6; water: 3 of 6 but common, lift ~0.6. Both on a third: lift decides.
     expect(liftRanking(m, [...m, ...rest])[0].label).toBe("Depth & 3D geometry");
   });
+
+  it("ranks a tag on a third of the cluster above a weaker one with a higher lift", () => {
+    // water: 3 of 9 (a third) but on every paper overall; depth: 2 of 9, found nowhere else.
+    const m = Array.from({ length: 9 }, (_, i) =>
+      entry(i, { topic: i < 3 ? ["water"] : [], ml: i < 2 ? ["depth"] : [] }),
+    );
+    const rest = Array.from({ length: 20 }, (_, i) => entry(100 + i, { topic: ["water"] }));
+    expect(liftRanking(m, [...m, ...rest]).map((r) => r.label)).toEqual([
+      "Water",
+      "Depth & 3D geometry",
+    ]);
+  });
+
+  it("breaks a tie in lift by the commoner tag, then by name", () => {
+    // Every tag below is found only in the cluster, so all share one lift.
+    const m = Array.from({ length: 6 }, (_, i) =>
+      entry(i, { topic: i < 4 ? ["water"] : i < 6 ? ["metals"] : [], ml: i >= 4 ? ["llm"] : [] }),
+    );
+    expect(liftRanking(m, [...m, entry(9)]).map((r) => r.label)).toEqual([
+      "Water",
+      "LLMs & agents",
+      "Metals & critical materials",
+    ]);
+  });
 });
 
 describe("layoutMap", () => {
@@ -153,6 +211,48 @@ describe("layoutMap", () => {
     }
   });
 
+  it("keeps each label on the plate, clear of the other labels and of every paper", () => {
+    // A bold 12px label measures about 7 plate units a character.
+    const half = (k: { name: string; n: number }) =>
+      ((k.name.length + String(k.n).length + 2) * 7) / 2;
+    expect(labelWidth({ name: "Water", n: 12 })).toBeGreaterThanOrEqual(
+      2 * half({ name: "Water", n: 12 }),
+    );
+    const boxes = map.clusters.map((k) => ({
+      x0: k.lx - half(k),
+      x1: k.lx + half(k),
+      y0: k.ly - 11,
+      y1: k.ly + 4,
+    }));
+    for (const b of boxes) {
+      expect(b.x0).toBeGreaterThanOrEqual(0);
+      expect(b.x1).toBeLessThanOrEqual(W);
+      expect(b.y0).toBeGreaterThanOrEqual(0);
+      expect(b.y1).toBeLessThanOrEqual(map.h);
+      for (const [id, x, y] of map.points)
+        expect(x > b.x0 && x < b.x1 && y > b.y0 && y < b.y1, id).toBe(false);
+    }
+    boxes.forEach((a, i) => {
+      for (const b of boxes.slice(i + 1))
+        expect(a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1).toBe(false);
+    });
+  });
+
+  it("gives a name two clusters share to the bigger one", () => {
+    // One tag on every paper: the biggest cluster is named for it, the rest get numbers.
+    const same = layoutMap(
+      vecs.map((_, i) => entry(i, { topic: ["water"] })),
+      vecs.map((v) => Float32Array.from(v)),
+    );
+    const sizes = same.clusters.map((k) => k.n);
+    expect(new Set(sizes).size).toBeGreaterThan(1);
+    const water = same.clusters.find((k) => k.name === "Water");
+    expect(water?.n).toBe(Math.max(...sizes));
+    expect(same.clusters.filter((k) => k.name.startsWith("Cluster"))).toHaveLength(
+      sizes.length - 1,
+    );
+  });
+
   it("is the same on every build", () => {
     expect(layoutMap(entries, withGap)).toEqual(map);
   });
@@ -164,5 +264,14 @@ describe("layoutMap", () => {
         entries.map(() => undefined),
       ).points,
     ).toEqual([]);
+  });
+});
+
+describe("litMap", () => {
+  it("lays the map out once per list, and again for a new list", () => {
+    const a = [entry(1), entry(2)];
+    const b = [entry(1), entry(3)];
+    expect(litMap(a)).toBe(litMap(a));
+    expect(litMap(b)).not.toBe(litMap(a));
   });
 });

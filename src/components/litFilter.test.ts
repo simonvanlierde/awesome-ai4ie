@@ -99,8 +99,11 @@ describe("parseView", () => {
     });
   });
   it("keeps the map's colour mode in the URL and ignores an unknown one", () => {
-    expect(toQuery({ filter: none, sort: "year", q: "", mode: "topic" })).toBe("?mode=topic");
+    expect(toQuery({ filter: none, sort: "year", q: "", mode: "openalex" })).toBe("?mode=openalex");
     expect(parseView("?mode=ml").mode).toBe("ml");
+    expect(parseView("?mode=openalex").mode).toBe("openalex");
+    // `topic=` is the site's own tag filter; the OpenAlex colouring is not called that.
+    expect(parseView("?mode=topic").mode).toBe("ie");
     expect(parseView("?mode=bogus").mode).toBe("ie");
   });
   it("omits empty filters and the default sort", () => {

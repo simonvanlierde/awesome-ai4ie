@@ -485,12 +485,26 @@ describe("LiteratureBrowser with the map", () => {
   it("draws every placed paper and counts those the filters keep", async () => {
     await mountMap("/literature/?ie=lca");
     expect(document.querySelectorAll(".lm-plot .lm-dot")).toHaveLength(3);
-    expect(document.querySelector(".lit-count [role=status]")?.textContent).toBe(
-      "1 of 3 entries, 1 on the map",
-    );
+    // Every paper the filters keep is on the map, so the count does not say it twice.
+    expect(document.querySelector(".lit-count [role=status]")?.textContent).toBe("1 of 3 entries");
     expect(mark("lca")?.classList.contains("is-out")).toBe(false);
     expect(mark("symbiosis")?.classList.contains("is-out")).toBe(true);
     expect(document.querySelector(".lm-plot .lm-none")?.classList.contains("is-out")).toBe(true);
+  });
+
+  it("counts the papers on the map when some are not placed", async () => {
+    history.replaceState(null, "", "/literature/");
+    host = document.createElement("div");
+    document.body.append(host);
+    root = createRoot(host);
+    const four = [...THREE, entry("newPaper", [])];
+    await act(async () => root.render(<LiteratureBrowser entries={four} map={MAP} />));
+    expect(document.querySelector(".lit-count [role=status]")?.textContent).toBe(
+      "4 of 4 entries, 3 on the map",
+    );
+    expect(document.querySelector(".lm-figure figcaption")?.textContent).toContain(
+      "1 paper is not placed yet and is not on the map.",
+    );
   });
 
   it("is one tab stop with a name, behind a skip link to the list", async () => {
@@ -524,6 +538,31 @@ describe("LiteratureBrowser with the map", () => {
     expect(window.location.hash).toBe("#otherPaper");
     expect(toggle("otherPaper")?.getAttribute("aria-expanded")).toBe("true");
     expect(document.activeElement?.id).toBe("otherPaper");
+  });
+
+  it("tells a screen reader about key moves only, with the cluster and the map's edge", async () => {
+    await mountMap("/literature/");
+    const said = () => document.querySelector(".lm-view [aria-live]")?.textContent;
+    plateAt200();
+    await pointer("pointermove", "mouse", 20, 20);
+    expect(card()).not.toBeNull();
+    expect(said()).toBe("");
+    await act(async () => frame()?.focus());
+    await key("ArrowRight");
+    expect(said()).toBe("Paper symPaper, 2024, Water");
+    await key("ArrowRight");
+    expect(said()).toBe("No paper further right.");
+    await key("ArrowLeft");
+    expect(said()).toBe("Paper lcaPaper, 2024, Water");
+  });
+
+  it("counts the papers a filter keeps in each cluster's name", async () => {
+    await mountMap("/literature/");
+    const names = () =>
+      [...document.querySelectorAll(".lm-name, .lm-chip")].map((n) => n.textContent);
+    expect(names()).toEqual(["Zoom to Water 3", "Zoom to Water 3"]);
+    await pickField("lca");
+    expect(names()).toEqual(["Zoom to Water 1", "Zoom to Water 1"]);
   });
 
   it("moves only between the papers the filters keep", async () => {
@@ -696,6 +735,32 @@ describe("LiteratureBrowser with the map", () => {
       expect(card()).toBeNull();
     });
 
+    it("closes when the pointer leaves the map for the page", async () => {
+      await mountMap("/literature/");
+      plateAt200();
+      await pointer("pointermove", "mouse", 20, 20);
+      expect(card()).not.toBeNull();
+      pointerOut(frame(), document.body);
+      expect(card()).toBeNull();
+    });
+
+    it("closes when the map loses focus", async () => {
+      await mountMap("/literature/");
+      await act(async () => frame()?.focus());
+      expect(card()).not.toBeNull();
+      await act(async () => frame()?.blur());
+      expect(card()).toBeNull();
+    });
+
+    it("closes when a filter leaves its paper out", async () => {
+      await mountMap("/literature/");
+      await act(async () => frame()?.focus());
+      await key("ArrowRight");
+      expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper symPaper");
+      await pickField("lca");
+      expect(card()).toBeNull();
+    });
+
     it("closes on Escape anywhere in the page", async () => {
       await mountMap("/literature/");
       plateAt200();
@@ -716,7 +781,7 @@ describe("LiteratureBrowser with the map", () => {
           legend: [{ cat: 0, label: "LLM", n: 3 }],
           cats: "000",
         },
-        topic: {
+        openalex: {
           legend: [
             { cat: 0, label: "Water", n: 1 },
             { cat: 6, label: "Other", n: 1 },
@@ -757,7 +822,7 @@ describe("LiteratureBrowser with the map", () => {
         "Other (1)",
         "No topic data (1)",
       ]);
-      expect(location.search).toBe("?mode=topic");
+      expect(location.search).toBe("?mode=openalex");
       await click(radios()[0]);
       expect(location.search).toBe("");
       expect(classes()[0]).toContain("field-lca");
@@ -768,7 +833,7 @@ describe("LiteratureBrowser with the map", () => {
       expect(radios()[1].checked).toBe(true);
       expect(classes().every((c) => c?.includes("lm-cat-0") || c?.includes("is-out"))).toBe(true);
       await click(radios()[2]);
-      expect(location.search).toBe("?ie=lca&mode=topic");
+      expect(location.search).toBe("?ie=lca&mode=openalex");
     });
 
     it("offers no control when the page shipped no mode data", async () => {

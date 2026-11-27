@@ -104,7 +104,8 @@ strokes at 40% and a light-blue stem, the same in both themes.
   or inside its hull rather than cover a paper or another cluster. A thin cluster keeps a dashed
   outline. Marks take their first field's ink and shape; a paper with no IE field is a small
   hollow grey dot. A segmented control ("Colour by", radio buttons, in the URL as
-  `mode=`) switches to AI technique or OpenAlex topic: the six biggest categories take inks 1
+  `mode=ml` or `mode=openalex`, the latter so it is not read as the site's own `topic=` filter)
+  switches to AI technique or OpenAlex topic: the six biggest categories take inks 1
   to 6, the rest one slate "Other", and every mark is a disc, since shapes belong to IE fields
   alone. That is the one place inks stand for something other than a chapter or field, and the
   key says which meaning is on. The map sits between the count and the list, and the

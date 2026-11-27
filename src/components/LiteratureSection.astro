@@ -37,10 +37,10 @@ const modes = {
     shortLabel,
     MODE_NONE.ml,
   ),
-  topic: categorise(
+  openalex: categorise(
     points.map(([id]) => topicOf(id)),
     (t) => t,
-    MODE_NONE.topic,
+    MODE_NONE.openalex,
   ),
 };
 const map = points.length ? { ...plate, points: encodePoints(points), modes } : undefined;

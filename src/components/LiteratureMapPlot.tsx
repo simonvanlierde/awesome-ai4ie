@@ -13,7 +13,7 @@ import {
   type Legend,
   type MapPoint,
   MODE_LABELS,
-  MODES,
+  MODE_NONE,
   type Mode,
   markPath,
   NONE_CAT,
@@ -139,21 +139,27 @@ export function MapKey({ legend }: { legend?: Legend }) {
   );
   if (legend)
     return (
-      <ul className="lm-key" aria-label="Key">
-        {legend.map((l) =>
-          item(
-            l.cat === NONE_CAT ? undefined : `lm-cat-${l.cat}`,
-            l.cat === NONE_CAT,
-            catPath(l.cat, 8, 8),
-            `${l.label} (${l.n})`,
-          ),
-        )}
-      </ul>
+      <>
+        <ul className="lm-key" aria-label="Key">
+          {legend.map((l) =>
+            item(
+              l.cat === NONE_CAT ? undefined : `lm-cat-${l.cat}`,
+              l.cat === NONE_CAT,
+              catPath(l.cat, 8, 8),
+              `${l.label} (${l.n})`,
+            ),
+          )}
+        </ul>
+        <p className="lm-key-note">
+          In this colouring every mark is a disc, so colour is the only cue. The filters above pick
+          out papers by technique or topic.
+        </p>
+      </>
     );
   return (
     <ul className="lm-key" aria-label="Key">
       {Object.keys(IE_TAGS).map((f) => item(`field-${f}`, false, markPath(f, 8, 8), shortLabel(f)))}
-      {item(undefined, true, markPath(undefined, 8, 8), "No IE field")}
+      {item(undefined, true, markPath(undefined, 8, 8), MODE_NONE.ie)}
     </ul>
   );
 }
@@ -172,7 +178,7 @@ export function ModePicker({
   return (
     <fieldset className="lm-modes">
       <legend>Colour by</legend>
-      {MODES.filter((m) => modes.includes(m)).map((m) => (
+      {modes.map((m) => (
         <label key={m}>
           <input type="radio" name="lm-mode" checked={mode === m} onChange={() => onChange(m)} />
           <span>{MODE_LABELS[m]}</span>
@@ -251,6 +257,8 @@ export function MapView({
 }) {
   const [active, setActive] = useState<MapPoint | null>(null);
   const [via, setVia] = useState<Via>("key");
+  // What the live region says after an arrow key that found no paper that way.
+  const [edge, setEdge] = useState("");
   // The frame in px once measured; until then it is taken to have the plate's shape.
   const [size, setSize] = useState<{ w: number; h: number } | null>(null);
   const base = useMemo(() => baseView(w, h, size ? size.w / size.h : w / h), [w, h, size]);
@@ -268,6 +276,8 @@ export function MapView({
   const live = points.filter((p) => kept.has(p.id));
   const out = new Set(points.filter((p) => !kept.has(p.id)).map((p) => p.id));
   const zoom = zoomOf(view, base);
+  // With a filter on, a cluster's name gives the papers it keeps, as the count above does.
+  const shownIn = (c: number, n: number) => (out.size ? live.filter((p) => p.c === c).length : n);
   // Plate units per screen pixel.
   const unit = view.w / (size?.w ?? w);
 
@@ -389,6 +399,7 @@ export function MapView({
   const show = (p: MapPoint | null, how: Via) => {
     setActive(p);
     setVia(how);
+    setEdge("");
   };
   // The kept paper within 20 screen pixels of the pointer.
   const at = (e: { clientX: number; clientY: number }) => {
@@ -414,7 +425,7 @@ export function MapView({
   const hint = {
     mouse: "Click to open it in the list.",
     touch: "Tap it again to open it in the list.",
-    key: "Enter opens it in the list, Escape closes.",
+    key: "Enter opens it in the list. Escape closes the card, and again leaves the map.",
   }[via];
   // Where a plate point sits in the frame, as fractions of its width and height.
   const fx = (x: number) => (x - view.x) / view.w;
@@ -471,7 +482,7 @@ export function MapView({
     : {
         role: "application",
         tabIndex: 0,
-        "aria-label": `Map of the literature, ${live.length} papers. Arrow keys move between papers, Enter opens one in the list, plus and minus zoom, 0 shows the whole map, Escape leaves the map.`,
+        "aria-label": `Map of the literature, ${live.length} papers. Arrow keys move between papers, Enter opens one in the list, plus and minus zoom, 0 shows the whole map. Escape closes the card, then leaves the map.`,
       };
 
   return (
@@ -557,8 +568,10 @@ export function MapView({
             if (isArrow(e.key)) {
               e.preventDefault();
               const from = active && kept.has(active.id) ? active : null;
-              const p = from ? (step(live, from, e.key) ?? from) : first(live);
+              const next = from ? step(live, from, e.key) : first(live);
+              const p = next ?? from;
               show(p, "key");
+              if (from && !next) setEdge(`No paper further ${e.key.slice(5).toLowerCase()}.`);
               if (p) go(keepInView(viewRef.current, p.x, p.y, 24 * unit, base));
             } else if (e.key === "Enter" && active) {
               e.preventDefault();
@@ -618,7 +631,7 @@ export function MapView({
                       onClick={() => toCluster(c)}
                     >
                       <span className="sr-only">Zoom to </span>
-                      {k.name} <span className="lm-n">{k.n}</span>
+                      {k.name} <span className="lm-n">{shownIn(c, k.n)}</span>
                     </button>
                   ),
               )}
@@ -656,7 +669,7 @@ export function MapView({
               {clusters.map((k, c) => (
                 <button type="button" key={k.name} className="lm-chip" onClick={() => toCluster(c)}>
                   <span className="sr-only">Zoom to </span>
-                  {k.name} <span className="lm-n">{k.n}</span>
+                  {k.name} <span className="lm-n">{shownIn(c, k.n)}</span>
                 </button>
               ))}
             </fieldset>
@@ -692,7 +705,10 @@ export function MapView({
         )}
       </div>
       <span className="sr-only" aria-live="polite">
-        {via === "key" && entry ? `${entry.title}, ${entry.year}` : ""}
+        {edge ||
+          (via === "key" && entry
+            ? `${entry.title}, ${entry.year}${cluster ? `, ${cluster.name}` : ""}`
+            : "")}
       </span>
     </div>
   );

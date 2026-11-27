@@ -13,10 +13,9 @@
 // already in literature.yaml or candidates.yaml, so a rejected lead stays rejected.
 import { readFile, writeFile } from "node:fs/promises";
 import process from "node:process";
-import { setTimeout as sleep } from "node:timers/promises";
 import { pathToFileURL } from "node:url";
 import { parse, stringify } from "yaml";
-import { abstractText, bareDoi, openalex, UA, worksByDoi } from "./lib/openalex.mjs";
+import { abstractText, bareDoi, openalex, worksByDoi } from "./lib/openalex.mjs";
 
 const LIT_PATH = new URL("../src/data/literature.yaml", import.meta.url);
 const CAND_PATH = new URL("../src/data/candidates.yaml", import.meta.url);
@@ -198,11 +197,6 @@ function splitAt(xs, lengths) {
 const SELECT =
   "doi,title,publication_year,primary_location,best_oa_location,open_access,abstract_inverted_index";
 
-/** Works by DOI, as a Map from bare DOI to work; DOIs OpenAlex does not know are absent. */
-function byDoi(dois) {
-  return worksByDoi(dois, SELECT);
-}
-
 function textOf(work, fallback) {
   return `${work?.title ?? fallback}. ${abstractText(work?.abstract_inverted_index)}`.trim();
 }
@@ -271,7 +265,11 @@ async function main() {
   const refsRej = candidates.filter((c) => c.status === "rejected");
   const open = candidates.filter((c) => c.status === "new");
   const missing = [...refsLit, ...refsRej, ...open].map((e) => e.doi.toLowerCase());
-  for (const [doi, w] of await byDoi(missing.filter((d) => !works.has(d)))) works.set(doi, w);
+  const more = await worksByDoi(
+    missing.filter((d) => !works.has(d)),
+    SELECT,
+  );
+  for (const [doi, w] of more) works.set(doi, w);
 
   const embed = await embedder();
   const vecs = await embed(

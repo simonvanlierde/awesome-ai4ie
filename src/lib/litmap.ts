@@ -58,7 +58,8 @@ export function mapVectors(entries: readonly Entry[]): (Float32Array | undefined
 export function project(vectors: ArrayLike<number>[], seed = SEED): [number, number][] {
   const n = vectors.length;
   if (n === 0) return [];
-  if (n < 3) return vectors.map((_, i) => [i === 0 ? -1 : 1, 0]);
+  // t-SNE needs a perplexity of at least 1, so (n - 1) / 3 >= 1: fewer papers sit on a line.
+  if (n < 4) return vectors.map((_, i) => [n === 1 ? -1 : -1 + (2 * i) / (n - 1), 0]);
   const unit = vectors.map((v) => {
     const a = Array.from(v);
     const m = Math.hypot(...a) || 1;
@@ -223,24 +224,25 @@ export function layoutMap(entries: readonly Entry[], vectors = mapVectors(entrie
 
   const all = placed.map((p) => p.e);
   const ids = [...new Set(labels)];
-  const members = (c: number) =>
-    placed.flatMap((p, i) => (labels[i] === c ? [{ ...p, xy: pts[i] }] : []));
+  const groups = ids.map((c) =>
+    placed.flatMap((p, i) => (labels[i] === c ? [{ e: p.e, xy: pts[i] }] : [])),
+  );
   // Names go to the biggest clusters first, so a small cluster does not take a big one's name.
   const taken = new Set<string>();
-  const names = new Map<number, string>();
-  for (const c of [...ids].sort((a, b) => members(b).length - members(a).length || a - b)) {
+  const names: string[] = [];
+  for (const i of [...ids.keys()].sort((a, b) => groups[b].length - groups[a].length || a - b)) {
     const name = liftRanking(
-      members(c).map((m) => m.e),
+      groups[i].map((m) => m.e),
       all,
     ).find((r) => !taken.has(r.label))?.label;
-    names.set(c, name ?? `Cluster ${c + 1}`);
-    taken.add(names.get(c) as string);
+    names[i] = name ?? `Cluster ${ids[i] + 1}`;
+    taken.add(names[i]);
   }
-  const outlines = ids.map((c) => paddedHull(members(c).map((p) => p.xy)));
-  const clusters: MapCluster[] = ids.map((c, i) => ({
-    name: names.get(c) as string,
-    n: members(c).length,
-    thin: members(c).length < THIN_CLUSTER,
+  const outlines = groups.map((g) => paddedHull(g.map((p) => p.xy)));
+  const clusters: MapCluster[] = groups.map((g, i) => ({
+    name: names[i],
+    n: g.length,
+    thin: g.length < THIN_CLUSTER,
     d: outlines[i].d,
     lx: 0,
     ly: 0,
@@ -249,7 +251,7 @@ export function layoutMap(entries: readonly Entry[], vectors = mapVectors(entrie
   // label or another cluster's shading tries the bottom centre, a line or two higher, and last
   // just inside its own hull, each also a third of its width to either side; it takes the place
   // that covers least, preferring that order. Labels stay on the plate.
-  const width = (k: MapCluster) => (k.name.length + String(k.n).length + 2) * 6.4;
+  const width = labelWidth;
   const done: MapCluster[] = [];
   // Sitting on another cluster's shading would tie the label to the wrong cluster.
   const onOther = (i: number, x: number, y: number) =>
@@ -301,6 +303,11 @@ export function layoutMap(entries: readonly Entry[], vectors = mapVectors(entrie
     points: placed.map((p, i) => [p.e.id, pts[i][0], pts[i][1], labels[i]]),
     clusters,
   };
+}
+
+/** A cluster label's width in plate units: about 7 a character at the label's bold 12px. */
+export function labelWidth(k: { name: string; n: number }): number {
+  return (k.name.length + String(k.n).length + 2) * 7;
 }
 
 let memo: { key: string; map: LitMap } | undefined;

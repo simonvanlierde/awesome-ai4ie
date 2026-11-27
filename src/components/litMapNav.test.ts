@@ -58,6 +58,13 @@ describe("map navigation", () => {
     expect(step(P, at("up"), "ArrowRight")?.id).toBe("right");
   });
 
+  it("counts a sideways step double, so Right prefers the next point along", () => {
+    const o = { id: "o", x: 0, y: 0, c: 0 };
+    // "off" is nearer (10.8 against 15) but 4 units off the line: 10 + 2 x 4 = 18 > 15.
+    const pts = [o, { id: "off", x: 10, y: 4, c: 0 }, { id: "along", x: 15, y: 0, c: 0 }];
+    expect(step(pts, o, "ArrowRight")?.id).toBe("along");
+  });
+
   it("starts at the top left, and finds the point under the pointer", () => {
     expect(first(P)?.id).toBe("left"); // ties with "up" go to the first listed
     expect(first([])).toBeNull();

@@ -23,7 +23,7 @@ import {
   toQuery,
   visibleCount,
 } from "./litFilter";
-import { decodePoints, type Mode, type ModeColours } from "./litMapNav";
+import { decodePoints, MODES, type Mode, type ModeColours } from "./litMapNav";
 import TagChips from "./TagChips";
 
 /**
@@ -310,8 +310,9 @@ export default function LiteratureBrowser({
   const catById = colours
     ? new Map(mapPoints.map((p, i) => [p.id, Number(colours.cats[i])]))
     : undefined;
-  const modes: Mode[] = ["ie", ...(["ml", "topic"] as const).filter((m) => map?.modes?.[m])];
+  const modes = MODES.filter((m) => m === "ie" || map?.modes?.[m]);
   const onMap = mapPoints.filter((p) => shownIds.has(p.id)).length;
+  const unplaced = entries.length - mapPoints.length;
   const hiddenTarget = target && !shown.some((e) => e.id === target) ? byId.get(target) : null;
 
   return (
@@ -419,7 +420,7 @@ export default function LiteratureBrowser({
       <div className="lit-count">
         <span role="status" ref={countRef} tabIndex={-1}>
           {shown.length} of {entries.length} entries
-          {mapPoints.length > 0 && `, ${onMap} on the map`}
+          {mapPoints.length > 0 && onMap < shown.length && `, ${onMap} on the map`}
           {visible < shown.length && `, showing the first ${visible}`}
         </span>
         <fieldset className="lit-export" aria-labelledby="lit-export-label">
@@ -477,17 +478,19 @@ export default function LiteratureBrowser({
             onLeave={focusList}
             linked={!hydrated}
           />
-          {modes.length > 1 && (
+          {/* Without JavaScript the radios could not recolour the plate, so they wait for it. */}
+          {hydrated && modes.length > 1 && (
             <ModePicker mode={colours ? mode : "ie"} modes={modes} onChange={setMode} />
           )}
           <MapKey legend={colours?.legend} />
           <figcaption>
-            <b>Fig. 2.1</b> The papers laid out by the meaning of their own title and abstract:
-            nearby papers read alike, and the axes have no unit. The colour of a point is a tag or a
-            topic, which the layout never saw. The filters above fade the papers they leave out.
-            {entries.length > mapPoints.length &&
-              ` ${entries.length - mapPoints.length} ${entries.length - mapPoints.length === 1 ? "paper has" : "papers have"} no vector yet and ${entries.length - mapPoints.length === 1 ? "is" : "are"} not on the map.`}{" "}
-            <a href="#how-the-map-is-made">How the map is made, with its clusters as a table</a>
+            <b>Fig. 2.1</b> Papers placed by the meaning of their title and abstract: nearby papers
+            read alike; the axes have no unit. Colour shows each paper's IE field, or the technique
+            or topic you pick; it was added after the layout, so it checks the map rather than
+            shaping it.
+            {unplaced > 0 &&
+              ` ${unplaced} ${unplaced === 1 ? "paper is" : "papers are"} not placed yet and ${unplaced === 1 ? "is" : "are"} not on the map.`}{" "}
+            <a href="#how-the-map-is-made">How the map is made</a>
           </figcaption>
         </figure>
       )}

@@ -22,17 +22,17 @@ export function decodePoints(s: string): MapPoint[] {
 }
 
 /** The colour modes after the default IE field: AI technique and OpenAlex topic. */
-export const MODES = ["ie", "ml", "topic"] as const;
+export const MODES = ["ie", "ml", "openalex"] as const;
 export type Mode = (typeof MODES)[number];
 export const MODE_LABELS: Record<Mode, string> = {
   ie: "IE field",
   ml: "AI technique",
-  topic: "OpenAlex topic",
+  openalex: "OpenAlex topic",
 };
 export const MODE_NONE: Record<Mode, string> = {
   ie: "No IE field",
   ml: "No technique",
-  topic: "No topic data",
+  openalex: "No topic data",
 };
 /** Colour classes 0-5 are the six biggest categories, OTHER the rest, NONE no value. */
 export const TOP = 6;

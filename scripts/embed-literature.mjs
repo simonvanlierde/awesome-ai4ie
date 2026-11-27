@@ -19,8 +19,9 @@ import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { parse } from "yaml";
 import { EMBED_MODEL, entryText } from "../src/lib/semantic.ts";
-import { embedMissing, MAP_VECTORS_FILE, textKey, VECTORS_FILE } from "../src/lib/vectors.ts";
-import { abstractText, entryDoi, worksByDoi } from "./lib/openalex.mjs";
+import { embedMissing, MAP_VECTORS_FILE, VECTORS_FILE } from "../src/lib/vectors.ts";
+import { mapPlan, mapTodo } from "./lib/map-plan.mjs";
+import { worksByDoi } from "./lib/openalex.mjs";
 import { embed } from "./lib/workers-ai.mjs";
 
 const entries = parse(await readFile("src/data/literature.yaml", "utf8"));
@@ -29,23 +30,15 @@ const out = { model: EMBED_MODEL, vectors: await embedMissing(texts, embed) };
 await writeFile(VECTORS_FILE, `${JSON.stringify(out)}\n`);
 console.log(`embedded ${texts.length} entries into ${VECTORS_FILE}`);
 
-// Only papers without a cached map vector go to OpenAlex: its API runs on a daily budget, and a
-// build should not depend on it. A paper's source key is its title plus the abstract hash in
-// literature-meta.json (or its summary), so an edited title or a new abstract re-embeds it.
+// Only papers without a cached map vector go to OpenAlex (scripts/lib/map-plan.mjs): its API
+// runs on a daily budget, and a build should not depend on it.
 const meta = JSON.parse(await readFile("src/data/literature-meta.json", "utf8"));
 const prev = existsSync(MAP_VECTORS_FILE)
   ? JSON.parse(await readFile(MAP_VECTORS_FILE, "utf8"))
   : {};
 const cache =
   prev.model === EMBED_MODEL && prev.sources ? prev : { keys: {}, sources: {}, vectors: {} };
-function source(e) {
-  return textKey(`${e.title}\n\n${meta[e.id]?.abstract ?? e.blurb}`);
-}
-function cached(e) {
-  return cache.sources[e.id] === source(e) && cache.vectors[cache.keys[e.id]];
-}
-const todo = entries.filter((e) => !cached(e));
-const dois = todo.flatMap((e) => (meta[e.id]?.abstract && entryDoi(e)) || []);
+const { todo, dois } = mapTodo(entries, meta, cache);
 // When OpenAlex fails, these papers use their summary this run and are retried on the next.
 const works = dois.length
   ? await worksByDoi(dois, "doi,abstract_inverted_index").catch((err) => {
@@ -53,21 +46,13 @@ const works = dois.length
       return null;
     })
   : new Map();
-const todoTexts = todo.map(
-  (e) =>
-    `${e.title}\n\n${abstractText(works?.get(entryDoi(e) ?? "")?.abstract_inverted_index) || e.blurb}`,
+const plan = mapPlan(entries, meta, cache, works);
+// The cache is the store, so a retried paper whose text did not change is not embedded again.
+const fresh = await embedMissing(plan.texts, embed, cache.vectors);
+const vectors = Object.fromEntries(
+  Object.values(plan.keys).map((k) => [k, fresh[k] ?? cache.vectors[k]]),
 );
-const fresh = await embedMissing(todoTexts, embed, {});
-const mapOut = { model: EMBED_MODEL, keys: {}, sources: {}, vectors: {} };
-for (const e of entries) {
-  const i = todo.indexOf(e);
-  const key = i < 0 ? cache.keys[e.id] : textKey(todoTexts[i]);
-  mapOut.keys[e.id] = key;
-  // A paper whose known abstract did not arrive used its summary: retry it next run.
-  const missed = i >= 0 && meta[e.id]?.abstract && todoTexts[i].endsWith(`\n\n${e.blurb}`);
-  mapOut.sources[e.id] = missed ? null : source(e);
-  mapOut.vectors[key] = i < 0 ? cache.vectors[key] : fresh[key];
-}
+const mapOut = { model: EMBED_MODEL, keys: plan.keys, sources: plan.sources, vectors };
 await writeFile(MAP_VECTORS_FILE, `${JSON.stringify(mapOut)}\n`);
 console.log(
   `map vectors: ${entries.length - todo.length} cached, ${todo.length} embedded (${dois.length} abstracts asked for, ${Object.values(mapOut.sources).filter((v) => v === null).length} fell back to the summary)`,

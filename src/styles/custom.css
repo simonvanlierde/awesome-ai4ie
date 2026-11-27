@@ -2318,6 +2318,13 @@ starlight-menu-button button {
   outline: 2px solid var(--sl-color-text-accent);
   outline-offset: 2px;
 }
+@media (forced-colors: active) {
+  .lm-modes input:checked + span {
+    background: Highlight;
+    color: HighlightText;
+    forced-color-adjust: none;
+  }
+}
 .lm-dot.is-out {
   opacity: 0.16;
 }
@@ -2360,6 +2367,11 @@ starlight-menu-button button {
   align-items: center;
   gap: 0.35rem;
   margin: 0;
+}
+.lm-key-note {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--sl-color-gray-2);
 }
 .lm-figure figcaption {
   margin-top: 0.5rem;
@@ -2541,7 +2553,8 @@ starlight-menu-button button {
 .lm-card {
   position: absolute;
   z-index: 2;
-  width: min(20rem, 60%);
+  /* 42%, so an unflipped card (left of 55%, plus 16px) stays inside the frame. */
+  width: min(20rem, 42%);
   padding: 0.6rem 0.75rem;
   border: 1px solid var(--sl-color-gray-4);
   border-top: 2px solid var(--sl-color-text-accent);
