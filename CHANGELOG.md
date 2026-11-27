@@ -9,10 +9,11 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- A footprint page: the carbon footprint of one page view and of one zero-shot demo run, as a
+- A footprint page: the carbon footprint of one page view and of one CLIP demo run, as a
   small life cycle assessment whose numbers, tables and figures are computed from each build.
-  Figures compare a page view, a demo run and the median web page, split a page view by asset
-  type, and show the pages heavier than the rest against their weight budgets.
+  Figures compare a page view, 1,000 page views and a demo run, split a page view by asset
+  type, and show the pages heavier than the rest against their weight budgets. A table adds
+  the median web page.
 - The contribute page links the AI4IE community survey, and `/qr/contribute.svg` and
   `/qr/contribute.png` hold a QR code for `https://ai4ie.org/contribute/`.
 - `pnpm run cited-figures` lists every number the site attributes to a paper. With

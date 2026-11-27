@@ -15,14 +15,14 @@ One page view of this site transfers about %%fp:viewKb%% kB and emits **%%fp:vie
 (carbon dioxide equivalent, the only impact the model covers). For comparison, the median
 home page on the web weighed %%fp:webMobileKb%% kB on mobile and %%fp:webDesktopKb%% kB on
 desktop in July 2025 ([Web Almanac 2025](https://almanac.httparchive.org/en/2025/page-weight), HTTP Archive). With the same model, a
-view of the mobile median emits %%fp:webMobile%% CO₂e, about %%fp:webTimes%% times a page of this
-site.
+view of the mobile median emits %%fp:webMobile%% CO₂e, about %%fp:webTimes%% times one view of this
+site's mean page.
 
 One run of the [CLIP demo](/demos/#classify-a-photo-with-clip), which labels a photo with an
 image model that runs in your browser, downloads about %%fp:demoMb%% MB and emits
-**%%fp:demo%%** CO₂e. That is as many bytes as about %%fp:viewsPerDemo%% page views. If more than one
-reader in %%fp:viewsPerDemo%% runs the demo, the demo's downloads outweigh all page views in this
-model. A lighter demo model would then save more than a lighter page.
+**%%fp:demo%%** CO₂e. That is as many bytes as about %%fp:viewsPerDemo%% page views. If the demo
+runs more than once per %%fp:viewsPerDemo%% page views, its downloads outweigh all page views in
+this model. A lighter demo model would then save more than a lighter page.
 
 Each pair of numbers is the same estimate with and without the model's adjustment for a green
 host, not an error range. The model's own uncertainty is larger (see [Uncertainty](#uncertainty)).
@@ -42,7 +42,7 @@ Source: [`src/lib/footprint.mjs`](repo:blob/main/src/lib/footprint.mjs) on this 
 
 <p class="table-title"><b>Table 6.1</b> The footprint per functional unit</p>
 
-| Functional unit | Data transferred | CO₂e, green host to other host |
+| Functional unit | Data transferred | CO₂e, green host to non-green host |
 | --- | --- | --- |
 | One page view | %%fp:viewKb%% kB | %%fp:view%% |
 | 1,000 page views (scaled) | %%fp:thousandMb%% MB | %%fp:thousandViews%% |
@@ -57,8 +57,8 @@ Source: [`src/lib/footprint.mjs`](repo:blob/main/src/lib/footprint.mjs) on this 
 The page view is the plain mean of all %%fp:pages%% pages, not weighted by visits. Most pages
 weigh about the same, because they share one shell: fonts, styles and scripts. The largest
 part is %%fp:largestPart%%, at %%fp:largestShare%% of a mean page view, and %%fp:secondPart%%
-is next at %%fp:secondShare%% (Fig. 5). Cutting %%fp:largestPart%% would save the most. The
-browser keeps the shared files after the first page, so the saving is largest for readers who
+is next at %%fp:secondShare%% (Fig. 5). The model scales with bytes, so cutting
+%%fp:largestPart%% would cut its estimate most. The browser keeps the shared files after the first page, so the saving is largest for readers who
 open one page and leave.
 
 <figure class="fp-figure not-content">
@@ -78,8 +78,8 @@ pages with an interactive list, map or demo load React and weigh more (Fig. 6).
 %%fp:pageFigure%%
 <figcaption>
 
-**Fig. 6** The pages more than 10% over the median weight, and the mean of all the others, with
-CO₂e per view. The tick marks a page's weight budget: the build check fails when a page goes
+**Fig. 6** The weight of each page more than 10% over the median, with its CO₂e per view, and
+one row for all the other pages: their weight range, with the bar at their mean. The tick marks a page's weight budget: the build check fails when a page goes
 over it. Source: [`scripts/page-weight.mjs`](repo:blob/main/scripts/page-weight.mjs) on this build.
 
 </figcaption>
@@ -109,7 +109,7 @@ those bytes pass through: data centres, networks, the reader's device and the el
 grid. This page measures the foreground and takes the background from the
 [Sustainable Web Design model](https://sustainablewebdesign.org/estimating-digital-emissions/),
 version 4 (SWD v4), through the [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview/)
-library (`@tgwf/co2` 0.19.0). The result is the bytes per functional unit times the total
+library (`@tgwf/co2`). The result is the bytes per functional unit times the total
 factor per GB in Table 6.2.
 
 <p class="table-title"><b>Table 6.2</b> Inventory and emission factors</p>
@@ -127,22 +127,23 @@ factor per GB in Table 6.2.
 | Total | %%fp:totalGb%% | SWD v4 |
 | Grid electricity | %%fp:gridIntensity%% g CO₂e/kWh | SWD v4, world average |
 
-<p class="table-src">Source: <code>src/lib/footprint.mjs</code>, which reads the background rows from CO2.js.</p>
+<p class="table-src">Source: <code>src/lib/footprint.mjs</code>, which reads the background rows from CO2.js. The g/GB rows already apply the grid electricity factor.</p>
 
 Each background row includes the embodied emissions of the equipment: making it, not only
-running it. The reader's device carries %%fp:deviceShare%% of the total for a host that is not
-green, %%fp:deviceEmbodiedShare%% of that embodied. The model assigns most of the footprint to the reader's
+running it. For a host that is not green, the reader's device carries %%fp:deviceShare%% of the
+total. Of the device's share, %%fp:deviceEmbodiedShare%% is embodied. The model assigns most of the footprint to the reader's
 device, not the server, and it scales that share with bytes. A large one-off download such as
 the demo's does not keep a screen on for longer, so this overstates the demo's device share.
 
 Outside the boundary:
 
-- **CI builds.** A build is a short job on one CI runner, spread over every view until the next
-  change. I have not measured it.
+- **CI builds.** A build is a short job on one CI runner. Its emissions spread over every view
+  until the next build. I have not measured them.
 - **Computing on the reader's device.** The model counts the device's energy per gigabyte
   received, not the energy of running the demo's model.
-- **Search, the author's devices and the Hugging Face Spaces.** Search runs on Workers AI and
-  only for queries of three or more words. Other people run the Spaces.
+- **Search, the MCP server, my own devices and the linked Hugging Face Spaces.** Search runs on
+  Workers AI, and only for queries of three or more words. The MCP server runs on Cloudflare
+  Workers. The Spaces are demo apps that other people host. None of these is counted.
 
 ## What the demo downloads
 
@@ -159,8 +160,14 @@ a reader presses Classify.
   It is made for comparing and for rough totals. It cannot say which part of this site
   causes the emissions, and I give no error bar for the model itself. Read the figures as
   orders of magnitude.
-- **Hosting.** The site runs on Cloudflare. The page shows both green-host cases rather than
-  pick one.
+- **The model's boundary is broad.** Its authors say this makes it likely to
+  [overestimate actual emissions](https://sustainablewebdesign.org/estimating-digital-emissions/).
+- **Greenhouse gases.** The model gives CO₂e but does not state its GWP time horizon or which
+  gases it covers.
+- **Hosting.** The site runs on Cloudflare. The Green Web Foundation's
+  [check](https://api.thegreenwebfoundation.org/api/v3/greencheck/ai4ie.org) lists Cloudflare as
+  a green host, on the strength of Cloudflare's own reports. I have not checked those reports,
+  so the page shows both green-host cases rather than pick one.
 - **Grid intensity.** The model uses a world average. Readers on cleaner or dirtier grids
   get less or more.
 - **The web median.** The Web Almanac counts every request a page makes while it loads.
@@ -194,9 +201,10 @@ or later, and it reads the built pages from `dist/`.
 1. Copy [`scripts/page-weight.mjs`](repo:blob/main/scripts/page-weight.mjs) into your repo's
    `scripts/` folder.
 2. Replace its line `import { basePath } from "../src/site.ts";` with `const basePath = "";`.
-   If your site is served under a path, put that path in the quotes, such as `"/docs"`.
-3. Set your budgets in `DEFAULT_BUDGET_KB` and `OVERRIDES`.
-4. Save this script next to it as `scripts/carbon.mjs`:
+3. If your site is served under a path, put that path in the quotes, such as `"/docs"`.
+4. Set `DEFAULT_BUDGET_KB` to your budget.
+5. Replace `OVERRIDES` with `{}`. It holds this site's pages.
+6. Save this script next to it as `scripts/carbon.mjs`:
 
 ```js
 // carbon.mjs: the weight and CO2e of each page in dist/
