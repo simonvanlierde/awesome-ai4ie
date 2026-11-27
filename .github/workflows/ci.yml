@@ -57,6 +57,8 @@ jobs:
       # hosted runners sit in Azure regions with other intensities.
       # Power curve: the action's default, 4-vCPU AMD EPYC 7763, the hosted runner as of 2026-11.
       - uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
+        # Monitoring only, like the Eco CI steps after the build.
+        continue-on-error: true
         with:
           task: start-measurement
           send-data: false
