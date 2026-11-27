@@ -63,10 +63,12 @@ for (const e of entries) {
   const i = todo.indexOf(e);
   const key = i < 0 ? cache.keys[e.id] : textKey(todoTexts[i]);
   mapOut.keys[e.id] = key;
-  mapOut.sources[e.id] = works || i < 0 || !meta[e.id]?.abstract ? source(e) : null;
+  // A paper whose known abstract did not arrive used its summary: retry it next run.
+  const missed = i >= 0 && meta[e.id]?.abstract && todoTexts[i].endsWith(`\n\n${e.blurb}`);
+  mapOut.sources[e.id] = missed ? null : source(e);
   mapOut.vectors[key] = i < 0 ? cache.vectors[key] : fresh[key];
 }
 await writeFile(MAP_VECTORS_FILE, `${JSON.stringify(mapOut)}\n`);
 console.log(
-  `map vectors: ${entries.length - todo.length} cached, ${todo.length} embedded (${dois.length} abstracts asked for)`,
+  `map vectors: ${entries.length - todo.length} cached, ${todo.length} embedded (${dois.length} abstracts asked for, ${Object.values(mapOut.sources).filter((v) => v === null).length} fell back to the summary)`,
 );

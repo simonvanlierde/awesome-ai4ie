@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { abstractHash, abstractText, entryDoi, metaRow } from "./openalex.mjs";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { abstractHash, abstractText, entryDoi, metaRow, openalex } from "./openalex.mjs";
 
 describe("openalex helpers", () => {
   it("rebuilds an abstract from its inverted index", () => {
@@ -37,5 +37,24 @@ describe("openalex helpers", () => {
       topic: null,
       abstract: null,
     });
+  });
+});
+
+describe("openalex request", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("drops the key when its account has no budget left", async () => {
+    const auth: (string | undefined)[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (_url: string, init: { headers: Record<string, string> }) => {
+        auth.push(init.headers.Authorization);
+        return auth.length === 1
+          ? new Response('{"reason":"daily_budget"}', { status: 429 })
+          : Response.json({ results: [] });
+      }),
+    );
+    await expect(openalex({ filter: "doi:x" }, 3, "k")).resolves.toEqual({ results: [] });
+    expect(auth).toEqual(["Bearer k", undefined]);
   });
 });

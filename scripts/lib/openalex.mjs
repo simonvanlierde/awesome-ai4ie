@@ -33,20 +33,19 @@ export function entryDoi(e) {
   return (e.doi ?? (e.arxiv && `10.48550/arxiv.${e.arxiv}`))?.toLowerCase();
 }
 
-/** GET /works with the query params, retrying a 429 after 1.5 s. */
-export async function openalex(params, retries = 3) {
+/** GET /works with the query params, retrying a 429 after 1.5 s. When the key's account has
+ * no budget left, it retries without the key: a key-less caller gets its own daily allowance. */
+export async function openalex(params, retries = 3, key = process.env.OPENALEX_API_KEY) {
   const res = await fetch(`https://api.openalex.org/works?${new URLSearchParams(params)}`, {
-    headers: {
-      "User-Agent": UA,
-      ...(process.env.OPENALEX_API_KEY && {
-        Authorization: `Bearer ${process.env.OPENALEX_API_KEY}`,
-      }),
-    },
+    headers: { "User-Agent": UA, ...(key && { Authorization: `Bearer ${key}` }) },
+    signal: AbortSignal.timeout(30_000),
   });
-  // Without a key, a search with more than a few boolean operators runs once a second.
   if (res.status === 429 && retries > 0) {
+    const body = await res.text();
+    if (key && body.includes("daily_budget")) return openalex(params, retries - 1, "");
+    // Without a key, a search with more than a few boolean operators runs once a second.
     await sleep(1500);
-    return openalex(params, retries - 1);
+    return openalex(params, retries - 1, key);
   }
   if (!res.ok) throw new Error(`OpenAlex ${res.status}: ${await res.text()}`);
   return res.json();
