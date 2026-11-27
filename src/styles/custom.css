@@ -165,19 +165,19 @@ h1#_top,
 
 /* Reading text: the serif. It fills the column, and on a docs page the type grows with the
    column so a line stays at or under about 80 characters (the serif averages 0.475em a
-   character). Islands (.not-content) set their own text; the :where() adds no specificity,
-   so island classes win. */
+   character). Islands (.not-content) set their own text. The selectors weigh one class, so
+   any later single-class rule (.vocab-meta) still sets its own size. */
 .sl-markdown-content {
   container-type: inline-size;
 }
-.sl-markdown-content :is(p, li, blockquote, dd):not(:where(.not-content *)) {
+.sl-markdown-content :where(p, li, blockquote, dd):not(:where(.not-content *)) {
   font-family: var(--font-read);
   font-size: 1.0625rem;
   line-height: 1.65;
 }
 :where(:root:not([data-has-hero]))
   .sl-markdown-content
-  :is(p, li, blockquote, dd):not(:where(.not-content *)) {
+  :where(p, li, blockquote, dd):not(:where(.not-content *)) {
   font-size: max(1.0625rem, 100cqi / 37);
 }
 /* The home page has no sidebar and a 67.5rem column, too wide for a line at any reading
@@ -651,6 +651,10 @@ starlight-menu-button button {
   font-weight: 750;
   font-stretch: 85%;
 }
+/* Starlight's own size sits in a cascade layer, which the unlayered reading-text rule beats. */
+.starlight-aside__title {
+  font-size: var(--sl-text-h5);
+}
 .sl-markdown-content .card {
   border: none;
   border-top: 3px solid var(--sl-color-white);
@@ -1011,7 +1015,8 @@ starlight-menu-button button {
     grid-template-areas: "title" "tagline";
   }
 }
-.cover-tagline a {
+.cover-tagline a,
+.flow figcaption a {
   color: var(--sl-color-text-accent);
 }
 .cover-start {
