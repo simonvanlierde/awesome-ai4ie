@@ -74,8 +74,11 @@ jobs:
       # dependencies' install and build code never sees them. A fork's pull request gets no
       # secrets and builds without vectors; on this repo's pull requests and on main a failed
       # embed fails the job.
+      # withastro/action sets pnpm up again, so this store cache would have nothing to save.
       - if: env.EMBED == 'true'
         uses: $/.github/actions/setup-pnpm
+        with:
+          cache: "false"
       - name: Embed the reading list
         if: env.EMBED == 'true'
         env:

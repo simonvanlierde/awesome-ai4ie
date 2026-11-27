@@ -1,12 +1,16 @@
 name: Set up pnpm
 description: Node, pnpm and the locked dependencies.
+inputs:
+  cache:
+    description: Cache the pnpm store. Off where a later step sets pnpm up again and moves the store.
+    default: "true"
 runs:
   using: composite
   steps:
     - uses: pnpm/setup@731dfb6463bbd11c11fd0ee11fe00ed0e36d48a1 # v3.2.0
       with:
         runtime: node@26
-        cache: true
+        cache: ${{ inputs.cache == 'true' }}
         install: false
     - run: pnpm install --frozen-lockfile
       shell: bash
