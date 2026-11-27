@@ -87,3 +87,13 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/dependency-review-action@bbc44d14a204704ccc493733616cd1e93a0321ec # v5.0.1
+
+  # Temporary: does a GitHub-hosted runner expose RAPL?
+  rapl-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: |-
+          ls -la /sys/class/powercap || true
+          grep -m1 'model name' /proc/cpuinfo
+          cat /sys/class/powercap/intel-rapl:0/energy_uj || true
