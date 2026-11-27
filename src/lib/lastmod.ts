@@ -14,7 +14,8 @@ const DATA: Record<string, string[]> = {
   literature: [LIT],
   "applications-map": [APPS, LIT],
   ...Object.fromEntries(Object.keys(IE_TAGS).map((t) => [`applications-map/${t}`, [APPS, LIT]])),
-  footprint: ["src/lib/footprint.mjs", "package.json"],
+  // The page's numbers are the site's page weights, which the styles and fonts change.
+  footprint: ["src/lib/footprint.mjs", "package.json", "src/styles/custom.css", "src/assets/fonts"],
   vocabulary: ["src/data/vocabulary.yaml", "src/components/Vocabulary.astro"],
 };
 

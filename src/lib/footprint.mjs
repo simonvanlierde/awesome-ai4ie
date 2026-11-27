@@ -9,7 +9,7 @@ import { co2 } from "@tgwf/co2";
 const KB = 1e3;
 const MB = 1e6;
 
-// What one zero-shot demo run downloads (src/components/ZeroShotDemo.tsx). Bytes as served
+// What one CLIP demo run downloads (src/components/ZeroShotDemo.tsx). Bytes as served
 // on 2026-11-26: the Hugging Face repo Xenova/clip-vit-base-patch32 at the pinned revision
 // (the quantized ONNX file the browser's wasm backend loads, plus tokenizer and config),
 // and from jsDelivr transformers.js 4.2.0 and the onnxruntime-web wasm it loads.
@@ -160,7 +160,11 @@ const SPECIAL = /[&<>"]/g;
 const INDEX_HTML = /index\.html$/;
 const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" };
 const esc = (s) => String(s).replace(SPECIAL, (c) => ESC[c]);
-const share = (x, total) => `${((x / total) * 100).toFixed(0)}%`;
+// Whole percents, one decimal under 2% so a small part does not read as 0%.
+const share = (x, total) => {
+  const p = (x / total) * 100;
+  return `${p.toFixed(p > 0 && p < 2 ? 1 : 0)}%`;
+};
 const pct = (x, max) => `${((x / max) * 100).toFixed(2)}%`;
 const urlOf = (page) => (page === "index.html" ? "/ (home)" : `/${page.replace(INDEX_HTML, "")}`);
 

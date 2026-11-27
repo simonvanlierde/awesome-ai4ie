@@ -4,14 +4,18 @@
  * gzipped size of the page's HTML plus the same-origin files it references (CSS,
  * JS, island scripts and the modules they import statically, preloaded fonts, images,
  * icons); gzip is a fair proxy for bytes on the wire.
- * Cross-origin requests are not counted: the zero-shot demo downloads ~150 MB of
- * model from Hugging Face only when the user clicks. Fonts reached only through
+ * Cross-origin requests are not counted: the CLIP demo downloads ~180 MB of model and
+ * runtime (DEMO_DOWNLOAD in src/lib/footprint.mjs) only when the user clicks. Fonts reached only through
  * CSS @font-face and dynamic import() chunks (Pagefind, the citation records) load on
  * demand and are not counted.
+ *
+ * weighAll() is also exported: the footprint page (src/plugins/footprint.mjs) reads its
+ * page weights from it.
  *
  *   pnpm run build && pnpm run page-weight
  */
 
+import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { posix } from "node:path";
 import process from "node:process";
@@ -19,16 +23,16 @@ import { fileURLToPath } from "node:url";
 import { gzipSync } from "node:zlib";
 import { basePath } from "../src/site.ts";
 
-// Per-page budget in kB (1,000 bytes): the heaviest page without a React island (182 KiB)
+// Per-page budget in kB (1,000 bytes): the heaviest page without a React island (186 kB)
 // plus ~20%.
-export const DEFAULT_BUDGET_KB = 220;
+export const DEFAULT_BUDGET_KB = 225;
 // Per-page overrides in kB, keyed by the path under dist/. The island pages ship React
 // (about 70 kB gzipped); each is budgeted at its weight on 2026-11-20 plus ~20%.
 /** @type {Record<string, number>} */
 export const OVERRIDES = {
-  "literature/index.html": 315,
-  "applications-map/index.html": 305,
-  "demos/index.html": 300,
+  "literature/index.html": 323,
+  "applications-map/index.html": 312,
+  "demos/index.html": 307,
 };
 
 const TAG = /<(script|link|img|astro-island)\b[^>]*>/gi;
@@ -116,7 +120,10 @@ async function weigh(page, root) {
   while (queue.length) {
     const url = queue.shift();
     const file = toDist(url, basePath, root);
-    parts[kindOf(url)] += await gzipped(file);
+    parts[kindOf(url)] += await gzipped(file).catch((e) => {
+      if (e.code !== "ENOENT") throw e;
+      throw new Error(`missing asset: ${url} in ${page} (check basePath)`, { cause: e });
+    });
     if (!url.endsWith(".js")) continue;
     for (const dep of staticImports(await readFile(file, "utf8"), url)) {
       if (seen.has(dep)) continue;
@@ -144,9 +151,12 @@ export async function weighAll(root = "dist") {
 }
 
 async function main() {
-  const rows = await weighAll().catch((e) => {
-    if (e.code !== "ENOENT") throw e;
+  if (!existsSync("dist")) {
     console.error("No dist/ folder: run `pnpm run build` first.");
+    process.exit(2);
+  }
+  const rows = await weighAll().catch((e) => {
+    console.error(e.message);
     process.exit(2);
   });
   console.log(`${"page".padEnd(46)}${"kB (gzip)".padStart(10)}${"budget".padStart(8)}`);
@@ -160,7 +170,7 @@ async function main() {
   }
   if (over.length) {
     console.error(
-      "Reproduce with `pnpm run build && pnpm run page-weight`. Make the page lighter, or raise " +
+      "Reproduce with `node scripts/page-weight.mjs` after the build. Make the page lighter, or raise " +
         "DEFAULT_BUDGET_KB or add an OVERRIDES entry in scripts/page-weight.mjs, with the reason in the PR.",
     );
   }

@@ -970,7 +970,7 @@ starlight-menu-button button {
   color: var(--sl-color-gray-3);
 }
 
-/* Figs. 4 and 5 on the footprint page: bar lists that src/lib/footprint.mjs writes into the
+/* Figs. 4 to 6 on the footprint page: bar lists that src/lib/footprint.mjs writes into the
    built page. HTML rather than SVG, so the labels keep their size at any width without a
    script. Name, bar and value share a row; on a phone the bar drops under the name. */
 .fp-figure {
@@ -1069,6 +1069,22 @@ starlight-menu-button button {
 .fp-figure figcaption strong {
   margin-right: 0.25rem;
   color: var(--sl-color-white);
+}
+/* Forced colours paint every background as Canvas, which would erase the bars, ticks and keys. */
+@media (forced-colors: active) {
+  .fp-bar,
+  .fp-key,
+  .fp-limit {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+  .fp-bar--high,
+  .fp-key--high {
+    background: GrayText;
+  }
+  .fp-bar--high {
+    border-left-color: Canvas;
+  }
 }
 @media (max-width: 40rem) {
   .fp-bars li,

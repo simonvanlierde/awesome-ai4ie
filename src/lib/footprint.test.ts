@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { expect, test } from "vitest";
-import { kindOf, weighAll } from "../../scripts/page-weight.mjs";
+import { DEFAULT_BUDGET_KB, kindOf, weighAll } from "../../scripts/page-weight.mjs";
 import {
   compareFigure,
   DEMO_DOWNLOAD,
@@ -133,6 +133,8 @@ test("parts are the mean page view by asset type, largest first, as shares of th
     "12%",
   ]);
   expect(partsFigure(f)).toContain('>Fonts</span><span class="fp-val">100 kB, 80%<');
+  const small = footprint([{ page: "a.html", kb: 200, parts: { ...parts(199, 0), html: 1 } }]);
+  expect(partsFigure(small)).toContain(">1 kB, 0.5%<");
 });
 
 test("the web median is converted with the same model as a page view", () => {
@@ -189,7 +191,7 @@ test("weighAll weighs assets under the given root, not ./dist", async () => {
   writeFileSync(join(root, "_astro/a.css"), "x".repeat(5000));
   writeFileSync(join(root, "index.html"), '<link rel="stylesheet" href="/_astro/a.css">');
   const [row] = await weighAll(root);
-  expect(row).toMatchObject({ page: "index.html", budget: 220 });
+  expect(row).toMatchObject({ page: "index.html", budget: DEFAULT_BUDGET_KB });
   expect(row.parts.css).toBeGreaterThan(0);
   expect(row.parts.html).toBeGreaterThan(0);
   const sum = Object.values(row.parts as Record<string, number>).reduce((a, b) => a + b, 0);

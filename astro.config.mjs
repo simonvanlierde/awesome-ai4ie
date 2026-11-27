@@ -147,8 +147,8 @@ export default defineConfig({
   },
 
   integrations: [
-    footprintNumbers(), // fills the footprint page from this build, before Pagefind
     cspInlineScripts(), // after Astro writes the policy: hashes the scripts Starlight inlines
+    footprintNumbers(), // fills the footprint page: after the CSP hashes it weighs, before Pagefind
     react(), // islands: the literature list, the map explorer and the demos
     // Starlight adds a plain sitemap unless one is configured here. This one dates
     // each URL by its last commit (src/lib/lastmod.ts).

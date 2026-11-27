@@ -1,3 +1,9 @@
+import { spawnSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import process from "node:process";
+import { fileURLToPath } from "node:url";
 import { expect, test } from "vitest";
 import { extractAssets, overBudget, staticImports, toDist } from "./page-weight.mjs";
 
@@ -57,4 +63,19 @@ test("toDist strips the base path and decodes the file name", () => {
   expect(toDist("/repo/_astro/a%20b.js", "/repo")).toBe("dist/_astro/a b.js");
   expect(toDist("/_astro/a.js", "")).toBe("dist/_astro/a.js");
   expect(toDist("/repository/x.js", "/repo")).toBe("dist/repository/x.js");
+});
+
+test("the CLI names a missing asset, and says when dist/ itself is missing", () => {
+  const script = fileURLToPath(new URL("./page-weight.mjs", import.meta.url));
+  const cwd = mkdtempSync(join(tmpdir(), "pw-"));
+  const run = () => spawnSync(process.execPath, [script], { cwd, encoding: "utf8" });
+  expect(run()).toMatchObject({ status: 2, stderr: expect.stringContaining("No dist/ folder") });
+  mkdirSync(join(cwd, "dist"));
+  writeFileSync(join(cwd, "dist/index.html"), '<link rel="stylesheet" href="/_astro/gone.css">');
+  const missing = run();
+  expect(missing.status).toBe(2);
+  expect(missing.stderr).toContain(
+    "missing asset: /_astro/gone.css in index.html (check basePath)",
+  );
+  expect(missing.stderr).not.toContain("No dist/ folder");
 });
