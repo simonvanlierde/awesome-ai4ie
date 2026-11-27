@@ -51,16 +51,6 @@ jobs:
       # Pushes and this repo's own pull requests have the Workers AI secrets; forks do not.
       EMBED: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
     steps:
-      # Eco CI models the job's energy from CPU utilisation (hosted runners expose no RAPL).
-      # send-data: false keeps the run off its hosted dashboard. CO2 uses the Dutch
-      # location-based grid intensity: 262 gCO2e/kWh, Electricity Maps, 2025.
-      - uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
-        with:
-          task: start-measurement
-          send-data: false
-          json-output: true
-          co2-calculation-method: constant
-          co2-grid-intensity-constant: 262
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
@@ -135,22 +125,6 @@ jobs:
           pnpm exec astro preview --port 4321 &
           for _ in $(seq 30); do curl -s -o /dev/null http://localhost:4321/ && break; sleep 1; done
           pnpm run test:a11y
-      - uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
-        with:
-          task: get-measurement
-          label: build
-      # Writes the energy and CO2 table to the step summary.
-      - uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
-        with:
-          task: display-results
-          display-badge: false
-      # v5.3.0 writes only the per-measurement file (its data-total-json output stays empty):
-      # steps[] of label, cpu_avg_percent, energy_joules, power_avg_watts, time, all strings.
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: eco-ci
-          path: /tmp/eco-ci/lap-data.json
-          if-no-files-found: error
 
   deploy:
     needs: build
