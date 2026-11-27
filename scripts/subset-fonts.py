@@ -1,6 +1,9 @@
 # /// script
 # requires-python = ">=3.11"
 # dependencies = ["fonttools", "brotli"]
+#
+# [tool.uv]
+# exclude-newer = "1 week"
 # ///
 """Rebuilds src/assets/fonts/*.woff2 from the @fontsource-variable packages.
 
