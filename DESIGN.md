@@ -39,8 +39,9 @@ Cobalt is also the accent: links, focus rings, the primary button.
 
 - **Archivo**, set narrow (`font-stretch` 72–90%), for anything that names, numbers or
   navigates: titles, tables, tabs, labels, buttons.
-- **Source Serif 4** for anything read through: paragraphs, ledes, blurbs, at most 68
-  characters a line.
+- **Source Serif 4** for anything read through: paragraphs, ledes, blurbs, at most 80
+  characters a line. Docs prose fills its column and its type grows with the column, from
+  17px to about 21px; home prose stops at 70ch. List blurbs keep a 68ch cap.
 - **Martian Mono** for code only.
 
 The fonts are self-hosted through Astro's font settings in `astro.config.mjs`, subset to
