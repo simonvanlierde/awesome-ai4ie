@@ -102,17 +102,18 @@ strokes at 40% and a light-blue stem, the same in both themes.
   fields) named at its top centre for the tag most over-represented in it; a label moves below
   or inside its hull rather than cover a paper or another cluster. A thin cluster keeps a dashed
   outline. Marks take their first field's ink and shape; a paper with no IE field is a small
-  hollow grey dot. On `/literature/` a segmented control ("Colour by", radio buttons, in the URL as
+  hollow grey dot. A segmented control ("Colour by", radio buttons, in the URL as
   `mode=`) switches to AI technique or OpenAlex topic: the six biggest categories take inks 1
   to 6, the rest one slate "Other", and every mark is a disc, since shapes belong to IE fields
   alone. That is the one place inks stand for something other than a chapter or field, and the
-  key says which meaning is on. `/literature-map/` stays IE field only. On `/literature/` the map sits between the count and the list, and the
+  key says which meaning is on. The map sits between the count and the list, and the
   list's filters drive it: kept papers in full ink, the rest at 16%. Pointing at, focusing or
   tapping a paper shows a card with the list's meta, title, blurb and tags; a click, Enter or
   a second tap opens its entry in the list, as on Fig. 1. One tab stop; arrow keys move to the
   nearest paper that way. Under 40rem the plate fits the width, marks grow 1.6×, labels give
-  way and the card docks under the plate. `/literature-map/` is the same plate with no script,
-  each mark a link, and Table 2.1.
+  way and the card docks under the plate. Without JavaScript the server-rendered plate stays,
+  each mark a link to its entry. "How the map is made", at the end of the page, holds the
+  method and Table 2.1, the clusters by IE field.
 - **Numbered tables.** A bold "Table N.N" title above, a source line below. Numbering and
   markup are in [CONTRIBUTING.md](CONTRIBUTING.md#look-and-feel).
 - **Application entries.** A field page opens with its synthesis paragraph; the map page's

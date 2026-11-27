@@ -237,13 +237,7 @@ export default defineConfig({
             })),
           ],
         },
-        {
-          label: "Literature",
-          items: [
-            { label: "Reading list", slug: "literature" },
-            { label: "Map of the literature", slug: "literature-map" },
-          ],
-        },
+        { label: "Literature", slug: "literature" },
         {
           label: "Best practices & guides",
           items: [

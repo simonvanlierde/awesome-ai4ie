@@ -3,6 +3,7 @@ title: Literature
 description: Search and filter papers on AI in industrial ecology by field, technique and topic.
 ---
 
+import LiteratureMapTable from '../../components/LiteratureMapTable.astro';
 import LiteratureSection from '../../components/LiteratureSection.astro';
 
 Papers on AI in industrial ecology, each with a one-line summary of what it found, laid out on
@@ -16,6 +17,23 @@ or [report a correction](/contribute/?type=other#send-a-contribution).
 <LiteratureSection />
 
 [Follow new papers by RSS](/literature/feed.xml).
+
+## How the map is made
+
+The layout of Fig. 2.1 comes from text embeddings of each paper's own title and abstract (the
+abstract comes from [OpenAlex](https://openalex.org/), and the entry's summary stands in for the
+few papers without one), made with the model that powers meaning search. The tags a curator gave
+a paper are not an input: they only name the clusters and colour the points, so the map can be
+checked against them. The embeddings are reduced to two dimensions by t-SNE (t-distributed
+stochastic neighbour embedding) with a fixed seed, so the same vectors give the same map. The
+clusters are then found on that 2D layout by k-means, so each one is a group you can see, and
+each is named for the tag most over-represented in it compared with the whole list. Both axes
+share one scale. t-SNE keeps near neighbours near: a paper's closest points are its closest
+papers, but the distance between two clusters means little. Where a region is empty or a cluster
+is small, the list is thin: a dashed outline on the map, and "(thin)" in Table 2.1, mark a
+cluster of fewer than five papers.
+
+<LiteratureMapTable />
 
 ## Ask an AI assistant
 

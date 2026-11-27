@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { LitEntry } from "../data/schemas";
-import { IE_TAGS, shortLabel } from "../data/tags";
+import { IE_TAGS, shortLabel, tagLabel } from "../data/tags";
 import { formatAuthors } from "../lib/literature";
 import type { MapCluster } from "../lib/litmap";
 import {
@@ -19,9 +19,9 @@ import {
 } from "./litMapNav";
 import TagChips from "./TagChips";
 
-/** The plate: hulls, marks and labels. Shared by the static figure on /literature-map/
- * (`href` set: each mark is a link) and the map on /literature/ (no links; MapView handles
- * pointer and keys). `out` marks the papers the list's filters leave out. */
+/** The plate: hulls, marks and labels. With `href` each mark is a link, the map as the server
+ * renders it for a reader without JavaScript; without, MapView handles pointer and keys. `out`
+ * marks the papers the list's filters leave out. */
 export function MapPlot({
   w,
   h,
@@ -153,6 +153,10 @@ export function ModePicker({
 
 type Via = "mouse" | "touch" | "key";
 
+/** A mark's link name: title, year and first IE field, as the list would read it. */
+const paperTitle = (e: LitEntry | undefined, id: string) =>
+  e ? `${e.title} (${e.year}), ${e.ie[0] ? tagLabel("ie", e.ie[0]) : "no IE field"}` : id;
+
 /** The interactive map on /literature/. One tab stop: arrow keys move to the nearest paper in
  * that direction, Enter opens it in the list, Escape closes the card and then leaves. A mouse
  * shows a paper's card on hover and opens it on click; on touch the first tap shows the card
@@ -168,6 +172,7 @@ export function MapView({
   catOf,
   onOpen,
   onLeave,
+  linked = false,
 }: {
   w: number;
   h: number;
@@ -178,6 +183,8 @@ export function MapView({
   catOf?: (id: string) => number;
   onOpen: (id: string) => void;
   onLeave: () => void;
+  /** Before hydration: each mark links to its entry, so the map works without JavaScript. */
+  linked?: boolean;
 }) {
   const [active, setActive] = useState<MapPoint | null>(null);
   const [via, setVia] = useState<Via>("key");
@@ -211,15 +218,22 @@ export function MapView({
     key: "Enter opens it in the list, Escape closes.",
   }[via];
 
+  // One tab stop for a 2D widget that reads arrow keys; the list below is the screen-reader
+  // path. Before hydration the marks are links and the frame is a plain box.
+  const frameA11y = linked
+    ? {}
+    : {
+        role: "application",
+        tabIndex: 0,
+        "aria-label": `Map of the literature, ${live.length} papers. Arrow keys move between papers, Enter opens one in the list, Escape leaves the map.`,
+      };
   return (
     <div className="lm-view">
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: frameA11y makes it an application once hydrated; the handlers never run before that */}
       <div
         ref={svgBox}
         className="lm-frame"
-        role="application"
-        // biome-ignore lint/a11y/noNoninteractiveTabindex: one tab stop for a 2D widget that reads arrow keys; the list below is the screen-reader path
-        tabIndex={0}
-        aria-label={`Map of the literature, ${live.length} papers. Arrow keys move between papers, Enter opens one in the list, Escape leaves the map.`}
+        {...frameA11y}
         onPointerDown={(e) => {
           pointer.current = e.pointerType === "mouse" ? "mouse" : "touch";
         }}
@@ -265,6 +279,8 @@ export function MapView({
           catOf={catOf}
           out={out}
           active={active}
+          href={linked ? (id) => `#${id}` : undefined}
+          title={linked ? (id) => paperTitle(byId.get(id), id) : undefined}
         />
       </div>
       <span className="sr-only" aria-live="polite">

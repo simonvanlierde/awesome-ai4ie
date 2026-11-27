@@ -1,4 +1,4 @@
-// The literature map's layout (Fig. 2.1 on /literature-map/ and the map on /literature/),
+// The literature map's layout (Fig. 2.1 on /literature/ and its Table 2.1),
 // worked out at build time only: druidjs is a dev dependency and never reaches the browser.
 // Entry vectors go to 2D by t-SNE, and the clusters are found on that 2D layout, so a cluster
 // is a group the reader can see. No randomness reaches the output except through SEED, so the
@@ -198,7 +198,7 @@ export type MapCluster = {
   ly: number;
 };
 
-/** What both map pages draw, in plate units. Points are [id, x, y, cluster]. */
+/** What the map and its table draw, in plate units. Points are [id, x, y, cluster]. */
 export type LitMap = {
   w: number;
   h: number;
@@ -304,7 +304,7 @@ export function layoutMap(entries: readonly Entry[], vectors = mapVectors(entrie
 }
 
 let memo: { key: string; map: LitMap } | undefined;
-/** layoutMap() once per build: both pages draw the same map. */
+/** layoutMap() once per build: the map and its table share it. */
 export function litMap(entries: readonly Entry[]): LitMap {
   const key = entries.map((e) => textKey(entryText(e))).join();
   if (memo?.key !== key) memo = { key, map: layoutMap(entries) };

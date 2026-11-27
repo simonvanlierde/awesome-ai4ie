@@ -1,0 +1,75 @@
+---
+// Table 2.1 on /literature/: the map's clusters (Fig. 2.1, drawn by LiteratureBrowser) by IE
+// field. See src/lib/litmap.ts for the layout.
+import { getCollection } from "astro:content";
+import { IE_TAGS, type IeTag, shortLabel } from "../data/tags";
+import { litMap } from "../lib/litmap";
+import { litUrl } from "../lib/urls";
+
+const FIELDS = Object.keys(IE_TAGS) as IeTag[];
+const all = (await getCollection("literature")).map(({ id, data }) => ({ id, ...data }));
+const byId = new Map(all.map((e) => [e.id, e]));
+const map = litMap(all);
+const points = map.points.map(([id, x, y, c]) => ({ id, x, y, c }));
+const fieldOf = (id: string) => byId.get(id)?.ie[0] as IeTag | undefined;
+const clusters = map.clusters.map((k, c) => {
+  const m = points.filter((p) => p.c === c).map((p) => fieldOf(p.id));
+  return {
+    ...k,
+    byField: Object.fromEntries(FIELDS.map((f) => [f, m.filter((x) => x === f).length])) as Record<
+      IeTag,
+      number
+    >,
+    none: m.filter((x) => !x).length,
+  };
+});
+const fieldTotals = FIELDS.map((f) => points.filter((p) => fieldOf(p.id) === f).length);
+const none = points.filter((p) => !fieldOf(p.id)).length;
+---
+
+{
+  points.length > 0 && (
+    <section class="apx-grid-wrap" aria-labelledby="lm-table" tabindex="0">
+      <p class="apx-grid-title" id="lm-table">
+        <b>Table 2.1</b> Papers by cluster and IE field
+      </p>
+      <table class="apx-grid">
+        <thead>
+          <tr>
+            <th><span class="sr-only">Cluster</span></th>
+            {FIELDS.map((f) => (
+              <th scope="col" class={`field-${f}`}>
+                <a href={litUrl({ ie: [f] })}>{shortLabel(f)}</a>
+              </th>
+            ))}
+            <th scope="col">None</th>
+            <th scope="col">Papers</th>
+          </tr>
+        </thead>
+        <tbody>
+          {clusters.map((k) => (
+            <tr>
+              <th scope="row">
+                {k.name}
+                {k.thin && <> (thin)</>}
+              </th>
+              {FIELDS.map((f) => <td data-n={k.byField[f] ? Math.min(k.byField[f], 3) : undefined}>{k.byField[f]}</td>)}
+              <td data-n={k.none ? Math.min(k.none, 3) : undefined}>{k.none}</td>
+              <td><b>{k.n}</b></td>
+            </tr>
+          ))}
+          <tr>
+            <th scope="row">All papers</th>
+            {fieldTotals.map((n) => <td><b>{n}</b></td>)}
+            <td><b>{none}</b></td>
+            <td><b>{points.length}</b></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="apx-grid-src">
+        Source: <code>literature.yaml</code>, clustered on Fig. 2.1. A paper with several IE fields
+        counts under its first. Links open the list filtered by field.
+      </p>
+    </section>
+  )
+}

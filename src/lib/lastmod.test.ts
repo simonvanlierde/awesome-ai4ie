@@ -25,10 +25,11 @@ describe("sourcesFor", () => {
   });
 
   it("adds the map's component and projection to its data", () => {
-    expect(sourcesFor("literature-map")).toEqual([
-      "src/content/docs/literature-map.mdx",
+    expect(sourcesFor("literature")).toEqual([
+      "src/content/docs/literature.mdx",
       "src/data/literature.yaml",
-      "src/components/LiteratureMap.astro",
+      "src/data/literature-meta.json",
+      "src/components/LiteratureMapTable.astro",
       "src/lib/litmap.ts",
     ]);
   });

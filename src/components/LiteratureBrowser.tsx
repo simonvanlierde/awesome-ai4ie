@@ -452,9 +452,15 @@ export default function LiteratureBrowser({
       </div>
       {map && mapPoints.length > 0 && (
         <figure className="lm-figure">
-          <button type="button" className="lm-skip" onClick={focusList}>
-            Skip the map
-          </button>
+          {hydrated ? (
+            <button type="button" className="lm-skip" onClick={focusList}>
+              Skip the map
+            </button>
+          ) : (
+            <a className="lm-skip" href="#lit-list">
+              Skip the map
+            </a>
+          )}
           <MapView
             w={map.w}
             h={map.h}
@@ -469,6 +475,7 @@ export default function LiteratureBrowser({
               if (hash !== `#${id}`) history.pushState(null, "", `${pathname}${search}#${id}`);
             }}
             onLeave={focusList}
+            linked={!hydrated}
           />
           {modes.length > 1 && (
             <ModePicker mode={colours ? mode : "ie"} modes={modes} onChange={setMode} />
@@ -480,9 +487,7 @@ export default function LiteratureBrowser({
             topic, which the layout never saw. The filters above fade the papers they leave out.
             {entries.length > mapPoints.length &&
               ` ${entries.length - mapPoints.length} ${entries.length - mapPoints.length === 1 ? "paper has" : "papers have"} no vector yet and ${entries.length - mapPoints.length === 1 ? "is" : "are"} not on the map.`}{" "}
-            <a href={siteUrl("literature-map/")}>
-              How the map is made, with its clusters as a table
-            </a>
+            <a href="#how-the-map-is-made">How the map is made, with its clusters as a table</a>
           </figcaption>
         </figure>
       )}

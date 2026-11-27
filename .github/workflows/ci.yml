@@ -105,7 +105,7 @@ jobs:
           jq -e --argjson n "$(jq length dist/literature-index.json)" \
             '.vectors as $v | (.keys | length == $n) and all(.keys[]; $v[.] != null)' \
             src/data/literature-map-vectors.json
-          ! grep -q "no vector yet" dist/literature-map/index.html
+          ! grep -q "no vector yet" dist/literature/index.html
       # The Worker's tests use hand-written fixtures; this checks the build gives what they mimic.
       - name: Worker data has the fields the tools read
         run: |

@@ -2211,8 +2211,7 @@ starlight-menu-button button {
   }
 }
 
-/* Fig. 2.1: the literature map. On /literature/ it sits over the list (.lm-view); on
-   /literature-map/ it is a static figure that keeps one size and scrolls sideways on a phone. */
+/* Fig. 2.1: the literature map over the list on /literature/. */
 .lm-figure {
   position: relative;
   margin: 1rem 0 0;
@@ -2473,41 +2472,19 @@ starlight-menu-button button {
   }
 }
 
-/* The static figure on /literature-map/. */
-.litmap-scroll {
-  overflow-x: auto;
-  scrollbar-width: thin;
-}
-.litmap-scroll .lm-plot {
-  min-width: 640px;
-}
-.litmap .lm-hit {
+/* The plate as the server renders it, for a reader without JavaScript: each mark a link. */
+.lm-plot .lm-hit {
   fill: transparent;
 }
-.litmap a:hover .lm-dot,
-.litmap a:focus-visible .lm-dot {
+.lm-plot a:hover .lm-dot,
+.lm-plot a:focus-visible .lm-dot {
   stroke: var(--sl-color-white);
   stroke-width: 2;
 }
-.litmap a:focus-visible {
+.lm-plot a:focus-visible {
   outline: none;
 }
-.litmap a:focus-visible .lm-hit {
+.lm-plot a:focus-visible .lm-hit {
   stroke: var(--sl-color-text-accent);
   stroke-width: 2;
-}
-.litmap-skip {
-  margin: 0 0 0.5rem;
-  font-size: var(--sl-text-sm);
-}
-.litmap-hint {
-  display: none;
-  margin: 0 0 0.5rem;
-  font-size: var(--sl-text-sm);
-  color: var(--sl-color-gray-2);
-}
-@media (max-width: 680px) {
-  .litmap-hint {
-    display: block;
-  }
 }
