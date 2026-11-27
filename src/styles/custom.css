@@ -163,20 +163,28 @@ h1#_top,
   font-weight: 700;
 }
 
-/* Reading text: the serif, at a reading measure. Islands (.not-content) set
-   their own text; the :where() adds no specificity, so island classes win. */
+/* Reading text: the serif. It fills the column, and on a docs page the type grows with the
+   column so a line stays at or under about 80 characters (the serif averages 0.475em a
+   character). Islands (.not-content) set their own text; the :where() adds no specificity,
+   so island classes win. */
+.sl-markdown-content {
+  container-type: inline-size;
+}
 .sl-markdown-content :is(p, li, blockquote, dd):not(:where(.not-content *)) {
   font-family: var(--font-read);
   font-size: 1.0625rem;
   line-height: 1.65;
 }
-.sl-markdown-content > :is(p, ul, ol, blockquote) {
-  max-width: 68ch;
+:where(:root:not([data-has-hero]))
+  .sl-markdown-content
+  :is(p, li, blockquote, dd):not(:where(.not-content *)) {
+  font-size: max(1.0625rem, 100cqi / 37);
 }
-/* The home page has no sidebar and a wider column: the same text may run wider, still
-   inside a readable line length. */
+/* The home page has no sidebar and a 67.5rem column, too wide for a line at any reading
+   size: its text grows to the cover tagline's size and stops at the same 80 characters. */
 [data-has-hero] .sl-markdown-content > :is(p, ul, ol, blockquote) {
-  max-width: 90ch;
+  max-width: 70ch;
+  font-size: clamp(1.0625rem, 100cqi / 37, 1.3125rem);
 }
 /* An opening line is followed by a ruled h2, whose 2.75rem top margin reads as a hole
    after one short paragraph. Paragraph spacing keeps the rule close to it. */
@@ -643,9 +651,6 @@ starlight-menu-button button {
   font-weight: 750;
   font-stretch: 85%;
 }
-.starlight-aside__content > :is(p, ul, ol) {
-  max-width: 68ch;
-}
 .sl-markdown-content .card {
   border: none;
   border-top: 3px solid var(--sl-color-white);
@@ -665,24 +670,6 @@ starlight-menu-button button {
   grid-template-columns: minmax(0, 1fr);
   gap: 2rem;
   margin-top: 0;
-}
-/* From 64rem the cover title and description sit side by side. */
-@media (min-width: 64rem) {
-  .cover-grid {
-    gap: 2.5rem;
-  }
-  .cover-copy {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-areas: "title tagline";
-    column-gap: 3rem;
-    align-items: start;
-  }
-  .cover h1#_top {
-    grid-area: title;
-  }
-  .cover-tagline {
-    grid-area: tagline;
-  }
 }
 .cover-copy {
   min-width: 0;
@@ -757,6 +744,32 @@ starlight-menu-button button {
   font-size: clamp(1.125rem, 1rem + 0.4vw, 1.3125rem);
   line-height: 1.5;
   color: var(--sl-color-gray-1);
+}
+/* From 64rem the cover title and description sit side by side. */
+@media (min-width: 64rem) {
+  .cover-grid {
+    gap: 2.5rem;
+  }
+  /* The tagline column is a little under its 44ch measure, so the title column is wide
+     enough to keep the title on two lines. */
+  .cover-copy {
+    container-type: inline-size;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
+    grid-template-areas: "title tagline";
+    column-gap: 2.5rem;
+    align-items: start;
+  }
+  .cover h1#_top {
+    grid-area: title;
+  }
+  /* The lockup (tile, gap, "Industrial Ecology") is about 8.7em wide: the font fits the
+     title column, which is the copy less the tagline and gap (30.5rem). */
+  .cover h1#_top.cover-lockup {
+    font-size: min(clamp(2.5rem, 1.5rem + 3.4vw, 4.5rem), calc((100cqi - 30.5rem) / 8.9));
+  }
+  .cover-tagline {
+    grid-area: tagline;
+  }
 }
 /* Fig. 1: the flow plate. */
 .flow {
@@ -947,9 +960,6 @@ starlight-menu-button button {
   }
 }
 .flow figcaption {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1rem;
   margin-top: 0.75rem;
   padding-top: 0.5rem;
   border-top: 1px solid var(--sl-color-hairline);
@@ -961,13 +971,6 @@ starlight-menu-button button {
 .flow figcaption b {
   margin-right: 0.25rem;
   color: var(--sl-color-white);
-}
-.flow figcaption > :first-child {
-  flex-basis: 100%;
-}
-.flow-gap {
-  font-size: 0.75rem;
-  color: var(--sl-color-gray-3);
 }
 
 /* ── The mark (Glyph.astro) ───────────────────────────────────────────────
@@ -1043,7 +1046,7 @@ starlight-menu-button button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin: 2.5rem 0 0;
+  margin: 1.5rem 0 0;
   font-family: var(--sl-font);
   font-size: var(--sl-text-base);
   font-weight: 600;
@@ -2173,12 +2176,6 @@ starlight-menu-button button {
 }
 .vocab dd p {
   margin-top: 0.25rem;
-}
-/* The prose is nested in sections and a list, so the 68ch rule above does not reach it. */
-.sl-markdown-content > section > p,
-.vocab dd p,
-.sl-markdown-content > details > p {
-  max-width: 68ch;
 }
 .vocab-meta {
   font-size: var(--sl-text-sm);
