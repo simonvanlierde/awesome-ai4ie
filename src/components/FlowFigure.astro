@@ -4,7 +4,7 @@
 // what the heights and numbers count.
 import { getCollection } from "astro:content";
 import { shortLabel, tagLabel } from "../data/tags";
-import { bandPath, missingTechniques, sankeyLayout, spinePath, topicLenses } from "../lib/sankey";
+import { bandPath, sankeyLayout, spinePath, topicLenses } from "../lib/sankey";
 import { litUrl } from "../lib/urls";
 import { repoUrl } from "../site";
 
@@ -27,16 +27,13 @@ const W = X1 + NODE + 240;
 const HIT = 64;
 
 const entries = (await getCollection("literature")).map((e) => e.data);
-const { ieNodes, mlNodes, bands, total, papers } = sankeyLayout(entries, H, GAP);
+const { ieNodes, mlNodes, bands, papers } = sankeyLayout(entries, H, GAP);
 // A one-paper topic lights a single band, which reads as broken.
 const lenses = topicLenses(entries).filter((t) => t.papers >= 2);
 // A node opens the list scoped to the flow (the other column's tags ORed), so
 // the list shows exactly the papers the node's number counts.
 const ieInFlow = ieNodes.map((n) => n.tag);
 const mlInFlow = mlNodes.map((n) => n.tag);
-// Techniques in the vocabulary with no paper in the flow yet: named in the
-// caption, so the figure does not imply the vocabulary ends at its right edge.
-const missing = missingTechniques(mlNodes).map((t) => tagLabel("ml", t));
 // Band ends as data, for the script to redraw the curves at another width.
 const ends = (b: (typeof bands)[number]) => ({ "data-y0": b.y0, "data-y1": b.y1, "data-h": b.h });
 const band = (b: (typeof bands)[number]) => bandPath(X0 + NODE, X1, b);
@@ -187,18 +184,12 @@ const idle =
   <p class="flow-readout" aria-live="polite">{idle}</p>
   <a class="flow-go" href="#top" hidden>Show papers</a>
   <figcaption>
-    <span><b>Fig. 1</b> {papers} papers, linking each IE field (left) to the AI techniques
-      applied in it (right). Wider bands mean more papers. A paper with several fields or
-      techniques appears in several bands ({total} in all).{" "}
+    <span><b>Fig. 1</b> The {papers} papers, of {entries.length} in the list, that have both an
+      IE field and an AI technique. Each band links an IE field (left) to an AI technique used
+      in it (right), and wider bands mean more papers. A paper with several
+      fields or techniques shows up in several bands.{" "}
       <a href={`${repoUrl}/blob/main/src/data/literature.yaml`}>Source data</a>
     </span>
-    {
-      missing.length > 0 && (
-        <span class="flow-gap">
-          No paper in the list uses {missing.join(", ")} yet.
-        </span>
-      )
-    }
   </figcaption>
 </figure>
 
