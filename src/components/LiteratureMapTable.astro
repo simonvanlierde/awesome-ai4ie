@@ -4,7 +4,7 @@
 import { getCollection } from "astro:content";
 import { IE_TAGS, type IeTag, shortLabel } from "../data/tags";
 import { litMap } from "../lib/litmap";
-import { litUrl } from "../lib/urls";
+import { contributeUrl, litUrl } from "../lib/urls";
 
 const FIELDS = Object.keys(IE_TAGS) as IeTag[];
 const all = (await getCollection("literature")).map(({ id, data }) => ({ id, ...data }));
@@ -42,7 +42,7 @@ const none = points.filter((p) => !fieldOf(p.id)).length;
                 <a href={litUrl({ ie: [f] })}>{shortLabel(f)}</a>
               </th>
             ))}
-            <th scope="col">None</th>
+            <th scope="col">No IE field</th>
             <th scope="col">Papers</th>
           </tr>
         </thead>
@@ -68,7 +68,9 @@ const none = points.filter((p) => !fieldOf(p.id)).length;
       </table>
       <p class="apx-grid-src">
         Source: <code>literature.yaml</code>, clustered on Fig. 2.1. A paper with several IE fields
-        counts under its first. Links open the list filtered by field.
+        counts under its first. Links open the list filtered by field. No IE field: ML landmarks,
+        general methods and research practice, whose IE use is indirect.{" "}
+        <a href={contributeUrl("other")}>Suggest a field</a> if one fits.
       </p>
     </section>
   )
