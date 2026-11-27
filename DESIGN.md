@@ -109,9 +109,16 @@ strokes at 40% and a light-blue stem, the same in both themes.
   key says which meaning is on. The map sits between the count and the list, and the
   list's filters drive it: kept papers in full ink, the rest at 16%. Pointing at, focusing or
   tapping a paper shows a card with the list's meta, title, blurb and tags; a click, Enter or
-  a second tap opens its entry in the list, as on Fig. 1. One tab stop; arrow keys move to the
-  nearest paper that way. Under 40rem the plate fits the width, marks grow 1.6×, labels give
-  way and the card docks under the plate. Without JavaScript the server-rendered plate stays,
+  a second tap opens its entry in the list, as on Fig. 1. The pointer can rest on the card,
+  and Escape anywhere closes it. One tab stop; arrow keys move to the nearest paper that way.
+  The plate is at most 42% of the window tall, so the list starts close to the fold; a wider
+  frame centres it. It zooms from 1× to 8× (wheel with Ctrl or ⌘ or once the map has focus,
+  pinch, the +, − and "Full map" buttons, keys +, − and 0) and pans by drag, two fingers or
+  arrow-key focus. Marks and names keep their screen size as it zooms, so a crowded cluster
+  spreads out; from 2× the papers in view carry their titles where a title covers no other
+  title or mark. A cluster's name is a button that zooms to it. Reduced motion jumps instead of
+  gliding. Under 40rem the names give way to chips in the zoom row under the plate, and the
+  card docks under the plate and scrolls into view after a tap. Without JavaScript the server-rendered plate stays,
   each mark a link to its entry. "How the map is made", at the end of the page, holds the
   method and Table 2.1, the clusters by IE field.
 - **Numbered tables.** A bold "Table N.N" title above, a source line below. Numbering and

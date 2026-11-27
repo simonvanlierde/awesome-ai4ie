@@ -15,7 +15,9 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `pnpm run literature-meta` records each paper's OpenAlex topic in
   `src/data/literature-meta.json` (CC0 data, no abstract text). The list's filters and search fade the
   papers they leave out; a card shows a paper on hover, focus or tap, and a click, Enter or a
-  second tap opens it in the list. Without JavaScript each point links to its entry. A "How
+  second tap opens it in the list. The map zooms and pans (wheel with Ctrl or ⌘, pinch, drag,
+  buttons, keys + − 0), a cluster's name zooms to it, and zoomed in, the papers in view show
+  their titles. Without JavaScript each point links to its entry. A "How
   the map is made" section holds the method and a table of the clusters by IE field.
 - The contribute page links the AI4IE community survey, and `/qr/contribute.svg` and
   `/qr/contribute.png` hold a QR code for `https://ai4ie.org/contribute/`.

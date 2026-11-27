@@ -558,6 +558,156 @@ describe("LiteratureBrowser with the map", () => {
     expect(toggle("lcaPaper")?.getAttribute("aria-expanded")).toBe("true");
   });
 
+  describe("zoom", () => {
+    // Reduced motion: every zoom lands at once, with no tween to wait for.
+    const realMatchMedia = window.matchMedia;
+    beforeEach(() => {
+      window.matchMedia = ((q: string) => ({ matches: q.includes("reduce") })) as typeof matchMedia;
+    });
+    afterEach(() => {
+      window.matchMedia = realMatchMedia;
+    });
+    const viewBox = () => document.querySelector(".lm-plot")?.getAttribute("viewBox");
+    // `n` presses of one key in a row.
+    const keys = (k: string, n: number) =>
+      act(() => {
+        for (let i = 0; i < n; i++)
+          frame()?.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true }));
+      });
+    const button = (name: string) =>
+      [...document.querySelectorAll<HTMLButtonElement>(".lm-zoom button")].find(
+        (b) => (b.getAttribute("aria-label") ?? b.textContent) === name,
+      );
+
+    it("zooms in and out about the middle with the buttons, and resets to the full map", async () => {
+      await mountMap("/literature/");
+      expect(viewBox()).toBe("0 0 100 100");
+      expect(button("Zoom out")?.getAttribute("aria-disabled")).toBe("true");
+      await click(button("Zoom in"));
+      expect(viewBox()).toBe("18.75 18.75 62.5 62.5");
+      expect(button("Zoom out")?.hasAttribute("aria-disabled")).toBe(false);
+      await click(button("Zoom out"));
+      expect(viewBox()).toBe("0 0 100 100");
+      await click(button("Zoom in"));
+      await click(button("Zoom in"));
+      await click(button("Full map"));
+      expect(viewBox()).toBe("0 0 100 100");
+    });
+
+    it("zooms with + and -, about the focused paper, up to 8x, and 0 resets", async () => {
+      await mountMap("/literature/");
+      await act(async () => frame()?.focus()); // lcaPaper at (10, 10)
+      await key("+");
+      expect(viewBox()).toBe("3.75 3.75 62.5 62.5");
+      await key("-");
+      expect(viewBox()).toBe("0 0 100 100");
+      keys("+", 8);
+      expect(viewBox()).toBe("8.75 8.75 12.5 12.5");
+      expect(button("Zoom in")?.getAttribute("aria-disabled")).toBe("true");
+      await key("0");
+      expect(viewBox()).toBe("0 0 100 100");
+    });
+
+    it("pans to keep the paper the arrow keys move to in view", async () => {
+      await mountMap("/literature/");
+      await act(async () => frame()?.focus());
+      keys("+", 4);
+      const [, y0, , h0] = (viewBox() ?? "").split(" ").map(Number);
+      expect(y0 + h0).toBeLessThan(60);
+      await key("ArrowDown"); // otherPaper at (12, 60)
+      expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper otherPaper");
+      const [, y, , h] = (viewBox() ?? "").split(" ").map(Number);
+      expect(y < 60 && y + h > 60).toBe(true);
+    });
+
+    it("zooms to a cluster from its name or its chip", async () => {
+      const TWO = {
+        ...MAP,
+        w: 400,
+        h: 400,
+        clusters: [
+          { ...MAP.clusters[0], name: "Pair", n: 2 },
+          { ...MAP.clusters[0], name: "Lone", n: 1, lx: 12, ly: 40 },
+        ],
+        points: "lcaPaper 10 10 0;symPaper 50 12 0;otherPaper 12 60 1",
+      };
+      history.replaceState(null, "", "/literature/");
+      host = document.createElement("div");
+      document.body.append(host);
+      root = createRoot(host);
+      await act(async () => root.render(<LiteratureBrowser entries={THREE} map={TWO} />));
+      const names = [...document.querySelectorAll(".lm-name")];
+      expect(names.map((n) => n.textContent)).toEqual(["Zoom to Pair 2", "Zoom to Lone 1"]);
+      await click(names[1]);
+      // The lone paper with 32 units round it, kept on the plate.
+      expect(viewBox()).toBe("0 28 64 64");
+      await click(button("Full map"));
+      expect(viewBox()).toBe("0 0 400 400");
+      const chips = [...document.querySelectorAll(".lm-zoom .lm-chip")];
+      expect(chips.map((n) => n.textContent)).toEqual(["Zoom to Pair 2", "Zoom to Lone 1"]);
+      await click(chips[1]);
+      expect(viewBox()).toBe("0 28 64 64");
+    });
+
+    it("zooms with the wheel only with Ctrl or once the map has focus", async () => {
+      await mountMap("/literature/");
+      plateAt200();
+      // happy-dom's WheelEvent drops the mouse fields, so they are set on it here.
+      const wheel = (mods: { ctrlKey?: boolean }) =>
+        act(() => {
+          const e = new WheelEvent("wheel", { deltaY: -200, cancelable: true });
+          for (const [k, v] of Object.entries({
+            clientX: 100,
+            clientY: 100,
+            ctrlKey: false,
+            ...mods,
+          }))
+            Object.defineProperty(e, k, { value: v });
+          frame()?.dispatchEvent(e);
+        });
+      wheel({});
+      expect(viewBox()).toBe("0 0 100 100");
+      wheel({ ctrlKey: true });
+      expect(viewBox()).not.toBe("0 0 100 100");
+      await key("0");
+      await act(async () => frame()?.focus());
+      await key("0");
+      wheel({});
+      expect(viewBox()).not.toBe("0 0 100 100");
+    });
+  });
+
+  describe("card", () => {
+    const pointerOut = (from: Element | null, to: Element | null) =>
+      act(() => {
+        const e = new MouseEvent("pointerout", { bubbles: true, relatedTarget: to });
+        Object.defineProperty(e, "pointerType", { value: "mouse" });
+        from?.dispatchEvent(e);
+      });
+
+    it("stays open while the pointer rests on it, and closes when it leaves", async () => {
+      await mountMap("/literature/");
+      plateAt200();
+      await pointer("pointermove", "mouse", 20, 20);
+      expect(card()).not.toBeNull();
+      pointerOut(frame(), card());
+      expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper lcaPaper");
+      pointerOut(card(), document.body);
+      expect(card()).toBeNull();
+    });
+
+    it("closes on Escape anywhere in the page", async () => {
+      await mountMap("/literature/");
+      plateAt200();
+      await pointer("pointermove", "mouse", 20, 20);
+      expect(card()).not.toBeNull();
+      act(() => {
+        document.body.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+      });
+      expect(card()).toBeNull();
+    });
+  });
+
   describe("colour modes", () => {
     const MODES_MAP = {
       ...MAP,

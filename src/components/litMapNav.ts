@@ -137,3 +137,106 @@ export function step(points: readonly MapPoint[], from: MapPoint, key: string): 
 export function first(points: readonly MapPoint[]): MapPoint | null {
   return points.reduce<MapPoint | null>((a, p) => (!a || p.x + p.y < a.x + a.y ? p : a), null);
 }
+
+/** A window onto the plate, in plate units, drawn as the SVG's viewBox. */
+export type View = { x: number; y: number; w: number; h: number };
+/** Closest zoom, as a multiple of the whole plate. */
+export const ZOOM_MAX = 8;
+
+/** The whole plate in a frame of aspect `a` (width over height), centred: zoom 1. A frame
+ * wider than the plate leaves room to either side, a taller one above and below. */
+export function baseView(w: number, h: number, a: number): View {
+  return a > w / h
+    ? { x: (w - h * a) / 2, y: 0, w: h * a, h }
+    : { x: 0, y: (h - w / a) / 2, w, h: w / a };
+}
+
+export const zoomOf = (v: View, base: View) => base.w / v.w;
+
+/** `v` with its zoom held to 1 to ZOOM_MAX and its window kept inside `base`, about its centre. */
+export function clampView(v: View, base: View): View {
+  const k = Math.min(Math.max(v.w / base.w, 1 / ZOOM_MAX), 1);
+  const [w, h] = [base.w * k, base.h * k];
+  const place = (c: number, size: number, lo: number, span: number) =>
+    Math.min(Math.max(c - size / 2, lo), lo + span - size);
+  return {
+    x: place(v.x + v.w / 2, w, base.x, base.w),
+    y: place(v.y + v.h / 2, h, base.y, base.h),
+    w,
+    h,
+  };
+}
+
+/** Zoom by factor `f` about plate point (px, py), which stays put on screen unless the clamp
+ * to the plate moves it. */
+export function zoomAt(v: View, f: number, px: number, py: number, base: View): View {
+  const z = zoomOf(v, base);
+  const g = Math.min(Math.max(z * f, 1), ZOOM_MAX) / z;
+  return clampView(
+    { x: px - (px - v.x) / g, y: py - (py - v.y) / g, w: v.w / g, h: v.h / g },
+    base,
+  );
+}
+
+/** Move the window by (dx, dy) plate units, kept inside the plate. */
+export function panBy(v: View, dx: number, dy: number, base: View): View {
+  return clampView({ ...v, x: v.x + dx, y: v.y + dy }, base);
+}
+
+/** The closest view, in the frame's aspect, that holds the box (x0, y0)-(x1, y1) with `pad`
+ * round it. */
+export function fitView(
+  box: { x0: number; y0: number; x1: number; y1: number },
+  base: View,
+  pad = 0,
+): View {
+  const a = base.w / base.h;
+  const w = Math.max(box.x1 - box.x0 + 2 * pad, (box.y1 - box.y0 + 2 * pad) * a);
+  const h = w / a;
+  return clampView(
+    { x: (box.x0 + box.x1) / 2 - w / 2, y: (box.y0 + box.y1) / 2 - h / 2, w, h },
+    base,
+  );
+}
+
+/** The least pan that brings (px, py) at least `margin` inside the window. */
+export function keepInView(v: View, px: number, py: number, margin: number, base: View): View {
+  const mx = Math.min(margin, v.w / 2);
+  const my = Math.min(margin, v.h / 2);
+  const x = Math.min(Math.max(v.x, px + mx - v.w), px - mx);
+  const y = Math.min(Math.max(v.y, py + my - v.h), py - my);
+  return clampView({ ...v, x, y }, base);
+}
+
+/** The plate point under screen point (cx, cy), in a frame at `rect` that shows `v`. */
+export function toPlate(
+  v: View,
+  rect: { left: number; top: number; width: number; height: number },
+  cx: number,
+  cy: number,
+): [number, number] {
+  return [v.x + ((cx - rect.left) * v.w) / rect.width, v.y + ((cy - rect.top) * v.h) / rect.height];
+}
+
+export type Box = { x: number; y: number; w: number; h: number };
+const overlaps = (a: Box, b: Box) =>
+  a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+
+/** Greedy label placement: each label, in order, is kept when it stays inside `bounds` and
+ * covers neither a kept label nor an obstacle. `own` says which obstacle a label may cover
+ * (its own mark). */
+export function placeLabels<T extends Box, O extends Box>(
+  labels: readonly T[],
+  bounds: { w: number; h: number },
+  obstacles: readonly O[] = [],
+  own: (label: T, obstacle: O) => boolean = () => false,
+): T[] {
+  const kept: T[] = [];
+  for (const l of labels) {
+    if (l.x < 0 || l.y < 0 || l.x + l.w > bounds.w || l.y + l.h > bounds.h) continue;
+    if (kept.some((k) => overlaps(k, l))) continue;
+    if (obstacles.some((o) => !own(l, o) && overlaps(o, l))) continue;
+    kept.push(l);
+  }
+  return kept;
+}

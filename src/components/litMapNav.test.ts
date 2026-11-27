@@ -1,13 +1,23 @@
 import { describe, expect, it } from "vitest";
 import {
+  baseView,
   categorise,
   catPath,
+  clampView,
   decodePoints,
   encodePoints,
   first,
+  fitView,
+  keepInView,
   markPath,
   nearest,
+  panBy,
+  placeLabels,
   step,
+  toPlate,
+  ZOOM_MAX,
+  zoomAt,
+  zoomOf,
 } from "./litMapNav";
 
 // A plus sign round the middle point, and one far off to the upper right.
@@ -81,5 +91,73 @@ describe("categorise", () => {
   it("draws a disc in a colour mode and the hollow dot for none", () => {
     expect(catPath(0, 10, 10)).toBe(markPath("lca", 10, 10));
     expect(catPath(7, 10, 10)).toBe(markPath(undefined, 10, 10));
+  });
+});
+
+describe("map zoom", () => {
+  // A 200 x 100 plate in a frame of the same shape, and in a square one.
+  const base = baseView(200, 100, 2);
+  const r = (v: { x: number; y: number; w: number; h: number }) =>
+    [v.x, v.y, v.w, v.h].map((n) => Math.round(n * 100) / 100);
+
+  it("centres the plate in a frame of another shape", () => {
+    expect(r(base)).toEqual([0, 0, 200, 100]);
+    expect(r(baseView(200, 100, 4))).toEqual([-100, 0, 400, 100]);
+    expect(r(baseView(200, 100, 1))).toEqual([0, -50, 200, 200]);
+  });
+
+  it("zooms about the pointer, which stays put", () => {
+    const v = zoomAt(base, 2, 50, 50, base);
+    expect(r(v)).toEqual([25, 25, 100, 50]);
+    expect(zoomOf(v, base)).toBe(2);
+    // The plate point under the pointer before and after is the same.
+    const rect = { left: 0, top: 0, width: 400, height: 200 };
+    expect(toPlate(v, rect, 100, 100)).toEqual(toPlate(base, rect, 100, 100));
+  });
+
+  it("holds zoom between 1x and the maximum, and the window on the plate", () => {
+    expect(r(zoomAt(base, 0.5, 50, 50, base))).toEqual([0, 0, 200, 100]);
+    expect(zoomOf(zoomAt(base, 100, 50, 50, base), base)).toBe(ZOOM_MAX);
+    const v = zoomAt(base, 2, 0, 0, base);
+    expect(r(panBy(v, -500, -500, base))).toEqual([0, 0, 100, 50]);
+    expect(r(panBy(v, 500, 500, base))).toEqual([100, 50, 100, 50]);
+    expect(r(clampView({ x: 50, y: 50, w: 1000, h: 500 }, base))).toEqual([0, 0, 200, 100]);
+  });
+
+  it("fits a box with padding, in the frame's shape", () => {
+    expect(r(fitView({ x0: 20, y0: 20, x1: 40, y1: 30 }, base, 5))).toEqual([10, 15, 40, 20]);
+    // A box too small for the closest zoom is centred at the maximum.
+    expect(zoomOf(fitView({ x0: 100, y0: 50, x1: 100, y1: 50 }, base), base)).toBe(ZOOM_MAX);
+  });
+
+  it("pans the least to keep a point inside the window", () => {
+    const v = { x: 50, y: 25, w: 100, h: 50 };
+    expect(r(keepInView(v, 100, 50, 10, base))).toEqual([50, 25, 100, 50]);
+    expect(r(keepInView(v, 160, 50, 10, base))).toEqual([70, 25, 100, 50]);
+    expect(r(keepInView(v, 100, 10, 10, base))).toEqual([50, 0, 100, 50]);
+  });
+
+  it("maps a screen point to the plate", () => {
+    const v = { x: 10, y: 20, w: 100, h: 50 };
+    expect(toPlate(v, { left: 100, top: 50, width: 200, height: 100 }, 200, 100)).toEqual([60, 45]);
+  });
+});
+
+describe("title labels", () => {
+  const box = (id: string, x: number, y: number, w = 40) => ({ id, x, y, w, h: 10 });
+  it("keeps labels in order that collide with no kept label, mark or edge", () => {
+    const labels = [
+      box("a", 0, 0),
+      box("b", 30, 5),
+      box("c", 0, 20),
+      box("d", 90, 0),
+      box("e", 0, 40),
+    ];
+    const marks = [
+      { id: "e", x: 5, y: 42, w: 4, h: 4 },
+      { id: "x", x: 10, y: 22, w: 4, h: 4 },
+    ];
+    const kept = placeLabels(labels, { w: 100, h: 100 }, marks, (l, m) => l.id === m.id);
+    expect(kept.map((l) => l.id)).toEqual(["a", "e"]);
   });
 });
