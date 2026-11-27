@@ -69,21 +69,28 @@ jobs:
             src/data/literature-map-vectors.json
           key: literature-vectors-${{ github.run_id }}
           restore-keys: literature-vectors-
-      # Builds the Astro site (also validates internal links) and uploads the Pages artifact.
-      # Before the build it embeds the reading list for meaning search with Workers AI, which
-      # literature-index.json then ships. A fork's pull request gets no secrets, so it
-      # builds without vectors; on this repo's pull requests and on main a failed embed
-      # fails the build.
-      - uses: withastro/action@a8b97df764791eb61fbf3338ef713b0e61ae05c5 # v6.1.4
+      # Embeds the reading list with Workers AI for meaning search and the map, which the
+      # build then ships. Only this step holds the Workers AI and OpenAlex secrets, so the
+      # dependencies' install and build code never sees them. A fork's pull request gets no
+      # secrets and builds without vectors; on this repo's pull requests and on main a failed
+      # embed fails the job.
+      - if: env.EMBED == 'true'
+        uses: $/.github/actions/setup-pnpm
+      - name: Embed the reading list
+        if: env.EMBED == 'true'
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           # Optional: the embed step reads each abstract from OpenAlex, and a key lifts its daily limit.
           OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+        run: pnpm run embed
+      # Builds the Astro site (also validates internal links) and uploads the Pages artifact.
+      - uses: withastro/action@a8b97df764791eb61fbf3338ef713b0e61ae05c5 # v6.1.4
+        env:
           PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
         with:
           node-version: ${{ steps.node.outputs.version }}
-          build-cmd: ${{ env.EMBED == 'true' && 'pnpm run embed && pnpm run build' || 'pnpm run build' }}
+          build-cmd: pnpm run build
       - name: Configured Turnstile key is present in the build
         if: vars.PUBLIC_TURNSTILE_SITE_KEY != ''
         env:
@@ -105,7 +112,7 @@ jobs:
           jq -e --argjson n "$(jq length dist/literature-index.json)" \
             '.vectors as $v | (.keys | length == $n) and all(.keys[]; $v[.] != null)' \
             src/data/literature-map-vectors.json
-          ! grep -q "no vector yet" dist/literature/index.html
+          ! grep -q "not placed yet" dist/literature/index.html
       # The Worker's tests use hand-written fixtures; this checks the build gives what they mimic.
       - name: Worker data has the fields the tools read
         run: |
