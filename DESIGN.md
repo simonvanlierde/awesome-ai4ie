@@ -43,8 +43,9 @@ Cobalt is also the accent: links, focus rings, the primary button.
   characters a line.
 - **Martian Mono** for code only.
 
-The fonts are self-hosted from their npm packages through Astro's font settings in
-`astro.config.mjs`, with `font-display: optional`, so a late font never shifts the layout.
+The fonts are self-hosted through Astro's font settings in `astro.config.mjs`, subset to
+Basic Latin, Latin-1 and typographic punctuation by `scripts/subset-fonts.py` (Archivo's
+width axis cut to 72–100%; a test fails on a character outside the subset), with `font-display: optional`, so a late font never shifts the layout.
 Narrow widths shrink the space between words, so narrow text takes `word-spacing: 0.1em`.
 Columns of numbers use tabular figures.
 
