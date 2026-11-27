@@ -64,7 +64,7 @@ Find suggestions under the `entry` label and other on-site submissions under
   [`scripts/page-weight.mjs`](scripts/page-weight.mjs). Raise `DEFAULT_BUDGET_KB` or a page's
   `OVERRIDES` entry only for a reason you can name in the pull request.
 - **Fonts.** The site serves subsets in `src/assets/fonts/`, not the `@fontsource-variable`
-  packages, so a Renovate bump of those changes nothing until you run
+  packages, so a Renovate bump of those (left open, not automerged) changes nothing until you run
   `uv run scripts/subset-fonts.py` and commit the new `.woff2` files. Run it too after you add a
   character to `UNICODES` in that script, which is what `src/assets/fonts.test.ts` asks for
   when a page uses one outside the subset.

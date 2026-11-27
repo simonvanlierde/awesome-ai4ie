@@ -39,6 +39,11 @@
       matchUpdateTypes: ["minor", "patch", "pin", "digest"],
       automerge: true,
     },
+    // A bump needs `uv run scripts/subset-fonts.py`; the open PR is the reminder.
+    {
+      matchPackageNames: ["@fontsource-variable/*"],
+      automerge: false,
+    },
     // `astro check` needs TypeScript's programmatic API, which 7.0 lacks.
     // Drop once 7.1 restores it: https://github.com/withastro/roadmap/discussions/1321
     {

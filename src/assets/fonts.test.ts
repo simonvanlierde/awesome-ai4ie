@@ -17,6 +17,7 @@ const FALLBACK = new Set([..."ăłŽθϕ‐₂→↓↔≈⌘─■□"]);
 const TEXT = /\.(mdx?|astro|tsx|ts|ya?ml|json)$/;
 // Unreviewed OpenAlex leads; nothing in it renders until a paper moves to literature.yaml.
 const SKIP = new Set(["candidates.yaml"]);
+const WDTH = /["']wdth["']/;
 
 const files = ["content/docs", "components", "data", "lib", "pages"].flatMap((d) =>
   readdirSync(join(src, d), { recursive: true, encoding: "utf8" })
@@ -49,5 +50,10 @@ describe("Archivo width axis", () => {
   });
   it("keeps every font-stretch within 72-100%", () => {
     expect(stretches.filter((v) => v < 72 || v > 100)).toEqual([]);
+  });
+  // A keyword, var() or "wdth" setting would slip past the range check above.
+  it("uses only percentage font-stretch and no wdth setting", () => {
+    expect([...css.matchAll(/font-stretch:\s*(?!\s|[\d.]+%)[^;]+/g)].map((m) => m[0])).toEqual([]);
+    expect(css).not.toMatch(WDTH);
   });
 });
