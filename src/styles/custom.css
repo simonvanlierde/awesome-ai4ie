@@ -180,10 +180,11 @@ h1#_top,
   :is(p, li, blockquote, dd):not(:where(.not-content *)) {
   font-size: max(1.0625rem, 100cqi / 37);
 }
-/* The home page has no sidebar and a 67.5rem column, so its text keeps 17px and stops at
-   the same 80 characters instead. */
+/* The home page has no sidebar and a 67.5rem column, too wide for a line at any reading
+   size: its text grows to the cover tagline's size and stops at the same 80 characters. */
 [data-has-hero] .sl-markdown-content > :is(p, ul, ol, blockquote) {
   max-width: 70ch;
+  font-size: clamp(1.0625rem, 100cqi / 37, 1.3125rem);
 }
 /* An opening line is followed by a ruled h2, whose 2.75rem top margin reads as a hole
    after one short paragraph. Paragraph spacing keeps the rule close to it. */

@@ -11,15 +11,6 @@ hero:
   tagline: This site shows what AI already does in industrial ecology research, how far you can trust it, and the papers behind each claim.
 ---
 
-import { getCollection } from 'astro:content';
-import { sankeyLayout } from '../../lib/sankey';
-
-export const papers = (await getCollection('literature')).length;
-export const linked = sankeyLayout((await getCollection('literature')).map((e) => e.data), 380, 18).papers;
-export const apps = (await getCollection('applications')).length;
-
-It lists {papers} papers, {apps} applications by field, verification checks and browser demos. Fig. 1 shows the {linked} papers that have both an IE field and an AI technique.
-
 ## Contributing
 
 This site is my proposal for the AI4IE working group, and I'd love to hear what you think. [Send a correction or a paper](/contribute/), vote in the [norms poll](/contribute/#which-checks-should-be-ie-norms), or talk it through on [Discord](https://discord.gg/zhHAZakXHX). [Open questions](/open-questions/) lists what's still undecided, and [Governance](repo:blob/main/GOVERNANCE.md) explains how the group could adopt the site.
