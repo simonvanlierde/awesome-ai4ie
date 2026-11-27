@@ -99,7 +99,7 @@ const discordUrl = "https://discord.gg/zhHAZakXHX";
 
       const renderCounts = (data: PollResponse) => {
         const total = data.voters;
-        votersEl.textContent = total === 1 ? "1 response" : `${total} responses`;
+        votersEl.textContent = total === 0 ? "No votes yet" : total === 1 ? "1 response" : `${total} responses`;
         for (const id of POLL_OPTION_IDS) {
           const count = data.counts[id] ?? 0;
           const pct = total > 0 ? Math.round((count / total) * 100) : 0;
