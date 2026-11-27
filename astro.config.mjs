@@ -42,7 +42,8 @@ export default defineConfig({
     }),
   },
 
-  // Self-hosted variable fonts, latin subset only, with no runtime CDN.
+  // Self-hosted variable fonts, subset by scripts/subset-fonts.py to the characters the
+  // pages use (src/fonts.test.ts guards that), with no runtime CDN.
   // font-display: optional, so a late font never shifts the layout; Head.astro
   // preloads Archivo and the upright serif. Archivo keeps its width axis because
   // titles, tables and tabs are set narrow.
@@ -56,10 +57,10 @@ export default defineConfig({
       options: {
         variants: [
           {
-            src: ["@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2"],
+            src: ["./src/assets/fonts/archivo.woff2"],
             weight: "100 900",
             style: "normal",
-            stretch: "62% 125%",
+            stretch: "72% 100%",
           },
         ],
       },
@@ -73,16 +74,12 @@ export default defineConfig({
       options: {
         variants: [
           {
-            src: [
-              "@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2",
-            ],
+            src: ["./src/assets/fonts/source-serif-normal.woff2"],
             weight: "200 900",
             style: "normal",
           },
           {
-            src: [
-              "@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-italic.woff2",
-            ],
+            src: ["./src/assets/fonts/source-serif-italic.woff2"],
             weight: "200 900",
             style: "italic",
           },
@@ -98,7 +95,7 @@ export default defineConfig({
       options: {
         variants: [
           {
-            src: ["@fontsource-variable/martian-mono/files/martian-mono-latin-wght-normal.woff2"],
+            src: ["./src/assets/fonts/martian-mono.woff2"],
             weight: "100 800",
             style: "normal",
           },

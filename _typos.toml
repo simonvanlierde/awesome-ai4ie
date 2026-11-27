@@ -7,3 +7,10 @@ PNGs = "PNGs"
 # Mean absolute percentage error, and a court case's name.
 MAPE = "MAPE"
 Mata = "Mata"
+
+# The font width axis tag, in scripts/subset-fonts.py and the Archivo licence text.
+wdth = "wdth"
+
+[files]
+# Generated codepoint list and OFL texts.
+extend-exclude = ["src/assets/fonts/*"]
