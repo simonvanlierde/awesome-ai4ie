@@ -55,7 +55,12 @@ export function numberProblems(pages) {
   const where = new Map(); // "Fig. 2.1" -> slug
   const series = new Map(); // "Fig. 2." -> [1, 2]
   const bodies = pages.map(({ slug, html }) => {
-    const body = html.replace(SCRIPT, "");
+    // Repeat until stable, so a nested or split tag cannot leave a script body behind.
+    let body = html;
+    for (let prev = ""; prev !== body; ) {
+      prev = body;
+      body = body.replace(SCRIPT, "");
+    }
     const prefix = prefixFor(slug);
     let last = { "Fig.": 0, Table: 0 };
     for (const [, , word, num] of body.matchAll(LABEL)) {
