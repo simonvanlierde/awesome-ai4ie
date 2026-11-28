@@ -94,6 +94,9 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Figures and tables are numbered by chapter, so no two share a label: the demos are
+  Fig. 5.1 and Fig. 5.2 (were Fig. 2 and Fig. 3), and the computer vision table is Table 5.1.
+  `pnpm run figure-numbers` checks the built site for repeated, skipped or dangling labels.
 - Plainer copy across the site: ML terms are explained where a reader first meets them,
   long sentences are split, and each field page's intro no longer repeats the maturity
   calls listed below it.

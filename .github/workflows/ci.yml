@@ -125,6 +125,8 @@ jobs:
             and all(.resources[]; .id and .title and .url and .kind and .ie and .topic)' dist/mcp-data.json
       - name: Page weight budget
         run: pnpm run page-weight
+      - name: Figure and table numbers
+        run: pnpm run figure-numbers
       # The vocabulary against SkoHub Vocabs' SHACL shape, pinned to a commit of
       # skohub-io/skohub-shapes. pyshacl exits 1 on a violation.
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3

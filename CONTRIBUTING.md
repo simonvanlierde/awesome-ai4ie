@@ -162,12 +162,31 @@ SKOS.
 
 Visual rules are in [`DESIGN.md`](DESIGN.md); who the site is for is in [`PRODUCT.md`](PRODUCT.md).
 
-- Number every new figure or table, and give it a source line that names its data file.
-- Number tables by chapter. Table 4.1 is the first table in chapter 4. Figure numbering
-  starts with Fig. 1 on the home page.
+- Number every figure and table (see below), and give it a source line that names its data file.
 - In Markdown, set the title as `<p class="table-title"><b>Table 4.1</b> …</p>` and the source as `<p class="table-src">Source: …</p>`.
 - For a figure that counts entries at build time, see [`FlowFigure.astro`](src/components/FlowFigure.astro).
 - A new IE field needs four things beside its concept in the vocabulary: a short label, a `.field-<tag>` ink rule, a link in the field list on the map page, and its own page at `src/content/docs/applications-map/<tag>.mdx`. That page holds a short definition of the field, what works today with `<Cite>` references, `<FieldPage ie="<tag>" />`, and the field's gaps; copy an existing one. The type check and `pnpm test` flag a missing one. Ink 6 is the one left, so a new field needs a maintainer decision first (see "One meaning per ink" in DESIGN.md). A domain such as water or chemicals is a topic, not a field: topics take no ink.
+
+### Figure and table numbers
+
+Every label is unique across the site, so "Fig. 2.1" means one figure wherever it is cited.
+
+- Number by chapter. Table 4.1 is the first table in chapter 4, and Fig. 5.2 the second
+  figure in chapter 5. Chapters count in sidebar order (`CHAPTERS` in
+  [`src/lib/chapters.ts`](src/lib/chapters.ts)). Within a chapter, figures and tables count
+  separately, in reading order through its pages in sidebar order.
+- The home page is not a chapter: its one figure is Fig. 1.
+- A page outside the chapters, such as a page linked from the footer, takes a letter: Fig. A.1,
+  Table A.1. Add the page and its letter to `LETTERS` in
+  [`scripts/figure-numbers.mjs`](scripts/figure-numbers.mjs).
+- Refer to a figure by its label, not by "above" or "below". On another page, make the label
+  the link text: `[Fig. 2.1](/literature/)`.
+- A new figure or table in the middle of a chapter renumbers the ones after it, and the
+  references to them. Search the repo for the old labels.
+
+`pnpm run figure-numbers` checks the built site: a label used twice, a number that skips or
+names the wrong chapter, a reference to a label no page has, and a reference to another
+page's figure without a link. CI runs it after the build.
 
 ### Checking accessibility
 
