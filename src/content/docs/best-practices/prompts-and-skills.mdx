@@ -17,11 +17,11 @@ Copy a prompt into any chat, or save a skill file so an assistant loads it for a
 
 ```text
 Here is a claim I want to cite: <claim>.
-Find the primary source. Quote the exact sentence(s) from it that support or
-contradict the claim, with a full citation including DOI. If you cannot locate a
-primary source, say "no primary source found". Do not substitute a similar paper
-and do not guess. If the source only partially supports the claim, state exactly
-which part is unsupported.
+Find the primary source.
+Quote the exact sentence(s) from it that support or contradict the claim, with a full citation including DOI.
+If you cannot locate a primary source, say "no primary source found".
+Do not substitute a similar paper and do not guess.
+If the source only partially supports the claim, state exactly which part is unsupported.
 ```
 
 ### Adversarial review of AI-written code
@@ -30,12 +30,10 @@ which part is unsupported.
 fresh session, so the reviewer isn't grading its own work.*
 
 ```text
-Review this diff as a skeptical colleague. Do not explain what it does; hunt for
-what's wrong. Specifically check: (1) units and unit conversions on every changed
-quantity; (2) defaults or identifiers that changed meaning (methods, database
-versions, regions, years); (3) filters, cutoffs, or NA-handling that silently
-drop data; (4) off-by-one and boundary conditions. For each finding, give the
-line and a concrete failing input. If you find nothing, say what you checked.
+Review this diff as a skeptical colleague. Do not explain what it does; hunt for what's wrong.
+Specifically check: (1) units and unit conversions on every changed quantity; (2) defaults or identifiers that changed meaning (methods, database versions, regions, years); (3) filters, cutoffs, or NA-handling that silently drop data; (4) off-by-one and boundary conditions.
+For each finding, give the line and a concrete failing input.
+If you find nothing, say what you checked.
 ```
 
 ### Surface a method's assumptions
@@ -44,9 +42,9 @@ line and a concrete failing input. If you find nothing, say what you checked.
 
 ```text
 I plan to use <method> on <one-line description of data and goal>.
-List the assumptions this method makes about the data, ordered by how badly the
-result degrades when each is violated. For each: how do I test it on my data, and
-what is the standard alternative if it fails? Cite a methods reference I can check.
+List the assumptions this method makes about the data, ordered by how badly the result degrades when each is violated.
+For each: how do I test it on my data, and what is the standard alternative if it fails?
+Cite a methods reference I can check.
 ```
 
 ### Data-leakage self-check
@@ -57,11 +55,11 @@ run against it.*
 
 ```text
 Here is my modeling pipeline, in order: <paste the steps or the code>.
-Audit it for data leakage. Check specifically: is the test set isolated before
-any normalization, gap-filling, feature selection, or outlier removal? Is any
-time-structured data split randomly? Does any preprocessing step see test rows?
-Report each check as pass/fail with the offending step named, then suggest the
-minimal reordering that fixes the failures.
+Audit it for data leakage.
+Check specifically: is the test set isolated before any normalization, gap-filling, feature selection, or outlier removal?
+Is any time-structured data split randomly?
+Does any preprocessing step see test rows?
+Report each check as pass/fail with the offending step named, then suggest the minimal reordering that fixes the failures.
 ```
 
 ### Extract without inventing
@@ -71,9 +69,9 @@ minimal reordering that fixes the failures.
 ```text
 Extract the following fields from the attached document: <fields>.
 Rules: quote values exactly as written, with the page or section they came from.
-If a field is not stated in the document, write "not stated". Do not infer,
-convert, or fill from general knowledge. Flag any value whose unit differs from
-the requested unit rather than converting it.
+If a field is not stated in the document, write "not stated".
+Do not infer, convert, or fill from general knowledge.
+Flag any value whose unit differs from the requested unit rather than converting it.
 ```
 
 ## Agent Skill files
