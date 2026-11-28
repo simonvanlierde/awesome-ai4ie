@@ -67,6 +67,9 @@ Find suggestions under the `entry` label and other on-site submissions under
 - **Page weight.** CI fails a page that goes over its budget in
   [`scripts/page-weight.mjs`](scripts/page-weight.mjs). Raise `DEFAULT_BUDGET_KB` or a page's
   `OVERRIDES` entry only for a reason you can name in the pull request.
+- **Demo download sizes.** `DEMO_DOWNLOAD` in [`src/lib/footprint.mjs`](src/lib/footprint.mjs) holds
+  hand-copied file sizes. Refresh them when the demo model or the transformers.js or
+  onnxruntime-web version changes.
 - **Fonts.** The site serves subsets in `src/assets/fonts/`, not the `@fontsource-variable`
   packages, so a Renovate bump of those (left open, not automerged) changes nothing until you run
   `uv run scripts/subset-fonts.py` and commit the new `.woff2` files. Run it too after you add a

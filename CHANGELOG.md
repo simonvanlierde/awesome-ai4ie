@@ -9,6 +9,11 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- A footprint page: the carbon footprint of one page view and of one CLIP demo run, as a
+  small life cycle assessment whose numbers, tables and figures are computed from each build.
+  Figures compare a page view, 1,000 page views and a demo run, split a page view by asset
+  type, and show the pages heavier than the rest against their weight budgets. A table adds
+  the median web page.
 - A map of the literature over the reading list: papers laid out by the meaning of their
   own title and abstract (t-SNE, abstracts from OpenAlex), in named clusters. On `/literature/`
   a "Colour by" control recolours the points by IE field, AI technique or OpenAlex topic.

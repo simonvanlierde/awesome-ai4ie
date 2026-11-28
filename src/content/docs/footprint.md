@@ -1,0 +1,233 @@
+---
+title: Footprint of this site
+description: The carbon footprint of one page view of this site and of one demo run, as a small life cycle assessment.
+---
+
+This site is about AI in industrial ecology, so it applies one of the field's methods to
+itself: a small life cycle assessment (LCA) of what it costs the climate to read it and to run
+its demo. Each build computes the numbers, tables and figures from its own pages. Only the
+demo's file sizes are typed in. To run the same check on your own site, see
+[Check your own site](#check-your-own-site).
+
+## Result
+
+One page view of this site transfers about %%fp:viewKb%% kB and emits **%%fp:view%%** CO₂e
+(carbon dioxide equivalent, the only impact the model covers). For comparison, the median
+home page on the web weighed %%fp:webMobileKb%% kB on mobile and %%fp:webDesktopKb%% kB on
+desktop in July 2025 ([Web Almanac 2025](https://almanac.httparchive.org/en/2025/page-weight), HTTP Archive). With the same model, a
+view of the mobile median emits %%fp:webMobile%% CO₂e, about %%fp:webTimes%% times one view of this
+site's mean page.
+
+One run of the [CLIP demo](/demos/#classify-a-photo-with-clip), which labels a photo with an
+image model that runs in your browser, downloads about %%fp:demoMb%% MB and emits
+**%%fp:demo%%** CO₂e. That is as many bytes as about %%fp:viewsPerDemo%% page views. If the demo
+runs more than once per %%fp:viewsPerDemo%% page views, its downloads outweigh all page views in
+this model. A lighter demo model would then save more than a lighter page.
+
+Each pair of numbers is the same estimate with and without the model's adjustment for a green
+host, not an error range. The model's own uncertainty is larger (see [Uncertainty](#uncertainty)).
+
+<figure class="fp-figure not-content">
+%%fp:compareFigure%%
+<figcaption>
+
+**Fig. 4** Grams of CO₂e for one page view, 1,000 page views and one demo run, on one linear
+scale. At this scale one page view is a hairline. Dark <span class="fp-key" aria-hidden="true"></span>:
+the estimate for a green host. Light <span class="fp-key fp-key--high" aria-hidden="true"></span>:
+what a host that is not green adds.
+Source: [`src/lib/footprint.mjs`](repo:blob/main/src/lib/footprint.mjs) on this build's page weights.
+
+</figcaption>
+</figure>
+
+<p class="table-title"><b>Table 6.1</b> The footprint per functional unit</p>
+
+| Functional unit | Data transferred | CO₂e, green host to non-green host |
+| --- | --- | --- |
+| One page view | %%fp:viewKb%% kB | %%fp:view%% |
+| 1,000 page views (scaled) | %%fp:thousandMb%% MB | %%fp:thousandViews%% |
+| One demo run | %%fp:demoMb%% MB | %%fp:demo%% |
+| One view of the median web home page, mobile | %%fp:webMobileKb%% kB | %%fp:webMobile%% |
+| One view of the median web home page, desktop | %%fp:webDesktopKb%% kB | %%fp:webDesktop%% |
+
+<p class="table-src">Source: <code>scripts/page-weight.mjs</code> on this build, the demo's file listings, and the Web Almanac 2025 for the median web page.</p>
+
+## What a page view is made of
+
+The page view is the plain mean of all %%fp:pages%% pages, not weighted by visits. Most pages
+weigh about the same, because they share one shell: fonts, styles and scripts. The largest
+part is %%fp:largestPart%%, at %%fp:largestShare%% of a mean page view, and %%fp:secondPart%%
+is next at %%fp:secondShare%% (Fig. 5). The model scales with bytes, so cutting
+%%fp:largestPart%% would cut its estimate most. The browser keeps the shared files after the first page, so the saving is largest for readers who
+open one page and leave.
+
+<figure class="fp-figure not-content">
+%%fp:partsFigure%%
+<figcaption>
+
+**Fig. 5** The mean page view by asset type, gzipped, largest first. Bar length is the share of
+the whole page view. Source: [`scripts/page-weight.mjs`](repo:blob/main/scripts/page-weight.mjs) on this build.
+
+</figcaption>
+</figure>
+
+The pages range from %%fp:minKb%% to %%fp:maxKb%% kB, around a median of %%fp:shellKb%% kB. The
+pages with an interactive list, map or demo load React and weigh more (Fig. 6).
+
+<figure class="fp-figure not-content">
+%%fp:pageFigure%%
+<figcaption>
+
+**Fig. 6** The weight of each page more than 10% over the median, with its CO₂e per view, and
+one row for all the other pages: their weight range, with the bar at their mean. The tick marks a page's weight budget: the build check fails when a page goes
+over it. Source: [`scripts/page-weight.mjs`](repo:blob/main/scripts/page-weight.mjs) on this build.
+
+</figcaption>
+</figure>
+
+<details class="fp-all">
+<summary>All %%fp:pages%% pages</summary>
+%%fp:pageTable%%
+</details>
+
+## Functional unit
+
+The functional unit is what the result is per. Here it is one page view: one reader loading one
+page with an empty cache. The page weight counts the page's HTML and the files from this site
+that it names: styles, scripts, preloaded fonts and images. It leaves out the code font,
+search and other scripts that load only when used, so it is a little low for a first visit. A
+returning visitor downloads less.
+
+The demo run is a second unit. It is one press of Classify in the CLIP demo, with an empty
+cache. The browser then keeps the model, so later runs download nothing.
+
+## Foreground and background
+
+In LCA terms, the foreground is what this site decides: how many bytes a page sends, what the
+demo downloads, and which host serves them. The background is the generic data for everything
+those bytes pass through: data centres, networks, the reader's device and the electricity
+grid. This page measures the foreground and takes the background from the
+[Sustainable Web Design model](https://sustainablewebdesign.org/estimating-digital-emissions/),
+version 4 (SWD v4), through the [CO2.js](https://developers.thegreenwebfoundation.org/co2js/overview/)
+library (`@tgwf/co2`). The result is the bytes per functional unit times the total
+factor per GB in Table 6.2.
+
+<p class="table-title"><b>Table 6.2</b> Inventory and emission factors</p>
+
+| Flow | Amount | Source |
+| --- | --- | --- |
+| **Foreground** | | |
+| Page data, one view | %%fp:viewKb%% kB | `scripts/page-weight.mjs`, mean over pages |
+| Demo download, one run | %%fp:demoMb%% MB | file listings on Hugging Face and jsDelivr |
+| Hosting | Cloudflare; two scenarios, green host or not | the model's green-host switch |
+| **Background, per GB transferred** | | |
+| Data centre | %%fp:dataCentreGb%% | SWD v4; the low end is for a green host |
+| Network | %%fp:networkGb%% | SWD v4 |
+| Reader's device | %%fp:deviceGb%% | SWD v4 |
+| Total | %%fp:totalGb%% | SWD v4 |
+| Grid electricity | %%fp:gridIntensity%% g CO₂e/kWh | SWD v4, world average |
+
+<p class="table-src">Source: <code>src/lib/footprint.mjs</code>, which reads the background rows from CO2.js. The g/GB rows already apply the grid electricity factor.</p>
+
+Each background row includes the embodied emissions of the equipment: making it, not only
+running it. For a host that is not green, the reader's device carries %%fp:deviceShare%% of the
+total. Of the device's share, %%fp:deviceEmbodiedShare%% is embodied. The model assigns most of the footprint to the reader's
+device, not the server, and it scales that share with bytes. A large one-off download such as
+the demo's does not keep a screen on for longer, so this overstates the demo's device share.
+
+Outside the boundary:
+
+- **CI builds.** A build is a short job on one CI runner. Its emissions spread over every view
+  until the next build. I have not measured them.
+- **Computing on the reader's device.** The model counts the device's energy per gigabyte
+  received, not the energy of running the demo's model.
+- **Search, the MCP server, my own devices and the linked Hugging Face Spaces.** Search runs on
+  Workers AI, and only for queries of three or more words. The MCP server runs on Cloudflare
+  Workers. The Spaces are demo apps that other people host. None of these is counted.
+
+## What the demo downloads
+
+The demo loads [transformers.js](https://huggingface.co/docs/transformers.js) from jsDelivr
+and the CLIP model `Xenova/clip-vit-base-patch32` from Hugging Face, at a pinned revision. The
+browser uses the quantized ONNX file (%%fp:onnxMb%% MB). With the tokenizer files, transformers.js and
+its wasm runtime, the total is %%fp:demoMb%% MB, uncompressed. I read the sizes from the file
+listings on 2026-11-26. These files are not in the page budget, because they load only when
+a reader presses Classify.
+
+## Uncertainty
+
+- **The model is top-down.** It spreads the energy of the whole internet over all bytes.
+  It is made for comparing and for rough totals. It cannot say which part of this site
+  causes the emissions, and I give no error bar for the model itself. Read the figures as
+  orders of magnitude.
+- **The model's boundary is broad.** Its authors say this makes it likely to
+  [overestimate actual emissions](https://sustainablewebdesign.org/estimating-digital-emissions/).
+- **Greenhouse gases.** The model gives CO₂e but does not state its GWP time horizon or which
+  gases it covers.
+- **Hosting.** The site runs on Cloudflare. The Green Web Foundation's
+  [check](https://api.thegreenwebfoundation.org/api/v3/greencheck/ai4ie.org) lists Cloudflare as
+  a green host, on the strength of Cloudflare's own reports. I have not checked those reports,
+  so the page shows both green-host cases rather than pick one.
+- **Grid intensity.** The model uses a world average. Readers on cleaner or dirtier grids
+  get less or more.
+- **The web median.** The Web Almanac counts every request a page makes while it loads.
+  This page leaves out files that load only when used, so the comparison flatters this site
+  a little.
+- **Gzip.** Page weight is the gzipped size, a proxy for bytes on the wire. Cloudflare may
+  send Brotli, which is smaller.
+- **Demo files.** The sizes are typed into the code, and I update them when the demo's
+  model or library version changes ([MAINTAINING.md](repo:blob/main/MAINTAINING.md)). The sizes are uncompressed and the wasm runtime is the
+  largest variant, so the demo total is an upper bound.
+- **Embodied emissions.** These come from the model's constants. I did not check them.
+
+## Check your own site
+
+You can run the same estimate on your own site. For one page, open your browser's developer
+tools, turn off the cache, reload, and read the bytes transferred from the Network tab. Then
+install CO2.js with `npm install @tgwf/co2`, save this as `one-page.mjs` with your byte count,
+and run `node one-page.mjs`:
+
+```js
+import { co2 } from "@tgwf/co2";
+
+const swd = new co2({ model: "swd", version: 4 });
+const bytes = 180_000; // the bytes transferred
+console.log(swd.perByte(bytes, false), "g CO2e per view"); // true for a green host
+```
+
+For every page of a built static site, use this repo's page-weight script. It needs Node 22
+or later, and it reads the built pages from `dist/`.
+
+1. Copy [`scripts/page-weight.mjs`](repo:blob/main/scripts/page-weight.mjs) into your repo's
+   `scripts/` folder.
+2. Replace its line `import { basePath } from "../src/site.ts";` with `const basePath = "";`.
+3. If your site is served under a path, put that path in the quotes, such as `"/docs"`.
+4. Set `DEFAULT_BUDGET_KB` to your budget.
+5. Replace `OVERRIDES` with `{}`. It holds this site's pages.
+6. Save this script next to it as `scripts/carbon.mjs`:
+
+```js
+// carbon.mjs: the weight and CO2e of each page in dist/
+import { co2 } from "@tgwf/co2";
+import { weighAll } from "./page-weight.mjs";
+
+const swd = new co2({ model: "swd", version: 4 });
+for (const { page, kb } of await weighAll("dist")) {
+  const mg = swd.perByte(kb * 1000, false) * 1000;
+  console.log(`${page}: ${kb.toFixed(0)} kB, ${mg.toFixed(0)} mg CO2e`);
+}
+```
+
+In GitHub Actions, run both after your build step. `page-weight.mjs` fails the job when a page
+goes over its budget. `carbon.mjs` prints each page's weight and CO₂e:
+
+```yaml
+- run: node scripts/page-weight.mjs
+- run: node scripts/carbon.mjs
+```
+
+Without code, [Website Carbon](https://www.websitecarbon.com/) estimates one page from its
+URL, and the Green Web Foundation's [Green Web Check](https://www.thegreenwebfoundation.org/green-web-check/)
+tells you whether your host runs on green energy. CO2.js's
+[methods](https://developers.thegreenwebfoundation.org/co2js/methods/) page lists the other
+options, such as other grid intensities.

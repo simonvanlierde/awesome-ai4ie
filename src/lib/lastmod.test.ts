@@ -24,6 +24,16 @@ describe("sourcesFor", () => {
     expect(sourcesFor("")).toEqual(["src/content/docs/index.mdx", "src/data/literature.yaml"]);
   });
 
+  it("adds the footprint page's code, dependencies, styles and fonts", () => {
+    expect(sourcesFor("footprint")).toEqual([
+      "src/content/docs/footprint.md",
+      "src/lib/footprint.mjs",
+      "package.json",
+      "src/styles/custom.css",
+      "src/assets/fonts",
+    ]);
+  });
+
   it("adds the map's component and projection to its data", () => {
     expect(sourcesFor("literature")).toEqual([
       "src/content/docs/literature.mdx",
