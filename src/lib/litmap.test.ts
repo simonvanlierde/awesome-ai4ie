@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { nameWidthPx } from "../components/litMapNav";
+import { IE_TAGS, ML_TAGS, TOPIC_TAGS } from "../data/tags";
 import {
   cluster,
   hull,
@@ -170,6 +172,66 @@ describe("liftRanking", () => {
       "LLMs & agents",
       "Metals & critical materials",
     ]);
+  });
+});
+
+describe("liftRanking, IE field first", () => {
+  // 30 papers: lca on 4 outside the cluster; llm only in it, so its lift is the higher.
+  const rest = Array.from({ length: 22 }, (_, i) => entry(100 + i, { ie: i < 4 ? ["lca"] : [] }));
+  const group = (lca: number) =>
+    Array.from({ length: 8 }, (_, i) => entry(i, { ie: i < lca ? ["lca"] : [], ml: ["llm"] }));
+
+  it("names a cluster for an IE field on more than half its papers, over a higher-lift technique", () => {
+    const m = group(5);
+    const r = liftRanking(m, [...m, ...rest]);
+    expect(r.map((x) => x.label)).toEqual(["Life cycle assessment", "LLMs & agents"]);
+    expect(r[0].lift).toBeLessThan(r[1].lift);
+  });
+
+  it("falls back to the technique when no IE field is on more than half the papers", () => {
+    const m = group(4); // exactly half
+    expect(liftRanking(m, [...m, ...rest])[0].label).toBe("LLMs & agents");
+  });
+
+  it("skips a field on most papers that is no commoner there than in the whole list", () => {
+    const m = group(8);
+    const common = Array.from({ length: 22 }, (_, i) => entry(100 + i, { ie: ["lca"] }));
+    expect(liftRanking(m, [...m, ...common])[0].label).toBe("LLMs & agents");
+  });
+
+  it("ranks two qualifying fields by lift, then the commoner", () => {
+    const m = Array.from({ length: 6 }, (_, i) =>
+      entry(i, { ie: i < 5 ? ["lca", "sem"] : ["lca"] }),
+    );
+    const all = [...m, entry(9, { ie: ["lca"] }), entry(10)];
+    // sem is only in the cluster (lift 8/6), lca also outside it (lift 1.14).
+    expect(liftRanking(m, all).map((x) => x.label)).toEqual([
+      "Socio-economic metabolism",
+      "Life cycle assessment",
+    ]);
+    // Same lift for both: the one on more papers first.
+    expect(liftRanking(m, [...m, entry(10)]).map((x) => x.label)).toEqual([
+      "Life cycle assessment",
+      "Socio-economic metabolism",
+    ]);
+  });
+
+  it("gives a cluster whose field a bigger cluster took its next tag", () => {
+    // layoutMap takes the first label not yet taken: here the technique.
+    const m = group(6);
+    const r = liftRanking(m, [...m, ...rest]).map((x) => x.label);
+    expect(r.find((l) => l !== "Life cycle assessment")).toBe("LLMs & agents");
+  });
+
+  it("keeps every name a cluster can take short enough for its button", () => {
+    // A name is one tag's label. Its button, with a three-digit count, stays within 40% of the
+    // 630px desktop frame, so two names fit side by side.
+    const longest = [
+      ...Object.values(IE_TAGS),
+      ...Object.values(TOPIC_TAGS),
+      ...Object.values(ML_TAGS),
+    ].sort((a, b) => b.length - a.length)[0];
+    expect(nameWidthPx({ name: longest, n: 999 })).toBeLessThanOrEqual(0.4 * 630);
   });
 });
 
