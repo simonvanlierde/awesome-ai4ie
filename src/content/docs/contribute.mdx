@@ -1,6 +1,6 @@
 ---
 title: Contribute
-description: Vote on candidate verification norms for industrial ecology, or send a paper, tool, golden question or AI mistake without a GitHub account.
+description: Send an AI mistake, a question with a known answer, a paper, tool or dataset, or vote on candidate verification norms for industrial ecology, without a GitHub account.
 ---
 
 import ContributeForm from '../../components/ContributeForm.astro';
@@ -8,18 +8,21 @@ import NormsPoll from '../../components/NormsPoll.astro';
 import Resources from '../../components/Resources.astro';
 
 This site is my proposal to the AI4IE working group. The group hasn't adopted it, and
-nothing here speaks for the group. [Governance](repo:blob/main/GOVERNANCE.md) says what
-adoption would mean and who decides, and [Maintaining](repo:blob/main/MAINTAINING.md) what
-the upkeep involves. Here is what I'd like from you:
+nothing here speaks for the group. [Who runs the site](#who-runs-the-site) says who
+decides and what the upkeep involves. Here is what I'd like from you:
 
-- [Vote](#which-checks-should-be-ie-norms) on which checks you'd support as IE norms.
-- [Send](/contribute/?type=golden-question#send-a-contribution) a candidate golden question for your
-  subfield: an IE question with a known answer, for testing AI tools.
+- [Send](/contribute/?type=ai-mistake#send-a-contribution) one AI mistake you have seen in IE
+  work. You can send it anonymously.
+- [Send](/contribute/?type=golden-question#send-a-contribution) a question with a known answer,
+  to test AI tools on. A question from your own subfield is best.
+- Say what the site would need before the group could adopt it, or offer to help maintain it,
+  on [Discord](https://discord.gg/zhHAZakXHX) or through the
+  [form](/contribute/?type=other#send-a-contribution).
 - [Send](/contribute/?type=resource#send-a-contribution) one paper, tool or dataset you use.
-- [Send](/contribute/?type=ai-mistake#send-a-contribution) one AI mistake you have seen in IE work.
-- Fill in the group's [community survey](https://forms.gle/nGH54ZxJefY6ksGM6) (a Google Form).
-- Tell me what would stop the group adopting the site, on [Discord](https://discord.gg/zhHAZakXHX)
-  or through the [form](/contribute/?type=other#send-a-contribution).
+- [Vote](#which-checks-should-be-ie-norms) on which checks you'd support as IE norms (a straw
+  poll).
+- Join the group's [Discord](https://discord.gg/zhHAZakXHX) and fill in its
+  [community survey](https://forms.gle/nGH54ZxJefY6ksGM6) (a Google Form).
 
 ## Which checks should be IE norms?
 
@@ -36,11 +39,21 @@ You don't need a GitHub account. Your submission becomes a public issue on GitHu
 review it before anything goes on the site.
 
 - **Paper, tool or dataset:** a link and a short note on why it belongs here.
-- **Golden question:** an IE question with a known answer or check.
+- **Question with a known answer:** an IE question whose answer or check you know.
 - **AI mistake seen in IE work:** what went wrong and how you caught it.
 - **Other:** a correction, a missing topic, or your view on an [open question](/open-questions/).
 
 <ContributeForm />
+
+## Who runs the site
+
+Only I have write access to the repository and to the Cloudflare account behind the domain,
+and I decide what goes in until the group adopts the site. Upkeep means checking each
+submission against its source, reviewing the monthly dependency updates, fixing what the weekly
+link check finds, sorting up to 25 new paper leads a week, and rechecking tool entries older
+than a year. I'm looking for a second maintainer from the group, and the repository could move
+to a working-group organisation. [GOVERNANCE.md](repo:blob/main/GOVERNANCE.md) and
+[MAINTAINING.md](repo:blob/main/MAINTAINING.md) have the details.
 
 ## Other ways to take part
 

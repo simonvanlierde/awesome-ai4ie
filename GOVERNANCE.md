@@ -23,7 +23,7 @@ Planned work is in [ROADMAP.md](ROADMAP.md).
 
 A named person can take over the GitHub repository, and the recovery details for Cloudflare are in an emergency-access vault.
 
-The code is MIT ([LICENSE](LICENSE)) and the content is CC BY 4.0 ([LICENSE-CONTENT](LICENSE-CONTENT)). Anyone can fork and keep publishing the guide. The site is a static build, so it keeps working without upkeep until a dependency or external link breaks.
+The code is MIT ([LICENSE](LICENSE)) and the content is CC BY 4.0 ([LICENSE-CONTENT](LICENSE-CONTENT)). Anyone can fork and keep publishing the guide. The site is a static build, so its pages keep loading without a maintainer. Dependencies and external links still break over time, and the [routine in MAINTAINING.md](MAINTAINING.md#routine) is what catches them.
 
 ## Changes to this file
 
