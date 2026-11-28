@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { nameWidthPx } from "../components/litMapNav";
+import { IE_TAGS, ML_TAGS, TOPIC_TAGS } from "../data/tags";
 import {
   cluster,
   hull,
@@ -170,6 +172,30 @@ describe("liftRanking", () => {
       "LLMs & agents",
       "Metals & critical materials",
     ]);
+  });
+});
+
+describe("liftRanking, IE field tie-break", () => {
+  it("gives a lift tie to the IE field, even over a technique on more papers", () => {
+    // Both tags are found only in the cluster, so both have the same lift.
+    const m = Array.from({ length: 6 }, (_, i) =>
+      entry(i, { ie: i < 3 ? ["symbiosis"] : [], ml: i < 4 ? ["recommender"] : [] }),
+    );
+    expect(liftRanking(m, [...m, entry(9)]).map((r) => r.label)).toEqual([
+      "Industrial symbiosis",
+      "Recommender systems",
+    ]);
+  });
+
+  it("keeps every name a cluster can take short enough for its button", () => {
+    // A name is one tag's label. Its button, with a three-digit count, stays within 40% of the
+    // 630px desktop frame, so two names fit side by side.
+    const longest = [
+      ...Object.values(IE_TAGS),
+      ...Object.values(TOPIC_TAGS),
+      ...Object.values(ML_TAGS),
+    ].sort((a, b) => b.length - a.length)[0];
+    expect(nameWidthPx({ name: longest, n: 999 })).toBeLessThanOrEqual(0.4 * 630);
   });
 });
 

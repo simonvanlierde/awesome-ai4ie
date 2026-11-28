@@ -159,7 +159,8 @@ function inside(poly: Pt[], [x, y]: Pt): boolean {
  * share in the whole list, so the name says what sets the cluster apart rather than what every
  * paper has. Tags on at least a third of the cluster rank first; below them come tags on at
  * least two papers, so a cluster whose strong tags are all taken still gets a name. A tag on a
- * single paper never names a cluster of more than one. Ties go to the commoner tag. */
+ * single paper never names a cluster of more than one. Ties go to an IE field, since the map is
+ * for industrial ecologists and coloured by field, then to the commoner tag, then by name. */
 export function liftRanking(members: Tagged[], all: Tagged[]): { label: string; lift: number }[] {
   const count = (list: Tagged[]) => {
     const n = new Map<string, number>();
@@ -177,12 +178,13 @@ export function liftRanking(members: Tagged[], all: Tagged[]): { label: string; 
     .map(([key, c]) => {
       const [dim, tag] = key.split(":") as ["ie" | "topic" | "ml", string];
       const lift = c / members.length / ((overall.get(key) ?? c) / all.length);
-      return { label: tagLabel(dim, tag), c, lift, strong: c >= strong };
+      return { label: tagLabel(dim, tag), c, lift, field: dim === "ie", strong: c >= strong };
     })
     .sort(
       (a, b) =>
         Number(b.strong) - Number(a.strong) ||
         b.lift - a.lift ||
+        Number(b.field) - Number(a.field) ||
         b.c - a.c ||
         a.label.localeCompare(b.label, "en"),
     )
