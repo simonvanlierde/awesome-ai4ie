@@ -17,12 +17,13 @@ Two benchmarks test language models on IE tasks. Both found frequent errors.
 
 | Benchmark | What it tests | Headline result |
 |---|---|---|
-| [Expert-grounded LCA benchmark](https://arxiv.org/abs/2510.19886) | 11 general-purpose models on 22 LCA tasks, reviewed by 17 LCA practitioners | Experts found inaccurate or misleading information in 37.2% of responses. Some models invented up to 40% of their citations. |
-| [PCFBench](https://arxiv.org/abs/2608.27716) | Eight frontier models on 614 expert-labelled items across six product carbon footprint tasks | The strongest models came within a factor of 2 of declared totals on 77% of products. When they built the footprint step by step, that fell to 37–58%, and only 45–75% of those footprints conserved mass. |
+| [Expert-grounded LCA benchmark](https://arxiv.org/abs/2510.19886) (preprint) | 11 general-purpose models on 22 LCA tasks, reviewed by 17 LCA practitioners | Experts found inaccurate or misleading information in 37.2% of responses. Some models invented up to 40% of their citations. |
+| [PCFBench](https://arxiv.org/abs/2608.27716) (preprint) | Eight frontier models on 614 expert-labelled items across six product carbon footprint tasks | The strongest models came within a factor of 2 of declared totals on 77% of products. When they built the footprint step by step, that fell to 37–58%, and only 45–75% of those footprints conserved mass. |
 
 <p class="table-src">Source: the abstract of each paper.</p>
 
-Outside IE, agents that try to reproduce published results from the paper's own code and
+An agent is an AI tool that takes steps on its own, such as running code and editing files,
+instead of only answering in a chat. Outside IE, agents that try to reproduce published results from the paper's own code and
 data still fail most of the time: the best agent scored 21% on the hardest level of
 [CORE-Bench](https://arxiv.org/abs/2409.11363). Scores change quickly as models change, so
 check a paper's date and the models it tested before you quote a number.

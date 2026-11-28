@@ -10,14 +10,14 @@ export interface PollOption {
 export const POLL_OPTIONS = [
   {
     id: "golden-test",
-    label: "Golden-value unit or method test",
+    label: "Known-answer test on a unit or method",
     summary: "Known-answer checks on calculations, unit conversions, and mass or energy balances.",
   },
   {
     id: "held-out-test",
-    label: "Test the agent cannot edit",
+    label: "Checks the AI cannot edit",
     summary:
-      "A separate test suite outside the agent's write scope so it cannot pass by changing the test.",
+      "Tests kept where an AI coding assistant cannot change them, so it cannot pass by editing the test.",
   },
   {
     id: "claim-ledger",
@@ -26,8 +26,9 @@ export const POLL_OPTIONS = [
   },
   {
     id: "compute-receipt",
-    label: "Log of model, tokens and energy",
-    summary: "Record of model, token count, runtime, or energy used for AI-assisted analysis.",
+    label: "Log of model, use and energy",
+    summary:
+      "Which model ran, how much text it processed, runtime, or energy used for AI-assisted analysis.",
   },
   {
     id: "lci-human-review",
