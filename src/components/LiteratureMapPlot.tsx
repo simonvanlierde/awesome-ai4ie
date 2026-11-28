@@ -358,19 +358,23 @@ export function MapView({
   useEffect(() => () => cancelAnimationFrame(tween.current), []);
 
   // The wheel zooms about the pointer, but only with Ctrl or Cmd (a trackpad pinch sends Ctrl)
-  // or while the map has focus. React's wheel listener is passive, so this one is added here.
+  // or while the map has focus. A focused map at a zoom limit lets the wheel scroll the page,
+  // so it never looks frozen. React's wheel listener is passive, so this one is added here.
   useEffect(() => {
     const el = svgBox.current;
     if (linked || !el) return;
     const wheel = (e: WheelEvent) => {
-      if (!(e.ctrlKey || e.metaKey || document.activeElement === el)) return;
-      e.preventDefault();
+      const modified = e.ctrlKey || e.metaKey;
+      if (!(modified || document.activeElement === el)) return;
       const v = viewRef.current;
       const [px, py] = toPlate(v, el.getBoundingClientRect(), e.clientX, e.clientY);
       const dy = e.deltaY * (e.deltaMode === 1 ? 16 : 1);
+      const next = zoomAt(v, Math.exp(-dy * 0.002), px, py, baseRef.current);
+      if (!modified && next.w === v.w) return;
+      e.preventDefault();
       cancelAnimationFrame(tween.current);
-      viewRef.current = zoomAt(v, Math.exp(-dy * 0.002), px, py, baseRef.current);
-      setViewState(viewRef.current);
+      viewRef.current = next;
+      setViewState(next);
     };
     el.addEventListener("wheel", wheel, { passive: false });
     return () => el.removeEventListener("wheel", wheel);

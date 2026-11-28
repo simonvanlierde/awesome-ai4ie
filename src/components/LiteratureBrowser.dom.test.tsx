@@ -714,6 +714,21 @@ describe("LiteratureBrowser with the map", () => {
       wheel({});
       expect(viewBox()).not.toBe("0 0 100 100");
     });
+
+    it("lets the wheel scroll the page when a focused map cannot zoom out further", async () => {
+      await mountMap("/literature/");
+      plateAt200();
+      await act(async () => frame()?.focus());
+      await key("0");
+      const e = new WheelEvent("wheel", { deltaY: 200, cancelable: true });
+      for (const [k, v] of Object.entries({ clientX: 100, clientY: 100 }))
+        Object.defineProperty(e, k, { value: v });
+      act(() => {
+        frame()?.dispatchEvent(e);
+      });
+      expect(viewBox()).toBe("0 0 100 100");
+      expect(e.defaultPrevented).toBe(false);
+    });
   });
 
   describe("card", () => {
