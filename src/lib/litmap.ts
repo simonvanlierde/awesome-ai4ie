@@ -155,14 +155,12 @@ function inside(poly: Pt[], [x, y]: Pt): boolean {
   return signs.every((s) => s >= 0) || signs.every((s) => s <= 0);
 }
 
-/** IE field, topic and technique tags ranked for naming a cluster. An IE field on more than half
- * the cluster's papers, and commoner there than in the whole list, ranks first: the map is for
- * industrial ecologists and is coloured by field. Then come tags on at least a third of the
- * cluster, then tags on at least two papers, so a cluster whose strong tags are all taken still
- * gets a name. Within each group tags rank by lift: a tag's share in the cluster over its share
- * in the whole list, so the name says what sets the cluster apart rather than what every paper
- * has. A tag on a single paper never names a cluster of more than one. Ties go to the commoner
- * tag, then the first by name. */
+/** IE field, topic and technique tags ranked by lift: a tag's share in the cluster over its
+ * share in the whole list, so the name says what sets the cluster apart rather than what every
+ * paper has. Tags on at least a third of the cluster rank first; below them come tags on at
+ * least two papers, so a cluster whose strong tags are all taken still gets a name. A tag on a
+ * single paper never names a cluster of more than one. Ties go to an IE field, since the map is
+ * for industrial ecologists and coloured by field, then to the commoner tag, then by name. */
 export function liftRanking(members: Tagged[], all: Tagged[]): { label: string; lift: number }[] {
   const count = (list: Tagged[]) => {
     const n = new Map<string, number>();
@@ -180,14 +178,13 @@ export function liftRanking(members: Tagged[], all: Tagged[]): { label: string; 
     .map(([key, c]) => {
       const [dim, tag] = key.split(":") as ["ie" | "topic" | "ml", string];
       const lift = c / members.length / ((overall.get(key) ?? c) / all.length);
-      const field = dim === "ie" && c > members.length / 2 && lift > 1;
-      return { label: tagLabel(dim, tag), c, lift, field, strong: c >= strong };
+      return { label: tagLabel(dim, tag), c, lift, field: dim === "ie", strong: c >= strong };
     })
     .sort(
       (a, b) =>
-        Number(b.field) - Number(a.field) ||
         Number(b.strong) - Number(a.strong) ||
         b.lift - a.lift ||
+        Number(b.field) - Number(a.field) ||
         b.c - a.c ||
         a.label.localeCompare(b.label, "en"),
     )

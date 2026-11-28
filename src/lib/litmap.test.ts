@@ -175,52 +175,16 @@ describe("liftRanking", () => {
   });
 });
 
-describe("liftRanking, IE field first", () => {
-  // 30 papers: lca on 4 outside the cluster; llm only in it, so its lift is the higher.
-  const rest = Array.from({ length: 22 }, (_, i) => entry(100 + i, { ie: i < 4 ? ["lca"] : [] }));
-  const group = (lca: number) =>
-    Array.from({ length: 8 }, (_, i) => entry(i, { ie: i < lca ? ["lca"] : [], ml: ["llm"] }));
-
-  it("names a cluster for an IE field on more than half its papers, over a higher-lift technique", () => {
-    const m = group(5);
-    const r = liftRanking(m, [...m, ...rest]);
-    expect(r.map((x) => x.label)).toEqual(["Life cycle assessment", "LLMs & agents"]);
-    expect(r[0].lift).toBeLessThan(r[1].lift);
-  });
-
-  it("falls back to the technique when no IE field is on more than half the papers", () => {
-    const m = group(4); // exactly half
-    expect(liftRanking(m, [...m, ...rest])[0].label).toBe("LLMs & agents");
-  });
-
-  it("skips a field on most papers that is no commoner there than in the whole list", () => {
-    const m = group(8);
-    const common = Array.from({ length: 22 }, (_, i) => entry(100 + i, { ie: ["lca"] }));
-    expect(liftRanking(m, [...m, ...common])[0].label).toBe("LLMs & agents");
-  });
-
-  it("ranks two qualifying fields by lift, then the commoner", () => {
+describe("liftRanking, IE field tie-break", () => {
+  it("gives a lift tie to the IE field, even over a technique on more papers", () => {
+    // Both tags are found only in the cluster, so both have the same lift.
     const m = Array.from({ length: 6 }, (_, i) =>
-      entry(i, { ie: i < 5 ? ["lca", "sem"] : ["lca"] }),
+      entry(i, { ie: i < 3 ? ["symbiosis"] : [], ml: i < 4 ? ["recommender"] : [] }),
     );
-    const all = [...m, entry(9, { ie: ["lca"] }), entry(10)];
-    // sem is only in the cluster (lift 8/6), lca also outside it (lift 1.14).
-    expect(liftRanking(m, all).map((x) => x.label)).toEqual([
-      "Socio-economic metabolism",
-      "Life cycle assessment",
+    expect(liftRanking(m, [...m, entry(9)]).map((r) => r.label)).toEqual([
+      "Industrial symbiosis",
+      "Recommender systems",
     ]);
-    // Same lift for both: the one on more papers first.
-    expect(liftRanking(m, [...m, entry(10)]).map((x) => x.label)).toEqual([
-      "Life cycle assessment",
-      "Socio-economic metabolism",
-    ]);
-  });
-
-  it("gives a cluster whose field a bigger cluster took its next tag", () => {
-    // layoutMap takes the first label not yet taken: here the technique.
-    const m = group(6);
-    const r = liftRanking(m, [...m, ...rest]).map((x) => x.label);
-    expect(r.find((l) => l !== "Life cycle assessment")).toBe("LLMs & agents");
   });
 
   it("keeps every name a cluster can take short enough for its button", () => {

@@ -42,12 +42,10 @@ const script = `${repoUrl}/blob/main/scripts/embed-literature.mjs`;
         into {K} groups around centres, so each cluster is a group you can see.
       </p>
       <p>
-        Each cluster is named for one IE field, topic or technique tag. An IE field on more than
-        half of its papers, and more common there than in the whole list, comes first (the most
-        over-represented one, if two qualify). Otherwise the name is the tag on at least a third
-        of its papers that is most over-represented compared with the whole list (failing that,
-        the most over-represented tag on two or more of its papers). Bigger clusters pick first,
-        and a name a bigger cluster took goes to the next tag.
+        Each cluster is named for one IE field, topic or technique tag: among the tags on at least
+        a third of its papers, the one most over-represented compared with the whole list (failing
+        that, the most over-represented tag on two or more of its papers). A tie goes to an IE
+        field. Bigger clusters pick first, and a name a bigger cluster took goes to the next tag.
       </p>
       <p>
         A paper's closest points are mostly its closest papers, but the distance between two
