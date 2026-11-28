@@ -174,6 +174,7 @@ h1#_top,
   font-family: var(--font-read);
   font-size: 1.0625rem;
   line-height: 1.65;
+  text-wrap: pretty;
 }
 :where(:root:not([data-has-hero]))
   .sl-markdown-content
