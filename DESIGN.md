@@ -124,7 +124,7 @@ strokes at 40% and a light-blue stem, the same in both themes.
   each mark a link to its entry. "How the map is made", at the end of the page, holds the
   method and Table 2.1, the clusters by IE field.
 - **Numbered tables.** A bold "Table N.N" title above, a source line below. Numbering and
-  markup are in [CONTRIBUTING.md](CONTRIBUTING.md#look-and-feel).
+  markup are in [CONTRIBUTING.md](CONTRIBUTING.md#figure-and-table-numbers).
 - **Application entries.** A field page opens with its synthesis paragraph; the map page's
   explorer and each field page list applications as disclosures: closed, the name over the maturity call; open, the
   description, tags and papers link.

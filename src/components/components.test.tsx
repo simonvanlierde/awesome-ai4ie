@@ -322,7 +322,7 @@ describe("SpaceEmbed", () => {
     expect(astro).toContain('role="status"');
     expect(astro).toContain('referrerPolicy = "no-referrer"');
     expect(astro).toContain("iframe.sandbox.add(");
-    expect(demos).toContain('figure="Fig. 2"');
-    expect(demos).toContain('figure="Fig. 3"');
+    expect(demos).toContain('figure="Fig. 5.1"');
+    expect(demos).toContain('figure="Fig. 5.2"');
   });
 });
