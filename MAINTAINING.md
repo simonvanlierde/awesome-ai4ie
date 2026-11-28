@@ -26,6 +26,9 @@ Find suggestions under the `entry` label and other on-site submissions under
 - **Dependencies.** Renovate opens one pull request a month for minor and patch updates and
   merges it once CI passes. Majors wait for a maintainer. Everything it plans is on the
   Dependency Dashboard issue.
+- **CI energy.** Each `build` job ends with an Eco CI estimate of its energy and CO2e, in the
+  job's step summary and the `eco-ci` artifact (`lap-data.json`). It is a model, good to an
+  order of magnitude, not a measurement.
 - **Links.** The weekly link check ([`links.yml`](.github/workflows/links.yml)) opens one issue,
   or updates the open one, when a link on the site or a DOI in `literature.yaml` breaks. It
   doesn't check README.md or this file. Publishers that block crawlers answer 403 or 429, and

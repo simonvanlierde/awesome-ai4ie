@@ -55,7 +55,10 @@ jobs:
       # send-data: false keeps the run off its hosted dashboard. CO2 is attributed to the
       # maintainer's grid, Dutch location-based 262 gCO2e/kWh (Electricity Maps, 2025);
       # hosted runners sit in Azure regions with other intensities.
-      # Power curve: the action's default, 4-vCPU AMD EPYC 7763, the hosted runner as of 2026-11.
+      # Power curve: the action's default, 4-vCPU AMD EPYC 7763. Hosted runners mix CPUs (EPYC 7763
+      # and 9V74, Xeon 8370C, 8573C and 6975P-C in 2026-11) and Eco CI has a curve only for the 7763,
+      # so read the joules as an order of magnitude. The window runs from this step to get-measurement,
+      # about 92 to 95% of the job: set-up, post steps and the other jobs are not counted.
       - uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
         # Monitoring only, like the Eco CI steps after the build.
         continue-on-error: true
@@ -139,16 +142,20 @@ jobs:
           pnpm exec astro preview --port 4321 &
           for _ in $(seq 30); do curl -s -o /dev/null http://localhost:4321/ && break; sleep 1; done
           pnpm run test:a11y
-      # Monitoring only: the Eco CI steps below never block the deploy jobs.
+      # Monitoring only: the Eco CI steps below never block the deploy jobs, and run on a failed
+      # build too, since it used energy as well. Settings carry over from start-measurement: the
+      # send-data and grid-intensity defaults these steps log are unused.
       # Its "Missing data points ... backfilled" warning is routine: the 1 s sampler misses ticks under load.
       - uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
         continue-on-error: true
+        if: ${{ !cancelled() }}
         with:
           task: get-measurement
           label: build
       # Writes the energy and CO2 table to the step summary.
       - uses: green-coding-solutions/eco-ci-energy-estimation@782dd4a31bc426a6ae26a7b08d89af454b10ffc0 # v5.3.0
         continue-on-error: true
+        if: ${{ !cancelled() }}
         with:
           task: display-results
           display-badge: false
@@ -156,10 +163,13 @@ jobs:
       # steps[] of label, cpu_avg_percent, energy_joules, power_avg_watts, time, all strings.
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         continue-on-error: true
+        if: ${{ !cancelled() }}
         with:
           name: eco-ci
           path: /tmp/eco-ci/lap-data.json
           if-no-files-found: warn
+          # A re-run attempt replaces the earlier attempt's file instead of failing on the name.
+          overwrite: true
 
   deploy:
     needs: build
