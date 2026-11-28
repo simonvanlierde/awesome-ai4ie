@@ -25,6 +25,7 @@
     "page-weight": "node scripts/page-weight.mjs",
     "search-eval": "node scripts/search-eval.mjs",
     "embed": "node scripts/embed-literature.mjs",
+    "literature-meta": "node scripts/literature-meta.mjs",
     "vocabulary": "node scripts/vocabulary.mjs",
     "cited-figures": "node scripts/cited-figures.mjs",
     "vocabulary-links": "node scripts/vocabulary-links.mjs"
@@ -50,6 +51,7 @@
     "@fontsource-variable/source-serif-4": "^5.3.1",
     "@huggingface/transformers": "^4.3.2",
     "@j178/prek": "0.5.11",
+    "@saehrimnir/druidjs": "^0.10.0",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@vitest/coverage-v8": "5.1.1",

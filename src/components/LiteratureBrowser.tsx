@@ -3,7 +3,9 @@ import type { LitEntry } from "../data/schemas";
 import { DIM_LABELS, TAG_DIMS, TAGS, type TagDim, tagLabel } from "../data/tags";
 import { type Citations, citationFile, FORMATS } from "../lib/citations";
 import { citeAuthors, formatAuthors, isNew, type PaperExtras, paperLink } from "../lib/literature";
+import type { MapCluster } from "../lib/litmap";
 import { contributeUrl, litUrl, paperUrl, siteUrl } from "../lib/urls";
+import { MapKey, MapView, ModePicker } from "./LiteratureMapPlot";
 import {
   DEFAULT_SORT,
   EMPTY_FILTER,
@@ -21,6 +23,7 @@ import {
   toQuery,
   visibleCount,
 } from "./litFilter";
+import { decodePoints, MODES, type Mode, type ModeColours } from "./litMapNav";
 import TagChips from "./TagChips";
 
 /**
@@ -43,7 +46,21 @@ import TagChips from "./TagChips";
  * link to share. Opening a card writes its id there, and closing it hands the
  * fragment to the last card still open. A linked paper the filters hide gets a
  * notice that clears them; a card only opened on the page gets neither mark nor notice.
+ *
+ * With `map` (laid out at build time, src/lib/litmap.ts), the map of the literature sits
+ * between the count and the list. The same filters drive it: the papers they keep are in full
+ * ink, the rest faded. Opening a paper on the map opens its card in the list, as `#<id>` does.
  */
+
+/** The map's layout as the page ships it: points encoded by encodePoints(). */
+export type ListMap = {
+  w: number;
+  h: number;
+  clusters: MapCluster[];
+  points: string;
+  /** The AI technique and OpenAlex topic colourings; the IE field one needs no data. */
+  modes?: Partial<Record<Exclude<Mode, "ie">, ModeColours>>;
+};
 
 const FLIP_MS = 220;
 const FLIP_EASING = "cubic-bezier(0.2, 0, 0, 1)";
@@ -59,13 +76,16 @@ function prefersReducedMotion(): boolean {
 export default function LiteratureBrowser({
   entries,
   extras = {},
+  map,
 }: {
   entries: LitEntry[];
   extras?: Record<string, PaperExtras>;
+  map?: ListMap;
 }) {
   const [filter, setFilter] = useState<Filter>(EMPTY_FILTER);
   const [sort, setSort] = useState<SortKey>(DEFAULT_SORT);
   const [q, setQ] = useState("");
+  const [mode, setMode] = useState<Mode>("ie");
   // Entries listed before "Show more". The server renders all of them; this applies after hydration.
   const [limit, setLimit] = useState(PAGE_SIZE);
   // First entry a "Show more" added: it takes focus, so a keyboard user carries on from there.
@@ -96,14 +116,13 @@ export default function LiteratureBrowser({
     setFilter(view.filter);
     setSort(view.sort);
     setQ(view.q);
+    setMode(view.mode);
     setHydrated(true);
     const ids = new Set(entries.map((e) => e.id));
     const follow = () => {
       const id = hashTarget(window.location.hash, ids);
-      setTarget(id);
-      if (!id) return;
-      setExpanded((cur) => new Set(cur).add(id));
-      pendingScroll.current = id;
+      if (id) openEntry(id);
+      else setTarget(null);
     };
     follow();
     window.addEventListener("hashchange", follow);
@@ -137,8 +156,8 @@ export default function LiteratureBrowser({
   useEffect(() => {
     if (!hydrated) return;
     const { pathname, hash } = window.location;
-    history.replaceState(null, "", pathname + toQuery({ filter, sort, q }) + hash);
-  }, [filter, sort, q, hydrated]);
+    history.replaceState(null, "", pathname + toQuery({ filter, sort, q, mode }) + hash);
+  }, [filter, sort, q, mode, hydrated]);
 
   // After a pill is removed its button is gone; move focus to the pill now in
   // its place, the last one, or the count.
@@ -207,6 +226,13 @@ export default function LiteratureBrowser({
     setLimit(PAGE_SIZE);
   }
 
+  /** Mark, open and scroll to an entry's card, as a `#<id>` link does. */
+  function openEntry(id: string) {
+    setTarget(id);
+    setExpanded((cur) => new Set(cur).add(id));
+    pendingScroll.current = id;
+  }
+
   // The records are a separate chunk, fetched on the first export click.
   async function download(picked: LitEntry[], format: (typeof FORMATS)[number], name: string) {
     setExportStatus(""); // so the same message twice is announced twice
@@ -244,6 +270,11 @@ export default function LiteratureBrowser({
     }
   }
 
+  // Leaving the map: focus goes to the first entry of the list.
+  function focusList() {
+    listRef.current?.querySelector<HTMLElement>(":scope > li")?.focus();
+  }
+
   function closePanel(dim: TagDim) {
     triggers.current[dim]?.focus();
     setOpen(null);
@@ -272,6 +303,16 @@ export default function LiteratureBrowser({
   const tagged = pills.length > 0 || filter.papers.length > 0;
   const anyActive = tagged || q.trim() !== "";
   const byId = new Map(entries.map((e) => [e.id, e]));
+  const mapPoints = map ? decodePoints(map.points) : [];
+  const shownIds = new Set(shown.map((e) => e.id));
+  // A mode the page shipped no data for (or none at all) falls back to the IE field colours.
+  const colours = mode === "ie" ? undefined : map?.modes?.[mode];
+  const catById = colours
+    ? new Map(mapPoints.map((p, i) => [p.id, Number(colours.cats[i])]))
+    : undefined;
+  const modes = MODES.filter((m) => m === "ie" || map?.modes?.[m]);
+  const onMap = mapPoints.filter((p) => shownIds.has(p.id)).length;
+  const unplaced = entries.length - mapPoints.length;
   const hiddenTarget = target && !shown.some((e) => e.id === target) ? byId.get(target) : null;
 
   return (
@@ -379,6 +420,7 @@ export default function LiteratureBrowser({
       <div className="lit-count">
         <span role="status" ref={countRef} tabIndex={-1}>
           {shown.length} of {entries.length} entries
+          {mapPoints.length > 0 && onMap < shown.length && `, ${onMap} on the map`}
           {visible < shown.length && `, showing the first ${visible}`}
         </span>
         <fieldset className="lit-export" aria-labelledby="lit-export-label">
@@ -409,6 +451,49 @@ export default function LiteratureBrowser({
           </select>
         </label>
       </div>
+      {map && mapPoints.length > 0 && (
+        <figure className="lm-figure">
+          {hydrated ? (
+            <button type="button" className="lm-skip" onClick={focusList}>
+              Skip the map
+            </button>
+          ) : (
+            <a className="lm-skip" href="#lit-list">
+              Skip the map
+            </a>
+          )}
+          <MapView
+            w={map.w}
+            h={map.h}
+            clusters={map.clusters}
+            points={mapPoints}
+            byId={byId}
+            kept={shownIds}
+            catOf={catById && ((id) => catById.get(id) as number)}
+            onOpen={(id) => {
+              openEntry(id);
+              const { pathname, search, hash } = window.location;
+              if (hash !== `#${id}`) history.pushState(null, "", `${pathname}${search}#${id}`);
+            }}
+            onLeave={focusList}
+            linked={!hydrated}
+          />
+          {/* Without JavaScript the radios could not recolour the plate, so they wait for it. */}
+          {hydrated && modes.length > 1 && (
+            <ModePicker mode={colours ? mode : "ie"} modes={modes} onChange={setMode} />
+          )}
+          <MapKey legend={colours?.legend} />
+          <figcaption>
+            <b>Fig. 2.1</b> Papers placed by the meaning of their title and abstract: nearby papers
+            read alike; the axes have no unit. Colour shows each paper's IE field, or the technique
+            or topic you pick; it was added after the layout, so it checks the map rather than
+            shaping it.
+            {unplaced > 0 &&
+              ` ${unplaced} ${unplaced === 1 ? "paper is" : "papers are"} not placed yet and ${unplaced === 1 ? "is" : "are"} not on the map.`}{" "}
+            <a href="#how-the-map-is-made">How the map is made</a>
+          </figcaption>
+        </figure>
+      )}
       {hiddenTarget && (
         <p id="lit-hidden-target" className="lit-hidden-target" tabIndex={-1}>
           The linked paper, {citeAuthors(hiddenTarget)} {hiddenTarget.year}, is hidden by the
@@ -426,7 +511,7 @@ export default function LiteratureBrowser({
           </button>
         </p>
       )}
-      <ol className="lit-list" ref={listRef}>
+      <ol className="lit-list" id="lit-list" ref={listRef}>
         {shown.slice(0, visible).map((e, i) => (
           <li
             key={e.id}

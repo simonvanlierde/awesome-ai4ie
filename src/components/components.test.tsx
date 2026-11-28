@@ -129,6 +129,26 @@ describe("LiteratureBrowser", () => {
     expect(html).not.toContain('lit-details"');
   });
 
+  it("renders the map as links to the list, for a reader without JavaScript", () => {
+    const [a, b] = SAMPLE_LIT;
+    const ml = { legend: [{ cat: 0, label: "LLM", n: 2 }], cats: "00" };
+    const map = {
+      w: 100,
+      h: 100,
+      clusters: [],
+      points: `${a.id} 10 10 0;${b.id} 50 50 0`,
+      modes: { ml },
+    };
+    const html = renderToStaticMarkup(<LiteratureBrowser entries={SAMPLE_LIT} map={map} />);
+    expect(html).toContain(`href="#${a.id}"`);
+    // Controls that need JavaScript are left out: the colour radios, zoom buttons and chips.
+    expect(html).not.toContain("lm-modes");
+    expect(html).not.toContain("lm-zoom");
+    expect(html).toContain(`aria-label="${a.title} (${a.year}`);
+    expect(html).not.toContain('role="application"');
+    expect(html).toContain('href="#how-the-map-is-made"');
+  });
+
   it("renders the empty state and disables bulk export when no entries exist", () => {
     const html = renderToStaticMarkup(<LiteratureBrowser entries={[]} />);
     expect(html).toContain("0 of 0 entries");

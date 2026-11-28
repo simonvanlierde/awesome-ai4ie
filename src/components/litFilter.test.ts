@@ -46,6 +46,7 @@ describe("parseView", () => {
       filter: { ...none, ie: ["circular", "lca"], ml: ["cv"] },
       sort: "year",
       q: "",
+      mode: "ie",
     });
   });
   it("reads a retired tag as its replacement and moves a tag to its current dimension", () => {
@@ -59,7 +60,7 @@ describe("parseView", () => {
     expect(parseView("?ie=nope").filter.ie).toEqual(["nope"]);
   });
   it("handles empty search", () => {
-    expect(parseView("")).toEqual({ filter: none, sort: "year", q: "" });
+    expect(parseView("")).toEqual({ filter: none, sort: "year", q: "", mode: "ie" });
   });
   it("reads a known sort and falls back to year for an unknown one", () => {
     expect(parseView("?sort=title").sort).toBe("title");
@@ -74,12 +75,18 @@ describe("parseView", () => {
       papers: ["kirillovSegmentAnything2023"],
     };
     for (const sort of ["year", "authors", "title"] as const) {
-      expect(parseView(toQuery({ filter, sort, q: "" }))).toEqual({ filter, sort, q: "" });
+      expect(parseView(toQuery({ filter, sort, q: "" }))).toEqual({
+        filter,
+        sort,
+        q: "",
+        mode: "ie",
+      });
     }
     expect(parseView(toQuery({ filter: none, sort: "title", q: "" }))).toEqual({
       filter: none,
       sort: "title",
       q: "",
+      mode: "ie",
     });
   });
   it("escapes values, so a # or & in a hand-made URL stays a value", () => {
@@ -88,7 +95,16 @@ describe("parseView", () => {
       filter,
       sort: "year",
       q: "",
+      mode: "ie",
     });
+  });
+  it("keeps the map's colour mode in the URL and ignores an unknown one", () => {
+    expect(toQuery({ filter: none, sort: "year", q: "", mode: "openalex" })).toBe("?mode=openalex");
+    expect(parseView("?mode=ml").mode).toBe("ml");
+    expect(parseView("?mode=openalex").mode).toBe("openalex");
+    // `topic=` is the site's own tag filter; the OpenAlex colouring is not called that.
+    expect(parseView("?mode=topic").mode).toBe("ie");
+    expect(parseView("?mode=bogus").mode).toBe("ie");
   });
   it("omits empty filters and the default sort", () => {
     expect(toQuery({ filter: none, sort: "year", q: "" })).toBe("");

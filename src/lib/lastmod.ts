@@ -6,12 +6,13 @@ import { existsSync } from "node:fs";
 import { IE_TAGS } from "../data/tags";
 
 const LIT = "src/data/literature.yaml";
+const META = "src/data/literature-meta.json";
 const APPS = "src/data/applications.yaml";
 
 /** Data files each data-rendered page draws on, by page path (no slashes). */
 const DATA: Record<string, string[]> = {
   "": [LIT], // Fig. 1 on the home page
-  literature: [LIT],
+  literature: [LIT, META, "src/components/LiteratureMapTable.astro", "src/lib/litmap.ts"], // the map over the list
   "applications-map": [APPS, LIT],
   ...Object.fromEntries(Object.keys(IE_TAGS).map((t) => [`applications-map/${t}`, [APPS, LIT]])),
   vocabulary: ["src/data/vocabulary.yaml", "src/components/Vocabulary.astro"],

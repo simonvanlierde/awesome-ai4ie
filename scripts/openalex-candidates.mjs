@@ -13,11 +13,10 @@
 // already in literature.yaml or candidates.yaml, so a rejected lead stays rejected.
 import { readFile, writeFile } from "node:fs/promises";
 import process from "node:process";
-import { setTimeout as sleep } from "node:timers/promises";
 import { pathToFileURL } from "node:url";
 import { parse, stringify } from "yaml";
+import { abstractText, bareDoi, openalex, worksByDoi } from "./lib/openalex.mjs";
 
-const UA = "awesome-ai4ie-candidates (https://github.com/simonvanlierde/awesome-ai4ie)";
 const LIT_PATH = new URL("../src/data/literature.yaml", import.meta.url);
 const CAND_PATH = new URL("../src/data/candidates.yaml", import.meta.url);
 const MODEL = "Xenova/bge-small-en-v1.5";
@@ -74,20 +73,6 @@ function anyOf(terms) {
 
 export const QUERY = `(${anyOf(AI)}) AND (${anyOf(IE)})`;
 export const VENUE_QUERY = anyOf(METHODS);
-
-/** OpenAlex stores abstracts as word → positions; rebuild the text. */
-export function abstractText(index) {
-  if (!index) return "";
-  const words = [];
-  for (const [word, positions] of Object.entries(index)) for (const p of positions) words[p] = word;
-  return words.filter(Boolean).join(" ");
-}
-
-const DOI_URL = /^https:\/\/doi\.org\//;
-
-function bareDoi(doi) {
-  return doi?.replace(DOI_URL, "").toLowerCase();
-}
 
 /** One lead from an OpenAlex work, or null when it has no DOI (nothing to dedupe on). */
 export function toLead(work, today) {
@@ -209,42 +194,8 @@ function splitAt(xs, lengths) {
   return [...parts, xs.slice(i)];
 }
 
-async function openalex(params, retries = 3) {
-  const res = await fetch(`https://api.openalex.org/works?${new URLSearchParams(params)}`, {
-    headers: {
-      "User-Agent": UA,
-      // Optional: a free key gives ten times the keyless daily budget.
-      ...(process.env.OPENALEX_API_KEY && {
-        Authorization: `Bearer ${process.env.OPENALEX_API_KEY}`,
-      }),
-    },
-  });
-  // Without a key, a search with more than a few boolean operators runs once a second.
-  if (res.status === 429 && retries > 0) {
-    await sleep(1500);
-    return openalex(params, retries - 1);
-  }
-  if (!res.ok) throw new Error(`OpenAlex ${res.status}: ${await res.text()}`);
-  return res.json();
-}
-
 const SELECT =
   "doi,title,publication_year,primary_location,best_oa_location,open_access,abstract_inverted_index";
-
-/** Works by DOI, as a Map from bare DOI to work; DOIs OpenAlex does not know are absent. */
-async function byDoi(dois) {
-  const out = new Map();
-  for (let i = 0; i < dois.length; i += 50) {
-    const batch = dois.slice(i, i + 50);
-    const { results } = await openalex({
-      filter: `doi:${batch.join("|")}`,
-      "per-page": "50",
-      select: SELECT,
-    });
-    for (const w of results) out.set(bareDoi(w.doi), w);
-  }
-  return out;
-}
 
 function textOf(work, fallback) {
   return `${work?.title ?? fallback}. ${abstractText(work?.abstract_inverted_index)}`.trim();
@@ -314,7 +265,11 @@ async function main() {
   const refsRej = candidates.filter((c) => c.status === "rejected");
   const open = candidates.filter((c) => c.status === "new");
   const missing = [...refsLit, ...refsRej, ...open].map((e) => e.doi.toLowerCase());
-  for (const [doi, w] of await byDoi(missing.filter((d) => !works.has(d)))) works.set(doi, w);
+  const more = await worksByDoi(
+    missing.filter((d) => !works.has(d)),
+    SELECT,
+  );
+  for (const [doi, w] of more) works.set(doi, w);
 
   const embed = await embedder();
   const vecs = await embed(

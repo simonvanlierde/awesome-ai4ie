@@ -67,6 +67,9 @@ importers:
       '@j178/prek':
         specifier: 0.5.11
         version: 0.5.11
+      '@saehrimnir/druidjs':
+        specifier: ^0.10.0
+        version: 0.10.0
       '@types/react':
         specifier: 19.3.0
         version: 19.3.0
@@ -1334,6 +1337,10 @@ packages:
 
   '@rolldown/pluginutils@1.1.1':
     resolution: {integrity: sha512-glFIJDvLNDtJhT9qrMFWLPbvS+skxgt4L0K8Ei2YtnhPysAJnsI7nyxSJxKj4ADeKX0OLjC4ntRkwpLOoS3rwA==}
+
+  '@saehrimnir/druidjs@0.10.0':
+    resolution: {integrity: sha512-6taK1ZdwofIJa3/E6ABjK/3sxb0IDce/eV71jF/ggy0fJdLP1NNhg6FQSr+lqV47yScJvv8X/STtCGxqG9fqnA==}
+    engines: {node: '>=20'}
 
   '@shikijs/core@4.6.0':
     resolution: {integrity: sha512-bfd4OKgvoyXYiYmMRuleA656P4V7M/Du9lcTl38Ngm6KszMj7bq4J1IGZwSYR4c95Tv5UQALtYNWUwaI9UT3xw==}
@@ -4342,6 +4349,8 @@ snapshots:
     optional: true
 
   '@rolldown/pluginutils@1.1.1': {}
+
+  '@saehrimnir/druidjs@0.10.0': {}
 
   '@shikijs/core@4.6.0':
     dependencies:
