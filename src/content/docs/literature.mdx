@@ -1,13 +1,15 @@
 ---
 title: Literature
-description: Search and filter papers on AI in industrial ecology by field, technique and topic.
+description: Search and filter papers on AI in industrial ecology by field, technique and topic, and see them on a map.
 ---
 
+import LiteratureMapMethod from '../../components/LiteratureMapMethod.astro';
+import LiteratureMapTable from '../../components/LiteratureMapTable.astro';
 import LiteratureSection from '../../components/LiteratureSection.astro';
 
-Papers on AI in industrial ecology, each with a one-line summary of what it found. Filter by
-IE field, AI technique or topic, or export the list as BibTeX or RIS. Missing a paper?
-[Suggest one](/contribute/?type=resource#send-a-contribution), or
+Papers on AI in industrial ecology, each with a one-line summary of what it found. Filter them
+or export BibTeX or RIS. New to the field? Start with the [reviews](/literature/?type=review).
+Missing a paper? [Suggest one](/contribute/?type=resource#send-a-contribution) or
 [report a correction](/contribute/?type=other#send-a-contribution).
 
 ## Papers
@@ -15,6 +17,12 @@ IE field, AI technique or topic, or export the list as BibTeX or RIS. Missing a 
 <LiteratureSection />
 
 [Follow new papers by RSS](/literature/feed.xml).
+
+## How the map is made
+
+<LiteratureMapMethod />
+
+<LiteratureMapTable />
 
 ## Ask an AI assistant
 

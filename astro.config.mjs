@@ -43,7 +43,7 @@ export default defineConfig({
   },
 
   // Self-hosted variable fonts, subset by scripts/subset-fonts.py to the characters the
-  // pages use (src/fonts.test.ts guards that), with no runtime CDN.
+  // pages use (src/assets/fonts.test.ts guards that), with no runtime CDN.
   // font-display: optional, so a late font never shifts the layout; Head.astro
   // preloads Archivo and the upright serif. Archivo keeps its width axis because
   // titles, tables and tabs are set narrow.

@@ -229,9 +229,12 @@ runs a language model in a loop with tools: it reads files, edits code, runs com
 keeps going until it decides it is done. The **harness** is what you put around that loop:
 an instructions file, permissions, tests, and hooks.
 
-[ie-agent-harness](https://github.com/simonvanlierde/ie-agent-harness) is a small example to fork:
-a toy matrix LCA with a golden test, a hook that refuses edits to the golden values, a short
-`AGENTS.md`, one skill and CI. Its README has a "break it yourself" exercise.
+The maintainer's example repo, [ie-agent-harness](https://github.com/simonvanlierde/ie-agent-harness),
+is a small one to fork. It has a toy matrix LCA, a [golden test](#golden-tests) that checks
+it against one result worked out by hand, a short `AGENTS.md`, one skill and CI. A git hook refuses a commit
+that changes the golden tests unless its message has an `Approved-by:` trailer.
+`git commit --no-verify` skips that hook, so CI also fails a pull request that changes them
+without the trailer. The trailer is a claim anyone can type, so a shared repo also needs a person's review on `main`. Its README has a "break it yourself" exercise.
 
 - **Keep `AGENTS.md` short.** Agents read this file at the start of a session. List only what
   they can't work out from the code: the check and test commands, unusual conventions such as

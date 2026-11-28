@@ -24,15 +24,6 @@ importers:
       '@astrojs/starlight':
         specifier: ^0.43.0
         version: 0.43.1(@astrojs/markdown-remark@7.3.10(supports-color@10.2.2))(astro@7.4.13(@astrojs/markdown-remark@7.3.10(supports-color@10.2.2))(@types/node@26.6.6)(esbuild@0.28.2)(yaml@2.9.1))(supports-color@10.2.2)(typescript@6.0.3)
-      '@fontsource-variable/archivo':
-        specifier: ^5.3.0
-        version: 5.3.0
-      '@fontsource-variable/martian-mono':
-        specifier: ^5.2.7
-        version: 5.3.0
-      '@fontsource-variable/source-serif-4':
-        specifier: ^5.3.1
-        version: 5.3.1
       '@modelcontextprotocol/server':
         specifier: 2.4.0
         version: 2.4.0
@@ -61,12 +52,24 @@ importers:
       '@biomejs/biome':
         specifier: 2.6.8
         version: 2.6.8
+      '@fontsource-variable/archivo':
+        specifier: ^5.3.0
+        version: 5.3.0
+      '@fontsource-variable/martian-mono':
+        specifier: ^5.2.7
+        version: 5.3.0
+      '@fontsource-variable/source-serif-4':
+        specifier: ^5.3.1
+        version: 5.3.1
       '@huggingface/transformers':
         specifier: ^4.3.2
         version: 4.3.2(@types/node@26.6.6)
       '@j178/prek':
         specifier: 0.5.11
         version: 0.5.11
+      '@saehrimnir/druidjs':
+        specifier: ^0.10.0
+        version: 0.10.0
       '@tgwf/co2':
         specifier: 0.19.0
         version: 0.19.0
@@ -1337,6 +1340,10 @@ packages:
 
   '@rolldown/pluginutils@1.1.1':
     resolution: {integrity: sha512-glFIJDvLNDtJhT9qrMFWLPbvS+skxgt4L0K8Ei2YtnhPysAJnsI7nyxSJxKj4ADeKX0OLjC4ntRkwpLOoS3rwA==}
+
+  '@saehrimnir/druidjs@0.10.0':
+    resolution: {integrity: sha512-6taK1ZdwofIJa3/E6ABjK/3sxb0IDce/eV71jF/ggy0fJdLP1NNhg6FQSr+lqV47yScJvv8X/STtCGxqG9fqnA==}
+    engines: {node: '>=20'}
 
   '@shikijs/core@4.6.0':
     resolution: {integrity: sha512-bfd4OKgvoyXYiYmMRuleA656P4V7M/Du9lcTl38Ngm6KszMj7bq4J1IGZwSYR4c95Tv5UQALtYNWUwaI9UT3xw==}
@@ -4349,6 +4356,8 @@ snapshots:
     optional: true
 
   '@rolldown/pluginutils@1.1.1': {}
+
+  '@saehrimnir/druidjs@0.10.0': {}
 
   '@shikijs/core@4.6.0':
     dependencies:

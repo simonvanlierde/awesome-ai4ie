@@ -30,6 +30,10 @@ Find suggestions under the `entry` label and other on-site submissions under
   or updates the open one, when a link on the site or a DOI in `literature.yaml` breaks. It
   doesn't check README.md or this file. Publishers that block crawlers answer 403 or 429, and
   the check counts those as fine.
+- **Map topics.** After adding entries, run `pnpm run literature-meta` and commit
+  `src/data/literature-meta.json`: each entry's OpenAlex id and primary topic, which colour the
+  map's OpenAlex topic colouring. OpenAlex data is CC0; the file holds only a hash of each abstract.
+  `pnpm run embed` fetches the abstracts live to place the papers.
 - **Weekly candidates.** Every Monday [`candidates.yml`](.github/workflows/candidates.yml) asks
   OpenAlex for new papers that pair an AI term with an industrial-ecology term. In the core
   industrial-ecology journals, a method term alone is enough. It adds up to 25 leads to
@@ -66,6 +70,11 @@ Find suggestions under the `entry` label and other on-site submissions under
 - **Demo download sizes.** `DEMO_DOWNLOAD` in [`src/lib/footprint.mjs`](src/lib/footprint.mjs) holds
   hand-copied file sizes. Refresh them when the demo model or the transformers.js or
   onnxruntime-web version changes.
+- **Fonts.** The site serves subsets in `src/assets/fonts/`, not the `@fontsource-variable`
+  packages, so a Renovate bump of those (left open, not automerged) changes nothing until you run
+  `uv run scripts/subset-fonts.py` and commit the new `.woff2` files. Run it too after you add a
+  character to `UNICODES` in that script, which is what `src/assets/fonts.test.ts` asks for
+  when a page uses one outside the subset.
 - **Citation files.** `CITATION.cff` is the source for `codemeta.json` and `.zenodo.json`. After
   a change of author, edit it and run `pnpm exec prek run citesync-write --stage manual --all-files`.
 - **Social card.** `public/og.png` is a picture of the logo, the title, the site description and Fig. 1, so it goes stale when

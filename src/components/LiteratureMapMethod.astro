@@ -1,0 +1,80 @@
+---
+// "How the map is made" on /literature/: the method behind Fig. 2.1, with every count that
+// depends on the data taken from this build. See src/lib/litmap.ts for the layout.
+import { getCollection } from "astro:content";
+import meta from "../data/literature-meta.json" with { type: "json" };
+import { IE_TAGS } from "../data/tags";
+import { K, litMap, THIN_CLUSTER } from "../lib/litmap";
+import { repoUrl } from "../site";
+
+const all = (await getCollection("literature")).map(({ id, data }) => ({ id, ...data }));
+const map = litMap(all);
+const abstracts = meta as Record<string, { abstract: string | null }>;
+const noAbstract = all.filter((e) => !abstracts[e.id]?.abstract).length;
+// The worked example for the check: where the LCA papers (by first IE field) fall.
+const lca = map.points.filter(([id]) => all.find((e) => e.id === id)?.ie[0] === "lca");
+const perCluster = map.clusters
+  .map((k, c) => ({ name: k.name, n: lca.filter((p) => p[3] === c).length }))
+  .filter((k) => k.n > 0)
+  .sort((a, b) => b.n - a.n);
+const script = `${repoUrl}/blob/main/scripts/embed-literature.mjs`;
+---
+
+{
+  map.points.length > 0 ? (
+    <>
+      <p>
+        Fig. 2.1 places each paper by its own title and abstract, never by its tags. An embedding
+        model, <a href="https://huggingface.co/Qwen/Qwen3-Embedding-0.6B">Qwen3-Embedding-0.6B</a>{" "}
+        on Cloudflare Workers AI (the one behind meaning search), turns that text into an
+        embedding: a list of numbers per paper, close when the texts mean similar things. The
+        abstract comes from <a href="https://openalex.org/">OpenAlex</a>; the {noAbstract} of{" "}
+        {all.length} papers without an abstract there are placed by their summary.{" "}
+        <a href={script}>
+          <code>embed-literature.mjs</code>
+        </a>{" "}
+        does this step.
+      </p>
+      <p>
+        t-SNE (t-distributed stochastic neighbour embedding) then squeezes those lists onto a flat
+        map that keeps near neighbours near. It runs with a fixed seed, so the same embeddings give
+        the same map, and both axes share one scale. k-means splits the points on that flat map
+        into {K} groups around centres, so each cluster is a group you can see.
+      </p>
+      <p>
+        Each cluster is named for one IE field, topic or technique tag: among the tags on at least
+        a third of its papers, the one most over-represented compared with the whole list (failing
+        that, the most over-represented tag on two or more of its papers). Bigger clusters pick
+        first, and a name a bigger cluster took goes to the next tag.
+      </p>
+      <p>
+        A paper's closest points are mostly its closest papers, but the distance between two
+        clusters means little. Read gaps from the cluster table, not from empty space: t-SNE
+        stretches and squeezes density, and the number of clusters is set at {K}. A dashed outline
+        on the map, and "(thin)" in Table 2.1, mark a cluster of fewer than {THIN_CLUSTER} papers.
+      </p>
+      <p>
+        The curators' tags only name the clusters and colour the points. A name is picked to fit
+        its cluster, so it always looks like agreement; Table 2.1 is the check: it shows how well
+        each cluster matches the curators' fields.
+        {perCluster.length > 0 && (
+          <>
+            {" "}
+            The {lca.length} papers whose first field is {IE_TAGS.lca} fall in {perCluster.length}{" "}
+            of the {map.clusters.length} clusters, {perCluster[0].n} of them in{" "}
+            {`"${perCluster[0].name}"`}.
+          </>
+        )}
+      </p>
+      <p>
+        A new paper joins the map when a maintainer runs <code>pnpm run embed</code>; contributors
+        need no keys.
+      </p>
+    </>
+  ) : (
+    <p>
+      This build has no map: its embeddings come from <code>pnpm run embed</code>, which needs
+      Cloudflare Workers AI keys. Without them the list works as usual.
+    </p>
+  )
+}

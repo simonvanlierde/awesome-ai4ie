@@ -44,6 +44,9 @@ When you reject a weekly lead, give the rule it fails as its `why`.
 - If you work locally, run `pnpm run citations` and include the citation cache with the paper.
   A maintainer can fetch the record for a GitHub-only edit. Until the cache has a record,
   the site exports a short citation from the YAML entry.
+- A new paper joins the literature map when a maintainer runs `pnpm run embed`; contributors
+  need no keys. A build without the Cloudflare keys, such as a local one or a fork's pull
+  request, has no map, and that is expected.
 
 ### Listing resources on a page
 

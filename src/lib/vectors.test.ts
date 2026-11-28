@@ -6,7 +6,14 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import { EMBED_MODEL } from "./semantic";
-import { embedMissing, encodeVector, loadVectors, textKey, vectorRows } from "./vectors";
+import {
+  embedMissing,
+  encodeVector,
+  loadMapVectors,
+  loadVectors,
+  textKey,
+  vectorRows,
+} from "./vectors";
 
 describe("vectorRows", () => {
   it("numbers the embedded entries in id order, whatever order they come in", () => {
@@ -65,5 +72,19 @@ describe("embedMissing", () => {
     writeFileSync(file, JSON.stringify({ model: "another-model", vectors }));
     await embedMissing(["a"], embed, loadVectors(file));
     expect(embed).toHaveBeenCalledWith(["a"]);
+  });
+});
+
+describe("loadMapVectors", () => {
+  const file = join(mkdtempSync(join(tmpdir(), "vectors-")), "m.json");
+  const data = { keys: { p1: "k1", p2: "gone" }, vectors: { k1: encodeVector([1, 0]) } };
+  it("gives each entry id its vector, and skips an id whose text key has none", () => {
+    writeFileSync(file, JSON.stringify({ model: EMBED_MODEL, ...data }));
+    expect(loadMapVectors(file)).toEqual({ p1: encodeVector([1, 0]) });
+  });
+  it("is empty for another model or a missing file", () => {
+    writeFileSync(file, JSON.stringify({ model: "another-model", ...data }));
+    expect(loadMapVectors(file)).toEqual({});
+    expect(loadMapVectors(`${file}.missing`)).toEqual({});
   });
 });

@@ -14,6 +14,16 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   Figures compare a page view, 1,000 page views and a demo run, split a page view by asset
   type, and show the pages heavier than the rest against their weight budgets. A table adds
   the median web page.
+- A map of the literature over the reading list: papers laid out by the meaning of their
+  own title and abstract (t-SNE, abstracts from OpenAlex), in named clusters. On `/literature/`
+  a "Colour by" control recolours the points by IE field, AI technique or OpenAlex topic.
+  `pnpm run literature-meta` records each paper's OpenAlex topic in
+  `src/data/literature-meta.json` (CC0 data, no abstract text). The list's filters and search fade the
+  papers they leave out; a card shows a paper on hover, focus or tap, and a click, Enter or a
+  second tap opens it in the list. The map zooms and pans (wheel with Ctrl or ⌘, pinch, drag,
+  buttons, keys + − 0), a cluster's name zooms to it, and zoomed in, the papers in view show
+  their titles. Without JavaScript each point links to its entry. A "How
+  the map is made" section holds the method and a table of the clusters by IE field.
 - The contribute page links the AI4IE community survey, and `/qr/contribute.svg` and
   `/qr/contribute.png` hold a QR code for `https://ai4ie.org/contribute/`.
 - `pnpm run cited-figures` lists every number the site attributes to a paper. With

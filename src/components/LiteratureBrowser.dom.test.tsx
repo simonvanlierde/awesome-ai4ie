@@ -445,3 +445,400 @@ describe("LiteratureBrowser pagination and text filter", () => {
     expect(bar.nextElementSibling).toBe(panel);
   });
 });
+
+describe("LiteratureBrowser with the map", () => {
+  // lcaPaper top left, symPaper to its right, otherPaper below: a plate of 100 x 100.
+  const MAP = {
+    w: 100,
+    h: 100,
+    clusters: [{ name: "Water", n: 3, thin: true, d: "M0 0L10 0L10 10Z", lx: 50, ly: 5 }],
+    points: "lcaPaper 10 10 0;symPaper 50 12 0;otherPaper 12 60 0",
+  };
+  const THREE = [...ENTRIES, entry("otherPaper", [])];
+  async function mountMap(url: string) {
+    history.replaceState(null, "", url);
+    host = document.createElement("div");
+    document.body.append(host);
+    root = createRoot(host);
+    await act(async () => root.render(<LiteratureBrowser entries={THREE} map={MAP} />));
+  }
+  const frame = () => document.querySelector<HTMLElement>(".lm-frame");
+  const card = () => document.querySelector(".lm-card");
+  const mark = (field: string) => document.querySelector(`.lm-plot .field-${field}`);
+  const key = (k: string) =>
+    act(async () => {
+      frame()?.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true }));
+    });
+  // The plate drawn at 200 x 200 px from the page's top left: plate units are half a pixel.
+  function plateAt200() {
+    const f = frame();
+    if (f)
+      f.getBoundingClientRect = () => ({ left: 0, top: 0, width: 200, height: 200 }) as DOMRect;
+  }
+  const pointer = (type: string, pointerType: string, x: number, y: number) =>
+    act(async () => {
+      const e = new MouseEvent(type, { clientX: x, clientY: y, bubbles: true });
+      Object.defineProperty(e, "pointerType", { value: pointerType });
+      frame()?.dispatchEvent(e);
+    });
+
+  it("draws every placed paper and counts those the filters keep", async () => {
+    await mountMap("/literature/?ie=lca");
+    expect(document.querySelectorAll(".lm-plot .lm-dot")).toHaveLength(3);
+    // Every paper the filters keep is on the map, so the count does not say it twice.
+    expect(document.querySelector(".lit-count [role=status]")?.textContent).toBe("1 of 3 entries");
+    expect(mark("lca")?.classList.contains("is-out")).toBe(false);
+    expect(mark("symbiosis")?.classList.contains("is-out")).toBe(true);
+    expect(document.querySelector(".lm-plot .lm-none")?.classList.contains("is-out")).toBe(true);
+  });
+
+  it("counts the papers on the map when some are not placed", async () => {
+    history.replaceState(null, "", "/literature/");
+    host = document.createElement("div");
+    document.body.append(host);
+    root = createRoot(host);
+    const four = [...THREE, entry("newPaper", [])];
+    await act(async () => root.render(<LiteratureBrowser entries={four} map={MAP} />));
+    expect(document.querySelector(".lit-count [role=status]")?.textContent).toBe(
+      "4 of 4 entries, 3 on the map",
+    );
+    expect(document.querySelector(".lm-figure figcaption")?.textContent).toContain(
+      "1 paper is not placed yet and is not on the map.",
+    );
+  });
+
+  it("is one tab stop with a name, behind a skip link to the list", async () => {
+    await mountMap("/literature/");
+    expect(document.querySelectorAll(".lm-figure [tabindex='0']")).toHaveLength(1);
+    expect(frame()?.getAttribute("aria-label")).toMatch(/^Map of the literature, 3 papers/);
+    expect(document.querySelector(".lm-plot")?.getAttribute("aria-hidden")).toBe("true");
+    await click(document.querySelector(".lm-skip"));
+    expect(document.activeElement?.id).toBe("lcaPaper");
+  });
+
+  it("moves with the arrow keys, opens with Enter and leaves with Escape", async () => {
+    await mountMap("/literature/");
+    await act(async () => frame()?.focus());
+    expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper lcaPaper");
+    await key("ArrowRight");
+    expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper symPaper");
+    await key("ArrowRight"); // nothing further right: stays
+    expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper symPaper");
+    await key("ArrowLeft");
+    await key("ArrowDown");
+    expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper otherPaper");
+    expect(card()?.textContent).toContain("Water");
+    await key("Escape");
+    expect(card()).toBeNull();
+    await key("Escape");
+    expect(document.activeElement?.id).toBe("lcaPaper");
+    await act(async () => frame()?.focus());
+    await key("ArrowDown");
+    await key("Enter");
+    expect(window.location.hash).toBe("#otherPaper");
+    expect(toggle("otherPaper")?.getAttribute("aria-expanded")).toBe("true");
+    expect(document.activeElement?.id).toBe("otherPaper");
+  });
+
+  it("tells a screen reader about key moves only, with the cluster and the map's edge", async () => {
+    await mountMap("/literature/");
+    const said = () => document.querySelector(".lm-view [aria-live]")?.textContent;
+    plateAt200();
+    await pointer("pointermove", "mouse", 20, 20);
+    expect(card()).not.toBeNull();
+    expect(said()).toBe("");
+    await act(async () => frame()?.focus());
+    await key("ArrowRight");
+    expect(said()).toBe("Paper symPaper, 2024, Water");
+    await key("ArrowRight");
+    expect(said()).toBe("No paper further right.");
+    await key("ArrowLeft");
+    expect(said()).toBe("Paper lcaPaper, 2024, Water");
+  });
+
+  it("counts the papers a filter keeps in each cluster's name", async () => {
+    await mountMap("/literature/");
+    const names = () =>
+      [...document.querySelectorAll(".lm-name, .lm-chip")].map((n) => n.textContent);
+    expect(names()).toEqual(["Zoom to Water 3", "Zoom to Water 3"]);
+    await pickField("lca");
+    expect(names()).toEqual(["Zoom to Water 1", "Zoom to Water 1"]);
+  });
+
+  it("moves only between the papers the filters keep", async () => {
+    await mountMap("/literature/?ie=lca,symbiosis");
+    await act(async () => frame()?.focus());
+    await key("ArrowDown"); // otherPaper is faded: nothing below
+    expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper lcaPaper");
+  });
+
+  it("shows the card on the first tap and opens the paper on the second", async () => {
+    await mountMap("/literature/");
+    plateAt200();
+    await pointer("pointerdown", "touch", 100, 24);
+    await pointer("click", "touch", 100, 24);
+    expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper symPaper");
+    expect(card()?.textContent).toContain("Tap it again");
+    expect(toggle("symPaper")?.getAttribute("aria-expanded")).toBe("false");
+    await pointer("pointerdown", "touch", 101, 25);
+    await pointer("click", "touch", 101, 25);
+    expect(toggle("symPaper")?.getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("shows the card on hover and opens the paper on a click", async () => {
+    await mountMap("/literature/");
+    plateAt200();
+    await pointer("pointermove", "mouse", 20, 20);
+    expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper lcaPaper");
+    await pointer("pointermove", "mouse", 190, 190); // far from every paper
+    expect(card()).toBeNull();
+    await pointer("pointerdown", "mouse", 20, 20);
+    await pointer("click", "mouse", 20, 20);
+    expect(toggle("lcaPaper")?.getAttribute("aria-expanded")).toBe("true");
+  });
+
+  describe("zoom", () => {
+    // Reduced motion: every zoom lands at once, with no tween to wait for.
+    const realMatchMedia = window.matchMedia;
+    beforeEach(() => {
+      window.matchMedia = ((q: string) => ({ matches: q.includes("reduce") })) as typeof matchMedia;
+    });
+    afterEach(() => {
+      window.matchMedia = realMatchMedia;
+    });
+    const viewBox = () => document.querySelector(".lm-plot")?.getAttribute("viewBox");
+    // `n` presses of one key in a row.
+    const keys = (k: string, n: number) =>
+      act(() => {
+        for (let i = 0; i < n; i++)
+          frame()?.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true }));
+      });
+    const button = (name: string) =>
+      [...document.querySelectorAll<HTMLButtonElement>(".lm-zoom button")].find(
+        (b) => (b.getAttribute("aria-label") ?? b.textContent) === name,
+      );
+
+    it("zooms in and out about the middle with the buttons, and resets to the full map", async () => {
+      await mountMap("/literature/");
+      expect(viewBox()).toBe("0 0 100 100");
+      expect(button("Zoom out")?.getAttribute("aria-disabled")).toBe("true");
+      await click(button("Zoom in"));
+      expect(viewBox()).toBe("18.75 18.75 62.5 62.5");
+      expect(button("Zoom out")?.hasAttribute("aria-disabled")).toBe(false);
+      await click(button("Zoom out"));
+      expect(viewBox()).toBe("0 0 100 100");
+      await click(button("Zoom in"));
+      await click(button("Zoom in"));
+      await click(button("Full map"));
+      expect(viewBox()).toBe("0 0 100 100");
+    });
+
+    it("zooms with + and -, about the focused paper, up to 8x, and 0 resets", async () => {
+      await mountMap("/literature/");
+      await act(async () => frame()?.focus()); // lcaPaper at (10, 10)
+      await key("+");
+      expect(viewBox()).toBe("3.75 3.75 62.5 62.5");
+      await key("-");
+      expect(viewBox()).toBe("0 0 100 100");
+      keys("+", 8);
+      expect(viewBox()).toBe("8.75 8.75 12.5 12.5");
+      expect(button("Zoom in")?.getAttribute("aria-disabled")).toBe("true");
+      await key("0");
+      expect(viewBox()).toBe("0 0 100 100");
+    });
+
+    it("pans to keep the paper the arrow keys move to in view", async () => {
+      await mountMap("/literature/");
+      await act(async () => frame()?.focus());
+      keys("+", 4);
+      const [, y0, , h0] = (viewBox() ?? "").split(" ").map(Number);
+      expect(y0 + h0).toBeLessThan(60);
+      await key("ArrowDown"); // otherPaper at (12, 60)
+      expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper otherPaper");
+      const [, y, , h] = (viewBox() ?? "").split(" ").map(Number);
+      expect(y < 60 && y + h > 60).toBe(true);
+    });
+
+    it("zooms to a cluster from its name or its chip", async () => {
+      const TWO = {
+        ...MAP,
+        w: 400,
+        h: 400,
+        clusters: [
+          { ...MAP.clusters[0], name: "Pair", n: 2 },
+          { ...MAP.clusters[0], name: "Lone", n: 1, lx: 12, ly: 40 },
+        ],
+        points: "lcaPaper 10 10 0;symPaper 50 12 0;otherPaper 12 60 1",
+      };
+      history.replaceState(null, "", "/literature/");
+      host = document.createElement("div");
+      document.body.append(host);
+      root = createRoot(host);
+      await act(async () => root.render(<LiteratureBrowser entries={THREE} map={TWO} />));
+      const names = [...document.querySelectorAll(".lm-name")];
+      expect(names.map((n) => n.textContent)).toEqual(["Zoom to Pair 2", "Zoom to Lone 1"]);
+      await click(names[1]);
+      // The lone paper with 32 units round it, kept on the plate.
+      expect(viewBox()).toBe("0 28 64 64");
+      await click(button("Full map"));
+      expect(viewBox()).toBe("0 0 400 400");
+      const chips = [...document.querySelectorAll(".lm-zoom .lm-chip")];
+      expect(chips.map((n) => n.textContent)).toEqual(["Zoom to Pair 2", "Zoom to Lone 1"]);
+      await click(chips[1]);
+      expect(viewBox()).toBe("0 28 64 64");
+    });
+
+    it("zooms with the wheel only with Ctrl or once the map has focus", async () => {
+      await mountMap("/literature/");
+      plateAt200();
+      // happy-dom's WheelEvent drops the mouse fields, so they are set on it here.
+      const wheel = (mods: { ctrlKey?: boolean }) =>
+        act(() => {
+          const e = new WheelEvent("wheel", { deltaY: -200, cancelable: true });
+          for (const [k, v] of Object.entries({
+            clientX: 100,
+            clientY: 100,
+            ctrlKey: false,
+            ...mods,
+          }))
+            Object.defineProperty(e, k, { value: v });
+          frame()?.dispatchEvent(e);
+        });
+      wheel({});
+      expect(viewBox()).toBe("0 0 100 100");
+      wheel({ ctrlKey: true });
+      expect(viewBox()).not.toBe("0 0 100 100");
+      await key("0");
+      await act(async () => frame()?.focus());
+      await key("0");
+      wheel({});
+      expect(viewBox()).not.toBe("0 0 100 100");
+    });
+  });
+
+  describe("card", () => {
+    const pointerOut = (from: Element | null, to: Element | null) =>
+      act(() => {
+        const e = new MouseEvent("pointerout", { bubbles: true, relatedTarget: to });
+        Object.defineProperty(e, "pointerType", { value: "mouse" });
+        from?.dispatchEvent(e);
+      });
+
+    it("stays open while the pointer rests on it, and closes when it leaves", async () => {
+      await mountMap("/literature/");
+      plateAt200();
+      await pointer("pointermove", "mouse", 20, 20);
+      expect(card()).not.toBeNull();
+      pointerOut(frame(), card());
+      expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper lcaPaper");
+      pointerOut(card(), document.body);
+      expect(card()).toBeNull();
+    });
+
+    it("closes when the pointer leaves the map for the page", async () => {
+      await mountMap("/literature/");
+      plateAt200();
+      await pointer("pointermove", "mouse", 20, 20);
+      expect(card()).not.toBeNull();
+      pointerOut(frame(), document.body);
+      expect(card()).toBeNull();
+    });
+
+    it("closes when the map loses focus", async () => {
+      await mountMap("/literature/");
+      await act(async () => frame()?.focus());
+      expect(card()).not.toBeNull();
+      await act(async () => frame()?.blur());
+      expect(card()).toBeNull();
+    });
+
+    it("closes when a filter leaves its paper out", async () => {
+      await mountMap("/literature/");
+      await act(async () => frame()?.focus());
+      await key("ArrowRight");
+      expect(card()?.querySelector(".lit-title")?.textContent).toBe("Paper symPaper");
+      await pickField("lca");
+      expect(card()).toBeNull();
+    });
+
+    it("closes on Escape anywhere in the page", async () => {
+      await mountMap("/literature/");
+      plateAt200();
+      await pointer("pointermove", "mouse", 20, 20);
+      expect(card()).not.toBeNull();
+      act(() => {
+        document.body.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+      });
+      expect(card()).toBeNull();
+    });
+  });
+
+  describe("colour modes", () => {
+    const MODES_MAP = {
+      ...MAP,
+      modes: {
+        ml: {
+          legend: [{ cat: 0, label: "LLM", n: 3 }],
+          cats: "000",
+        },
+        openalex: {
+          legend: [
+            { cat: 0, label: "Water", n: 1 },
+            { cat: 6, label: "Other", n: 1 },
+            { cat: 7, label: "No topic data", n: 1 },
+          ],
+          cats: "067",
+        },
+      },
+    };
+    async function mountModes(url: string) {
+      history.replaceState(null, "", url);
+      host = document.createElement("div");
+      document.body.append(host);
+      root = createRoot(host);
+      await act(async () => root.render(<LiteratureBrowser entries={THREE} map={MODES_MAP} />));
+    }
+    const radios = () => [...document.querySelectorAll<HTMLInputElement>(".lm-modes input")];
+    const classes = () =>
+      [...document.querySelectorAll(".lm-plot .lm-dot")].map((p) => p.getAttribute("class"));
+
+    it("colours by IE field until another mode is chosen, and says so in the URL", async () => {
+      await mountModes("/literature/");
+      expect(radios().map((r) => [r.checked, r.parentElement?.textContent])).toEqual([
+        [true, "IE field"],
+        [false, "AI technique"],
+        [false, "OpenAlex topic"],
+      ]);
+      expect(document.querySelector(".lm-modes legend")?.textContent).toBe("Colour by");
+      expect(classes()[0]).toContain("field-lca");
+      await click(radios()[2]);
+      expect(classes().map((c) => c?.replace("lm-dot ", ""))).toEqual([
+        "lm-cat-0",
+        "lm-cat-6",
+        "lm-none",
+      ]);
+      expect([...document.querySelectorAll(".lm-key li")].map((li) => li.textContent)).toEqual([
+        "Water (1)",
+        "Other (1)",
+        "No topic data (1)",
+      ]);
+      expect(location.search).toBe("?mode=openalex");
+      await click(radios()[0]);
+      expect(location.search).toBe("");
+      expect(classes()[0]).toContain("field-lca");
+    });
+
+    it("opens in the mode the URL names and keeps the filters beside it", async () => {
+      await mountModes("/literature/?ie=lca&mode=ml");
+      expect(radios()[1].checked).toBe(true);
+      expect(classes().every((c) => c?.includes("lm-cat-0") || c?.includes("is-out"))).toBe(true);
+      await click(radios()[2]);
+      expect(location.search).toBe("?ie=lca&mode=openalex");
+    });
+
+    it("offers no control when the page shipped no mode data", async () => {
+      await mountMap("/literature/");
+      expect(document.querySelector(".lm-modes")).toBeNull();
+    });
+  });
+});

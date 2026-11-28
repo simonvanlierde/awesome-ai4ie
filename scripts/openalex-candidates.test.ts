@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-  abstractText,
   floor,
   lowBatch,
   nearest,
@@ -22,11 +21,6 @@ const work = {
 };
 
 describe("openalex-candidates", () => {
-  it("rebuilds an abstract from its inverted index", () => {
-    expect(abstractText({ world: [1], hello: [0] })).toBe("hello world");
-    expect(abstractText(null)).toBe("");
-  });
-
   it("turns a work into a lead with a bare, lower-case DOI", () => {
     const lead = toLead(work, "2026-11-19");
     expect(lead).toMatchObject({

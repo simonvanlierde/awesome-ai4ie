@@ -21,6 +21,30 @@ async function post(url, init) {
   }
 }
 
+/** Vectors for one call. Workers AI refuses a call whose texts are too long together
+ * ("input too big", code 3030), so that call is split in half, and a single text that is
+ * still too long is cut in half: the map places such a paper by the start of its abstract. */
+async function embedBatch(url, token, texts) {
+  const r = await post(url, {
+    method: "POST",
+    headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+    body: JSON.stringify({ text: texts }),
+  });
+  if (r.ok) return (await r.json()).result.data.map(unit);
+  const body = await r.text();
+  if (r.status === 400 && body.includes("input too big")) {
+    const mid = texts.length >> 1;
+    if (mid)
+      return [
+        ...(await embedBatch(url, token, texts.slice(0, mid))),
+        ...(await embedBatch(url, token, texts.slice(mid))),
+      ];
+    if (texts[0].length > 1000)
+      return embedBatch(url, token, [texts[0].slice(0, texts[0].length >> 1)]);
+  }
+  throw new Error(`Workers AI: HTTP ${r.status} ${body}`);
+}
+
 /** One unit-length vector per text, in order. */
 export async function embed(texts) {
   const { CLOUDFLARE_ACCOUNT_ID: account, CLOUDFLARE_API_TOKEN: token } = process.env;
@@ -28,14 +52,7 @@ export async function embed(texts) {
     throw new Error("set CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN to embed with Workers AI");
   const url = `https://api.cloudflare.com/client/v4/accounts/${account}/ai/run/${EMBED_MODEL}`;
   const out = [];
-  for (let i = 0; i < texts.length; i += BATCH) {
-    const r = await post(url, {
-      method: "POST",
-      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
-      body: JSON.stringify({ text: texts.slice(i, i + BATCH) }),
-    });
-    if (!r.ok) throw new Error(`Workers AI: HTTP ${r.status} ${await r.text()}`);
-    out.push(...(await r.json()).result.data.map(unit));
-  }
+  for (let i = 0; i < texts.length; i += BATCH)
+    out.push(...(await embedBatch(url, token, texts.slice(i, i + BATCH))));
   return out;
 }
